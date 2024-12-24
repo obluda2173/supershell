@@ -6,12 +6,13 @@ NAME		=	minishell
 # Compiler and flags
 CC 			=	@cc
 RM			=	@rm -f
-FLAGS		=	-Wall -Wextra -Werror -lreadline
+FLAGS		=	-Wall -Wextra -Werror -lreadline -o minishell
 
 # Directories and source files
 SRCDIR		=	src
 SRC			=	$(SRCDIR)/main.c \
-				$(SRCDIR)/parser.c
+				$(SRCDIR)/parser.c \
+				$(SRCDIR)/free.c
 
 INCLDIR		=	include
 LIBFTDIR	=	$(INCLDIR)/Libft

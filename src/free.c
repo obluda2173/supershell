@@ -1,39 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/23 17:07:34 by erian             #+#    #+#             */
-/*   Updated: 2024/12/24 13:59:10 by erian            ###   ########.fr       */
+/*   Created: 2024/12/24 12:39:03 by erian             #+#    #+#             */
+/*   Updated: 2024/12/24 13:41:26 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-// convert
-// ls|cat -e<<her_doc>file1>>file2
-// to
-// ls | cat -e << her_doc > file1 >> file2
-// static char	*space_line(char *line)
-// {
-// 	char	*new_line;
-// 	int		i;
-// 	int		j;
-
-// 	i = 0;
-// 	j = 0;
-// 	new_line = malloc(sizeof(char *));
-// 	while (new_line && line[i])
-// 	{
-		
-// 	}
-	
-// }
-
-//main parser
-void	parse(t_data **data)
+void free_all(t_data **data)
 {
-	//todo
+	if (!data || !*data)
+		return;
+
+	t_ep *current = (*data)->ep;
+	t_ep *temp;
+
+	while (current)
+	{
+		
+		temp = current->next;
+		free(current->value);
+		free(current);
+		current = temp;
+	}
+
+	if ((*data)->line)
+		free((*data)->line);
+
+	free(*data);
+	*data = NULL;
 }
