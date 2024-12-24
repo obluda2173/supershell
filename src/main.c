@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:59:08 by erian             #+#    #+#             */
-/*   Updated: 2024/12/23 18:12:50 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/24 11:46:26 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,41 +16,29 @@
 #include <string.h>
 #include <readline/readline.h>
 
-void	process_line(char *shell)
-{
-	char *fullpath;
-	
-	shell->command->
-}
 
-void    minishell_loop(char **shell)
-{
-	char	*line;
 
-	while (1)
+void	init(t_data **data, char **ep)
+{
+	t_ep	*node;
+	//initialise all data needed
+	*data = malloc(sizeof(t_data));
+    if (!*data)
+        return ;
+    (*data)->ep = NULL;
+
+	//extract environment
+	while (*ep != NULL)
 	{
-		line = readline("minishell% ");
-		if (!line)
-		{
-			printf("EOF received. Exiting...\n");
-			break;
-		}
-		shell->line = *line;
-		process_line(shell);
-		free(line);
+		node = ft_lstnew(*ep);
+		ft_lstadd_back(&((*data)->ep), node);
+		ep++;
 	}
-}
-
-void	init_shell(t_shell *shell, char **ep)
-{
-	shell->line = NULL;
-	shell->ep = *ep;
 }
 
 int main(int ac, char **av, char **ep)
 {
-	t_shell	*shell;
-
+	t_data	*data;
 	//initial mandatory check
 	if (ac != 1 || ep == NULL || *ep == NULL)
 		return (printf("Error: No environment found. Exiting...\n"), 0);
@@ -58,12 +46,15 @@ int main(int ac, char **av, char **ep)
 	//suppress warning of unused argument
 	(void)av;
 
-	shell = malloc(sizeof(t_shell));
-
-	init_shell(&shell, ep);
+	//initialise data
+	init(&data, ep);
 	
-	//main loop
-	minishell_loop(shell);
+	t_ep *current = data->ep;
+	while (current)
+    {
+        printf("%s\n", current->value);
+        current = current->next;
+    }
 	
 	return (0);
 }

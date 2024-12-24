@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstclear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: erian <erian@student.42>                   +#+  +:+       +#+        */
+/*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 18:54:22 by erian             #+#    #+#             */
-/*   Updated: 2024/08/07 19:20:35 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/24 11:24:40 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstclear(t_list **lst, void (*del)(void *))
+void	ft_lstclear(t_ep **lst, void (*del)(void *))
 {
-	t_list	*temp;
+	t_ep	*temp;
 
 	if (lst && *lst && del)
 	{

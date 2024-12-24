@@ -3,30 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: erian <erian@student.42>                   +#+  +:+       +#+        */
+/*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 19:25:44 by erian             #+#    #+#             */
-/*   Updated: 2024/08/07 20:16:08 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/24 11:25:33 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
+t_ep	*ft_lstmap(t_ep *lst, void *(*f)(void *), void (*del)(void *))
 {
-	t_list	*lst_ret;
-	t_list	*current;
+	t_ep	*lst_ret;
+	t_ep	*current;
 
 	if (!lst || !f)
 		return (NULL);
-	lst_ret = ft_lstnew(f(lst->content));
+	lst_ret = ft_lstnew(f(lst->value));
 	if (!lst_ret)
 		return (NULL);
 	current = lst_ret;
 	while (lst->next)
 	{
 		lst = lst->next;
-		current->next = ft_lstnew(f(lst->content));
+		current->next = ft_lstnew(f(lst->value));
 		if (!current->next)
 		{
 			ft_lstclear(&lst_ret, del);

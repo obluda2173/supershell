@@ -32,7 +32,7 @@ CYAN        =   \033[0;96m
 COLOR       =   \033[0m
 
 # Messages
-SUCCESS     =   @echo "$(GREEN)pipex compiled successfully$(COLOR)"
+SUCCESS     =   @echo "$(GREEN)minishell compiled successfully$(COLOR)"
 S_OBJS      =   @echo "$(BLUE)Cleaning of objects completed$(COLOR)"
 S_NAME      =   @echo "$(BLUE)Full clean completed$(COLOR)"
 
@@ -41,7 +41,7 @@ S_NAME      =   @echo "$(BLUE)Full clean completed$(COLOR)"
 # **************************************************************************** #
 all:		$(NAME)
 $(NAME):	$(OBJS)
-			@make -sC $(LIBFTDIR)
+			@make bonus -sC $(LIBFTDIR)
 			$(CC) $(FLAGS) $(OBJS) $(LIBS) -o $(NAME)
 			$(SUCCESS)
 

@@ -2,7 +2,11 @@ NAME = libft.a
 
 SRC = 
 
+BONUS = 
+
 OBJS = $(SRC:.c=.o)
+
+OBJS_B = $(BONUS:.c=.o)
 
 FLAGS = -Wall -Wextra -Werror
 
@@ -60,8 +64,18 @@ SRC += ft_putendl_fd.c
 # other                                                                        #
 # **************************************************************************** #
 SRC += ft_split.c
-
-
+# **************************************************************************** #
+# bonus                                                                        #
+# **************************************************************************** #
+BONUS += ft_lstlast.c
+BONUS += ft_lstnew.c
+BONUS += ft_lstmap.c
+BONUS += ft_lstsize.c
+BONUS += ft_lstadd_back.c
+BONUS += ft_lstadd_front.c
+BONUS += ft_lstiter.c
+BONUS += ft_lstdelone.c
+BONUS += ft_lstclear.c
 
 all: $(NAME)
 
@@ -72,12 +86,17 @@ $(NAME): $(OBJS)
 %.o: %.c
 	$(CC) $(FLAGS) -c $< -o $@
 
+bonus: $(OBJS) $(OBJS_B)
+	ar rc $(NAME) $(OBJS) $(OBJS_B)
+	ranlib $(NAME)
+
+
 clean:
-	rm -f $(OBJS)
+	rm -f $(OBJS) $(OBJS_B)
 
 fclean: clean
 	rm -f $(NAME)
 
 re:	fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all bonus clean fclean re

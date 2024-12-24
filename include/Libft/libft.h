@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: erian <erian@student.42>                   +#+  +:+       +#+        */
+/*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 16:26:34 by erian             #+#    #+#             */
-/*   Updated: 2024/09/16 17:31:38 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/24 11:48:53 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 # include <stdlib.h>
 # include <string.h>
 # include <limits.h>
+# include "./../minishell.h"
+
+typedef struct s_ep t_ep;
 
 /* ************************************************************************** */
 /* char                                                                     * */
@@ -70,5 +73,17 @@ void	ft_putendl_fd(char *s, int fd);
 /* other                                                                    * */
 /* ************************************************************************** */
 char	**ft_split(char const *s, char c);
+/* ************************************************************************** */
+/* bonus                                                                    * */
+/* ************************************************************************** */
+t_ep	*ft_lstlast(t_ep *lst);
+t_ep	*ft_lstnew(void *content);
+t_ep	*ft_lstmap(t_ep *lst, void *(*f)(void *), void (*del)(void *));
+int		ft_lstsize(t_ep *lst);
+void	ft_lstadd_back(t_ep **lst, t_ep *new);
+void	ft_lstadd_front(t_ep **lst, t_ep *new);
+void	ft_lstiter(t_ep *lst, void (*f)(void *));
+void	ft_lstdelone(t_ep *lst, void (*del)(void *));
+void	ft_lstclear(t_ep **lst, void (*del)(void *));
 
 #endif 

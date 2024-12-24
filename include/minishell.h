@@ -7,11 +7,15 @@
 # include "./lexer.h"
 # include "./Libft/libft.h"
 
-typedef struct	s_shell
+typedef struct	s_ep
 {
-    char	*line;
-	char	**ep;
-	t_dlist	**command;
-}				t_shell;
+	char			*value;
+	struct s_ep		*next;
+}				t_ep;
+
+typedef struct	s_data
+{
+	t_ep	*ep;
+}				t_data;
 
 #endif

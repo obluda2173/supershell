@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: erian <erian@student.42>                   +#+  +:+       +#+        */
+/*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 17:41:28 by erian             #+#    #+#             */
-/*   Updated: 2024/08/07 18:04:09 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/24 11:35:00 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_list	*ft_lstnew(void *content)
+t_ep	*ft_lstnew(void *content)
 {
-	t_list	*node;
+	t_ep	*node;
 
-	node = (t_list *)malloc(sizeof(t_list));
+	node = (t_ep *)malloc(sizeof(t_ep));
 	if (!node)
 		return (NULL);
-	node->content = content;
+	node->value = ft_strdup(content);;
 	node->next = NULL;
 	return (node);
 }
