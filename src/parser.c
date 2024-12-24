@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:07:34 by erian             #+#    #+#             */
-/*   Updated: 2024/12/24 15:47:36 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/24 18:56:48 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ static char	*space_line(char *line)
 	i = 0;
 	j = 0;
 	new_line = malloc(sizeof(char) * (ft_strlen(line) + (count_separators(line) * 2) + 1));
+	if (!new_line)
+		return (NULL);
 	while (line[i])
 	{
 		if (line[i] == '$' && quotes(line, i) != 2 && i && line[i - 1] != '\\')
@@ -95,13 +97,34 @@ static char	*space_line(char *line)
 			new_line[j++] = line[i++];
 	}
 	new_line[j] = '\0';
-	if (line)
-	{
-		free(line);
-		line = NULL;
-	}
+	free(line);
 	return (new_line);
 }
+
+//not finished part
+// t_token	*get_token(t_data **data)
+// {
+// 	t_token	*prev;
+// 	t_token	*next;
+// 	int		i;
+// 	int		separator;
+
+// 	prev = NULL;
+// 	next = NULL;
+// 	i = 0;
+// 	//ft_strtrim(line);
+// 	while (line[i])
+// 	{
+// 		separator = ignore_operator(line, i);
+// 		next = next_token(line, &i);
+// 		next->prev = prev;
+// 		if (prev)
+// 			prev->next = next;
+// 		prev = next;
+// 		token_type(next, sep);
+		
+// 	}
+// }
 
 //main parser
 void	parse(t_data **data)
@@ -109,6 +132,6 @@ void	parse(t_data **data)
 	(*data)->line = space_line((*data)->line);
 	if ((*data)->line && (*data)->line[0] == '$')
 		(*data)->line[0] = (char)(-(*data)->line[0]);
-	//(*data)->line = get_token((*data)->line);
+	(*data)->line = get_token((*data)->line);
 	printf("%s\n", (*data)->line);
 }

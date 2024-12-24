@@ -18,11 +18,21 @@ typedef struct	s_ep
 	struct s_ep		*next;
 }				t_ep;
 
+//structure for tokenisation
+typedef struct	s_token
+{
+	char			*content;
+	int				type;
+	struct s_token	*prev;
+	struct s_token	*next;
+}				t_token;
+
 //structure for main data
 typedef struct	s_data
 {
 	t_ep	*ep;
 	char	*line;
+	t_token	*tokens;
 	bool	exit;
 }				t_data;
 

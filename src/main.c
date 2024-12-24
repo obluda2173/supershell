@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:59:08 by erian             #+#    #+#             */
-/*   Updated: 2024/12/24 16:02:24 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/24 17:50:38 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	init(t_data **data, char **ep)
 		return ;
 	(*data)->ep = NULL;
 	(*data)->exit = true;
+	(*data)->tokens = NULL;
 
 	//extract environment
 	while (*ep != NULL)
@@ -67,7 +68,7 @@ char	*meeting_line(t_data **data)
 			line = ft_substr(start->value, 8, ft_strlen(start->value) - 8);
 			if (line)
 			{
-				result = ft_strjoin(line, "~ ");
+				result = ft_strjoin(line, "$ ");
 				free(line);
 				return (result);
 			}
@@ -134,7 +135,7 @@ int	main(int ac, char **av, char **ep)
 		}
 		
 		if (ft_strncmp(data->line, "exit", 4) == 0)
-			break ;
+			data->exit = false;
 		free(data->line);
 		data->line = NULL;
 	}
