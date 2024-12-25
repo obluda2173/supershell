@@ -29,6 +29,7 @@ SRC += ft_strlen.c
 SRC += ft_strlcat.c
 SRC += ft_strlcpy.c
 SRC += ft_strdup.c
+SRC += ft_strndup.c
 SRC += ft_strchr.c
 SRC += ft_strrchr.c
 SRC += ft_strjoin.c

@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 16:26:34 by erian             #+#    #+#             */
-/*   Updated: 2024/12/24 11:48:53 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/25 14:29:02 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ size_t	ft_strlen(const char *str);
 size_t	ft_strlcat(char *dst, const char *src, size_t size);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 char	*ft_strdup(const char *src);
+char	*ft_strndup(const char *s, size_t n);
 char	*ft_strchr(const char *str, int chr);
 char	*ft_strrchr(const char *str, int chr);
 char	*ft_strjoin(char const *s1, char const *s2);

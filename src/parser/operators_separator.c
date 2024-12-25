@@ -1,21 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   operators_separator.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/23 17:07:34 by erian             #+#    #+#             */
-/*   Updated: 2024/12/24 18:56:48 by erian            ###   ########.fr       */
+/*   Created: 2024/12/25 10:33:18 by erian             #+#    #+#             */
+/*   Updated: 2024/12/25 10:35:22 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
-// convert
-// ls|cat -e<<her_doc>file1>>file2
-// to
-// ls | cat -e << her_doc > file1 >> file2
+/*
+
+What does this file do?
+
+it converts:
+ls|cat -e<<her_doc>file1>>file2
+
+to
+ls | cat -e << her_doc > file1 >> file2
+
+*/
 
 //quotes counter
 static int	quotes(char *line, int i)
@@ -53,6 +60,7 @@ static bool	is_separator(char c)
 	return (false);
 }
 
+//counts the number of operators in the line passed
 static int	count_separators(char *line)
 {
 	int	i;
@@ -70,7 +78,7 @@ static int	count_separators(char *line)
 }
 
 //handle cases when commands and separators are not separated with spaces 
-static char	*space_line(char *line)
+char	*space_line(char *line)
 {
 	char	*new_line;
 	int		i;
@@ -99,39 +107,4 @@ static char	*space_line(char *line)
 	new_line[j] = '\0';
 	free(line);
 	return (new_line);
-}
-
-//not finished part
-// t_token	*get_token(t_data **data)
-// {
-// 	t_token	*prev;
-// 	t_token	*next;
-// 	int		i;
-// 	int		separator;
-
-// 	prev = NULL;
-// 	next = NULL;
-// 	i = 0;
-// 	//ft_strtrim(line);
-// 	while (line[i])
-// 	{
-// 		separator = ignore_operator(line, i);
-// 		next = next_token(line, &i);
-// 		next->prev = prev;
-// 		if (prev)
-// 			prev->next = next;
-// 		prev = next;
-// 		token_type(next, sep);
-		
-// 	}
-// }
-
-//main parser
-void	parse(t_data **data)
-{
-	(*data)->line = space_line((*data)->line);
-	if ((*data)->line && (*data)->line[0] == '$')
-		(*data)->line[0] = (char)(-(*data)->line[0]);
-	(*data)->line = get_token((*data)->line);
-	printf("%s\n", (*data)->line);
 }

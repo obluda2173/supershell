@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:59:08 by erian             #+#    #+#             */
-/*   Updated: 2024/12/24 17:50:38 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/25 16:22:06 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,14 +128,15 @@ int	main(int ac, char **av, char **ep)
 			continue ;
 		}
 		
+		if (ft_strncmp(data->line, "exit", 4) == 0)
+			data->exit = false;
+		
 		if (check_syntax(data->line))
 		{
 			parse(&data);
 			execute(&data);
 		}
 		
-		if (ft_strncmp(data->line, "exit", 4) == 0)
-			data->exit = false;
 		free(data->line);
 		data->line = NULL;
 	}

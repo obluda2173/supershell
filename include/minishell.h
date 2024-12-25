@@ -11,12 +11,30 @@
 # include "./lexer.h"
 # include "./Libft/libft.h"
 
+/* ************************************************************************** */
+/* structures                                                               * */
+/* ************************************************************************** */
+
 //structure for environment
 typedef struct	s_ep
 {
 	char			*value;
 	struct s_ep		*next;
 }				t_ep;
+
+// token types
+typedef enum
+{
+	CMD,				//0
+	ARG,				//1
+	SINGLE_QUOTE,		//2
+	DOUBLE_QUOTE,		//3
+	REDIRECT_IN,		//4
+	REDIRECT_OUT,		//5
+	PIPE,				//6
+	HERE_DOC,			//7
+	REDIRECT_APPEND		//8
+}	token_type;			
 
 //structure for tokenisation
 typedef struct	s_token
@@ -36,19 +54,37 @@ typedef struct	s_data
 	bool	exit;
 }				t_data;
 
-/*
-** free.c
-*/
-void	free_all(t_data **data);
+/* ************************************************************************** */
+/* parser                                                                   * */
+/* ************************************************************************** */
 
-/*
-** parse.c
-*/
+// operators_separator.c
+char	*space_line(char *line);
+
+// parse.c
 void	parse(t_data **data);
 
-/*
-** main.c
-*/
-int	main(int ac, char **av, char **ep);
+// get_tokens_1.c
+void	skip_spaces(char *line, int *i);
+t_token	*get_token(char *line);
+
+// get_tokens_2.c
+int		identify_operator(char *line, int i);
+void	link_tokens(t_token **head, t_token *current, t_token *prev);
+t_token	*create_token(char *content, token_type type);
+t_token	*create_operator_token(char *line, int *i, int operator);
+t_token	*create_command_token(char *line, int *i);
+
+/* ************************************************************************** */
+/* src                                                                      * */
+/* ************************************************************************** */
+
+// main.c
+int		main(int ac, char **av, char **ep);
+
+// free.c
+void	free_tokens(t_token *tokens);
+void	free_all(t_data **data);
+
 
 #endif
