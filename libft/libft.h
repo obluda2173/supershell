@@ -17,9 +17,12 @@
 # include <stdlib.h>
 # include <string.h>
 # include <limits.h>
-# include "../include/minishell.h"
 
-typedef struct s_ep t_ep;
+typedef struct	s_ep
+{
+	char			*value;
+	struct s_ep		*next;
+} t_ep;
 
 /* ************************************************************************** */
 /* char                                                                     * */

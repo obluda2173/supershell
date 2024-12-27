@@ -15,12 +15,12 @@
 /* structures                                                               * */
 /* ************************************************************************** */
 
-//structure for environment
-typedef struct	s_ep
-{
-	char			*value;
-	struct s_ep		*next;
-}				t_ep;
+/* //structure for environment */
+/* typedef struct	s_ep */
+/* { */
+/* 	char			*value; */
+/* 	struct s_ep		*next; */
+/* }				t_ep; */
 
 // token types
 typedef enum

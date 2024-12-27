@@ -5,27 +5,23 @@ NAME		=	minishell
 
 # Compiler and flags
 CC 			=	@cc
-RM			=	@rm -f
-FLAGS		=	-Wall -Wextra -Werror -lreadline -o minishell
+CFLAGS		=	-Wall -Wextra -Werror
+LIBS 		= 	-lreadline -Llibft -lft
+
+# Debugging
+FSANITIZE =
 
 # Directories and source files
-SRCDIR		=	src
-RUNDIR		=	run
-PRSRDIR		=	src/parser
-SRC			=	$(RUNDIR)/main.c \
-				$(PRSRDIR)/parser.c \
-				$(PRSRDIR)/operators_separator.c \
-				$(PRSRDIR)/get_tokens_1.c \
-				$(PRSRDIR)/get_tokens_2.c \
-				$(SRCDIR)/free.c
+SRC_DIR		=	src
+OBJ_DIR		=	obj
+RUN_DIR		=	run
+PRS_RDIR	=	src/parser
+LIBFT_DIR	=	libft
 
-INCLDIR		=	include
-LIBFTDIR	=	$(INCLDIR)/Libft
+INCLUDES 	:= 	-Ilibft -Iinclude
 
-OBJS		=	$(SRC:.c=.o)
-
-# Libraries
-LIBS		=	$(LIBFTDIR)/libft.a
+SRC_FILES 	:= 	$(wildcard $(SRC_DIR)/*.c)
+OBJ_FILES 	:= 	$(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 # **************************************************************************** #
 # COLORS                                                                       #
@@ -46,23 +42,18 @@ S_NAME      =   @echo "$(BLUE)Full clean completed$(COLOR)"
 # RULES                                                                        #
 # **************************************************************************** #
 all:		$(NAME)
-$(NAME):	$(OBJS)
-			@make bonus -sC $(LIBFTDIR)
-			$(CC) $(FLAGS) $(OBJS) $(LIBS) -o $(NAME)
+$(NAME):	libft $(OBJ_FILES)
+			$(CC) $(FLAGS) $(OBJ_FILES) $(INCLUDES) $(FSANITIZE) run/main.c -o $(NAME) $(LIBS)
 			$(SUCCESS)
 
-clean:
-			$(RM) $(OBJS)
-			@make --no-print-directory -sC $(LIBFTDIR) clean
-			$(S_OBJS)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-fclean:		clean
-			$(RM) $(NAME)
-			@make --no-print-directory -sC $(LIBFTDIR) fclean
-			$(S_NAME)
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
 
-re: 		fclean all
-
+$(BIN_DIR):
+	@mkdir -p $(BIN_DIR)
 
 # **************************************************************************** #
 # RULES - test                                                                  #
@@ -76,4 +67,31 @@ unittest:
 # **************************************************************************** #
 # PHONY                                                                        #
 # **************************************************************************** #
-.PHONY:		all clean fclean re
+
+libft:
+	@make bonus -C $(LIBFT_DIR)
+
+clean:
+	$(MAKE) -C libft $@
+	@rm -f $(OBJ_FILES)
+	$(S_OBJS)
+
+fclean:		clean
+			$(MAKE) -C libft $@
+			@rm -f $(NAME)
+			$(S_NAME)
+
+re: 		fclean all
+
+print_srcs:
+	@echo $(SRC_FILES)
+
+print_objs:
+	@echo $(OBJ_FILES)
+
+compile_commands:
+	cmake -S . -B build -DBUILD_TEST=ON -DBUILD_MINISHELL=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON && \
+	mv build/compile_commands.json ./compile_commands.json
+
+
+.PHONY:		all clean fclean re libft
