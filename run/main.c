@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "minishell.h"
 
 //initialise data structure and extract environment
 void	init(t_data **data, char **ep)
@@ -81,12 +81,14 @@ char	*meeting_line(t_data **data)
 //execution
 void	execute(t_data **data)
 {
+	(void)data;
 	//todo
 }
 
 //check syntax
 bool	check_syntax(char *line)
 {
+	(void)line;
 	return (true);
 }
 

@@ -10,8 +10,9 @@ FLAGS		=	-Wall -Wextra -Werror -lreadline -o minishell
 
 # Directories and source files
 SRCDIR		=	src
+RUNDIR		=	run
 PRSRDIR		=	src/parser
-SRC			=	$(SRCDIR)/main.c \
+SRC			=	$(RUNDIR)/main.c \
 				$(PRSRDIR)/parser.c \
 				$(PRSRDIR)/operators_separator.c \
 				$(PRSRDIR)/get_tokens_1.c \
