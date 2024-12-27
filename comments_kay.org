@@ -1,0 +1,16 @@
+#+title: Comments Kay
+
+* change meaning of data->exit
+- instead of
+  #+begin_src c
+while (data->exit)
+  #+end_src
+  write
+  #+begin_src c
+while (data->exit)
+  #+end_src
+
+- set exit to true, if "exit" was encountered
+
+* purpose of meeting line - rename to create_prompt/get_prompt
+-
