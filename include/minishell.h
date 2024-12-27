@@ -45,6 +45,7 @@ typedef struct	s_token
 	struct s_token	*next;
 }				t_token;
 
+
 //structure for main data
 typedef struct	s_data
 {
@@ -57,6 +58,8 @@ typedef struct	s_data
 /* ************************************************************************** */
 /* parser                                                                   * */
 /* ************************************************************************** */
+
+t_token *tokenize(char *line);
 
 // operators_separator.c
 char	*space_line(char *line);

@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+/* TODO: return in each if statement */
+/* TODO: Can we somehow write immediatey line[i] == REDIRECT_OUT for example? */
 // Gets the next token type based on the operator
 int identify_operator(char *line, int i)
 {

@@ -32,6 +32,10 @@ void print_tokens(t_token *head)
 }
 
 //main parser
+// TODO: this is more the lexer, which seperates text into tokens
+// should only be concerned with a char* and should not know about the t_data type
+// (inside the function you only work on line and then assign tokens to data->tokens, but this can also be handled by the caller)
+// suggestion: call it tokenize, and take only a char*
 void	parse(t_data **data)
 {
 	if (!data || !*data)
@@ -43,7 +47,7 @@ void	parse(t_data **data)
 		return ;
 	}
 	if ((*data)->line && (*data)->line[0] == '$')
-		(*data)->line[0] = (char)(-(*data)->line[0]);
+		(*data)->line[0] = (char)(-(*data)->line[0]); /* TODO: I don't understand (-$ symbol ?) */
 	//printf("%s\n", (*data)->line);
 	(*data)->tokens = get_token((*data)->line);
 	if (!(*data)->tokens)
@@ -53,4 +57,9 @@ void	parse(t_data **data)
 		return ;
 	}
 	//print_tokens((*data)->tokens);
+}
+
+t_token *tokenize(char *line) {
+	(void)line;
+	return NULL;
 }
