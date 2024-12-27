@@ -82,15 +82,15 @@ t_token *create_command_token(char *line, int *i)
 	if (len <= 0)
 		return (NULL);
 	content = ft_strndup(&line[start], len);
-    if (!content)
-        return (NULL);
-    t_token *token = create_token(content, CMD);
-    if (!token)
-    {
-        free(content);
-        return (NULL);
-    }
-    return (token);
+	if (!content)
+		return (NULL);
+	t_token *token = create_token(content, CMD);
+	if (!token)
+	{
+		free(content);
+		return (NULL);
+	}
+	return (token);
 }
 
 // Links tokens to form a doubly linked list
