@@ -17,7 +17,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <limits.h>
-# include "./../minishell.h"
+# include "../include/minishell.h"
 
 typedef struct s_ep t_ep;
 
@@ -81,8 +81,8 @@ t_ep	*ft_lstlast(t_ep *lst);
 t_ep	*ft_lstnew(void *content);
 t_ep	*ft_lstmap(t_ep *lst, void *(*f)(void *), void (*del)(void *));
 int		ft_lstsize(t_ep *lst);
-void	ft_lstadd_back(t_ep **lst, t_ep *new);
-void	ft_lstadd_front(t_ep **lst, t_ep *new);
+void	ft_lstadd_back(t_ep **lst, t_ep *new_node);
+void	ft_lstadd_front(t_ep **lst, t_ep *new_node);
 void	ft_lstiter(t_ep *lst, void (*f)(void *));
 void	ft_lstdelone(t_ep *lst, void (*del)(void *));
 void	ft_lstclear(t_ep **lst, void (*del)(void *));
