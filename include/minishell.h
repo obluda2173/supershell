@@ -72,15 +72,12 @@ t_token	*get_token(char *line);
 int		identify_operator(char *line, int i);
 void	link_tokens(t_token **head, t_token *current, t_token *prev);
 t_token	*create_token(char *content, token_type type);
-t_token	*create_operator_token(char *line, int *i, int operator);
+t_token	*create_operator_token(char *line, int *i, int op);
 t_token	*create_command_token(char *line, int *i);
 
 /* ************************************************************************** */
 /* src                                                                      * */
 /* ************************************************************************** */
-
-// main.c
-int		main(int ac, char **av, char **ep);
 
 // free.c
 void	free_tokens(t_token *tokens);
