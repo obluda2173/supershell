@@ -14,12 +14,13 @@ FSANITIZE =
 # Directories and source files
 SRC_DIR		=	src
 OBJ_DIR		=	obj
-RUN_DIR		=	run
-PRS_RDIR	=	src/parser
+BUILD_DIR	=	build
 LIBFT_DIR	=	libft
 
 INCLUDES 	:= 	-Ilibft -Iinclude
 
+RUN_DIR		=	run
+PRS_RDIR	=	src/parser
 SRC_FILES 	:= 	$(wildcard $(SRC_DIR)/*.c)
 OBJ_FILES 	:= 	$(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
@@ -78,8 +79,10 @@ clean:
 
 fclean:		clean
 			$(MAKE) -C libft $@
-			@rm -f $(NAME)
+			rm -f $(NAME)
 			$(S_NAME)
+			rm -rf $(OBJ_DIR)
+			rm -rf $(BUILD_DIR)
 
 re: 		fclean all
 
