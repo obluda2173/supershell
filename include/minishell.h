@@ -8,8 +8,8 @@
 # include <stdbool.h>
 # include <readline/readline.h>
 
-# include "./lexer.h"
-# include "./Libft/libft.h"
+# include "lexer.h"
+# include "libft.h"
 
 /* ************************************************************************** */
 /* structures                                                               * */
