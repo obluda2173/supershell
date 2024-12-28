@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
+/*   ft_dllstadd_back.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 18:28:32 by erian             #+#    #+#             */
-/*   Updated: 2024/12/24 11:35:46 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/28 18:00:37 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,12 @@ void	ft_dllstadd_back(t_dllist **lst, t_dllist *new)
 		*lst = new;
 		return ;
 	}
+	if (!new)
+		return ;
 	while (head->next)
 	{
 		head = head->next;
 	}
 	head->next = new;
+	new->prev = head;
 }

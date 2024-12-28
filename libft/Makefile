@@ -78,6 +78,16 @@ BONUS += ft_lstiter.c
 BONUS += ft_lstdelone.c
 BONUS += ft_lstclear.c
 
+BONUS += ft_dllstlast.c
+BONUS += ft_dllstnew.c
+BONUS += ft_dllstmap.c
+BONUS += ft_dllstsize.c
+BONUS += ft_dllstadd_back.c
+BONUS += ft_dllstadd_front.c
+BONUS += ft_dllstiter.c
+BONUS += ft_dllstdelone.c
+BONUS += ft_dllstclear.c
+
 all: $(NAME)
 
 $(NAME): $(OBJS)

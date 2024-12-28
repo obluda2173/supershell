@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2024/12/28 15:07:00 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/28 17:22:23 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void skip_spaces(char *line, int *i)
 	while (line[*i] && line[*i] == ' ')
 		(*i)++;
 }
-
+ 
 //extract allocated word from line
 static char	*extract_word(t_line_container *lc)
 {
@@ -51,11 +51,11 @@ static char	*extract_word(t_line_container *lc)
 }
 
 //returns token of given content
-token_type	assign_type(char *str)
+static token_type	assign_type(char *str)
 {
 	if (strcmp(str, "|") == 0)
 		return (PIPE);
-	else if (ft_strncmp(str, "<", 2) == 0)
+	else if (ft_strncmp(str, "<", 1) == 0)
 		return (REDIRECT_IN);
 	else if (ft_strncmp(str, ">", 1) == 0)
 		return (REDIRECT_OUT);
@@ -69,7 +69,7 @@ token_type	assign_type(char *str)
 		return (DOUBLE_QUOTE);
 	else if (ft_strlen(str) > 0)
 	{
-		if (ft_strchr(str, "="))
+		if (ft_strchr(str, '='))
 			return (ARG);
 		else
 			return (CMD);
@@ -77,26 +77,33 @@ token_type	assign_type(char *str)
 	return END_OF_FILE;
 }
 
-
 // Tokenizes the input line into a doubly linked list
-t_token	get_next_token(t_line_container *lc)
+t_token	*get_next_token(t_line_container *lc)
 {
+	t_token	*token;
 	char	*word;
-	t_token	token;
+
+	if (!lc->line)
+		return NULL;
 
 	skip_spaces((char *)lc->line, &(lc->pos));
 
 	if (lc->line[lc->pos] == '\0')
 	{
-		token.content = NULL;
-		token.type = END_OF_FILE;
+		token = malloc(sizeof(t_token));
+		if (!token)
+			return (NULL);
+		token->content = NULL;
+		token->type = END_OF_FILE;
 		return (token);
 	}
 
 	word = extract_word(lc);
 
-	token.content = word;
-	token.type = assing_type(token.content);
+	token = malloc(sizeof(t_token));
+	
+	token->content = word;
+	token->type = assign_type(word);
 
 	return (token);
 }

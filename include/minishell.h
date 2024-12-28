@@ -25,10 +25,10 @@
 //structure for main data
 typedef struct	s_data
 {
-	t_ep			*ep;
+	t_list			*ep;
 	char			*line;
 	size_t			i;
-	t_token_list	*tokens;
+	t_dllist		*tokens;
 	bool			not_exit;
 }				t_data;
 
@@ -44,22 +44,16 @@ void	parse(t_data **data);
 
 // get_tokens_1.c
 void	skip_spaces(char *line, int *i);
-t_token	get_next_token(t_line_container *lc);
+t_token	*get_next_token(t_line_container *lc);
 
-// get_tokens_2.c
-int		identify_operator(char *line, int i);
-void	link_tokens(t_token_list **head, t_token_list *current, t_token_list *prev);
-t_token_list	*create_token(char *content, token_type type);
-t_token_list	*create_operator_token(char *line, int *i, int op);
-t_token_list	*create_command_token(char *line, int *i);
 
 /* ************************************************************************** */
 /* src                                                                      * */
 /* ************************************************************************** */
 
 // free.c
-void	free_tokens(t_token_list *tokens);
-void	free_all(t_data **data);
+//void	free_tokens(t_dllist *tokens);
+//void	free_all(t_data **data);
 
 
 #endif

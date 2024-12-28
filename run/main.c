@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:59:08 by erian             #+#    #+#             */
-/*   Updated: 2024/12/28 12:47:46 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/28 18:22:07 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 //initialise data structure and extract environment
 void	init(t_data **data, char **ep)
 {
-	t_ep	*new_node;
-	t_ep	*last_node;
+	t_list	*new_node;
+	t_list	*last_node;
 
 	//initialise all data needed
 	*data = malloc(sizeof(t_data));
@@ -33,7 +33,7 @@ void	init(t_data **data, char **ep)
 		new_node = ft_lstnew(*ep);
 		if (!new_node)
 		{
-			free_all(data);
+			//free_all(data);
 			return ;
 		}
 		last_node = ft_lstlast((*data)->ep);
@@ -48,7 +48,7 @@ void	init(t_data **data, char **ep)
 //finding meeting line
 char	*meeting_line(t_data **data)
 {
-	t_ep	*start;
+	t_list	*start;
 	char	*line;
 	char	*result;
 
@@ -58,15 +58,16 @@ char	*meeting_line(t_data **data)
 	start = (*data)->ep;
 	line = NULL;
 	result = NULL;
-	
-	free((*data)->line);
+	if (!(*data)->line)
+		return 0;
+		// free((*data)->line);
 	(*data)->line = NULL; 
 	
 	while (start)
 	{
-		if (ft_strncmp(start->value, "LOGNAME=", 8) == 0)
+		if (ft_strncmp(start->content, "LOGNAME=", 8) == 0)
 		{
-			line = ft_substr(start->value, 8, ft_strlen(start->value) - 8);
+			line = ft_substr(start->content, 8, ft_strlen(start->content) - 8);
 			if (line)
 			{
 				result = ft_strjoin(line, "$ ");
@@ -148,6 +149,6 @@ int	main(int ac, char **av, char **ep)
 		free(data->line);
 		data->line = NULL;
 	}
-	free_all(&data);
+	//free_all(&data);
 	return (0);
 }

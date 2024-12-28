@@ -14,10 +14,10 @@ TEST_P(TestTokenizer, firstTests) {
 	for (size_t i = 0; i < params.want_tokens.size(); i++) {
 		auto want_token = params.want_tokens[i];
 
-		t_token got_token = get_next_token(&lc);
+		t_token *got_token = get_next_token(&lc);
 
-		ASSERT_EQ(got_token.content, want_token.content);
-		ASSERT_EQ(got_token.type, want_token.type);
+		ASSERT_STREQ(got_token->content, want_token.content);
+		ASSERT_EQ(got_token->type, want_token.type);
 	}
 }
 
@@ -26,7 +26,7 @@ INSTANTIATE_TEST_SUITE_P(
 	testing::Values(TestTokenizeParams{"", {{NULL, END_OF_FILE}}},
 					TestTokenizeParams{">>",
 									   {
-										   {">>", REDIRECT_APPEND},
+										   {(char*)">>", REDIRECT_APPEND},
 										   {NULL, END_OF_FILE}
 										   }}
 		)
