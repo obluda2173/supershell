@@ -1,18 +1,24 @@
 #ifndef LEXER_H
 # define LEXER_H
 
+typedef struct s_line_container {
+	char* line;
+	int pos;
+} t_line_container;
+
 // token types
 typedef enum
 {
-	CMD,				//0
-	ARG,				//1
-	SINGLE_QUOTE,		//2
-	DOUBLE_QUOTE,		//3
-	REDIRECT_IN,		//4
-	REDIRECT_OUT,		//5
-	PIPE,				//6
-	HERE_DOC,			//7
-	REDIRECT_APPEND		//8
+	END_OF_FILE,
+	CMD,				//1
+	ARG,				//2
+	SINGLE_QUOTE,		//3
+	DOUBLE_QUOTE,		//4
+	REDIRECT_IN,		//5
+	REDIRECT_OUT,		//6
+	PIPE,				//7
+	HERE_DOC,			//8
+	REDIRECT_APPEND		//9
 }	token_type;
 
 const char	*token_strings[] = {
