@@ -27,6 +27,7 @@ typedef struct	s_data
 {
 	t_ep	*ep;
 	char	*line;
+	size_t	i;
 	t_token	*tokens;
 	bool	not_exit;
 }				t_data;

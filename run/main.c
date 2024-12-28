@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:59:08 by erian             #+#    #+#             */
-/*   Updated: 2024/12/28 12:03:39 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/28 12:47:46 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,9 @@ void	init(t_data **data, char **ep)
 	if (!*data)
 		return ;
 	(*data)->ep = NULL;
-	(*data)->not_exit = true;
+	(*data)->ep = 0;
 	(*data)->tokens = NULL;
+	(*data)->not_exit = true;
 
 	//extract environment
 	while (*ep != NULL)
