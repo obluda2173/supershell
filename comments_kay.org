@@ -14,3 +14,15 @@ while (data->exit)
 
 * purpose of meeting line - rename to create_prompt/get_prompt
 -
+
+* TokenTypes
+- add identifiers
+- add keywords
+- add numbers
+
+* Lexer should not be concerned with the DataStructure
+- the lexer is there to give you back the tokens in a certain way
+  - yes, can be an array of tokens, a list of tokens or a double linked list
+  - but prefereably it just gives you the tokens one after the other, and the caller decides in which DataStructure the tokens should be saved in
+    - this way we have a seperation of concerns
+    - gives us the power to change the data structure afterwards, without changing the internals of the lexer (tokenizer)
