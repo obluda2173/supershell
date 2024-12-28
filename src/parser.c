@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:07:34 by erian             #+#    #+#             */
-/*   Updated: 2024/12/28 12:04:26 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/28 13:50:31 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void print_tokens(t_token_list *head)
 	printf("Tokens in the doubly linked list:\n");
 	while (current)
 	{
-		printf("Content: %s, Type: %d\n", current->content, current->type);
+		printf("Content: %s, Type: %d\n", current->token->content, current->token->type);
 		current = current->next;
 	}
 }
@@ -38,6 +38,9 @@ void print_tokens(t_token_list *head)
 // suggestion: call it tokenize, and take only a char*
 void	parse(t_data **data)
 {
+	t_line_container lc = {(*data)->line, 0};
+	bool reached_end = false;
+	
 	if (!data || !*data)
 		return ;
 	
@@ -52,7 +55,18 @@ void	parse(t_data **data)
 	if ((*data)->line && (*data)->line[0] == '$')
 		(*data)->line[0] = (char)(-(*data)->line[0]); /* TODO: I don't understand (-$ symbol ?) */
 	//printf("%s\n", (*data)->line);
+
+	
+	while (!reached_end)
+	{
+			t_token token = get_next_token(&lc);
+			ft_lstadd_back(token_list, token);
+	}
+	
+	
 	(*data)->tokens = tokenize((*data)->line);
+	
+	
 	if (!(*data)->tokens)
 	{
 		free((*data)->line);
