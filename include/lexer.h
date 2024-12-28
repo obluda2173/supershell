@@ -33,13 +33,20 @@ const char	*token_strings[] = {
 	">>"
 };
 
-//structure for tokenisation
+
 typedef struct	s_token
 {
 	char			*content;
 	token_type		type;
-	struct s_token	*prev;
-	struct s_token	*next;
-}				t_token;
+} t_token;
+
+//structure for tokenisation
+typedef struct	s_token_list
+{
+	char			*content;
+	token_type		type;
+	struct s_token_list	*prev;
+	struct s_token_list	*next;
+}				t_token_list;
 
 #endif

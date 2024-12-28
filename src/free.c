@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-void	free_tokens(t_token *tokens)
+void	free_tokens(t_token_list *tokens)
 {
-	t_token	*temp;
+	t_token_list	*temp;
 
 	while (tokens)
 	{

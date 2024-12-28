@@ -27,7 +27,7 @@ typedef struct	s_data
 {
 	t_ep	*ep;
 	char	*line;
-	t_token	*tokens;
+	t_token_list	*tokens;
 	bool	not_exit;
 }				t_data;
 
@@ -43,21 +43,21 @@ void	parse(t_data **data);
 
 // get_tokens_1.c
 void	skip_spaces(char *line, int *i);
-t_token	*tokenize(char *line);
+t_token_list	*tokenize(char *line);
 
 // get_tokens_2.c
 int		identify_operator(char *line, int i);
-void	link_tokens(t_token **head, t_token *current, t_token *prev);
-t_token	*create_token(char *content, token_type type);
-t_token	*create_operator_token(char *line, int *i, int op);
-t_token	*create_command_token(char *line, int *i);
+void	link_tokens(t_token_list **head, t_token_list *current, t_token_list *prev);
+t_token_list	*create_token(char *content, token_type type);
+t_token_list	*create_operator_token(char *line, int *i, int op);
+t_token_list	*create_command_token(char *line, int *i);
 
 /* ************************************************************************** */
 /* src                                                                      * */
 /* ************************************************************************** */
 
 // free.c
-void	free_tokens(t_token *tokens);
+void	free_tokens(t_token_list *tokens);
 void	free_all(t_data **data);
 
 
