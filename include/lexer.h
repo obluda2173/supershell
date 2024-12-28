@@ -7,16 +7,16 @@ extern const char *token_strings[];
 // token types
 typedef enum
 {
-	CMD,				//1
-	ARG,				//2
-	SINGLE_QUOTE,		//3
-	DOUBLE_QUOTE,		//4
-	REDIRECT_IN,		//5
-	REDIRECT_OUT,		//6
-	PIPE,				//7
-	HERE_DOC,			//8
-	REDIRECT_APPEND,	//9
-	END_OF_FILE			//10
+	CMD,				//0
+	ARG,				//1
+	SINGLE_QUOTE,		//2
+	DOUBLE_QUOTE,		//3
+	REDIRECT_IN,		//4
+	REDIRECT_OUT,		//5
+	PIPE,				//6
+	HERE_DOC,			//7
+	REDIRECT_APPEND,	//8
+	END_OF_FILE			//9
 }	token_type;
 
 //structure for line container
@@ -33,12 +33,7 @@ typedef struct s_token
 	token_type		type;
 }					t_token;
 
-// //structure for token list
-// typedef struct s_token_list
-// {
-// 	t_token				*token;
-// 	struct s_token_list	*prev;
-// 	struct s_token_list	*next;
-// }						t_token_list;
+t_token	*get_next_token(t_line_container *lc);
+void free_token(t_token *t);
 
 #endif

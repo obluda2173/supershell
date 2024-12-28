@@ -44,7 +44,6 @@ void	parse(t_data **data);
 
 // get_tokens_1.c
 void	skip_spaces(char *line, int *i);
-t_token	*get_next_token(t_line_container *lc);
 
 
 /* ************************************************************************** */
