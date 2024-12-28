@@ -1,10 +1,6 @@
 #ifndef LEXER_H
 # define LEXER_H
 
-typedef struct s_line_container {
-	char* line;
-	int pos;
-} t_line_container;
 
 // token types
 typedef enum
@@ -33,20 +29,26 @@ const char	*token_strings[] = {
 	">>"
 };
 
+//structure for line_container
+typedef struct s_line_container
+{
+	const char	*line;
+	int			pos;
+}			t_line_container;
 
+//structure for token
 typedef struct	s_token
 {
 	char			*content;
 	token_type		type;
-} t_token;
+}					t_token;
 
 //structure for tokenisation
 typedef struct	s_token_list
 {
-	char			*content;
-	token_type		type;
+	t_token				*token;
 	struct s_token_list	*prev;
 	struct s_token_list	*next;
-}				t_token_list;
+}						t_token_list;
 
 #endif
