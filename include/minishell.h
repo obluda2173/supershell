@@ -22,43 +22,18 @@
 /* 	struct s_ep		*next; */
 /* }				t_ep; */
 
-// token types
-typedef enum
-{
-	CMD,				//0
-	ARG,				//1
-	SINGLE_QUOTE,		//2
-	DOUBLE_QUOTE,		//3
-	REDIRECT_IN,		//4
-	REDIRECT_OUT,		//5
-	PIPE,				//6
-	HERE_DOC,			//7
-	REDIRECT_APPEND		//8
-}	token_type;			
-
-//structure for tokenisation
-typedef struct	s_token
-{
-	char			*content;
-	int				type;
-	struct s_token	*prev;
-	struct s_token	*next;
-}				t_token;
-
-
 //structure for main data
 typedef struct	s_data
 {
 	t_ep	*ep;
 	char	*line;
 	t_token	*tokens;
-	bool	exit;
+	bool	not_exit;
 }				t_data;
 
 /* ************************************************************************** */
 /* parser                                                                   * */
 /* ************************************************************************** */
-
 
 // operators_separator.c
 char	*space_line(char *line);

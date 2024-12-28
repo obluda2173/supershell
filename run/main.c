@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:59:08 by erian             #+#    #+#             */
-/*   Updated: 2024/12/25 16:22:06 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/28 12:03:39 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	init(t_data **data, char **ep)
 	if (!*data)
 		return ;
 	(*data)->ep = NULL;
-	(*data)->exit = true;
+	(*data)->not_exit = true;
 	(*data)->tokens = NULL;
 
 	//extract environment
@@ -113,7 +113,7 @@ int	main(int ac, char **av, char **ep)
 		return (printf("Error: Initialization failed. Exiting...\n"), 0);
 
 	//main loop
-	while (data->exit)
+	while (data->not_exit)
 	{
 		read = meeting_line(&data);
 		data->line = readline(read);
@@ -123,6 +123,7 @@ int	main(int ac, char **av, char **ep)
 		if (!data->line)
 			break ;
 
+		//empty line handler
 		if (ft_strlen(data->line) == 0)
 		{
 			free(data->line);
@@ -130,8 +131,12 @@ int	main(int ac, char **av, char **ep)
 			continue ;
 		}
 		
+		//exit the process
 		if (ft_strncmp(data->line, "exit", 4) == 0)
-			data->exit = false;
+		{
+			data->not_exit = false;
+			continue ;
+		}
 		
 		if (check_syntax(data->line))
 		{

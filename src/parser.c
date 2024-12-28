@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:07:34 by erian             #+#    #+#             */
-/*   Updated: 2024/12/25 16:58:45 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/28 12:04:26 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,15 @@ void	parse(t_data **data)
 {
 	if (!data || !*data)
 		return ;
+	
+	
 	(*data)->line = space_line((*data)->line);
 	if (!(*data)->line)
 	{
 		free_all(data);
 		return ;
 	}
+	
 	if ((*data)->line && (*data)->line[0] == '$')
 		(*data)->line[0] = (char)(-(*data)->line[0]); /* TODO: I don't understand (-$ symbol ?) */
 	//printf("%s\n", (*data)->line);
