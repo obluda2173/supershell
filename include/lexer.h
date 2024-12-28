@@ -39,7 +39,7 @@ typedef struct s_line_container
 //structure for token
 typedef struct	s_token
 {
-	char			*content;
+	const char			*content;
 	token_type		type;
 }					t_token;
 
