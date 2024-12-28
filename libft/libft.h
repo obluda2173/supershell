@@ -24,6 +24,13 @@ typedef struct s_list
 	struct s_list	*next;
 }					t_list;
 
+typedef struct s_dllist
+{
+	void			*content;
+	struct s_dllist	*next;
+	struct s_dllist	*prev;
+}					t_dllist;
+
 /* ************************************************************************** */
 /* char                                                                     * */
 /* ************************************************************************** */
@@ -89,5 +96,16 @@ void				ft_lstadd_front(t_list **lst, t_list *new_node);
 void				ft_lstiter(t_list *lst, void (*f)(void *));
 void				ft_lstdelone(t_list *lst, void (*del)(void *));
 void				ft_lstclear(t_list **lst, void (*del)(void *));
-
+/* ************************************************************************** */
+/* double linked list                                                                    * */
+/* ************************************************************************** */
+t_dllist				*ft_dllstlast(t_dllist *lst);
+t_dllist				*ft_dllstnew(void *content);
+t_dllist				*ft_dllstmap(t_dllist *lst, void *(*f)(void *), void (*del)(void *));
+int					ft_dllstsize(t_dllist *lst);
+void				ft_dllstadd_back(t_dllist **lst, t_dllist *new_node);
+void				ft_dllstadd_front(t_dllist **lst, t_dllist *new_node);
+void				ft_dllstiter(t_dllist *lst, void (*f)(void *));
+void				ft_dllstdelone(t_dllist *lst, void (*del)(void *));
+void				ft_dllstclear(t_dllist **lst, void (*del)(void *));
 #endif 
