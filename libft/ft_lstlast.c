@@ -12,10 +12,10 @@
 
 #include "libft.h"
 
-t_ep	*ft_lstlast(t_ep *lst)
+t_list	*ft_lstlast(t_list *lst)
 {
 	if (!lst)
-		return (0);
+		return (NULL);
 	while (lst->next)
 		lst = lst->next;
 	return (lst);
