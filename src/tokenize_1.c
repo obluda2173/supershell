@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2024/12/28 12:57:58 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/28 13:05:17 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*extract_word(t_data **data)
 }
 
 // Tokenizes the input line into a doubly linked list
-t_token	*tokenize(t_data **data)
+t_token_list	*tokenize(t_data **data)
 {
 	int		*i;
 	char	*line;

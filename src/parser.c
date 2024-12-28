@@ -13,9 +13,9 @@
 #include "minishell.h"
 
 //function to print the content of doubly list of tokens
-void print_tokens(t_token *head)
+void print_tokens(t_token_list *head)
 {
-	t_token *current = head;
+	t_token_list *current = head;
 
 	if (!current)
 	{
