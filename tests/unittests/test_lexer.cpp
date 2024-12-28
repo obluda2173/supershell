@@ -1,4 +1,7 @@
 #include "test_main.hpp"
+extern "C" {
+#include "lexer.h"
+}
 
 struct TestTokenizeParams {
 	std::string line;
@@ -16,18 +19,29 @@ TEST_P(TestTokenizer, firstTests) {
 
 		t_token *got_token = get_next_token(&lc);
 
-		ASSERT_STREQ(got_token->content, want_token.content);
-		ASSERT_EQ(got_token->type, want_token.type);
+		EXPECT_STREQ(got_token->content, want_token.content);
+		EXPECT_EQ(got_token->type, want_token.type);
+		free_token(got_token);
 	}
+}
+
+t_token new_token(const char* content, token_type type) {
+	return (t_token){(char*)content, type};
+
 }
 
 INSTANTIATE_TEST_SUITE_P(
 	LexerTests, TestTokenizer,
 	testing::Values(TestTokenizeParams{"", {{NULL, END_OF_FILE}}},
-					TestTokenizeParams{">>",
-									   {
-										   {(char*)">>", REDIRECT_APPEND},
-										   {NULL, END_OF_FILE}
-										   }}
+					TestTokenizeParams{
+						">>", {
+							new_token(">>", REDIRECT_APPEND),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"<<", {
+							new_token("<<", HERE_DOC),
+							new_token(NULL, END_OF_FILE),
+						}}
 		)
 	);

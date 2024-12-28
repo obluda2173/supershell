@@ -52,3 +52,8 @@
 // 	free(*data);
 // 	*data = NULL;
 // }
+
+void free_token(t_token *t) {
+	free(t->content);
+	free(t);
+}
