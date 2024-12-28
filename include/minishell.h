@@ -25,11 +25,11 @@
 //structure for main data
 typedef struct	s_data
 {
-	t_ep	*ep;
-	char	*line;
-	size_t	i;
+	t_ep			*ep;
+	char			*line;
+	size_t			i;
 	t_token_list	*tokens;
-	bool	not_exit;
+	bool			not_exit;
 }				t_data;
 
 /* ************************************************************************** */
@@ -44,7 +44,7 @@ void	parse(t_data **data);
 
 // get_tokens_1.c
 void	skip_spaces(char *line, int *i);
-t_token_list	*tokenize(char *line);
+t_token	get_next_token(t_line_container *lc);
 
 // get_tokens_2.c
 int		identify_operator(char *line, int i);

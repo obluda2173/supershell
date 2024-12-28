@@ -5,7 +5,6 @@
 // token types
 typedef enum
 {
-	END_OF_FILE,
 	CMD,				//1
 	ARG,				//2
 	SINGLE_QUOTE,		//3
@@ -14,37 +13,39 @@ typedef enum
 	REDIRECT_OUT,		//6
 	PIPE,				//7
 	HERE_DOC,			//8
-	REDIRECT_APPEND		//9
+	REDIRECT_APPEND,	//9
+	END_OF_FILE			//10
 }	token_type;
 
 const char	*token_strings[] = {
-	"CMD",
-	"ARG",
-	"'",
-	"\"",
-	"<",
-	">",
-	"|",
-	"<<",
-	">>"
+	"CMD",				//1
+	"ARG",				//2
+	"'",				//3
+	"\"",				//4
+	"<",				//5
+	">",				//6
+	"|",				//7
+	"<<",				//8
+	">>",				//9
+	"END"				//10
 };
 
-//structure for line_container
+//structure for line container
 typedef struct s_line_container
 {
 	const char	*line;
 	int			pos;
-}			t_line_container;
+}				t_line_container;
 
 //structure for token
-typedef struct	s_token
+typedef struct s_token
 {
-	const char			*content;
+	const char		*content;
 	token_type		type;
 }					t_token;
 
-//structure for tokenisation
-typedef struct	s_token_list
+//structure for token list
+typedef struct s_token_list
 {
 	t_token				*token;
 	struct s_token_list	*prev;

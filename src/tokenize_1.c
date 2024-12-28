@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2024/12/28 14:06:46 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/28 15:07:00 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,38 @@ void skip_spaces(char *line, int *i)
 		(*i)++;
 }
 
-char	*extract_word(t_line_container *lc)
+//extract allocated word from line
+static char	*extract_word(t_line_container *lc)
 {
-	//todo
+	int		start;
+	int		len;
+	char	*word;
+
+	start = lc->pos;
+	len = 0;
+	if (lc->line[lc->pos] == '\'' || lc->line[lc->pos] == '\"' ||
+		lc->line[lc->pos] == '<' || lc->line[lc->pos] == '>' ||
+		lc->line[lc->pos] == '|')
+	{
+		if ((lc->line[lc->pos] == '<' && lc->line[lc->pos + 1] == '<') ||
+			(lc->line[lc->pos] == '>' && lc->line[lc->pos + 1] == '>'))
+			lc->pos += 2;
+		else
+			lc->pos++;
+	}
+	else
+		while (lc->line[lc->pos] && lc->line[lc->pos] != ' ' &&
+				lc->line[lc->pos] != '\'' && lc->line[lc->pos] != '\"' &&
+				lc->line[lc->pos] != '<' && lc->line[lc->pos] != '>' &&
+				lc->line[lc->pos] != '|')
+			lc->pos++;
+	len = lc->pos - start;
+	word = malloc(len + 1);
+	ft_strlcpy(word, lc->line + start, len + 1);
+	return (word);
 }
 
+//returns token of given content
 token_type	assign_type(char *str)
 {
 	if (strcmp(str, "|") == 0)
@@ -56,6 +83,8 @@ t_token	get_next_token(t_line_container *lc)
 {
 	char	*word;
 	t_token	token;
+
+	skip_spaces((char *)lc->line, &(lc->pos));
 
 	if (lc->line[lc->pos] == '\0')
 	{

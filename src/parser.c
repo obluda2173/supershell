@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:07:34 by erian             #+#    #+#             */
-/*   Updated: 2024/12/28 13:50:31 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/28 15:15:24 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void print_tokens(t_token_list *head)
 void	parse(t_data **data)
 {
 	t_line_container lc = {(*data)->line, 0};
+	t_token token;
 	bool reached_end = false;
 	
 	if (!data || !*data)
@@ -52,27 +53,19 @@ void	parse(t_data **data)
 		return ;
 	}
 	
-	if ((*data)->line && (*data)->line[0] == '$')
-		(*data)->line[0] = (char)(-(*data)->line[0]); /* TODO: I don't understand (-$ symbol ?) */
-	//printf("%s\n", (*data)->line);
+	// if ((*data)->line && (*data)->line[0] == '$')
+	// 	(*data)->line[0] = (char)(-(*data)->line[0]); /* TODO: I don't understand (-$ symbol ?) */
+	// //printf("%s\n", (*data)->line);
 
 	
 	while (!reached_end)
 	{
-			t_token token = get_next_token(&lc);
-			ft_lstadd_back(token_list, token);
+		token = get_next_token(&lc);
+		t_lstadd_back((*data)->tokens, token);
+		if (token.type == END_OF_FILE)
+			reached_end = true;
 	}
 	
-	
-	(*data)->tokens = tokenize((*data)->line);
-	
-	
-	if (!(*data)->tokens)
-	{
-		free((*data)->line);
-		free_all(data);
-		return ;
-	}
-	//print_tokens((*data)->tokens);
+	print_tokens((*data)->tokens);
 }
 
