@@ -59,7 +59,6 @@ typedef struct	s_data
 /* parser                                                                   * */
 /* ************************************************************************** */
 
-t_token *tokenize(char *line);
 
 // operators_separator.c
 char	*space_line(char *line);
@@ -69,7 +68,7 @@ void	parse(t_data **data);
 
 // get_tokens_1.c
 void	skip_spaces(char *line, int *i);
-t_token	*get_token(char *line);
+t_token	*tokenize(char *line);
 
 // get_tokens_2.c
 int		identify_operator(char *line, int i);

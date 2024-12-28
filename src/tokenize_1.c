@@ -20,7 +20,7 @@ void skip_spaces(char *line, int *i)
 }
 
 // Tokenizes the input line into a doubly linked list
-t_token *get_token(char *line)
+t_token *tokenize(char *line)
 {
 	int i;
 	int operator;

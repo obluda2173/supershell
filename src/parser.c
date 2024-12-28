@@ -49,7 +49,7 @@ void	parse(t_data **data)
 	if ((*data)->line && (*data)->line[0] == '$')
 		(*data)->line[0] = (char)(-(*data)->line[0]); /* TODO: I don't understand (-$ symbol ?) */
 	//printf("%s\n", (*data)->line);
-	(*data)->tokens = get_token((*data)->line);
+	(*data)->tokens = tokenize((*data)->line);
 	if (!(*data)->tokens)
 	{
 		free((*data)->line);
@@ -59,7 +59,3 @@ void	parse(t_data **data)
 	//print_tokens((*data)->tokens);
 }
 
-t_token *tokenize(char *line) {
-	(void)line;
-	return NULL;
-}
