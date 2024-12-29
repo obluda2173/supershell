@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2024/12/28 17:22:23 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/29 16:47:59 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,13 @@ static char	*extract_word(t_line_container *lc)
 	len = 0;
 	if (lc->line[lc->pos] == '\'' || lc->line[lc->pos] == '\"' ||
 		lc->line[lc->pos] == '<' || lc->line[lc->pos] == '>' ||
-		lc->line[lc->pos] == '|')
+		lc->line[lc->pos] == '|' || lc->line[lc->pos] == '$' ||
+		lc->line[lc->pos] == '&' || lc->line[lc->pos] == '*')
 	{
 		if ((lc->line[lc->pos] == '<' && lc->line[lc->pos + 1] == '<') ||
-			(lc->line[lc->pos] == '>' && lc->line[lc->pos + 1] == '>'))
+			(lc->line[lc->pos] == '>' && lc->line[lc->pos + 1] == '>') ||
+			(lc->line[lc->pos] == '&' && lc->line[lc->pos + 1] == '&') ||
+			(lc->line[lc->pos] == '|' && lc->line[lc->pos + 1] == '|'))
 			lc->pos += 2;
 		else
 			lc->pos++;
@@ -53,26 +56,41 @@ static char	*extract_word(t_line_container *lc)
 //returns token of given content
 static token_type	assign_type(char *str)
 {
-	if (strcmp(str, "|") == 0)
+	if (ft_strncmp(str, "||", 2) == 0)
+		return (OR);
+	else if (ft_strncmp(str, "&&", 2) == 0)
+		return (AND);
+	else if (ft_strncmp(str, "|", 1) == 0)
 		return (PIPE);
-	else if (ft_strncmp(str, "<", 1) == 0)
-		return (REDIRECT_IN);
-	else if (ft_strncmp(str, ">", 1) == 0)
-		return (REDIRECT_OUT);
+	else if (ft_strncmp(str, "$", 1) == 0)
+		return (DOLLAR);
+	else if (ft_strncmp(str, "*", 1) == 0)
+		return (WILDCARD);
 	else if (ft_strncmp(str, "<<", 2) == 0)
 		return (HERE_DOC);
 	else if (ft_strncmp(str, ">>", 2) == 0)
 		return (REDIRECT_APPEND);
+	else if (ft_strncmp(str, "<", 1) == 0)
+		return (REDIRECT_IN);
+	else if (ft_strncmp(str, ">", 1) == 0)
+		return (REDIRECT_OUT);
 	else if (ft_strncmp(str, "'", 1) == 0)
 		return (SINGLE_QUOTE);
 	else if (ft_strncmp(str, "\"", 1) == 0)
 		return (DOUBLE_QUOTE);
 	else if (ft_strlen(str) > 0)
 	{
-		if (ft_strchr(str, '='))
-			return (ARG);
+		if (ft_strncmp(str, "echo", 4) == 0 || 
+			ft_strncmp(str, "cd", 2) == 0 || 
+			ft_strncmp(str, "pwd", 3) == 0 || 
+			ft_strncmp(str, "export", 6) == 0 || 
+			ft_strncmp(str, "unset", 5) == 0 || 
+			ft_strncmp(str, "env", 3) == 0 || 
+			ft_strncmp(str, "exit", 4) == 0)
+			return (BUILTIN);
 		else
-			return (CMD);
+			return (WORD);
+		//implement invalid
 	}
 	return END_OF_FILE;
 }

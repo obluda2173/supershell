@@ -34,13 +34,73 @@ INSTANTIATE_TEST_SUITE_P(
 	LexerTests, TestTokenizer,
 	testing::Values(TestTokenizeParams{"", {{NULL, END_OF_FILE}}},
 					TestTokenizeParams{
-						">>", {
-							new_token(">>", REDIRECT_APPEND),
+						"'", {
+							new_token("'", SINGLE_QUOTE),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"\"", {
+							new_token("\"", DOUBLE_QUOTE),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"<", {
+							new_token("<", REDIRECT_IN),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						">", {
+							new_token(">", REDIRECT_OUT),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"|", {
+							new_token("|", PIPE),
 							new_token(NULL, END_OF_FILE),
 						}},
 					TestTokenizeParams{
 						"<<", {
 							new_token("<<", HERE_DOC),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						">>", {
+							new_token(">>", REDIRECT_APPEND),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"cd", {
+							new_token("cd", CMD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"ls | wc", {
+							new_token("ls", CMD),
+							new_token("|", PIPE),
+							new_token("wc", CMD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"ls -a -l | wc -l", {
+							new_token("ls", CMD),							new_token("ls", CMD),
+							new_token("-a", ARG),
+							new_token("-l", ARG),
+							new_token("|", PIPE),
+							new_token("wc", CMD),
+							new_token("-l", ARG),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"> test.txt", {
+							new_token(">", REDIRECT_OUT),							new_token("ls", CMD),
+							new_token("test.txt", ARG),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"echo  $PATH", {
+							new_token("echo", CMD),							new_token("ls", CMD),
+							new_token("$", DOLLAR),
+							new_token("PATH", ARG)
 							new_token(NULL, END_OF_FILE),
 						}}
 		)

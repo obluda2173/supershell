@@ -1,8 +1,8 @@
 #include "lexer.h"
 
 const char *token_strings[] = {
-    "CMD",
-    "ARG",
+    "BUILTIN",
+    "WORD",
     "'",
     "\"",
     "<",
@@ -10,5 +10,10 @@ const char *token_strings[] = {
     "|",
     "<<",
     ">>",
-    "END"
+    "END",
+    "$",
+    "&&",
+    "||",
+    "*",
+    "INV"
 };
