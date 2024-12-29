@@ -38,15 +38,15 @@ built-in <expression>
 
 #+begin_src js-json
 {
-	type: "builtin-statement",
-	token: "echo"
-	value: {
-		type: "expression"
-	}
+        type: "builtin-statement",
+        token: "echo"
+        value: {
+                type: "expression"
+        }
 }
 #+end_src
 
 - series of statements that can be connected in specific ways
   ("&&", "||", "|")
-**
+
 ** either absolute path / executable / built-in / an Operator like > >> < <<
