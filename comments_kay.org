@@ -26,3 +26,27 @@ while (data->exit)
   - but prefereably it just gives you the tokens one after the other, and the caller decides in which DataStructure the tokens should be saved in
     - this way we have a seperation of concerns
     - gives us the power to change the data structure afterwards, without changing the internals of the lexer (tokenizer)
+
+* expressions and statements in bash
+
+** built-in statement
+- expressions produce values
+#+begin_example
+echo "some text"
+built-in <expression>
+#+end_example
+
+#+begin_src js-json
+{
+	type: "builtin-statement",
+	token: "echo"
+	value: {
+		type: "expression"
+	}
+}
+#+end_src
+
+- series of statements that can be connected in specific ways
+  ("&&", "||", "|")
+**
+** either absolute path / executable / built-in / an Operator like > >> < <<
