@@ -1,18 +1,83 @@
 [
 {
   "directory": "/home/kfreyer/workspace/minishell/build",
-  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/. -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/run_tests_executor.dir/src/executor.c.o -c /home/kfreyer/workspace/minishell/src/executor.c",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft -I/home/kfreyer/workspace/minishell/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/run_unittests.dir/src/executor.c.o -c /home/kfreyer/workspace/minishell/src/executor.c",
   "file": "/home/kfreyer/workspace/minishell/src/executor.c"
 },
 {
   "directory": "/home/kfreyer/workspace/minishell/build",
-  "command": "/usr/bin/clang++  -I/home/kfreyer/workspace/minishell/. -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/run_tests_executor.dir/tests/test_main.cpp.o -c /home/kfreyer/workspace/minishell/tests/test_main.cpp",
-  "file": "/home/kfreyer/workspace/minishell/tests/test_main.cpp"
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft -I/home/kfreyer/workspace/minishell/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/run_unittests.dir/src/free.c.o -c /home/kfreyer/workspace/minishell/src/free.c",
+  "file": "/home/kfreyer/workspace/minishell/src/free.c"
 },
 {
   "directory": "/home/kfreyer/workspace/minishell/build",
-  "command": "/usr/bin/clang    -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft_executor.dir/src/executor.c.o -c /home/kfreyer/workspace/minishell/src/executor.c",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft -I/home/kfreyer/workspace/minishell/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/run_unittests.dir/src/lexer.c.o -c /home/kfreyer/workspace/minishell/src/lexer.c",
+  "file": "/home/kfreyer/workspace/minishell/src/lexer.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft -I/home/kfreyer/workspace/minishell/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/run_unittests.dir/src/operators_separator.c.o -c /home/kfreyer/workspace/minishell/src/operators_separator.c",
+  "file": "/home/kfreyer/workspace/minishell/src/operators_separator.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft -I/home/kfreyer/workspace/minishell/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/run_unittests.dir/src/paths.c.o -c /home/kfreyer/workspace/minishell/src/paths.c",
+  "file": "/home/kfreyer/workspace/minishell/src/paths.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft -I/home/kfreyer/workspace/minishell/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/run_unittests.dir/src/tokenize_1.c.o -c /home/kfreyer/workspace/minishell/src/tokenize_1.c",
+  "file": "/home/kfreyer/workspace/minishell/src/tokenize_1.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build",
+  "command": "/usr/bin/clang++  -I/home/kfreyer/workspace/minishell/libft -I/home/kfreyer/workspace/minishell/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/run_unittests.dir/tests/unittests/test_lexer.cpp.o -c /home/kfreyer/workspace/minishell/tests/unittests/test_lexer.cpp",
+  "file": "/home/kfreyer/workspace/minishell/tests/unittests/test_lexer.cpp"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build",
+  "command": "/usr/bin/clang++  -I/home/kfreyer/workspace/minishell/libft -I/home/kfreyer/workspace/minishell/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/run_unittests.dir/tests/unittests/test_main.cpp.o -c /home/kfreyer/workspace/minishell/tests/unittests/test_main.cpp",
+  "file": "/home/kfreyer/workspace/minishell/tests/unittests/test_main.cpp"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build",
+  "command": "/usr/bin/clang++  -I/home/kfreyer/workspace/minishell/libft -I/home/kfreyer/workspace/minishell/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/run_unittests.dir/tests/unittests/test_parser.cpp.o -c /home/kfreyer/workspace/minishell/tests/unittests/test_parser.cpp",
+  "file": "/home/kfreyer/workspace/minishell/tests/unittests/test_parser.cpp"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft -I/home/kfreyer/workspace/minishell/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/minishell.dir/src/executor.c.o -c /home/kfreyer/workspace/minishell/src/executor.c",
   "file": "/home/kfreyer/workspace/minishell/src/executor.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft -I/home/kfreyer/workspace/minishell/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/minishell.dir/src/free.c.o -c /home/kfreyer/workspace/minishell/src/free.c",
+  "file": "/home/kfreyer/workspace/minishell/src/free.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft -I/home/kfreyer/workspace/minishell/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/minishell.dir/src/lexer.c.o -c /home/kfreyer/workspace/minishell/src/lexer.c",
+  "file": "/home/kfreyer/workspace/minishell/src/lexer.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft -I/home/kfreyer/workspace/minishell/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/minishell.dir/src/operators_separator.c.o -c /home/kfreyer/workspace/minishell/src/operators_separator.c",
+  "file": "/home/kfreyer/workspace/minishell/src/operators_separator.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft -I/home/kfreyer/workspace/minishell/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/minishell.dir/src/paths.c.o -c /home/kfreyer/workspace/minishell/src/paths.c",
+  "file": "/home/kfreyer/workspace/minishell/src/paths.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft -I/home/kfreyer/workspace/minishell/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/minishell.dir/src/tokenize_1.c.o -c /home/kfreyer/workspace/minishell/src/tokenize_1.c",
+  "file": "/home/kfreyer/workspace/minishell/src/tokenize_1.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft -I/home/kfreyer/workspace/minishell/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googlemock  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/minishell.dir/run/main.c.o -c /home/kfreyer/workspace/minishell/run/main.c",
+  "file": "/home/kfreyer/workspace/minishell/run/main.c"
 },
 {
   "directory": "/home/kfreyer/workspace/minishell/build/_deps/googletest-build/googlemock",
@@ -33,5 +98,270 @@
   "directory": "/home/kfreyer/workspace/minishell/build/_deps/googletest-build/googletest",
   "command": "/usr/bin/clang++  -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/include -isystem /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest -Wall -Wshadow -Wconversion -DGTEST_HAS_PTHREAD=1 -fexceptions -W -Wpointer-arith -Wreturn-type -Wcast-qual -Wwrite-strings -Wswitch -Wunused-parameter -Wcast-align -Wchar-subscripts -Winline -Wredundant-decls -o CMakeFiles/gtest_main.dir/src/gtest_main.cc.o -c /home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/src/gtest_main.cc",
   "file": "/home/kfreyer/workspace/minishell/build/_deps/googletest-src/googletest/src/gtest_main.cc"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_atoi.c.o -c /home/kfreyer/workspace/minishell/libft/ft_atoi.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_atoi.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_bzero.c.o -c /home/kfreyer/workspace/minishell/libft/ft_bzero.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_bzero.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_calloc.c.o -c /home/kfreyer/workspace/minishell/libft/ft_calloc.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_calloc.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_dllstadd_back.c.o -c /home/kfreyer/workspace/minishell/libft/ft_dllstadd_back.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_dllstadd_back.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_dllstadd_front.c.o -c /home/kfreyer/workspace/minishell/libft/ft_dllstadd_front.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_dllstadd_front.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_dllstclear.c.o -c /home/kfreyer/workspace/minishell/libft/ft_dllstclear.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_dllstclear.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_dllstdelone.c.o -c /home/kfreyer/workspace/minishell/libft/ft_dllstdelone.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_dllstdelone.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_dllstiter.c.o -c /home/kfreyer/workspace/minishell/libft/ft_dllstiter.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_dllstiter.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_dllstlast.c.o -c /home/kfreyer/workspace/minishell/libft/ft_dllstlast.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_dllstlast.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_dllstmap.c.o -c /home/kfreyer/workspace/minishell/libft/ft_dllstmap.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_dllstmap.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_dllstnew.c.o -c /home/kfreyer/workspace/minishell/libft/ft_dllstnew.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_dllstnew.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_dllstsize.c.o -c /home/kfreyer/workspace/minishell/libft/ft_dllstsize.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_dllstsize.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_isalnum.c.o -c /home/kfreyer/workspace/minishell/libft/ft_isalnum.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_isalnum.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_isalpha.c.o -c /home/kfreyer/workspace/minishell/libft/ft_isalpha.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_isalpha.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_isascii.c.o -c /home/kfreyer/workspace/minishell/libft/ft_isascii.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_isascii.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_isdigit.c.o -c /home/kfreyer/workspace/minishell/libft/ft_isdigit.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_isdigit.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_isprint.c.o -c /home/kfreyer/workspace/minishell/libft/ft_isprint.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_isprint.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_itoa.c.o -c /home/kfreyer/workspace/minishell/libft/ft_itoa.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_itoa.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_lstadd_back.c.o -c /home/kfreyer/workspace/minishell/libft/ft_lstadd_back.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_lstadd_back.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_lstadd_front.c.o -c /home/kfreyer/workspace/minishell/libft/ft_lstadd_front.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_lstadd_front.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_lstclear.c.o -c /home/kfreyer/workspace/minishell/libft/ft_lstclear.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_lstclear.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_lstdelone.c.o -c /home/kfreyer/workspace/minishell/libft/ft_lstdelone.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_lstdelone.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_lstiter.c.o -c /home/kfreyer/workspace/minishell/libft/ft_lstiter.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_lstiter.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_lstlast.c.o -c /home/kfreyer/workspace/minishell/libft/ft_lstlast.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_lstlast.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_lstmap.c.o -c /home/kfreyer/workspace/minishell/libft/ft_lstmap.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_lstmap.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_lstnew.c.o -c /home/kfreyer/workspace/minishell/libft/ft_lstnew.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_lstnew.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_lstsize.c.o -c /home/kfreyer/workspace/minishell/libft/ft_lstsize.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_lstsize.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_memchr.c.o -c /home/kfreyer/workspace/minishell/libft/ft_memchr.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_memchr.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_memcmp.c.o -c /home/kfreyer/workspace/minishell/libft/ft_memcmp.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_memcmp.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_memcpy.c.o -c /home/kfreyer/workspace/minishell/libft/ft_memcpy.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_memcpy.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_memmove.c.o -c /home/kfreyer/workspace/minishell/libft/ft_memmove.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_memmove.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_memset.c.o -c /home/kfreyer/workspace/minishell/libft/ft_memset.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_memset.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_putchar_fd.c.o -c /home/kfreyer/workspace/minishell/libft/ft_putchar_fd.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_putchar_fd.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_putendl_fd.c.o -c /home/kfreyer/workspace/minishell/libft/ft_putendl_fd.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_putendl_fd.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_putnbr_fd.c.o -c /home/kfreyer/workspace/minishell/libft/ft_putnbr_fd.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_putnbr_fd.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_putstr_fd.c.o -c /home/kfreyer/workspace/minishell/libft/ft_putstr_fd.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_putstr_fd.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_split.c.o -c /home/kfreyer/workspace/minishell/libft/ft_split.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_split.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_strchr.c.o -c /home/kfreyer/workspace/minishell/libft/ft_strchr.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_strchr.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_strdup.c.o -c /home/kfreyer/workspace/minishell/libft/ft_strdup.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_strdup.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_striteri.c.o -c /home/kfreyer/workspace/minishell/libft/ft_striteri.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_striteri.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_strjoin.c.o -c /home/kfreyer/workspace/minishell/libft/ft_strjoin.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_strjoin.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_strlcat.c.o -c /home/kfreyer/workspace/minishell/libft/ft_strlcat.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_strlcat.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_strlcpy.c.o -c /home/kfreyer/workspace/minishell/libft/ft_strlcpy.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_strlcpy.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_strlen.c.o -c /home/kfreyer/workspace/minishell/libft/ft_strlen.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_strlen.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_strmapi.c.o -c /home/kfreyer/workspace/minishell/libft/ft_strmapi.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_strmapi.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_strncmp.c.o -c /home/kfreyer/workspace/minishell/libft/ft_strncmp.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_strncmp.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_strndup.c.o -c /home/kfreyer/workspace/minishell/libft/ft_strndup.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_strndup.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_strnstr.c.o -c /home/kfreyer/workspace/minishell/libft/ft_strnstr.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_strnstr.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_strrchr.c.o -c /home/kfreyer/workspace/minishell/libft/ft_strrchr.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_strrchr.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_strtrim.c.o -c /home/kfreyer/workspace/minishell/libft/ft_strtrim.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_strtrim.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_substr.c.o -c /home/kfreyer/workspace/minishell/libft/ft_substr.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_substr.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_tolower.c.o -c /home/kfreyer/workspace/minishell/libft/ft_tolower.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_tolower.c"
+},
+{
+  "directory": "/home/kfreyer/workspace/minishell/build/libft",
+  "command": "/usr/bin/clang  -I/home/kfreyer/workspace/minishell/libft  -Wall -Werror -Wextra -fsanitize=address -o CMakeFiles/ft.dir/ft_toupper.c.o -c /home/kfreyer/workspace/minishell/libft/ft_toupper.c",
+  "file": "/home/kfreyer/workspace/minishell/libft/ft_toupper.c"
 }
 ]
