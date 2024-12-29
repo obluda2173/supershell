@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:07:34 by erian             #+#    #+#             */
-/*   Updated: 2024/12/29 14:11:01 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/29 16:26:56 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,6 @@ static void print_tokens(t_dllist *head)
 	}
 }
 
-//main parser
-// TODO: this is more the lexer, which seperates text into tokens
-// should only be concerned with a char* and should not know about the t_data type
-// (inside the function you only work on line and then assign tokens to data->tokens, but this can also be handled by the caller)
-// suggestion: call it tokenize, and take only a char*
 void tokenize_line(t_dllist **token_list, const char *line)
 {
 	t_line_container lc = {line, 0};

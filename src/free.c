@@ -6,13 +6,13 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 12:39:03 by erian             #+#    #+#             */
-/*   Updated: 2024/12/29 14:10:32 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/29 16:00:33 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void free_token(void *content)
+void	free_token(void *content)
 {
 	t_token *token;
 
@@ -21,7 +21,7 @@ void free_token(void *content)
 	free(token);
 }
 
-void free_ep(t_list **ep)
+void	free_ep(t_list **ep)
 {
 	t_list	*current_ep;
 	t_list	*temp_ep;
