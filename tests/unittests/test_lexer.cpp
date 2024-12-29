@@ -34,13 +34,38 @@ INSTANTIATE_TEST_SUITE_P(
 	LexerTests, TestTokenizer,
 	testing::Values(TestTokenizeParams{"", {{NULL, END_OF_FILE}}},
 					TestTokenizeParams{
-						">>", {
-							new_token(">>", REDIRECT_APPEND),
+						"'", {
+							new_token("'", SINGLE_QUOTE),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"\"", {
+							new_token("\"", DOUBLE_QUOTE),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"<", {
+							new_token("<", REDIRECT_IN),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						">", {
+							new_token(">", REDIRECT_OUT),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"|", {
+							new_token("|", PIPE),
 							new_token(NULL, END_OF_FILE),
 						}},
 					TestTokenizeParams{
 						"<<", {
 							new_token("<<", HERE_DOC),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						">>", {
+							new_token(">>", REDIRECT_APPEND),
 							new_token(NULL, END_OF_FILE),
 						}}
 		)

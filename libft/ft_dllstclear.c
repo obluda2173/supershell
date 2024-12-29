@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstclear.c                                      :+:      :+:    :+:   */
+/*   ft_dllstclear.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/07 18:54:22 by erian             #+#    #+#             */
-/*   Updated: 2024/12/24 11:24:40 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/29 14:11:59 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_dllstclear(t_dllist **lst, void (*del)(void *))
+void	ft_dllstclear(t_dllist **dllst, void (*del)(void *))
 {
 	t_dllist	*head;
 	t_dllist	*tmp;
 
-	head = *lst;
+	head = *dllst;
 	if (!head)
 		return ;
 	while (head)
@@ -27,5 +27,5 @@ void	ft_dllstclear(t_dllist **lst, void (*del)(void *))
 		(*del)(tmp->content);
 		free(tmp);
 	}
-	*lst = NULL;
+	*dllst = NULL;
 }

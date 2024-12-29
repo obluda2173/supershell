@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:59:08 by erian             #+#    #+#             */
-/*   Updated: 2024/12/28 18:22:07 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/29 13:09:00 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void	init(t_data **data, char **ep)
 	if (!*data)
 		return ;
 	(*data)->ep = NULL;
-	(*data)->ep = 0;
 	(*data)->tokens = NULL;
 	(*data)->not_exit = true;
 
@@ -33,7 +32,7 @@ void	init(t_data **data, char **ep)
 		new_node = ft_lstnew(*ep);
 		if (!new_node)
 		{
-			//free_all(data);
+			free_all(data);
 			return ;
 		}
 		last_node = ft_lstlast((*data)->ep);
@@ -58,11 +57,6 @@ char	*meeting_line(t_data **data)
 	start = (*data)->ep;
 	line = NULL;
 	result = NULL;
-	if (!(*data)->line)
-		return 0;
-		// free((*data)->line);
-	(*data)->line = NULL; 
-	
 	while (start)
 	{
 		if (ft_strncmp(start->content, "LOGNAME=", 8) == 0)
@@ -145,10 +139,10 @@ int	main(int ac, char **av, char **ep)
 			parse(&data);
 			execute(&data);
 		}
-		
+
 		free(data->line);
 		data->line = NULL;
 	}
-	//free_all(&data);
+	free_all(&data);
 	return (0);
 }

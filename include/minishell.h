@@ -15,13 +15,6 @@
 /* structures                                                               * */
 /* ************************************************************************** */
 
-/* //structure for environment */
-/* typedef struct	s_ep */
-/* { */
-/* 	char			*value; */
-/* 	struct s_ep		*next; */
-/* }				t_ep; */
-
 //structure for main data
 typedef struct	s_data
 {
@@ -51,8 +44,8 @@ void	skip_spaces(char *line, int *i);
 /* ************************************************************************** */
 
 // free.c
-//void	free_tokens(t_dllist *tokens);
-//void	free_all(t_data **data);
+
+void	free_all(t_data **data);
 
 
 #endif

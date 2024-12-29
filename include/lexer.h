@@ -34,6 +34,6 @@ typedef struct s_token
 }					t_token;
 
 t_token	*get_next_token(t_line_container *lc);
-void free_token(t_token *t);
+void free_token(void *content);
 
 #endif
