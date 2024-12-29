@@ -70,37 +70,37 @@ INSTANTIATE_TEST_SUITE_P(
 						}},
 					TestTokenizeParams{
 						"cd", {
-							new_token("cd", CMD),
+							new_token("cd", BUILTIN),
 							new_token(NULL, END_OF_FILE),
 						}},
 					TestTokenizeParams{
 						"ls | wc", {
-							new_token("ls", CMD),
+							new_token("ls", BUILTIN),
 							new_token("|", PIPE),
-							new_token("wc", CMD),
+							new_token("wc", WORD),
 							new_token(NULL, END_OF_FILE),
 						}},
 					TestTokenizeParams{
 						"ls -a -l | wc -l", {
-							new_token("ls", CMD),							new_token("ls", CMD),
-							new_token("-a", ARG),
-							new_token("-l", ARG),
+							new_token("ls", BUILTIN),
+							new_token("-a", WORD),
+							new_token("-l", WORD),
 							new_token("|", PIPE),
-							new_token("wc", CMD),
-							new_token("-l", ARG),
+							new_token("wc", WORD),
+							new_token("-l", WORD),
 							new_token(NULL, END_OF_FILE),
 						}},
 					TestTokenizeParams{
 						"> test.txt", {
-							new_token(">", REDIRECT_OUT),							new_token("ls", CMD),
-							new_token("test.txt", ARG),
+							new_token(">", REDIRECT_OUT),
+							new_token("test.txt", WORD),
 							new_token(NULL, END_OF_FILE),
 						}},
 					TestTokenizeParams{
 						"echo  $PATH", {
-							new_token("echo", CMD),							new_token("ls", CMD),
+							new_token("echo", BUILTIN),
 							new_token("$", DOLLAR),
-							new_token("PATH", ARG)
+							new_token("PATH", WORD),
 							new_token(NULL, END_OF_FILE),
 						}}
 		)
