@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2024/12/29 16:47:59 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/29 17:01:18 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,19 @@ static char	*extract_word(t_line_container *lc)
 	return (word);
 }
 
+bool	is_builtin(char *str)
+{
+	if ((ft_strncmp(str, "echo", 4) == 0 && ft_strlen(str) == 4) || 
+		(ft_strncmp(str, "cd", 2) == 0 && ft_strlen(str) == 2) || 
+		(ft_strncmp(str, "pwd", 3) == 0 && ft_strlen(str) == 3)|| 
+		(ft_strncmp(str, "export", 6) == 0 && ft_strlen(str) == 6)|| 
+		(ft_strncmp(str, "unset", 5) == 0 && ft_strlen(str) == 5)|| 
+		(ft_strncmp(str, "env", 3) == 0 && ft_strlen(str) == 3)|| 
+		(ft_strncmp(str, "exit", 4) == 0 && ft_strlen(str) == 4))
+		return (true);
+	return (false);
+}
+
 //returns token of given content
 static token_type	assign_type(char *str)
 {
@@ -80,13 +93,7 @@ static token_type	assign_type(char *str)
 		return (DOUBLE_QUOTE);
 	else if (ft_strlen(str) > 0)
 	{
-		if (ft_strncmp(str, "echo", 4) == 0 || 
-			ft_strncmp(str, "cd", 2) == 0 || 
-			ft_strncmp(str, "pwd", 3) == 0 || 
-			ft_strncmp(str, "export", 6) == 0 || 
-			ft_strncmp(str, "unset", 5) == 0 || 
-			ft_strncmp(str, "env", 3) == 0 || 
-			ft_strncmp(str, "exit", 4) == 0)
+		if (is_builtin(str))
 			return (BUILTIN);
 		else
 			return (WORD);
