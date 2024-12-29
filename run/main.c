@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "minishell.h"
 
 //initialise data structure and extract environment
@@ -23,7 +24,6 @@ void	init(t_data **data, char **ep)
 	if (!*data)
 		return ;
 	(*data)->ep = NULL;
-	(*data)->tokens = NULL;
 	(*data)->not_exit = true;
 
 	//extract environment
@@ -133,12 +133,12 @@ int	main(int ac, char **av, char **ep)
 			data->not_exit = false;
 			continue ;
 		}
-		
+
+		t_dllist *tokens = tokenize(data->line);
+		ft_dllstclear(&tokens, free_token);
+
 		if (check_syntax(data->line))
-		{
-			parse(&data);
 			execute(&data);
-		}
 
 		free(data->line);
 		data->line = NULL;

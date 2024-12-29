@@ -1,6 +1,9 @@
 #ifndef LEXER_H
 # define LEXER_H
 
+#include "libft.h"
+# include <stdbool.h>
+# include <stdio.h>
 
 extern const char *token_strings[];
 
@@ -41,6 +44,19 @@ typedef struct s_token
 
 t_token	*get_next_token(t_line_container *lc);
 void free_token(void *content);
+
+/* ************************************************************************** */
+/* lexer                                                                   * */
+/* ************************************************************************** */
+
+// operators_separator.c
+char	*space_line(char *line);
+
+// lexer.c
+t_dllist *tokenize(char* line);
+
+// tokenize_1.c
+void	skip_spaces(char *line, int *i);
 
 // typedef enum {
 // 	EXPANSION, // $PATH

@@ -105,6 +105,5 @@ char	*space_line(char *line)
 			new_line[j++] = line[i++];
 	}
 	new_line[j] = '\0';
-	free(line);
 	return (new_line);
 }

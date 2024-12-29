@@ -12,14 +12,6 @@
 
 #include "minishell.h"
 
-void	free_token(void *content)
-{
-	t_token *token;
-
-	token = (t_token *)content;
-	free(token->content);
-	free(token);
-}
 
 void	free_ep(t_list **ep)
 {
@@ -40,10 +32,6 @@ void	free_all(t_data **data)
 {
 	if (!data || !*data)
 		return;
-
-	//free token doubly list
-	if ((*data)->tokens)
-		ft_dllstclear(&(*data)->tokens, free_token);
 
 	//free environment ponter list
 	if ((*data)->ep)
