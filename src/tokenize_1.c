@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "lexer.h"
 
 // Skips spaces in the input string
 void skip_spaces(char *line, int *i)
