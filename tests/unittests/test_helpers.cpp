@@ -19,3 +19,14 @@ t_dllist *create_token_dllist(std::vector<t_token> tokens) {
 	ft_dllstadd_back(&token_dllist, ft_dllstnew(t1));
 	return token_dllist;
 }
+
+t_test_script_node new_test_script_node(t_token token, t_node_type type, std::vector<std::string> args, int argument_count) {
+	return (t_test_script_node){token, type, args, argument_count};
+}
+
+void free_script_node(void *sn) {
+	t_script_node *node;
+	node = (t_script_node*)sn;
+	free(node->token.content);
+	free(node);
+}
