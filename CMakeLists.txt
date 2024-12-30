@@ -13,7 +13,7 @@ FetchContent_MakeAvailable(googletest)
 project(minishell)
 
 option(BUILD_TEST "Build tests" ON)
-option(BUILD_MINISHELL "Build minishell" ON)
+option(BUILD_MINISHELL "Build minishell" OFF)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -Wextra -fsanitize=address")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -fsanitize=address")

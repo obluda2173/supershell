@@ -1,10 +1,10 @@
 #include "parser.h"
 #include "libft.h"
 
-t_token *copy_token(t_token token) {
-	t_token *copy = (t_token*)malloc(sizeof(t_token));
-	copy->content = ft_strdup(token.content);
-	copy->type = token.type;
+t_token copy_token(t_token token) {
+	t_token copy;
+	copy.content = ft_strdup(token.content);
+	copy.type = token.type;
 	return copy;
 }
 
