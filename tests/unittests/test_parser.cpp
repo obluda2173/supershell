@@ -36,31 +36,55 @@ TEST_P(ParserTestSuite, ParserTest) {
 	ft_lstclear(&script, free_script_node);
 }
 
-t_argument new_argument(const char* literal) {
-	return (t_argument){(char*)literal};
-}
-
 INSTANTIATE_TEST_SUITE_P(
-	ParserTests,
-	ParserTestSuite,
+	ParserTests, ParserTestSuite,
 	testing::Values(
-		ParserTestParams {
-			{
+		ParserTestParams{{
 				new_token("echo", BUILTIN),
 				new_token(NULL, END_OF_FILE),
 			},
-			{
-				new_test_script_node(new_token("echo", BUILTIN), CMD_NODE, {}, 0)
-			}
-		},
-		ParserTestParams {
+						 {new_test_script_node(new_token("echo", BUILTIN),
+											   CMD_NODE, {}, 0)}},
+		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
 				new_token("file.txt", WORD),
 				new_token(NULL, END_OF_FILE),
 			},
+			{new_test_script_node(new_token("echo", BUILTIN), CMD_NODE,
+								  {new_argument("file.txt")}, 1)}},
+		ParserTestParams{
 			{
-				new_test_script_node(new_token("echo", BUILTIN), CMD_NODE, {new_argument("file.txt")}, 1)
-			}
-		}
+				new_token("echo", BUILTIN),
+				new_token("file1.txt", WORD),
+				new_token("file2.txt", WORD),
+				new_token(NULL, END_OF_FILE),
+			},
+			{new_test_script_node(new_token("echo", BUILTIN), CMD_NODE,
+								  {
+									  new_argument("file1.txt"),
+									  new_argument("file2.txt")
+								  }, 2)
+			}},
+		ParserTestParams{
+			{
+				new_token("wc", WORD),
+				new_token("-l", WORD),
+				new_token(NULL, END_OF_FILE),
+			},
+			{new_test_script_node(new_token("wc", WORD), CMD_NODE, {new_argument("-l"),}, 1)
+			}}
+		// ParserTestParams{
+		// 	{
+		// 		new_token("ls", BUILTIN),
+		// 		new_token("|", PIPE),
+		// 		new_token("wc", WORD),
+		// 		new_token(NULL, END_OF_FILE),
+		// 	},
+		// 	{new_test_script_node(new_token("echo", BUILTIN), CMD_NODE,
+		// 						  {
+		// 							  new_argument("file1.txt"),
+		// 							  new_argument("file2.txt")
+		// 						  }, 1)
+		// 	}}
 		));

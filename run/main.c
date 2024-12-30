@@ -12,6 +12,8 @@
 
 #include "libft.h"
 #include "minishell.h"
+#include "parser.h"
+#include "executor.h"
 
 //initialise data structure and extract environment
 void	init(t_data **data, char **ep)
@@ -75,11 +77,11 @@ char	*meeting_line(t_data **data)
 }
 
 //execution
-void	execute(t_data **data)
-{
-	(void)data;
-	//todo
-}
+/* void	execute(t_data **data) */
+/* { */
+/* 	(void)data; */
+/* 	//todo */
+/* } */
 
 //check syntax
 bool	check_syntax(char *line)
@@ -135,10 +137,10 @@ int	main(int ac, char **av, char **ep)
 		}
 
 		t_dllist *tokens = tokenize(data->line);
+		t_list *script = parse(tokens);
 		ft_dllstclear(&tokens, free_token);
-
-		if (check_syntax(data->line))
-			execute(&data);
+		execute(script);
+		ft_lstclear(&script, free_script_node);
 
 		free(data->line);
 		data->line = NULL;

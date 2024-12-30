@@ -31,17 +31,8 @@ const char *token_strings[] = {
     "INV"
 };
 
-void	free_token(void *content)
-{
-	t_token *token;
-
-	token = (t_token *)content;
-	free(token->content);
-	free(token);
-}
-
 //function to print the content of doubly list of tokens
-static void print_tokens(t_dllist *head)
+void print_tokens(t_dllist *head)
 {
 	t_dllist *current;
 	t_token *token;
@@ -68,6 +59,16 @@ static void print_tokens(t_dllist *head)
 		}
 		current = current->next;
 	}
+}
+
+
+void	free_token(void *content)
+{
+	t_token *token;
+
+	token = (t_token *)content;
+	free(token->content);
+	free(token);
 }
 
 t_dllist *tokenize_line(const char *line)
@@ -103,13 +104,12 @@ t_dllist *tokenize_line(const char *line)
 t_dllist *tokenize(char* line)
 {
 	line = space_line(line);
-	printf("%s\n", line);
 	if (!line)
 		return NULL;
 
 	t_dllist *tokens = tokenize_line(line);
 	free(line);
 
-	print_tokens(tokens);
+	/* print_tokens(tokens); */
 	return tokens;
 }

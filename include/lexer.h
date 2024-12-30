@@ -58,6 +58,7 @@ t_dllist *tokenize(char* line);
 // tokenize_1.c
 void	skip_spaces(char *line, int *i);
 
+void print_tokens(t_dllist *head);
 // typedef enum {
 // 	EXPANSION, // $PATH
 // 	LITERAL,

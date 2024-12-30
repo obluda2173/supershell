@@ -21,6 +21,7 @@ typedef struct s_script_node {
 
 t_list *parse(t_dllist *tokens);
 t_token copy_token(t_token token);
+void free_script_node(void *sn);
 
 // typedef enum {
 // 	EXPANSION, // $PATH
