@@ -15,6 +15,8 @@ t_list *parse(t_dllist *tokens) {
 		return NULL;
 	sn->token = copy_token(*(t_token*)tokens->content);
 	sn->type = CMD_NODE;
+	sn->arguments = NULL;
+	sn->argument_count = 0;
 	t_list *script = ft_lstnew(sn);
 	return script;
 }

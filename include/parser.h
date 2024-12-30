@@ -11,6 +11,8 @@ typedef enum {
 typedef struct s_script_node {
 	t_token token;
 	t_node_type type;
+	char** arguments;
+	int argument_count;
 } t_script_node;
 
 t_list *parse(t_dllist *tokens);
