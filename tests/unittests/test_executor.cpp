@@ -1,7 +1,8 @@
 #include "test_main.hpp"
+#include <gtest/gtest.h>
+#include <vector>
 
 t_list *create_script(std::vector<t_argument> args) {
-	(void)args;
 	t_script_node *sn = (t_script_node*)malloc(sizeof(t_script_node));
 	t_list *script = NULL;
 	sn->token = new_token(ft_strdup("echo"), BUILTIN);
@@ -23,31 +24,30 @@ t_list *create_script(std::vector<t_argument> args) {
 	return script;
 }
 
+struct ExecutorTestParams {
+	std::vector<t_argument> args;
+	std::string want_output;
+	int want_return;
+};
 
-TEST(ExecutorTests, FirstTest) {
-	t_list *script = NULL;
-	std::vector<t_argument> args = {};
-	script = create_script(args);
+class ExecutorTestSuite : public::testing::TestWithParam<ExecutorTestParams>{};
+
+TEST_P(ExecutorTestSuite, ExecutorTests) {
+	ExecutorTestParams params = GetParam();
+	t_list *script = create_script(params.args);
 
 	testing::internal::CaptureStdout();
-	EXPECT_EQ(0, execute(script));
+	EXPECT_EQ(params.want_return, execute(script));
 	std::string got = testing::internal::GetCapturedStdout();
-	EXPECT_STREQ("\n", got.c_str());
-	ft_lstclear(&script, free_script_node);
-
-	args = {new_argument("Hello")};
-	script = create_script(args);
-	testing::internal::CaptureStdout();
-	EXPECT_EQ(0, execute(script));
-	got = testing::internal::GetCapturedStdout();
-	EXPECT_STREQ("Hello\n", got.c_str());
-	ft_lstclear(&script, free_script_node);
-
-	args = {new_argument("Hello"), new_argument("World!")};
-	script = create_script(args);
-	testing::internal::CaptureStdout();
-	EXPECT_EQ(0, execute(script));
-	got = testing::internal::GetCapturedStdout();
-	EXPECT_STREQ("Hello World!\n", got.c_str());
+	EXPECT_STREQ(params.want_output.c_str(), got.c_str());
 	ft_lstclear(&script, free_script_node);
 }
+
+
+INSTANTIATE_TEST_SUITE_P(
+	ExecutorTests, ExecutorTestSuite,
+	testing::Values(
+		ExecutorTestParams{{}, "\n", 0},
+		ExecutorTestParams{{new_argument("Hello")}, "Hello\n", 0},
+		ExecutorTestParams{{new_argument("Hello"), new_argument("World")}, "Hello World\n", 0}
+		));
