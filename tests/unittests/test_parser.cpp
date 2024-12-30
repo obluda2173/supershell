@@ -36,7 +36,7 @@ TEST_P(ParserTestSuite, ParserTest) {
 }
 
 INSTANTIATE_TEST_SUITE_P(
-    ParserTests,
+	ParserTests,
 	ParserTestSuite,
 	testing::Values(
 		ParserTestParams {
@@ -47,16 +47,15 @@ INSTANTIATE_TEST_SUITE_P(
 			{
 				new_test_script_node(new_token("echo", BUILTIN), CMD_NODE, {""}, 0)
 			}
+		},
+		ParserTestParams {
+			{
+				new_token("echo", BUILTIN),
+				new_token("file.txt", WORD),
+				new_token(NULL, END_OF_FILE),
+			},
+			{
+				new_test_script_node(new_token("echo", BUILTIN), CMD_NODE, {"file.txt"}, 1)
+			}
 		}
-		// ParserTestParams {
-		// 	{
-		// 		new_token("echo", BUILTIN),
-		// 		new_token(NULL, END_OF_FILE),
-		// 	},
-		// 	{
-		// 		new_script_node(new_token("echo", BUILTIN))
-		// 	}
-		// }
-
-
 		));

@@ -27,6 +27,11 @@ t_test_script_node new_test_script_node(t_token token, t_node_type type, std::ve
 void free_script_node(void *sn) {
 	t_script_node *node;
 	node = (t_script_node*)sn;
+
+	for (int i = 0; i < node->argument_count; i++) {
+		free(node->arguments[i]);
+	}
+	free(node->arguments);
 	free(node->token.content);
 	free(node);
 }
