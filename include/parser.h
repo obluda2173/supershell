@@ -4,8 +4,13 @@
 #include "lexer.h"
 #include "libft.h"
 
+typedef enum {
+	CMD_NODE
+} t_node_type;
+
 typedef struct s_script_node {
 	t_token token;
+	t_node_type type;
 } t_script_node;
 
 t_list *parse(t_dllist *tokens);

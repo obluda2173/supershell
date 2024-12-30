@@ -16,8 +16,8 @@ t_dllist *create_token_dllist(std::vector<t_token> tokens) {
 	return token_dllist;
 }
 
-t_script_node new_script_node(t_token token) {
-	return (t_script_node){token};
+t_script_node new_script_node(t_token token, t_node_type type) {
+	return (t_script_node){token, type};
 }
 
 void free_script_node(void *sn) {
@@ -39,27 +39,45 @@ TEST_P(ParserTestSuite, ParserTest) {
 
 	t_dllist *tokens = create_token_dllist(params.token_vec);
 	t_list *script = parse(tokens);
-
-	ASSERT_NE(script, nullptr);
 	t_list *head = script;
 	t_script_node cur_node;
-	cur_node = *(t_script_node*)head->content;
-	t_script_node want_node = params.sn_vec[0];
-	EXPECT_STREQ(want_node.token.content, cur_node.token.content);
-	EXPECT_EQ(want_node.token.type, cur_node.token.type);
 
+	ASSERT_NE(script, nullptr);
+	for (size_t i = 0; i < params.sn_vec.size() ; i++ ) {
+		cur_node = *(t_script_node*)head->content;
+		EXPECT_STREQ(params.sn_vec[i].token.content, cur_node.token.content);
+		EXPECT_EQ(params.sn_vec[i].token.type, cur_node.token.type);
+		EXPECT_EQ(params.sn_vec[i].type, cur_node.type);
+		head = head->next;
+	}
+	ASSERT_EQ(head, nullptr);
 	ft_dllstclear(&tokens, free_token);
 	ft_lstclear(&script, free_script_node);
 }
 
 
-INSTANTIATE_TEST_SUITE_P(ParserTests, ParserTestSuite,
-						 testing::Values(ParserTestParams{
-								 {
-									 new_token("echo", BUILTIN),
-									 new_token(NULL, END_OF_FILE),
-								 },
-								 {
-									 new_script_node(new_token("echo", BUILTIN))
-								 }
-							 }));
+INSTANTIATE_TEST_SUITE_P(
+    ParserTests,
+	ParserTestSuite,
+	testing::Values(
+		ParserTestParams {
+			{
+				new_token("echo", BUILTIN),
+				new_token(NULL, END_OF_FILE),
+			},
+			{
+				new_script_node(new_token("echo", BUILTIN), CMD_NODE)
+			}
+		}
+		// ParserTestParams {
+		// 	{
+		// 		new_token("echo", BUILTIN),
+		// 		new_token(NULL, END_OF_FILE),
+		// 	},
+		// 	{
+		// 		new_script_node(new_token("echo", BUILTIN))
+		// 	}
+		// }
+
+
+		));
