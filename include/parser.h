@@ -8,10 +8,14 @@ typedef enum {
 	CMD_NODE
 } t_node_type;
 
+typedef struct s_argument {
+	char* literal;
+} t_argument;
+
 typedef struct s_script_node {
 	t_token token;
 	t_node_type type;
-	char** arguments;
+	t_argument** arguments;
 	int argument_count;
 } t_script_node;
 

@@ -1,5 +1,4 @@
 #include "test_main.hpp"
-#include <gtest/gtest.h>
 
 struct ParserTestParams {
 	std::vector<t_token> token_vec;
@@ -13,8 +12,10 @@ void compare_script_node(t_test_script_node want, t_script_node got) {
 	EXPECT_EQ(want.token.type, got.token.type);
 	EXPECT_EQ(want.type, got.type);
 	EXPECT_EQ(want.argument_count, got.argument_count);
+	if (want.argument_count == 0)
+		EXPECT_EQ(NULL,got.arguments);
 	for (int j = 0; j < want.argument_count; j++)
-		EXPECT_STREQ(want.arguments[j].c_str(), got.arguments[j]);
+		EXPECT_STREQ(want.arguments[j].literal, got.arguments[j]->literal);
 }
 
 TEST_P(ParserTestSuite, ParserTest) {
@@ -35,6 +36,10 @@ TEST_P(ParserTestSuite, ParserTest) {
 	ft_lstclear(&script, free_script_node);
 }
 
+t_argument new_argument(const char* literal) {
+	return (t_argument){(char*)literal};
+}
+
 INSTANTIATE_TEST_SUITE_P(
 	ParserTests,
 	ParserTestSuite,
@@ -45,7 +50,7 @@ INSTANTIATE_TEST_SUITE_P(
 				new_token(NULL, END_OF_FILE),
 			},
 			{
-				new_test_script_node(new_token("echo", BUILTIN), CMD_NODE, {""}, 0)
+				new_test_script_node(new_token("echo", BUILTIN), CMD_NODE, {}, 0)
 			}
 		},
 		ParserTestParams {
@@ -55,7 +60,7 @@ INSTANTIATE_TEST_SUITE_P(
 				new_token(NULL, END_OF_FILE),
 			},
 			{
-				new_test_script_node(new_token("echo", BUILTIN), CMD_NODE, {"file.txt"}, 1)
+				new_test_script_node(new_token("echo", BUILTIN), CMD_NODE, {new_argument("file.txt")}, 1)
 			}
 		}
 		));

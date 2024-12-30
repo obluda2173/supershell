@@ -30,8 +30,9 @@ t_list *parse(t_dllist *tokens) {
 		t_token* cur = (t_token*)(head->content);
 		if (cur->type == END_OF_FILE)
 			return script;
-		sn->arguments = (char**)malloc(sizeof(char*));
-		sn->arguments[0] = ft_strdup(cur->content);
+		sn->arguments = (t_argument**)malloc(sizeof(t_argument*));
+		sn->arguments[0] = (t_argument*)malloc(sizeof(t_argument));
+		sn->arguments[0]->literal = ft_strdup(cur->content);
 		sn->argument_count = 1;
 		head = head->next;
 	}

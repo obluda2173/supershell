@@ -20,7 +20,7 @@ t_dllist *create_token_dllist(std::vector<t_token> tokens) {
 	return token_dllist;
 }
 
-t_test_script_node new_test_script_node(t_token token, t_node_type type, std::vector<std::string> args, int argument_count) {
+t_test_script_node new_test_script_node(t_token token, t_node_type type, std::vector<t_argument> args, int argument_count) {
 	return (t_test_script_node){token, type, args, argument_count};
 }
 
@@ -29,6 +29,7 @@ void free_script_node(void *sn) {
 	node = (t_script_node*)sn;
 
 	for (int i = 0; i < node->argument_count; i++) {
+		free(node->arguments[i]->literal);
 		free(node->arguments[i]);
 	}
 	free(node->arguments);
