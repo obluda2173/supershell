@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2024/12/29 17:01:18 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/31 17:44:05 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,7 @@ static char	*extract_word(t_line_container *lc)
 	len = 0;
 	if (lc->line[lc->pos] == '\'' || lc->line[lc->pos] == '\"' ||
 		lc->line[lc->pos] == '<' || lc->line[lc->pos] == '>' ||
-		lc->line[lc->pos] == '|' || lc->line[lc->pos] == '$' ||
-		lc->line[lc->pos] == '&' || lc->line[lc->pos] == '*')
+		lc->line[lc->pos] == '|')
 	{
 		if ((lc->line[lc->pos] == '<' && lc->line[lc->pos + 1] == '<') ||
 			(lc->line[lc->pos] == '>' && lc->line[lc->pos + 1] == '>') ||
@@ -41,15 +40,20 @@ static char	*extract_word(t_line_container *lc)
 		else
 			lc->pos++;
 	}
+
 	else
+	{
 		while (lc->line[lc->pos] && lc->line[lc->pos] != ' ' &&
 				lc->line[lc->pos] != '\'' && lc->line[lc->pos] != '\"' &&
 				lc->line[lc->pos] != '<' && lc->line[lc->pos] != '>' &&
 				lc->line[lc->pos] != '|')
 			lc->pos++;
+	}
+
 	len = lc->pos - start;
 	word = malloc(len + 1);
 	ft_strlcpy(word, lc->line + start, len + 1);
+	printf("%s\n", word);
 	return (word);
 }
 
@@ -69,6 +73,7 @@ bool	is_builtin(char *str)
 //returns token of given content
 static token_type	assign_type(char *str)
 {
+	printf("here is assign type: %s\n", str);
 	if (ft_strncmp(str, "||", 2) == 0)
 		return (OR);
 	else if (ft_strncmp(str, "&&", 2) == 0)
@@ -77,7 +82,7 @@ static token_type	assign_type(char *str)
 		return (PIPE);
 	else if (ft_strncmp(str, "$", 1) == 0)
 		return (DOLLAR);
-	else if (ft_strncmp(str, "*", 1) == 0)
+	else if (ft_strchr(str, '*') != 0)
 		return (WILDCARD);
 	else if (ft_strncmp(str, "<<", 2) == 0)
 		return (HERE_DOC);
@@ -107,10 +112,11 @@ t_token	*get_next_token(t_line_container *lc)
 {
 	t_token	*token;
 	char	*word;
+	char	*if_dollar;
 
 	if (!lc->line)
 		return NULL;
-
+	
 	skip_spaces((char *)lc->line, &(lc->pos));
 
 	if (lc->line[lc->pos] == '\0')
@@ -127,8 +133,15 @@ t_token	*get_next_token(t_line_container *lc)
 
 	token = malloc(sizeof(t_token));
 	
-	token->content = word;
 	token->type = assign_type(word);
+	if (token->type == DOLLAR)
+	{
+		if_dollar = ft_substr(word, 1, ft_strlen(word));
+		token->content = if_dollar;
+		free(word);
+	}
+	else
+		token->content = word;
 
 	return (token);
 }

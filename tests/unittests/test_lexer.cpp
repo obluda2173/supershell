@@ -130,9 +130,9 @@ INSTANTIATE_TEST_SUITE_P(
 					TestTokenizeParams{
 						"echo \"string1 $PATH string2\"", {
 							new_token("echo", BUILTIN),
-							new_token("string1", DOUBLE_QUOTE),
+							new_token("string1 ", DOUBLE_QUOTE),
 							new_token("PATH", DOLLAR),
-							new_token("string2", DOUBLE_QUOTE),
+							new_token(" string2", DOUBLE_QUOTE),
 							new_token(NULL, END_OF_FILE),
 						}},
 					TestTokenizeParams{

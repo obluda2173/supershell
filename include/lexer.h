@@ -46,7 +46,7 @@ t_token	*get_next_token(t_line_container *lc);
 void free_token(void *content);
 
 /* ************************************************************************** */
-/* lexer                                                                   * */
+/* lexer                                                                    * */
 /* ************************************************************************** */
 
 // operators_separator.c
