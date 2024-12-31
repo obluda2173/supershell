@@ -24,6 +24,6 @@ t_test_script_node new_test_script_node(t_token token, t_node_type type, std::ve
 	return (t_test_script_node){token, type, args, argument_count};
 }
 
-t_argument new_argument(const char* literal) {
-	return (t_argument){(char*)literal};
+t_argument new_argument(const char* literal, t_argument_type type) {
+	return (t_argument){(char*)literal, type};
 }

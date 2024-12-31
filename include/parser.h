@@ -8,8 +8,16 @@ typedef enum {
 	CMD_NODE
 } t_node_type;
 
+typedef enum {
+	LITERAL,
+	ENV_EXP,
+	WILDCARD_EXP,
+	EXIT_STATUS_EXP
+} t_argument_type;
+
 typedef struct s_argument {
 	char* literal;
+	t_argument_type type;
 } t_argument;
 
 typedef struct s_script_node {

@@ -50,6 +50,16 @@ t_list *parse(t_dllist *tokens) {
 			return script;
 		sn->arguments[count] = (t_argument*)malloc(sizeof(t_argument));
 		sn->arguments[count]->literal = ft_strdup(cur.content);
+		if (cur.type == WORD || cur.type == DOUBLE_QUOTE || cur.type == SINGLE_QUOTE)
+			sn->arguments[count]->type = LITERAL;
+		if (cur.type == DOLLAR) {
+			sn->arguments[count]->type = ENV_EXP;
+			if (!ft_strncmp(sn->arguments[count]->literal, "?", 1))
+				sn->arguments[count]->type = EXIT_STATUS_EXP;
+		}
+		if (cur.type == WILDCARD)
+			sn->arguments[count]->type = WILDCARD_EXP;
+
 		head = head->next;
 		count++;
 	}

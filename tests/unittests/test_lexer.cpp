@@ -89,10 +89,48 @@ INSTANTIATE_TEST_SUITE_P(
 							new_token(NULL, END_OF_FILE),
 						}},
 					TestTokenizeParams{
-						"echo  $PATH", {
+						"echo  $ PATH", {
 							new_token("echo", BUILTIN),
 							new_token("$", DOLLAR),
 							new_token("PATH", WORD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"echo  $PATH", {
+							new_token("echo", BUILTIN),
+							new_token("PATH", DOLLAR),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"echo $?", {
+							new_token("echo", BUILTIN),
+							new_token("?", DOLLAR),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"echo dir1/dir2/*.c", {
+							new_token("echo", BUILTIN),
+							new_token("dir1/dir2/*.c", WILDCARD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"echo \"this is a double quoted string\"", {
+							new_token("echo", BUILTIN),
+							new_token("this is a double quoted string", DOUBLE_QUOTE),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"echo \"string1 $PATH string2\"", {
+							new_token("echo", BUILTIN),
+							new_token("string1 ", DOUBLE_QUOTE),
+							new_token("PATH", DOLLAR),
+							new_token(" string2", DOUBLE_QUOTE),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"echo \'string1 $PATH string2\'", {
+							new_token("echo", BUILTIN),
+							new_token("string1 $PATH string2", SINGLE_QUOTE),
 							new_token(NULL, END_OF_FILE),
 						}},
 					TestTokenizeParams{

@@ -46,6 +46,6 @@ INSTANTIATE_TEST_SUITE_P(
 	ExecutorTests, ExecutorTestSuite,
 	testing::Values(
 		ExecutorTestParams{{}, "\n", 0},
-		ExecutorTestParams{{new_argument("Hello")}, "Hello\n", 0},
-		ExecutorTestParams{{new_argument("Hello"), new_argument("World")}, "Hello World\n", 0}
+		ExecutorTestParams{{new_argument("Hello", LITERAL)}, "Hello\n", 0},
+		ExecutorTestParams{{new_argument("Hello", LITERAL), new_argument("World", LITERAL)}, "Hello World\n", 0}
 		));
