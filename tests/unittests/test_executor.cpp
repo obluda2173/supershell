@@ -1,6 +1,4 @@
 #include "test_main.hpp"
-#include <gtest/gtest.h>
-#include <vector>
 
 t_list *create_script(std::vector<t_argument> args) {
 	t_script_node *sn = (t_script_node*)malloc(sizeof(t_script_node));

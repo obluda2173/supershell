@@ -1,7 +1,6 @@
 #include "executor.h"
 #include "libft.h"
 #include "parser.h"
-#include <unistd.h>
 
 int execute(t_list *script) {
 	t_script_node sn = *(t_script_node*)script->content;
