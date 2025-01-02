@@ -3,21 +3,15 @@
 t_list *create_script(std::vector<t_argument> args) {
 	t_script_node *sn = (t_script_node*)malloc(sizeof(t_script_node));
 	t_list *script = NULL;
-	sn->token = new_token(ft_strdup("echo"), BUILTIN);
+	sn->cmd_token = new_token(ft_strdup("echo"), BUILTIN);
 	sn->type = CMD_NODE;
-	sn->argument_count = (int)args.size();
-	if (sn->argument_count == 0)
-		sn->arguments = NULL;
-	else
-		sn->arguments = (t_argument**)malloc(sizeof(t_argument*) * sn->argument_count);
-
-	int count = 0;
-	while (count < sn->argument_count) {
-		sn->arguments[count] = (t_argument*)malloc(sizeof(t_argument));
-		sn->arguments[count]->literal = ft_strdup(args[count].literal);
-		count++;
+	sn->arguments = NULL;
+	sn->redirections = NULL;
+	for (auto want_arg : args) {
+		t_argument *arg = (t_argument*)malloc(sizeof(t_argument));
+		arg->literal = ft_strdup(want_arg.literal);
+		ft_lstadd_back(&sn->arguments, ft_lstnew(arg));
 	}
-
 	ft_lstadd_back(&script, ft_lstnew(sn));
 	return script;
 }

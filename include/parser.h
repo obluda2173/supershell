@@ -30,10 +30,9 @@ typedef struct s_redirection {
 } t_redirection;
 
 typedef struct s_script_node {
-	t_token token;
+	t_token cmd_token;
 	t_node_type type;
-	t_argument** arguments;
-	int argument_count;
+	t_list* arguments;
 	t_list *redirections;
 } t_script_node;
 
