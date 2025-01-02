@@ -40,70 +40,92 @@ t_token	copy_token(t_token token)
 	return (copy);
 }
 
-void init_script_node(t_script_node *sn, t_token t) {
+void	init_script_node(t_script_node *sn, t_token t)
+{
 	sn->cmd_token = copy_token(t);
 	sn->type = CMD_NODE;
 	sn->arguments = NULL;
 	sn->redirections = NULL;
 }
 
-t_redirection *extract_redirection(t_dllist *tokens) {
-	t_token cur = *(t_token *)(tokens->content);
-	t_redirection *r = (t_redirection *)malloc(sizeof(t_redirection));
+t_redirection	*extract_redirection(t_dllist *tokens)
+{
+	t_token			cur;
+	t_redirection	*r;
+
+	cur = *(t_token *)(tokens->content);
+	r = (t_redirection *)malloc(sizeof(t_redirection));
 	if (!r)
 		return (NULL);
 	r->type = OUT;
 	tokens = tokens->next;
 	cur = *(t_token *)(tokens->content);
 	r->file = ft_strdup(cur.content);
-	return r;
+	return (r);
 }
 
-t_list	*parse(t_dllist *tokens)
+static t_list	*create_and_add_redirection(t_list **script, t_dllist *head,
+		t_script_node *sn)
 {
-	t_script_node	*sn;
-	t_dllist		*head;
-	t_list			*script;
-	t_token			cur;
 	t_redirection	*r;
-	t_argument		*arg;
 	t_list			*tmp;
 
-	head = tokens;
-	script = NULL;
-	cur = (*(t_token *)head->content);
+	r = extract_redirection(head);
+	if (!r)
+	{
+		ft_lstclear(script, free_script_node);
+		return (NULL);
+	}
+	tmp = ft_lstnew(r);
+	if (!tmp)
+	{
+		free_redirection(r);
+		ft_lstclear(script, free_script_node);
+		return (NULL);
+	}
+	ft_lstadd_back(&sn->redirections, tmp);
+	return (tmp);
+}
 
+static t_list	*create_and_add_script_node(t_list **script, t_dllist *tokens)
+{
+	t_token			cur;
+	t_script_node	*sn;
+
+	cur = (*(t_token *)tokens->content);
 	sn = (t_script_node *)malloc(sizeof(t_script_node));
 	if (!sn)
 		return (NULL);
 	init_script_node(sn, cur);
-
-	script = ft_lstnew(sn);
+	*script = ft_lstnew(sn);
 	if (!script)
 	{
 		free_script_node(sn);
 		return (NULL);
 	}
+	return (*script);
+}
 
+t_list	*parse(t_dllist *tokens)
+{
+	t_dllist	*head;
+	t_list		*script;
+	t_token		cur;
+	t_argument	*arg;
+	t_list		*tmp;
+
+	head = tokens;
+	script = NULL;
+	if (!create_and_add_script_node(&script, tokens))
+		return (NULL);
 	head = head->next;
 	while (head)
 	{
 		cur = *(t_token *)(head->content);
 		if (cur.type == REDIRECT_OUT)
 		{
-			r = extract_redirection(head);
-			if (!r)
-			{
-				ft_lstclear(&script, free_script_node);
-				return (NULL);
-			}
-			tmp = ft_lstnew(r);
-			if (!tmp) {
-				free_redirection(r);
-				ft_lstclear(&script, free_script_node);
-				return NULL;
-			}
-			ft_lstadd_back(&sn->redirections, tmp);
+			if (!create_and_add_redirection(&script, head, script->content))
+				return (NULL); // Error is already handled in the helper
 			head = head->next->next;
 			continue ;
 		}
@@ -133,7 +155,7 @@ t_list	*parse(t_dllist *tokens)
 			ft_lstclear(&script, free_script_node);
 			return (NULL);
 		}
-		ft_lstadd_back(&sn->arguments, tmp);
+		ft_lstadd_back(&((t_script_node *)(script->content))->arguments, tmp);
 		head = head->next;
 	}
 	return (script);
