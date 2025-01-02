@@ -83,6 +83,8 @@ t_list	*parse(t_dllist *tokens)
 	t_token	cur;
 
 	script = NULL;
+	if (!tokens)
+		return script;
 	if (!create_and_add_script_node(&script, tokens))
 		return (NULL);
 	tokens = tokens->next;

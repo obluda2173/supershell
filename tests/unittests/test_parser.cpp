@@ -37,8 +37,16 @@ TEST_P(ParserTestSuite, ParserTest) {
 	std::vector<t_test_script_node> want_nodes = params.sn_vec;
 
 	t_dllist *tokens = create_token_dllist(params.token_vec);
+	if (params.token_vec.size() == 0)
+		ASSERT_EQ(nullptr, tokens);
+
 	t_list *script = parse(tokens);
 	t_list *head = script;
+
+	if (!tokens) {
+		ASSERT_EQ(nullptr, script);
+		return;
+	}
 
 	ASSERT_NE(script, nullptr);
 	for (t_test_script_node want_node : want_nodes) {
@@ -54,6 +62,7 @@ TEST_P(ParserTestSuite, ParserTest) {
 INSTANTIATE_TEST_SUITE_P(
 	ParserTests, ParserTestSuite,
 	testing::Values(
+		ParserTestParams{{}, {}},
 		ParserTestParams{{
 				new_token("echo", BUILTIN),
 				new_token(NULL, END_OF_FILE),
