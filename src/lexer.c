@@ -70,16 +70,6 @@ void print_tokens(t_dllist *head)
 	}
 }
 
-
-void	free_token(void *content)
-{
-	t_token *token;
-
-	token = (t_token *)content;
-	free(token->content);
-	free(token);
-}
-
 t_dllist *tokenize_line(const char *line)
 {
 	t_line_container lc = {line, 0};

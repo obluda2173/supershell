@@ -18,6 +18,12 @@ void compare_script_node(t_test_script_node want, t_script_node got) {
 		EXPECT_STREQ(want.arguments[j].literal, got.arguments[j]->literal);
 		EXPECT_EQ(want.arguments[j].type, got.arguments[j]->type);
         }
+	if (want.redirects.size() > 0) {
+		ASSERT_NE(got.redirections, nullptr);
+		t_redirection r = *(t_redirection*)got.redirections->content;
+		EXPECT_EQ(OUT, r.type);
+		EXPECT_STREQ("output1", r.file);
+	}
 }
 
 TEST_P(ParserTestSuite, ParserTest) {
@@ -33,6 +39,7 @@ TEST_P(ParserTestSuite, ParserTest) {
 		compare_script_node(want_node, *(t_script_node*)head->content);
 		head=head->next;
 	}
+
 	ASSERT_EQ(head, nullptr);
 	ft_dllstclear(&tokens, free_token);
 	ft_lstclear(&script, free_script_node);
@@ -46,7 +53,7 @@ INSTANTIATE_TEST_SUITE_P(
 				new_token(NULL, END_OF_FILE),
 			},
 						 {new_test_script_node(new_token("echo", BUILTIN),
-											   CMD_NODE, {}, 0)}},
+											   CMD_NODE, {}, 0, {})}},
 		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
@@ -57,7 +64,7 @@ INSTANTIATE_TEST_SUITE_P(
 								  {
 									  new_argument("file.txt", LITERAL),
 								  },
-								  1)}},
+								  1, {})}},
 		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
@@ -68,7 +75,7 @@ INSTANTIATE_TEST_SUITE_P(
 			{new_test_script_node(new_token("echo", BUILTIN), CMD_NODE,
 								  {new_argument("file1.txt", LITERAL),
 								   new_argument("file2.txt", LITERAL)},
-								  2)}},
+								  2, {})}},
 		ParserTestParams{{
 				new_token("wc", WORD),
 				new_token("-l", WORD),
@@ -78,7 +85,7 @@ INSTANTIATE_TEST_SUITE_P(
 											   {
 												   new_argument("-l", LITERAL),
 											   },
-											   1)}},
+											   1, {})}},
 		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
@@ -89,7 +96,7 @@ INSTANTIATE_TEST_SUITE_P(
 								  {
 									  new_argument("PATH", ENV_EXP),
 								  },
-								  1)}},
+								  1, {})}},
 		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
@@ -100,7 +107,7 @@ INSTANTIATE_TEST_SUITE_P(
 								  {
 									  new_argument("?", EXIT_STATUS_EXP),
 								  },
-								  1)}},
+								  1, {})}},
 		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
@@ -111,7 +118,7 @@ INSTANTIATE_TEST_SUITE_P(
 								  {
 									  new_argument("", ENV_EXP),
 								  },
-								  1)}},
+								  1, {})}},
 		ParserTestParams{{
 				new_token("echo", BUILTIN),
 				new_token("some_*_file.c", WILDCARD),
@@ -122,7 +129,7 @@ INSTANTIATE_TEST_SUITE_P(
 								 {
 									 new_argument("some_*_file.c", WILDCARD_EXP),
 								 },
-								 1)}},
+								 1, {})}},
 		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
@@ -134,7 +141,7 @@ INSTANTIATE_TEST_SUITE_P(
 					{
 						new_argument("this is a double quoted string", LITERAL),
 					},
-					1)}},
+					1, {})}},
 		ParserTestParams{{
 				new_token("echo", BUILTIN),
 				new_token("string1 $PATH string2", SINGLE_QUOTE),
@@ -145,7 +152,7 @@ INSTANTIATE_TEST_SUITE_P(
 								 {
 									 new_argument("string1 $PATH string2", LITERAL),
 								 },
-								 1)}},
+								 1, {})}},
 		ParserTestParams{{
 				new_token("echo", BUILTIN),
 				new_token("string1 ", DOUBLE_QUOTE),
@@ -159,6 +166,18 @@ INSTANTIATE_TEST_SUITE_P(
 									 new_argument("string1 ", LITERAL),
 									 new_argument("PATH", ENV_EXP),
 									 new_argument(" string2", LITERAL),
-								 }, 3)}}
+								 }, 3, {})}},
+		ParserTestParams{{
+				new_token("echo", BUILTIN),
+				new_token("string1 ", DOUBLE_QUOTE),
+				new_token(">", REDIRECT_OUT),
+				new_token("output1", WORD),
+				new_token(NULL, END_OF_FILE),
+			},
+						 {new_test_script_node(
+								 new_token("echo", BUILTIN), CMD_NODE,
+								 {
+									 new_argument("string1 ", LITERAL),
+								 }, 1, {new_redirection("output1", OUT)})}}
 
 		));

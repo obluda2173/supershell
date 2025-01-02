@@ -2,6 +2,14 @@
 #include "lexer.h"
 #include "libft.h"
 
+void	free_redirection(void *content)
+{
+	t_redirection *r;
+	r = (t_redirection *)content;
+	free(r->file);
+	free(r);
+}
+
 void free_script_node(void *sn) {
 	t_script_node *node;
 	node = (t_script_node*)sn;
@@ -10,6 +18,8 @@ void free_script_node(void *sn) {
 		free(node->arguments[i]->literal);
 		free(node->arguments[i]);
 	}
+
+	ft_lstclear(&node->redirections, free_redirection);
 	free(node->arguments);
 	free(node->token.content);
 	free(node);
@@ -34,10 +44,21 @@ t_list *parse(t_dllist *tokens) {
 	t_token cur = (*(t_token*)head->content);
 	sn->token = copy_token(cur);
 	sn->type = CMD_NODE;
+	sn->argument_count= 0;
+	sn->arguments= NULL;
+	sn->redirections= NULL;
 	script = ft_lstnew(sn);
 
 	head = head->next;
-	sn->argument_count = ft_dllstsize(head) - 1;
+
+	t_dllist *head2 = head;
+	cur = *(t_token *)(head2->content);
+	while ((cur.type != END_OF_FILE) && (cur.type != REDIRECT_OUT)) {
+		sn->argument_count++;
+		head2 = head2->next;
+		cur = *(t_token *)(head2->content);
+	}
+
 	if (sn->argument_count == 0)
 		sn->arguments = NULL;
 	else
@@ -46,6 +67,16 @@ t_list *parse(t_dllist *tokens) {
 	int count = 0;
 	while (head) {
 		cur = *(t_token*)(head->content);
+		if (cur.type == REDIRECT_OUT) {
+			t_redirection *r = (t_redirection*)malloc(sizeof(t_redirection));
+			r->type = OUT;
+			head = head->next;
+			cur = *(t_token*)(head->content);
+			r->file = ft_strdup(cur.content);
+			ft_lstadd_back(&sn->redirections, ft_lstnew(r));
+			head = head->next;
+			continue;
+		}
 		if (cur.type == END_OF_FILE)
 			return script;
 		sn->arguments[count] = (t_argument*)malloc(sizeof(t_argument));

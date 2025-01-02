@@ -20,10 +20,14 @@ t_dllist *create_token_dllist(std::vector<t_token> tokens) {
 	return token_dllist;
 }
 
-t_test_script_node new_test_script_node(t_token token, t_node_type type, std::vector<t_argument> args, int argument_count) {
-	return (t_test_script_node){token, type, args, argument_count};
+t_test_script_node new_test_script_node(t_token token, t_node_type type, std::vector<t_argument> args, int argument_count, std::vector<t_redirection> redirects) {
+	return (t_test_script_node){token, type, args, argument_count, redirects};
 }
 
 t_argument new_argument(const char* literal, t_argument_type type) {
 	return (t_argument){(char*)literal, type};
+}
+
+t_redirection new_redirection(const char* literal, t_redirection_type type) {
+	return (t_redirection){(char*)literal, type};
 }
