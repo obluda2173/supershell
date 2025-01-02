@@ -1,0 +1,8 @@
+#+title: Todo
+* TODO
+:LOGBOOK:
+CLOCK: [2025-01-02 Do 11:37]
+:END:
+- [X] go through allocations in parser and do NULL-CHECKS (with proper releases)
+- [ ] rename to cmd_node and have a ScriptNode Type with node_type and node_data
+- [ ]
