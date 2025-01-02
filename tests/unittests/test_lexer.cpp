@@ -75,14 +75,14 @@ INSTANTIATE_TEST_SUITE_P(
 						}},
 					TestTokenizeParams{
 						"ls | wc", {
-							new_token("ls", BUILTIN),
+							new_token("ls", WORD),
 							new_token("|", PIPE),
 							new_token("wc", WORD),
 							new_token(NULL, END_OF_FILE),
 						}},
 					TestTokenizeParams{
 						"ls -a -l | wc -l", {
-							new_token("ls", BUILTIN),
+							new_token("ls", WORD),
 							new_token("-a", WORD),
 							new_token("-l", WORD),
 							new_token("|", PIPE),
@@ -99,7 +99,7 @@ INSTANTIATE_TEST_SUITE_P(
 					TestTokenizeParams{
 						"echo  $ PATH", {
 							new_token("echo", BUILTIN),
-							new_token("$", DOLLAR),
+							new_token("$", WORD),
 							new_token("PATH", WORD),
 							new_token(NULL, END_OF_FILE),
 						}},
