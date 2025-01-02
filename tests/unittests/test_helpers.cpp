@@ -24,8 +24,8 @@ t_test_cmd_node new_test_cmd_node(t_token cmd_token, std::vector<t_argument> arg
 	return (t_test_cmd_node){cmd_token, args, argument_count, redirects};
 }
 
-t_test_script_node new_test_script_node(t_token token, t_node_type type, std::vector<t_argument> args, int argument_count, std::vector<t_redirection> redirects) {
-	return (t_test_script_node){type, new_test_cmd_node(token, args, argument_count, redirects)};
+t_test_script_node new_test_script_node(t_node_type type, t_test_cmd_node cn) {
+	return (t_test_script_node){type, cn};
 }
 
 t_argument new_argument(const char* literal, t_argument_type type) {

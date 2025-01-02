@@ -66,23 +66,24 @@ INSTANTIATE_TEST_SUITE_P(
 	testing::Values(
 		ParserTestParams{{}, {}},
 		ParserTestParams{{new_token(NULL, END_OF_FILE)}, {}},
-		ParserTestParams{{
+		ParserTestParams{
+			{
 				new_token("echo", BUILTIN),
 				new_token(NULL, END_OF_FILE),
 			},
-						 {new_test_script_node(new_token("echo", BUILTIN),
-											   CMD_NODE, {}, 0, {})}},
+			{new_test_script_node(CMD_NODE,
+								  new_test_cmd_node(new_token("echo", BUILTIN),
+													{}, 0, {}))}},
 		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
 				new_token("file.txt", WORD),
 				new_token(NULL, END_OF_FILE),
 			},
-			{new_test_script_node(new_token("echo", BUILTIN), CMD_NODE,
-								  {
-									  new_argument("file.txt", LITERAL),
-								  },
-								  1, {})}},
+			{new_test_script_node(CMD_NODE,
+								  new_test_cmd_node(new_token("echo", BUILTIN),
+													{new_argument("file.txt", LITERAL),},
+													1, {}))}},
 		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
@@ -90,87 +91,88 @@ INSTANTIATE_TEST_SUITE_P(
 				new_token("file2.txt", WORD),
 				new_token(NULL, END_OF_FILE),
 			},
-			{new_test_script_node(new_token("echo", BUILTIN), CMD_NODE,
-								  {new_argument("file1.txt", LITERAL),
-								   new_argument("file2.txt", LITERAL)},
-								  2, {})}},
+			{new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN),
+															  {new_argument("file1.txt", LITERAL),
+															   new_argument("file2.txt", LITERAL)},
+															  2, {}))}},
 		ParserTestParams{{
 				new_token("wc", WORD),
 				new_token("-l", WORD),
 				new_token(NULL, END_OF_FILE),
 			},
-						 {new_test_script_node(new_token("wc", WORD), CMD_NODE,
-											   {
-												   new_argument("-l", LITERAL),
-											   },
-											   1, {})}},
+						 {new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("wc", WORD),
+																		   {
+																			   new_argument("-l", LITERAL),
+																		   },
+																		   1, {}))}},
 		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
 				new_token("PATH", DOLLAR),
 				new_token(NULL, END_OF_FILE),
 			},
-			{new_test_script_node(new_token("echo", BUILTIN), CMD_NODE,
-								  {
-									  new_argument("PATH", ENV_EXP),
-								  },
-								  1, {})}},
+			{new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN),
+															  {
+																  new_argument("PATH", ENV_EXP),
+															  }, 1, {}))}},
 		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
 				new_token("?", DOLLAR),
 				new_token(NULL, END_OF_FILE),
 			},
-			{new_test_script_node(new_token("echo", BUILTIN), CMD_NODE,
-								  {
-									  new_argument("?", EXIT_STATUS_EXP),
-								  },
-								  1, {})}},
+			{new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN),
+															  {
+																  new_argument("?", EXIT_STATUS_EXP),
+															  },
+															  1, {}))}},
 		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
 				new_token("", DOLLAR),
 				new_token(NULL, END_OF_FILE),
 			},
-			{new_test_script_node(new_token("echo", BUILTIN), CMD_NODE,
-								  {
-									  new_argument("", ENV_EXP),
-								  },
-								  1, {})}},
+			{new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN),
+															  {
+																  new_argument("", ENV_EXP),
+															  },
+															  1, {}))}},
 		ParserTestParams{{
 				new_token("echo", BUILTIN),
 				new_token("some_*_file.c", WILDCARD),
 				new_token(NULL, END_OF_FILE),
 			},
-						 {new_test_script_node(
-								 new_token("echo", BUILTIN), CMD_NODE,
-								 {
-									 new_argument("some_*_file.c", WILDCARD_EXP),
-								 },
-								 1, {})}},
+						 {new_test_script_node(CMD_NODE,
+											   new_test_cmd_node(new_token("echo", BUILTIN),
+																 {
+																	 new_argument("some_*_file.c", WILDCARD_EXP),
+																 },
+																 1, {}))}},
 		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
 				new_token("this is a double quoted string", DOUBLE_QUOTE),
 				new_token(NULL, END_OF_FILE),
 			},
-			{new_test_script_node(
-					new_token("echo", BUILTIN), CMD_NODE,
-					{
-						new_argument("this is a double quoted string", LITERAL),
-					},
-					1, {})}},
+			{new_test_script_node(CMD_NODE,
+								  new_test_cmd_node(
+									  new_token("echo", BUILTIN),
+									  {
+										  new_argument("this is a double quoted string", LITERAL),
+									  },
+									  1, {}))}},
 		ParserTestParams{{
 				new_token("echo", BUILTIN),
 				new_token("string1 $PATH string2", SINGLE_QUOTE),
 				new_token(NULL, END_OF_FILE),
 			},
-						 {new_test_script_node(
-								 new_token("echo", BUILTIN), CMD_NODE,
-								 {
-									 new_argument("string1 $PATH string2", LITERAL),
-								 },
-								 1, {})}},
+						 {new_test_script_node(CMD_NODE,
+											   new_test_cmd_node(
+												   new_token("echo", BUILTIN),
+												   {
+													   new_argument("string1 $PATH string2", LITERAL),
+												   },
+												   1, {}))}},
 		ParserTestParams{{
 				new_token("echo", BUILTIN),
 				new_token("string1 ", DOUBLE_QUOTE),
@@ -178,13 +180,14 @@ INSTANTIATE_TEST_SUITE_P(
 				new_token(" string2", DOUBLE_QUOTE),
 				new_token(NULL, END_OF_FILE),
 			},
-						 {new_test_script_node(
-								 new_token("echo", BUILTIN), CMD_NODE,
-								 {
-									 new_argument("string1 ", LITERAL),
-									 new_argument("PATH", ENV_EXP),
-									 new_argument(" string2", LITERAL),
-								 }, 3, {})}},
+						 {new_test_script_node(CMD_NODE,
+											   new_test_cmd_node(
+												   new_token("echo", BUILTIN),
+												   {
+													   new_argument("string1 ", LITERAL),
+													   new_argument("PATH", ENV_EXP),
+													   new_argument(" string2", LITERAL),
+												   }, 3, {}))}},
 		ParserTestParams{{
 				new_token("echo", BUILTIN),
 				new_token("string1 ", DOUBLE_QUOTE),
@@ -192,10 +195,11 @@ INSTANTIATE_TEST_SUITE_P(
 				new_token("output1", WORD),
 				new_token(NULL, END_OF_FILE),
 			},
-						 {new_test_script_node(
-								 new_token("echo", BUILTIN), CMD_NODE,
-								 {
-									 new_argument("string1 ", LITERAL),
-								 }, 1, {new_redirection("output1", OUT)})}}
+						 {new_test_script_node(CMD_NODE,
+											   new_test_cmd_node(
+												   new_token("echo", BUILTIN),
+												   {
+													   new_argument("string1 ", LITERAL),
+												   }, 1, {new_redirection("output1", OUT)}))}}
 
 		));
