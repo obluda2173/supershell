@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:07:34 by erian             #+#    #+#             */
-/*   Updated: 2024/12/29 16:26:56 by erian            ###   ########.fr       */
+/*   Updated: 2024/12/31 17:09:00 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,15 @@ const char *token_strings[] = {
     "*",
     "INV"
 };
+
+void	free_token(void *content)
+{
+	t_token *token;
+
+	token = (t_token *)content;
+	free(token->content);
+	free(token);
+}
 
 //function to print the content of doubly list of tokens
 void print_tokens(t_dllist *head)

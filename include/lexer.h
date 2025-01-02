@@ -10,7 +10,7 @@ extern const char *token_strings[];
 // token types
 typedef enum
 {
-	
+
 	BUILTIN,			//0
 	WORD,				//1  arbitrary chain of chars without double/single quotes or semicolons
 	SINGLE_QUOTE,		//2
@@ -46,7 +46,7 @@ t_token	*get_next_token(t_line_container *lc);
 void free_token(void *content);
 
 /* ************************************************************************** */
-/* lexer                                                                   * */
+/* lexer                                                                    * */
 /* ************************************************************************** */
 
 // operators_separator.c
@@ -58,7 +58,6 @@ t_dllist *tokenize(char* line);
 // tokenize_1.c
 void	skip_spaces(char *line, int *i);
 
-void print_tokens(t_dllist *head);
 // typedef enum {
 // 	EXPANSION, // $PATH
 // 	LITERAL,

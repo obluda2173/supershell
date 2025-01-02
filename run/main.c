@@ -55,7 +55,7 @@ char	*meeting_line(t_data **data)
 
 	if (!data || !*data)
 		return (NULL);
-	
+
 	start = (*data)->ep;
 	line = NULL;
 	result = NULL;
@@ -98,7 +98,7 @@ int	main(int ac, char **av, char **ep)
 	//initial mandatory check
 	if (ac != 1 || ep == NULL || *ep == NULL)
 		return (printf("Error: No environment found. Exiting...\n"), 0);
-	
+
 	data = NULL;
 	read = NULL;
 
@@ -117,7 +117,7 @@ int	main(int ac, char **av, char **ep)
 		data->line = readline(read);
 		free(read);
 		read = NULL;
-		
+
 		if (!data->line)
 			break ;
 
@@ -128,7 +128,7 @@ int	main(int ac, char **av, char **ep)
 			data->line = NULL;
 			continue ;
 		}
-		
+
 		//exit the process
 		if (ft_strncmp(data->line, "exit", 4) == 0)
 		{
