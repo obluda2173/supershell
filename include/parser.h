@@ -5,7 +5,8 @@
 #include "libft.h"
 
 typedef enum {
-	CMD_NODE
+	CMD_NODE,
+	ERROR_NODE,
 } t_node_type;
 
 typedef enum {
@@ -29,6 +30,10 @@ typedef struct s_redirection {
 	t_redirection_type type;
 } t_redirection;
 
+typedef struct s_error_node {
+	const char* error;
+} t_error_node;
+
 typedef struct s_cmd_node {
 	t_token cmd_token;
 	t_list* arguments;
@@ -37,6 +42,7 @@ typedef struct s_cmd_node {
 
 typedef union u_node_data {
 	t_cmd_node cmd_node;
+	t_error_node error_node;
 } t_node_data;
 
 typedef struct s_script_node {

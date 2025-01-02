@@ -24,8 +24,8 @@ t_test_cmd_node new_test_cmd_node(t_token cmd_token, std::vector<t_argument> arg
 	return (t_test_cmd_node){cmd_token, args, argument_count, redirects};
 }
 
-t_test_script_node new_test_script_node(t_node_type type, t_test_cmd_node cn) {
-	return (t_test_script_node){type, cn};
+t_test_script_node new_test_script_node(t_node_type type, t_test_cmd_node cn, t_error_node en) {
+	return (t_test_script_node){type, cn, en};
 }
 
 t_argument new_argument(const char* literal, t_argument_type type) {
@@ -34,4 +34,8 @@ t_argument new_argument(const char* literal, t_argument_type type) {
 
 t_redirection new_redirection(const char* literal, t_redirection_type type) {
 	return (t_redirection){(char*)literal, type};
+}
+
+t_error_node new_error_node(const char* error) {
+	return {error};
 }
