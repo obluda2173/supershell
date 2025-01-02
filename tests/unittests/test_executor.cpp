@@ -3,13 +3,13 @@
 t_list *create_script(std::vector<t_argument> args) {
 	t_script_node *sn = (t_script_node*)malloc(sizeof(t_script_node));
 	t_list *script = NULL;
-	sn->node.cmd_token = new_token(ft_strdup("echo"), BUILTIN);
-	sn->node.arguments = NULL;
-	sn->node.redirections = NULL;
+	sn->node_data.cmd_node.cmd_token = new_token(ft_strdup("echo"), BUILTIN);
+	sn->node_data.cmd_node.arguments = NULL;
+	sn->node_data.cmd_node.redirections = NULL;
 	for (auto want_arg : args) {
 		t_argument *arg = (t_argument*)malloc(sizeof(t_argument));
 		arg->literal = ft_strdup(want_arg.literal);
-		ft_lstadd_back(&sn->node.arguments, ft_lstnew(arg));
+		ft_lstadd_back(&sn->node_data.cmd_node.arguments, ft_lstnew(arg));
 	}
 	ft_lstadd_back(&script, ft_lstnew(sn));
 	return script;

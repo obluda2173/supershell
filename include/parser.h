@@ -35,9 +35,13 @@ typedef struct s_cmd_node {
 	t_list *redirections;
 } t_cmd_node;
 
+typedef union u_node_data {
+	t_cmd_node cmd_node;
+} t_node_data;
+
 typedef struct s_script_node {
 	t_node_type node_type;
-	t_cmd_node node;
+	t_node_data node_data;
 } t_script_node;
 
 void	init_cmd_node(t_script_node *sn, t_token t);

@@ -33,7 +33,7 @@ static t_list	*create_and_add_redirection(t_list **script, t_dllist *head,
 		ft_lstclear(script, free_script_node);
 		return (NULL);
 	}
-	ft_lstadd_back(&sn->node.redirections, tmp);
+	ft_lstadd_back(&sn->node_data.cmd_node.redirections, tmp);
 	return (tmp);
 }
 
@@ -76,7 +76,7 @@ static t_list	*create_and_add_argument(t_list **script, t_token *t)
 		ft_lstclear(script, free_script_node);
 		return (NULL);
 	}
-	ft_lstadd_back(&((t_script_node *)((*script)->content))->node.arguments, tmp);
+	ft_lstadd_back(&((t_script_node *)((*script)->content))->node_data.cmd_node.arguments, tmp);
 	return (tmp);
 }
 

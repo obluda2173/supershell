@@ -52,7 +52,7 @@ TEST_P(ParserTestSuite, ParserTest) {
 	ASSERT_NE(script, nullptr);
 	for (t_test_script_node want_node : want_nodes) {
 		EXPECT_EQ(CMD_NODE, (*(t_script_node*)head->content).node_type);
-		compare_cmd_node(want_node, (*(t_script_node*)head->content).node);
+		compare_cmd_node(want_node, (*(t_script_node*)head->content).node_data.cmd_node);
 		head=head->next;
 	}
 
