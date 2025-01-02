@@ -49,6 +49,7 @@ static t_script_node	*create_and_add_cmd_node(t_list **script,
 	if (!tokens)
 	{
 		sn->node_type = ERROR_NODE;
+		sn->node_data.error_node.error = "no tokens";
 		ft_lstadd_back(script, ft_lstnew(sn));
 		return (sn);
 	}

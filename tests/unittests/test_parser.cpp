@@ -1,4 +1,5 @@
 #include "test_main.hpp"
+#include <gtest/gtest.h>
 #include <iostream>
 
 struct ParserTestParams {
@@ -50,6 +51,7 @@ TEST_P(ParserTestSuite, ParserTest) {
 	if (want_nodes[0].type == ERROR_NODE) {
 		ASSERT_NE(nullptr, script);
 		ASSERT_EQ(ERROR_NODE, ((t_script_node*)script->content)->node_type);
+		ASSERT_STREQ(want_nodes[0].err_node.error, ((t_script_node*)script->content)->node_data.error_node.error);
 		ft_lstclear(&script, free_script_node);
 		return;
 	}
