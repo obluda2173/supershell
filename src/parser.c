@@ -1,68 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kfreyer <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/02 13:57/10 by kfreyer           #+#    #+#             */
+/*   Updated: 2025/01/02 13:57:10 by kfreyer          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lexer.h"
 #include "libft.h"
 #include "parser.h"
-
-void	free_arguments(void *content)
-{
-	t_argument	*a;
-
-	a = (t_argument *)content;
-	free(a->literal);
-	free(a);
-}
-
-void	free_redirection(void *content)
-{
-	t_redirection	*r;
-
-	r = (t_redirection *)content;
-	free(r->file);
-	free(r);
-}
-
-void	free_script_node(void *sn)
-{
-	t_script_node	*node;
-
-	node = (t_script_node *)sn;
-	ft_lstclear(&node->arguments, free_arguments);
-	ft_lstclear(&node->redirections, free_redirection);
-	free(node->cmd_token.content);
-	free(node);
-}
-
-t_token	copy_token(t_token token)
-{
-	t_token	copy;
-
-	copy.content = ft_strdup(token.content);
-	copy.type = token.type;
-	return (copy);
-}
-
-void	init_script_node(t_script_node *sn, t_token t)
-{
-	sn->cmd_token = copy_token(t);
-	sn->type = CMD_NODE;
-	sn->arguments = NULL;
-	sn->redirections = NULL;
-}
-
-t_redirection	*extract_redirection(t_dllist *tokens)
-{
-	t_token			cur;
-	t_redirection	*r;
-
-	cur = *(t_token *)(tokens->content);
-	r = (t_redirection *)malloc(sizeof(t_redirection));
-	if (!r)
-		return (NULL);
-	r->type = OUT;
-	tokens = tokens->next;
-	cur = *(t_token *)(tokens->content);
-	r->file = ft_strdup(cur.content);
-	return (r);
-}
 
 static t_list	*create_and_add_redirection(t_list **script, t_dllist *head,
 		t_script_node *sn)
@@ -106,57 +56,51 @@ static t_list	*create_and_add_script_node(t_list **script, t_dllist *tokens)
 	return (*script);
 }
 
-t_list	*parse(t_dllist *tokens)
+static t_list	*create_and_add_argument(t_list **script, t_token *t)
 {
-	t_dllist	*head;
-	t_list		*script;
-	t_token		cur;
 	t_argument	*arg;
 	t_list		*tmp;
 
-	head = tokens;
+	arg = extract_argument(t);
+	if (!arg)
+	{
+		ft_lstclear(script, free_script_node);
+		return (NULL);
+	}
+	tmp = ft_lstnew(arg);
+	if (!tmp)
+	{
+		ft_lstclear(script, free_script_node);
+		return (NULL);
+	}
+	ft_lstadd_back(&((t_script_node *)((*script)->content))->arguments, tmp);
+	return (tmp);
+}
+
+t_list	*parse(t_dllist *tokens)
+{
+	t_list	*script;
+	t_token	cur;
+
 	script = NULL;
 	if (!create_and_add_script_node(&script, tokens))
 		return (NULL);
-	head = head->next;
-	while (head)
+	tokens = tokens->next;
+	while (tokens)
 	{
-		cur = *(t_token *)(head->content);
-		if (cur.type == REDIRECT_OUT)
-		{
-			if (!create_and_add_redirection(&script, head, script->content))
-				return (NULL); // Error is already handled in the helper
-			head = head->next->next;
-			continue ;
-		}
+		cur = *(t_token *)(tokens->content);
 		if (cur.type == END_OF_FILE)
 			return (script);
-		arg = (t_argument *)malloc(sizeof(t_argument));
-		if (!arg)
+		if (cur.type == REDIRECT_OUT)
 		{
-			ft_lstclear(&script, free_script_node);
+			if (!create_and_add_redirection(&script, tokens, script->content))
+				return (NULL);
+			tokens = tokens->next->next;
+			continue ;
+		}
+		if (!create_and_add_argument(&script, tokens->content))
 			return (NULL);
-		}
-		arg->literal = ft_strdup(cur.content);
-		if (cur.type == WORD || cur.type == DOUBLE_QUOTE
-			|| cur.type == SINGLE_QUOTE)
-			arg->type = LITERAL;
-		if (cur.type == DOLLAR)
-		{
-			arg->type = ENV_EXP;
-			if (!ft_strncmp(arg->literal, "?", 1))
-				arg->type = EXIT_STATUS_EXP;
-		}
-		if (cur.type == WILDCARD)
-			arg->type = WILDCARD_EXP;
-		tmp = ft_lstnew(arg);
-		if (!tmp)
-		{
-			ft_lstclear(&script, free_script_node);
-			return (NULL);
-		}
-		ft_lstadd_back(&((t_script_node *)(script->content))->arguments, tmp);
-		head = head->next;
+		tokens = tokens->next;
 	}
 	return (script);
 }

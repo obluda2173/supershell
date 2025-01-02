@@ -36,8 +36,19 @@ typedef struct s_script_node {
 	t_list *redirections;
 } t_script_node;
 
+void	init_script_node(t_script_node *sn, t_token t);
 t_list *parse(t_dllist *tokens);
 t_token copy_token(t_token token);
 void free_script_node(void *sn);
+
+/* extraction */
+t_redirection	*extract_redirection(t_dllist *tokens);
+t_argument	*extract_argument(t_token *t);
+
+/* free */
+void	free_arguments(void *content);
+void	free_redirection(void *content);
+void	free_script_node(void *sn);
+t_token	copy_token(t_token token);
 
 #endif // PARSER_H
