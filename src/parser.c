@@ -37,7 +37,8 @@ static t_list	*create_and_add_redirection(t_list **script, t_dllist *head,
 	return (tmp);
 }
 
-static t_script_node	*create_and_add_cmd_node(t_list **script, t_dllist *tokens)
+static t_script_node	*create_and_add_cmd_node(t_list **script,
+		t_dllist *tokens)
 {
 	t_token			cur;
 	t_script_node	*sn;
@@ -49,11 +50,12 @@ static t_script_node	*create_and_add_cmd_node(t_list **script, t_dllist *tokens)
 	{
 		sn->node_type = ERROR_NODE;
 		ft_lstadd_back(script, ft_lstnew(sn));
-		return sn;
+		return (sn);
 	}
 	cur = (*(t_token *)tokens->content);
-	if (cur.type == END_OF_FILE) {
-		free(sn)	;
+	if (cur.type == END_OF_FILE)
+	{
+		free(sn);
 		return (NULL);
 	}
 	init_cmd_node(sn, cur);
@@ -64,7 +66,7 @@ static t_script_node	*create_and_add_cmd_node(t_list **script, t_dllist *tokens)
 		free_script_node(sn);
 		return (NULL);
 	}
-	return sn;
+	return (sn);
 }
 
 static t_list	*create_and_add_argument(t_list **script, t_token *t)
@@ -89,13 +91,11 @@ static t_list	*create_and_add_argument(t_list **script, t_token *t)
 	return (tmp);
 }
 
-t_list	*parse(t_dllist *tokens)
+t_list	*parse_cmd(t_list *script, t_dllist *tokens)
 {
-	t_list	*script;
-	t_script_node *latest_node;
-	t_token	cur;
+	t_token			cur;
+	t_script_node	*latest_node;
 
-	script = NULL;
 	latest_node = create_and_add_cmd_node(&script, tokens);
 	if (latest_node && latest_node->node_type == ERROR_NODE)
 		return (script);
@@ -117,4 +117,12 @@ t_list	*parse(t_dllist *tokens)
 		tokens = tokens->next;
 	}
 	return (script);
+}
+
+t_list	*parse(t_dllist *tokens)
+{
+	t_list	*script;
+
+	script = NULL;
+	return (parse_cmd(script, tokens));
 }
