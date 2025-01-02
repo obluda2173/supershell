@@ -43,8 +43,9 @@ TEST_P(ParserTestSuite, ParserTest) {
 	t_list *script = parse(tokens);
 	t_list *head = script;
 
-	if (!tokens) {
+	if (!tokens || params.sn_vec.size() == 0) {
 		ASSERT_EQ(nullptr, script);
+		ft_dllstclear(&tokens, free_token);
 		return;
 	}
 
@@ -63,6 +64,7 @@ INSTANTIATE_TEST_SUITE_P(
 	ParserTests, ParserTestSuite,
 	testing::Values(
 		ParserTestParams{{}, {}},
+		ParserTestParams{{new_token(NULL, END_OF_FILE)}, {}},
 		ParserTestParams{{
 				new_token("echo", BUILTIN),
 				new_token(NULL, END_OF_FILE),

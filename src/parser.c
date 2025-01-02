@@ -43,6 +43,8 @@ static t_list	*create_and_add_script_node(t_list **script, t_dllist *tokens)
 	t_script_node	*sn;
 
 	cur = (*(t_token *)tokens->content);
+	if (cur.type == END_OF_FILE)
+		return *script;
 	sn = (t_script_node *)malloc(sizeof(t_script_node));
 	if (!sn)
 		return (NULL);
