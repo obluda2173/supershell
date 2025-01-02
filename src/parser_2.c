@@ -35,9 +35,11 @@ void	free_script_node(void *sn)
 	t_script_node	*node;
 
 	node = (t_script_node *)sn;
-	ft_lstclear(&node->node_data.cmd_node.arguments, free_arguments);
-	ft_lstclear(&node->node_data.cmd_node.redirections, free_redirection);
-	free(node->node_data.cmd_node.cmd_token.content);
+	if (node->node_type == CMD_NODE) {
+		ft_lstclear(&node->node_data.cmd_node.arguments, free_arguments);
+		ft_lstclear(&node->node_data.cmd_node.redirections, free_redirection);
+		free(node->node_data.cmd_node.cmd_token.content);
+	}
 	free(node);
 }
 

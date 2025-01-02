@@ -1,8 +1,9 @@
 #include "test_main.hpp"
+#include <iostream>
 
 struct ParserTestParams {
 	std::vector<t_token> token_vec;
-	std::vector<t_test_script_node> sn_vec;
+	std::vector<t_test_script_node> want_nodes;
 };
 
 class ParserTestSuite : public::testing::TestWithParam<ParserTestParams>{};
@@ -33,24 +34,26 @@ void compare_cmd_node(t_test_script_node want, t_cmd_node got) {
 
 TEST_P(ParserTestSuite, ParserTest) {
 	ParserTestParams params = GetParam();
-	std::vector<t_test_script_node> want_nodes = params.sn_vec;
+	std::vector<t_test_script_node> want_nodes = params.want_nodes;
 
 	t_dllist *tokens = create_token_dllist(params.token_vec);
 	if (params.token_vec.size() == 0)
 		ASSERT_EQ(nullptr, tokens);
 
 	t_list *script = parse(tokens);
+	if (params.want_nodes.size() == 0) {
+		ASSERT_EQ(nullptr, script);
+		ft_dllstclear(&tokens, free_token);
+		return;
+	}
+
 	if (want_nodes[0].type == ERROR_NODE) {
+		ASSERT_NE(nullptr, script);
 		ASSERT_EQ(ERROR_NODE, ((t_script_node*)script->content)->node_type);
 		ft_lstclear(&script, free_script_node);
 		return;
 	}
 
-	if (!tokens || params.sn_vec.size() == 0) {
-		ASSERT_EQ(nullptr, script);
-		ft_dllstclear(&tokens, free_token);
-		return;
-	}
 
 	ASSERT_NE(script, nullptr);
 	t_list *head = script;
