@@ -12,13 +12,18 @@ extern "C" {
 #include "libft.h"
 }
 
-typedef struct s_test_script_node {
+typedef struct s_test_cmd_node {
 	t_token cmd_token;
-	t_node_type type;
 	std::vector<t_argument> arguments;
 	int argument_count;
 	std::vector<t_redirection> redirects;
+} t_test_cmd_node;
+
+typedef struct s_test_script_node {
+	t_node_type type;
+	t_test_cmd_node node;
 } t_test_script_node;
+
 
 t_token new_token(const char* content, token_type type);
 t_dllist *create_token_dllist(std::vector<t_token> tokens);

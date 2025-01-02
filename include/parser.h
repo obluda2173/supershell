@@ -29,11 +29,15 @@ typedef struct s_redirection {
 	t_redirection_type type;
 } t_redirection;
 
-typedef struct s_script_node {
+typedef struct s_cmd_node {
 	t_token cmd_token;
-	t_node_type type;
 	t_list* arguments;
 	t_list *redirections;
+} t_cmd_node;
+
+typedef struct s_script_node {
+	t_node_type node_type;
+	t_cmd_node node;
 } t_script_node;
 
 void	init_script_node(t_script_node *sn, t_token t);

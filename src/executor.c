@@ -5,7 +5,7 @@
 int execute(t_list *script) {
 	t_script_node sn = *(t_script_node*)script->content;
 
-	t_list* head = sn.arguments;
+	t_list* head = sn.node.arguments;
 	while (head) {
 		t_argument arg = *(t_argument*)head->content;
 		ft_putstr_fd(arg.literal, STDOUT_FILENO);

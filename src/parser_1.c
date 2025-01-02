@@ -14,10 +14,9 @@
 
 void	init_script_node(t_script_node *sn, t_token t)
 {
-	sn->cmd_token = copy_token(t);
-	sn->type = CMD_NODE;
-	sn->arguments = NULL;
-	sn->redirections = NULL;
+	sn->node.cmd_token = copy_token(t);
+	sn->node.arguments = NULL;
+	sn->node.redirections = NULL;
 }
 
 t_redirection	*extract_redirection(t_dllist *tokens)
