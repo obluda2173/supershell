@@ -12,7 +12,7 @@
 
 #include "parser.h"
 
-void	init_script_node(t_script_node *sn, t_token t)
+void	init_cmd_node(t_script_node *sn, t_token t)
 {
 	sn->node.cmd_token = copy_token(t);
 	sn->node.arguments = NULL;

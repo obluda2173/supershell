@@ -37,7 +37,7 @@ static t_list	*create_and_add_redirection(t_list **script, t_dllist *head,
 	return (tmp);
 }
 
-static t_list	*create_and_add_script_node(t_list **script, t_dllist *tokens)
+static t_list	*create_and_add_cmd_node(t_list **script, t_dllist *tokens)
 {
 	t_token			cur;
 	t_script_node	*sn;
@@ -48,7 +48,7 @@ static t_list	*create_and_add_script_node(t_list **script, t_dllist *tokens)
 	sn = (t_script_node *)malloc(sizeof(t_script_node));
 	if (!sn)
 		return (NULL);
-	init_script_node(sn, cur);
+	init_cmd_node(sn, cur);
 	sn->node_type = CMD_NODE;
 	*script = ft_lstnew(sn);
 	if (!script)
@@ -88,7 +88,7 @@ t_list	*parse(t_dllist *tokens)
 	script = NULL;
 	if (!tokens)
 		return script;
-	if (!create_and_add_script_node(&script, tokens))
+	if (!create_and_add_cmd_node(&script, tokens))
 		return (NULL);
 	tokens = tokens->next;
 	while (tokens)
