@@ -33,6 +33,8 @@ typedef enum e_argument_type
 typedef enum e_redirection_type
 {
 	OUT,
+	IN,
+	APPEND,
 }						t_redirection_type;
 
 typedef struct s_argument
