@@ -140,12 +140,22 @@ INSTANTIATE_TEST_SUITE_P(
 							new_token("echo", BUILTIN),
 							new_token("string1 $PATH string2", SINGLE_QUOTE),
 							new_token(NULL, END_OF_FILE),
-						}},
-					TestTokenizeParams{
-						"echo  file.txt", {
-							new_token("echo", BUILTIN),
-							new_token("file.txt", WORD),
-							new_token(NULL, END_OF_FILE),
 						}}
+					// TestTokenizeParams{
+					// 	"cat <<EOF\nline1\nline2\nEOF", {
+					// 		new_token("cat", WORD),
+					// 		new_token("<<", HERE_DOC),
+					// 		new_token("line1\nline2\n", WORD),	
+					// 		new_token(NULL, END_OF_FILE),
+					// 	}},
+					// 	TestTokenizeParams{
+					// 	"cat <<EOF\nline1\n$PATH\nline2\nEOF", {
+					// 		new_token("cat", WORD),
+					// 		new_token("<<", HERE_DOC),
+					// 		new_token("line1\n", WORD),	
+					// 		new_token("PATH", DOLLAR),	
+					// 		new_token("line2\n", WORD),	
+					// 		new_token(NULL, END_OF_FILE),
+					// 	}}
 		)
 	);

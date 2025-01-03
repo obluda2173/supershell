@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2025/01/02 15:57:47 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/03 11:57:31 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,15 @@ static char	*extract_word(t_line_container *lc)
 			return NULL;
 		}
 		lc->pos++;
+	}
+	else if (lc->line[lc->pos] == '\"')
+	{
+		while ((lc->line[lc->pos] != '\"' || lc->line[lc->pos] != '$') && lc->line[lc->pos])	
+		{
+			lc->pos++;
+			printf("inside\n");
+		}
+		
 	}
 	else
 		while (lc->line[lc->pos] && lc->line[lc->pos] != ' ' &&

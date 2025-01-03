@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:07:34 by erian             #+#    #+#             */
-/*   Updated: 2025/01/02 16:10:33 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/03 11:43:23 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,24 @@ static void print_tokens(t_dllist *head)
 	}
 }
 
+void ft_dllstinsert_before(t_dllist *node, t_dllist *new_node)
+{
+	if (!node || !new_node)
+		return;
+
+	new_node->next = node;
+	new_node->prev = node->prev;
+
+	if (node->prev)
+		node->prev->next = new_node;
+	node->prev = new_node;
+}
+
 void	quotes(t_dllist **tokens)
 {
 	t_dllist *tokens_lst;
+	t_dllist *new_node;
+	char	*combined_content = NULL;
 
 	if (!tokens || !*tokens)
 		return;
@@ -82,34 +97,76 @@ void	quotes(t_dllist **tokens)
 	while (tokens_lst)
 	{
 		t_token *current_token = (t_token *)tokens_lst->content;
+
 		if (current_token && current_token->type == DOUBLE_QUOTE)
 		{
-			free_token(tokens_lst->content);
-			free(tokens_lst);
-			tokens_lst->prev->next = tokens_lst->next;
-			tokens_lst = tokens_lst->next; 
+			tokens_lst = tokens_lst->next; // Skip opening DOUBLE_QUOTE
 			while (tokens_lst)
 			{
 				t_token *inner_token = (t_token *)tokens_lst->content;
+
+				// End of DOUBLE_QUOTE section
 				if (inner_token && inner_token->type == DOUBLE_QUOTE)
 				{
-					free_token(tokens_lst->content);
-					free(tokens_lst);
-					tokens_lst->prev->next = tokens_lst->next;
-					tokens_lst = tokens_lst->next;
+					t_dllist *to_free = tokens_lst;
+					tokens_lst = tokens_lst->next; // Remove closing DOUBLE_QUOTE
+					if (to_free->prev)
+						to_free->prev->next = to_free->next;
+					if (to_free->next)
+						to_free->next->prev = to_free->prev;
+					free_token(to_free->content);
+					free(to_free);
 					break;
 				}
+
+				// Handle DOLLAR as a separator
 				if (inner_token && inner_token->type == DOLLAR)
 				{
+					// Create a new node for the combined content so far
+					if (combined_content)
+					{
+						t_token *new_token = malloc(sizeof(t_token));
+						new_token->type = WORD;
+						new_token->content = combined_content;
+						new_node = ft_dllstnew(new_token);
+						ft_dllstinsert_before(tokens_lst, new_node);
+						combined_content = NULL;
+					}
 					tokens_lst = tokens_lst->next;
 					continue;
 				}
-				if (inner_token)
-					inner_token->type = WORD;
 
+				// Concatenate non-DOLLAR tokens into combined_content
+				if (inner_token && inner_token->type != DOLLAR)
+				{
+					char *new_combined = ft_strjoin(combined_content ? combined_content : "", inner_token->content);
+					free(combined_content);
+					combined_content = new_combined;
+				}
+
+				// Remove the processed token
+				t_dllist *to_free = tokens_lst;
 				tokens_lst = tokens_lst->next;
+				if (to_free->prev)
+					to_free->prev->next = to_free->next;
+				if (to_free->next)
+					to_free->next->prev = to_free->prev;
+				free_token(to_free->content);
+				free(to_free);
+			}
+
+			// Create a final node for remaining combined content
+			if (combined_content)
+			{
+				t_token *new_token = malloc(sizeof(t_token));
+				new_token->type = WORD;
+				new_token->content = combined_content;
+				new_node = ft_dllstnew(new_token);
+				ft_dllstinsert_before(tokens_lst, new_node);
+				combined_content = NULL;
 			}
 		}
+		//if see token with type SINGLE_QUOTE trim the '' from both sides
 		else if (current_token->type == SINGLE_QUOTE)
 		{
 			char *trimmed_content = ft_strtrim(current_token->content, "'");
