@@ -1,6 +1,4 @@
 #include "test_main.hpp"
-#include <gtest/gtest.h>
-#include <iostream>
 
 struct ParserTestParams {
 	std::vector<t_token> token_vec;
@@ -53,6 +51,7 @@ TEST_P(ParserTestSuite, ParserTest) {
 		ASSERT_EQ(ERROR_NODE, ((t_script_node*)script->content)->node_type);
 		ASSERT_STREQ(want_nodes[0].err_node.error, ((t_script_node*)script->content)->node_data.error_node.error);
 		ft_lstclear(&script, free_script_node);
+		ft_dllstclear(&tokens, free_token);
 		return;
 	}
 
@@ -73,6 +72,11 @@ TEST_P(ParserTestSuite, ParserTest) {
 INSTANTIATE_TEST_SUITE_P(
 	ParserTests, ParserTestSuite,
 	testing::Values(
+		ParserTestParams{{
+				new_token("echo", BUILTIN),
+				new_token(">", REDIRECT_OUT),
+				new_token(NULL, END_OF_FILE),
+			}, {new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error redirection"))}},
 		ParserTestParams{{}, {new_test_script_node(ERROR_NODE, {}, new_error_node("no tokens"))}},
 		ParserTestParams{{new_token(NULL, END_OF_FILE)}, {}},
 		ParserTestParams{

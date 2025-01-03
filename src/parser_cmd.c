@@ -10,10 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "parser.h"
+#include <unistd.h>
 
-static t_list	*create_and_add_redirection(t_list **script, t_dllist *head,
-		t_script_node *sn)
+static t_script_node	*create_and_add_redirection(t_list **script,
+		t_dllist *head, t_script_node *sn)
 {
 	t_redirection	*r;
 	t_list			*tmp;
@@ -22,7 +24,7 @@ static t_list	*create_and_add_redirection(t_list **script, t_dllist *head,
 	if (!r)
 	{
 		ft_lstclear(script, free_script_node);
-		return (NULL);
+		return (create_and_add_error_node(script, "parsing error redirection"));
 	}
 	tmp = ft_lstnew(r);
 	if (!tmp)
@@ -32,7 +34,7 @@ static t_list	*create_and_add_redirection(t_list **script, t_dllist *head,
 		return (NULL);
 	}
 	ft_lstadd_back(&sn->node_data.cmd_node.redirections, tmp);
-	return (tmp);
+	return (sn);
 }
 
 static t_script_node	*create_and_add_cmd_node(t_list **script,
@@ -81,15 +83,11 @@ static t_list	*create_and_add_argument(t_list **script, t_token *t)
 	return (tmp);
 }
 
-t_list	*parse_cmd(t_list *script, t_dllist *tokens)
+t_list	*fill_cmd_node(t_list *script, t_dllist *tokens)
 {
 	t_token			cur;
 	t_script_node	*latest_node;
 
-	latest_node = create_and_add_cmd_node(&script, tokens);
-	if (latest_node && latest_node->node_type == ERROR_NODE)
-		return (script);
-	tokens = tokens->next;
 	while (tokens)
 	{
 		cur = *(t_token *)(tokens->content);
@@ -97,8 +95,10 @@ t_list	*parse_cmd(t_list *script, t_dllist *tokens)
 			return (script);
 		if (cur.type == REDIRECT_OUT)
 		{
-			if (!create_and_add_redirection(&script, tokens, script->content))
-				return (NULL);
+			latest_node = create_and_add_redirection(&script, tokens,
+					script->content);
+			if (latest_node && latest_node->node_type == ERROR_NODE)
+				return (script);
 			tokens = tokens->next->next;
 			continue ;
 		}
@@ -107,4 +107,14 @@ t_list	*parse_cmd(t_list *script, t_dllist *tokens)
 		tokens = tokens->next;
 	}
 	return (script);
+}
+
+t_list	*parse_cmd(t_list *script, t_dllist *tokens)
+{
+	t_script_node	*latest_node;
+
+	latest_node = create_and_add_cmd_node(&script, tokens);
+	if (latest_node && latest_node->node_type == ERROR_NODE)
+		return (script);
+	return (fill_cmd_node(script, tokens->next));
 }

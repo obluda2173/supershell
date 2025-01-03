@@ -31,6 +31,11 @@ t_redirection	*extract_redirection(t_dllist *tokens)
 	r->type = OUT;
 	tokens = tokens->next;
 	cur = *(t_token *)(tokens->content);
+	if (cur.type != WORD)
+	{
+		free(r);
+		return (NULL);
+	}
 	r->file = ft_strdup(cur.content);
 	return (r);
 }
