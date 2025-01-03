@@ -104,6 +104,20 @@ INSTANTIATE_TEST_SUITE_P(
 	ParserTestsCmdsWithRedirections,
 	ParserTestSuite,
 	testing::Values(
+		// ParserTestParams{
+		// 	{
+		// 	new_token("cat", WORD),
+		// 	new_token("<<", HERE_DOC),
+		// 	new_token("line1\n", WORD),
+		// 	new_token("PATH", DOLLAR),
+		// 	new_token("line2\n", WORD),
+		// 	new_token(NULL, END_OF_FILE),
+		// 	},
+		// 	{new_test_script_node(
+		// 			CMD_NODE,
+		// 			{new_test_cmd_node(new_token("<<", HERE_DOC), {},
+		// 							   {new_redirection("line1\nline2\n", HERED)})},
+		// 			{})}},
 		ParserTestParams{
 			{
 				new_token("<<", HERE_DOC),
@@ -115,7 +129,6 @@ INSTANTIATE_TEST_SUITE_P(
 					{new_test_cmd_node(new_token("<<", HERE_DOC), {},
 									   {new_redirection("line1\nline2\n", HERED)})},
 					{})}},
-
 		ParserTestParams{
 			{
 				new_token(">>", REDIRECT_APPEND),
