@@ -20,8 +20,8 @@ t_dllist *create_token_dllist(std::vector<t_token> tokens) {
 	return token_dllist;
 }
 
-t_test_cmd_node new_test_cmd_node(t_token cmd_token, std::vector<t_argument> args, int argument_count, std::vector<t_redirection> redirects) {
-	return (t_test_cmd_node){cmd_token, args, argument_count, redirects};
+t_test_cmd_node new_test_cmd_node(t_token cmd_token, std::vector<t_argument> args,  std::vector<t_redirection> redirects) {
+	return (t_test_cmd_node){cmd_token, args,  redirects};
 }
 
 t_test_script_node new_test_script_node(t_node_type type, t_test_cmd_node cn, t_error_node en) {
