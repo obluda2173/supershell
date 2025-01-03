@@ -41,34 +41,34 @@ void	free_token(void *content)
 }
 
 //function to print the content of doubly list of tokens
-static void print_tokens(t_dllist *head)
-{
-	t_dllist *current;
-	t_token *token;
+/* static void print_tokens(t_dllist *head) */
+/* { */
+/* 	t_dllist *current; */
+/* 	t_token *token; */
 
-	if (!head)
-	{
-		printf("The token list is empty.\n");
-		return;
-	}
+/* 	if (!head) */
+/* 	{ */
+/* 		printf("The token list is empty.\n"); */
+/* 		return; */
+/* 	} */
 
-	current = head;
-	printf("Tokens in the doubly linked list:\n");
-	while (current && current->content)
-	{
-		if (!current->content)
-		{
-			printf("Corrupted token node detected.\n");
-			break;
-		}
-		token = (t_token *)current->content;
-		if (token)
-		{
-			printf("Content: %s, Type: %s\n", token->content, token_strings[token->type]);
-		}
-		current = current->next;
-	}
-}
+/* 	current = head; */
+/* 	printf("Tokens in the doubly linked list:\n"); */
+/* 	while (current && current->content) */
+/* 	{ */
+/* 		if (!current->content) */
+/* 		{ */
+/* 			printf("Corrupted token node detected.\n"); */
+/* 			break; */
+/* 		} */
+/* 		token = (t_token *)current->content; */
+/* 		if (token) */
+/* 		{ */
+/* 			printf("Content: %s, Type: %s\n", token->content, token_strings[token->type]); */
+/* 		} */
+/* 		current = current->next; */
+/* 	} */
+/* } */
 
 void	quotes(t_dllist **tokens)
 {
@@ -148,6 +148,6 @@ t_dllist *tokenize(char* line)
 	free(line);
 	
 	
-	print_tokens(tokens);
+	/* print_tokens(tokens); */
 	return tokens;
 }

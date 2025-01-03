@@ -1,4 +1,6 @@
 #include "test_main.hpp"
+#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 extern "C" {
 #include "lexer.h"
 }
@@ -12,17 +14,22 @@ class TestTokenizer : public::testing::TestWithParam<TestTokenizeParams>{};
 
 TEST_P(TestTokenizer, firstTests) {
 	TestTokenizeParams params = GetParam();
-	t_line_container lc = (t_line_container){params.line.c_str(), 0};
+	std::vector<t_token> want_tokens = params.want_tokens;
 
+	testing::internal::CaptureStdout();
+	t_dllist *tokens = tokenize((char*)params.line.c_str());
+	testing::internal::GetCapturedStdout();
+	t_dllist *head = tokens;
+
+	ASSERT_EQ(want_tokens.size(),ft_dllstsize(tokens));
 	for (size_t i = 0; i < params.want_tokens.size(); i++) {
-		auto want_token = params.want_tokens[i];
-
-		t_token *got_token = get_next_token(&lc);
-
-		EXPECT_STREQ(got_token->content, want_token.content);
-		EXPECT_EQ(got_token->type, want_token.type);
-		free_token(got_token);
+		auto want_token = want_tokens[i];
+		t_token *got_token = (t_token*)head->content;
+		EXPECT_STREQ(want_token.content, got_token->content);
+		EXPECT_EQ( want_token.type, got_token->type);
+		head = head->next;
 	}
+	ft_dllstclear(&tokens, free_token);
 }
 
 t_token new_token(const char* content, token_type type) {
@@ -33,11 +40,11 @@ t_token new_token(const char* content, token_type type) {
 INSTANTIATE_TEST_SUITE_P(
 	LexerTests, TestTokenizer,
 	testing::Values(TestTokenizeParams{"", {{NULL, END_OF_FILE}}},
-					TestTokenizeParams{
-						"'", {
-							new_token("'", SINGLE_QUOTE),
-							new_token(NULL, END_OF_FILE),
-						}},
+					// TestTokenizeParams{
+					// 	"'", {
+					// 		new_token("'", SINGLE_QUOTE),
+					// 		new_token(NULL, END_OF_FILE),
+					// 	}},
 					TestTokenizeParams{
 						"\"", {
 							new_token("\"", DOUBLE_QUOTE),

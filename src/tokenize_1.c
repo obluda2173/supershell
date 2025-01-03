@@ -165,7 +165,7 @@ bool	is_builtin(char *str)
 //returns token of given content
 static token_type	assign_type(char *str)
 {
-	printf("here is assign type: %s\n", str);
+	/* printf("here is assign type: %s\n", str); */
 	if (ft_strncmp(str, "||", 2) == 0)
 		return (OR);
 	else if (ft_strncmp(str, "&&", 2) == 0)
@@ -229,7 +229,7 @@ t_token	*get_next_token(t_line_container *lc)
 
 	word = extract_word(lc);
 
-	printf("%s\n", word);
+	/* printf("%s\n", word); */
 
 	token = malloc(sizeof(t_token));
 	
