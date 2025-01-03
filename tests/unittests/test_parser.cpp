@@ -70,7 +70,7 @@ TEST_P(ParserTestSuite, ParserTest) {
 }
 
 INSTANTIATE_TEST_SUITE_P(
-    ParserTestsErrorHandling,
+	ParserTestsErrorHandling,
 	ParserTestSuite,
 	testing::Values(
 		ParserTestParams{{
@@ -104,6 +104,17 @@ INSTANTIATE_TEST_SUITE_P(
 	ParserTestsCmdsWithRedirections,
 	ParserTestSuite,
 	testing::Values(
+		ParserTestParams{
+			{
+				new_token("<<", HERE_DOC),
+				new_token("line1\nline2\n", WORD),
+				new_token(NULL, END_OF_FILE),
+			},
+			{new_test_script_node(
+					CMD_NODE,
+					{new_test_cmd_node(new_token("<<", HERE_DOC), {},
+									   {new_redirection("line1\nline2\n", HERED)})},
+					{})}},
 
 		ParserTestParams{
 			{
