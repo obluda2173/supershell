@@ -27,7 +27,7 @@ void compare_cmd_node(t_test_script_node want, t_cmd_node got) {
 		ASSERT_NE(got.redirections, nullptr);
 		t_redirection r = *(t_redirection*)got.redirections->content;
 		EXPECT_EQ(OUT, r.type);
-		EXPECT_STREQ("output1", r.file);
+		EXPECT_STREQ(want.cmd_node.redirects[0].file, r.file);
 	}
 }
 

@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "lexer.h"
 #include "libft.h"
 #include "parser.h"
 #include <unistd.h>
@@ -88,6 +89,10 @@ t_list	*fill_cmd_node(t_list *script, t_dllist *tokens)
 	t_token			cur;
 	t_script_node	*latest_node;
 
+	cur = *(t_token *)(tokens->content);
+	if (cur.type != REDIRECT_OUT) {
+		tokens = tokens->next;
+	}
 	while (tokens)
 	{
 		cur = *(t_token *)(tokens->content);
@@ -116,5 +121,5 @@ t_list	*parse_cmd(t_list *script, t_dllist *tokens)
 	latest_node = create_and_add_cmd_node(&script, tokens);
 	if (latest_node && latest_node->node_type == ERROR_NODE)
 		return (script);
-	return (fill_cmd_node(script, tokens->next));
+	return (fill_cmd_node(script, tokens));
 }
