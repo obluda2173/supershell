@@ -73,18 +73,15 @@ INSTANTIATE_TEST_SUITE_P(
 	ParserTests,
 	ParserTestSuite,
 	testing::Values(
-		// ParserTestParams{
-		// 	{
-		// 		new_token(">", REDIRECT_OUT),
-		// 		new_token("test.txt", WORD),
-		// 		new_token(NULL, END_OF_FILE),
-		// 	},
-		// 	{new_test_script_node(
-		// 			CMD_NODE,
-		// 			{new_test_cmd_node(new_token(">", REDIRECT_OUT),
-		// 							   {}, 0,
-		// 							   {new_redirection("test.txt", OUT)})},
-		// 			{})} },
+		ParserTestParams{
+			{
+				new_token(">", REDIRECT_OUT),
+				new_token("test.txt", WORD),
+				new_token(NULL, END_OF_FILE),
+			},
+			{new_test_script_node(
+					CMD_NODE,
+					{new_test_cmd_node(new_token(">", REDIRECT_OUT), {}, {new_redirection("test.txt", OUT)})}, {})} },
 		ParserTestParams{{}, {new_test_script_node(ERROR_NODE, {}, new_error_node("no tokens"))}},
 		ParserTestParams{{new_token(NULL, END_OF_FILE)}, {}},
 		ParserTestParams{
