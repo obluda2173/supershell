@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:07:34 by erian             #+#    #+#             */
-/*   Updated: 2025/01/03 14:24:35 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/03 14:59:05 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,19 +70,6 @@ static void print_tokens(t_dllist *head)
 	}
 }
 
-void ft_dllstinsert_before(t_dllist *node, t_dllist *new_node)
-{
-	if (!node || !new_node)
-		return;
-
-	new_node->next = node;
-	new_node->prev = node->prev;
-
-	if (node->prev)
-		node->prev->next = new_node;
-	node->prev = new_node;
-}
-
 void	quotes(t_dllist **tokens)
 {
 	t_dllist *tokens_lst;
@@ -96,7 +83,15 @@ void	quotes(t_dllist **tokens)
 	while (tokens_lst)
 	{
 		current_token = (t_token *)tokens_lst->content;
-
+		
+		if (current_token->type == DOUBLE_QUOTE)
+		{
+			char *trimmed_content = ft_strtrim(current_token->content, "'");
+			free(current_token->content);
+			current_token->content = trimmed_content;
+			tokens_lst = tokens_lst->next;
+		}
+		
 		if (current_token->type == SINGLE_QUOTE)
 		{
 			char *trimmed_content = ft_strtrim(current_token->content, "'");

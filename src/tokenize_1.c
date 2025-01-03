@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2025/01/03 14:31:20 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/03 15:19:14 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,9 @@ void skip_spaces(char *line, int *i)
 static char *extract_word(t_line_container *lc)
 {
     int start;
-    int len;
+    size_t len;
     char *word;
+	char *word_2 = NULL;
     static bool in_double_quote = false;
 
     if (!lc->line)
@@ -43,6 +44,7 @@ static char *extract_word(t_line_container *lc)
         else
             lc->pos++;
     }
+	
     else if (lc->line[lc->pos] == '\'')
     {
         lc->pos++;
@@ -55,11 +57,12 @@ static char *extract_word(t_line_container *lc)
         }
         lc->pos++;
     }
+	
     else if (lc->line[lc->pos] == '\"' && !in_double_quote)
     {
         lc->pos++;
         in_double_quote = true;
-        while (lc->line[lc->pos] && (lc->line[lc->pos] != '\"' || lc->line[lc->pos - 1] == '\\'))
+        while (lc->line[lc->pos] && lc->line[lc->pos] != '\"')
         {
             if (lc->line[lc->pos] == '$') // Handle $ symbol inside quotes
                 break;
@@ -72,15 +75,17 @@ static char *extract_word(t_line_container *lc)
             in_double_quote = false;
         }
     }
+	
     else if (lc->line[lc->pos] == '$')
     {
         lc->pos++;
         while (lc->line[lc->pos] && (ft_isalnum(lc->line[lc->pos]) || lc->line[lc->pos] == '_'))
             lc->pos++;
     }
+	
     else if (in_double_quote)
     {
-        while (lc->line[lc->pos] && (lc->line[lc->pos] != '\"' || lc->line[lc->pos - 1] == '\\'))
+        while (lc->line[lc->pos] && lc->line[lc->pos] != '\"')
         {
             if (lc->line[lc->pos] == '$') // Handle $ symbol inside quotes
                 break;
@@ -92,6 +97,7 @@ static char *extract_word(t_line_container *lc)
             in_double_quote = false;
         }
     }
+	
     else
     {
         while (lc->line[lc->pos] && lc->line[lc->pos] != ' ' &&
@@ -103,7 +109,8 @@ static char *extract_word(t_line_container *lc)
     }
 
     // Ensure that lc->pos has not gone out of bounds
-    if (lc->line[lc->pos] == '\0' && lc->pos == start) {
+    if (lc->line[lc->pos] == '\0' && lc->pos == start)
+	{
         printf("Error: Empty token.\n");
         return NULL;
     }
@@ -111,7 +118,7 @@ static char *extract_word(t_line_container *lc)
     len = lc->pos - start;
 
     // Validate word length
-    if (len <= 0 || len > (int)ft_strlen(lc->line))
+    if (len <= 0 || len > ft_strlen(lc->line))
     {
         printf("Error: Invalid word length.\n");
         return NULL;
@@ -124,9 +131,19 @@ static char *extract_word(t_line_container *lc)
         printf("Error: Memory allocation failed.\n");
         return NULL;
     }
-    ft_strlcpy(word, lc->line + start, len + 1);
+    
+	ft_strlcpy(word, lc->line + start, len + 1);
 
-	printf("\n%s\n", word);
+	len = ft_strlen(word); 
+	if ((in_double_quote || word[len - 1] == '\"') && lc->line[start] != '$' && lc->line[start] != '\"')
+	{
+		free(word);
+		len = lc->pos - start;
+		word_2 = malloc(len + 1);
+		ft_strlcpy(word_2, lc->line + start, len + 1);
+		word = ft_strjoin("\"", word_2);
+		free(word_2);
+	}
 
     return word;
 }
