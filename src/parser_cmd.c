@@ -90,9 +90,8 @@ t_list	*fill_cmd_node(t_list *script, t_dllist *tokens)
 	t_script_node	*latest_node;
 
 	cur = *(t_token *)(tokens->content);
-	if (cur.type != REDIRECT_OUT) {
+	if (cur.type != REDIRECT_OUT)
 		tokens = tokens->next;
-	}
 	while (tokens)
 	{
 		cur = *(t_token *)(tokens->content);
