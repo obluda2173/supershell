@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2025/01/03 11:57:31 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/03 14:31:20 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,73 +20,117 @@ void skip_spaces(char *line, int *i)
 }
  
 //extract allocated word from line
-static char	*extract_word(t_line_container *lc)
+static char *extract_word(t_line_container *lc)
 {
-	int		start;
-	int		len;
-	char	*word;
+    int start;
+    int len;
+    char *word;
+    static bool in_double_quote = false;
 
-	start = lc->pos;
-	if (!lc->line)
-		return NULL;
+    if (!lc->line)
+        return NULL;
 
-	if (lc->line[lc->pos] == '\"' || lc->line[lc->pos] == '<'
-		|| lc->line[lc->pos] == '>' || lc->line[lc->pos] == '|')
-	{
-		if ((lc->line[lc->pos] == '<' && lc->line[lc->pos + 1] == '<') ||
-			(lc->line[lc->pos] == '>' && lc->line[lc->pos + 1] == '>') ||
-			(lc->line[lc->pos] == '&' && lc->line[lc->pos + 1] == '&') ||
-			(lc->line[lc->pos] == '|' && lc->line[lc->pos + 1] == '|'))
-			lc->pos += 2;
-		else
-			lc->pos++;
-	}
+    start = lc->pos;
 
-	else if (lc->line[lc->pos] == '\'')
-	{
-		lc->pos++;
-		while (lc->line[lc->pos] && lc->line[lc->pos] != '\'')
-			lc->pos++;
-		if (!lc->line[lc->pos])
-		{
-			printf("Error: Unmatched single quote.\n");
-			return NULL;
-		}
-		lc->pos++;
-	}
-	else if (lc->line[lc->pos] == '\"')
-	{
-		while ((lc->line[lc->pos] != '\"' || lc->line[lc->pos] != '$') && lc->line[lc->pos])	
-		{
-			lc->pos++;
-			printf("inside\n");
-		}
-		
-	}
-	else
-		while (lc->line[lc->pos] && lc->line[lc->pos] != ' ' &&
-				lc->line[lc->pos] != '\'' && lc->line[lc->pos] != '\"' &&
-				lc->line[lc->pos] != '<' && lc->line[lc->pos] != '>' &&
-				lc->line[lc->pos] != '|')
-			lc->pos++;
+    if (lc->line[lc->pos] == '<' || lc->line[lc->pos] == '>' 
+        || lc->line[lc->pos] == '|' || lc->line[lc->pos] == '&')
+    {
+        if ((lc->line[lc->pos] == '<' && lc->line[lc->pos + 1] == '<') ||
+            (lc->line[lc->pos] == '>' && lc->line[lc->pos + 1] == '>') ||
+            (lc->line[lc->pos] == '&' && lc->line[lc->pos + 1] == '&') ||
+            (lc->line[lc->pos] == '|' && lc->line[lc->pos + 1] == '|'))
+            lc->pos += 2;
+        else
+            lc->pos++;
+    }
+    else if (lc->line[lc->pos] == '\'')
+    {
+        lc->pos++;
+        while (lc->line[lc->pos] && lc->line[lc->pos] != '\'')
+            lc->pos++;
+        if (!lc->line[lc->pos])
+        {
+            printf("Error: Unmatched single quote.\n");
+            return NULL;
+        }
+        lc->pos++;
+    }
+    else if (lc->line[lc->pos] == '\"' && !in_double_quote)
+    {
+        lc->pos++;
+        in_double_quote = true;
+        while (lc->line[lc->pos] && (lc->line[lc->pos] != '\"' || lc->line[lc->pos - 1] == '\\'))
+        {
+            if (lc->line[lc->pos] == '$') // Handle $ symbol inside quotes
+                break;
+            lc->pos++;
+        }
 
-	len = lc->pos - start;
-	if (len <= 0 || len > (int)ft_strlen(lc->line))
-	{
-		printf("Error: Invalid word length.\n");
-		return NULL;
-	}
+        if (lc->line[lc->pos] == '\"')
+        {
+            lc->pos++;
+            in_double_quote = false;
+        }
+    }
+    else if (lc->line[lc->pos] == '$')
+    {
+        lc->pos++;
+        while (lc->line[lc->pos] && (ft_isalnum(lc->line[lc->pos]) || lc->line[lc->pos] == '_'))
+            lc->pos++;
+    }
+    else if (in_double_quote)
+    {
+        while (lc->line[lc->pos] && (lc->line[lc->pos] != '\"' || lc->line[lc->pos - 1] == '\\'))
+        {
+            if (lc->line[lc->pos] == '$') // Handle $ symbol inside quotes
+                break;
+            lc->pos++;
+        }
+        if (lc->line[lc->pos] == '\"')
+        {
+            lc->pos++;
+            in_double_quote = false;
+        }
+    }
+    else
+    {
+        while (lc->line[lc->pos] && lc->line[lc->pos] != ' ' &&
+               lc->line[lc->pos] != '\'' && lc->line[lc->pos] != '\"' &&
+               lc->line[lc->pos] != '<' && lc->line[lc->pos] != '>' &&
+               lc->line[lc->pos] != '|' && lc->line[lc->pos] != '&' &&
+			   lc->line[lc->pos] != '$')
+            lc->pos++;
+    }
 
-	word = malloc(len + 1);
-	if (!word)
-	{
-		printf("Error: Memory allocation failed.\n");
-		return NULL;
-	}
+    // Ensure that lc->pos has not gone out of bounds
+    if (lc->line[lc->pos] == '\0' && lc->pos == start) {
+        printf("Error: Empty token.\n");
+        return NULL;
+    }
 
-	ft_strlcpy(word, lc->line + start, len + 1);
-	return word;
+    len = lc->pos - start;
+
+    // Validate word length
+    if (len <= 0 || len > (int)ft_strlen(lc->line))
+    {
+        printf("Error: Invalid word length.\n");
+        return NULL;
+    }
+
+    // Allocate and copy the word
+    word = malloc(len + 1);
+    if (!word)
+    {
+        printf("Error: Memory allocation failed.\n");
+        return NULL;
+    }
+    ft_strlcpy(word, lc->line + start, len + 1);
+
+	printf("\n%s\n", word);
+
+    return word;
 }
+
 
 bool	is_builtin(char *str)
 {

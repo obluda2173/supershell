@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:33:18 by erian             #+#    #+#             */
-/*   Updated: 2024/12/31 15:55:39 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/03 14:42:58 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static int	quotes(char *line, int i)
 //not sure if there are any other separators
 static bool	is_separator(char c)
 {
-	if (c == '|' || c == '&'|| c == '<' || c == '>')
+	if (c == '|' || c == '&' || c == '<' || c == '>')
 		return (true);
 	return (false);
 }
@@ -97,7 +97,7 @@ char	*space_line(char *line)
 		{
 			new_line[j++] = ' ';
 			new_line[j++] = line[i++];
-			if (quotes(line, i) == 0 && (line[i] == '>' || line[i] == '<' || line[i] == '|'))
+			if (quotes(line, i) == 0 && (line[i] == '>' || line[i] == '<' || line[i] == '|' || line[i] == '&'))
 				new_line[j++] = line[i++];
 			new_line[j++] = ' ';
 		}
