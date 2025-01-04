@@ -49,6 +49,13 @@ INSTANTIATE_TEST_SUITE_P(
 	ParserTestsErrorsRedirections,
 	ParserTestSuite,
 	testing::Values(
+		ParserTestParams{
+			{
+				new_token("<<", HERE_DOC),
+				new_token("line1\nline2", WORD),
+				new_token(NULL, END_OF_FILE),
+			},
+			{new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error redirection"))}},
 		ParserTestParams{{
 				new_token(">", REDIRECT_APPEND),
 				new_token("echo", BUILTIN),
@@ -103,17 +110,29 @@ INSTANTIATE_TEST_SUITE_P(
 		// 			{new_test_cmd_node(new_token("<<", HERE_DOC), {},
 		// 							   {new_redirection("line1\n$PATH\nline2\n", HERED)})},
 		// 			{})}},
-		// ParserTestParams{
-		// 	{
-		// 		new_token("<<", HERE_DOC),
-		// 		new_token("line1\nline2\n", WORD),
-		// 		new_token(NULL, END_OF_FILE),
-		// 	},
-		// 	{new_test_script_node(
-		// 			CMD_NODE,
-		// 			{new_test_cmd_node(new_token("<<", HERE_DOC), {},
-		// 							   {new_redirection("line1\nline2\n", HERED)})},
-		// {})}},
+		//
+		ParserTestParams{
+			{
+				new_token("<<", HERE_DOC),
+				new_token("line1\n$PATH\nline2", DOUBLE_QUOTE),
+				new_token(NULL, END_OF_FILE),
+			},
+			{new_test_script_node(
+					CMD_NODE,
+					{new_test_cmd_node(new_token("<<", HERE_DOC), {},
+									   {new_redirection(0, HERED, "line1\n$PATH\nline2", DOUBLE_QUOTE_STR)})},
+		{})}},
+		ParserTestParams{
+			{
+				new_token("<<", HERE_DOC),
+				new_token("line1\nline2", SINGLE_QUOTE),
+				new_token(NULL, END_OF_FILE),
+			},
+			{new_test_script_node(
+					CMD_NODE,
+					{new_test_cmd_node(new_token("<<", HERE_DOC), {},
+									   {new_redirection(0, HERED, "line1\nline2", LITERAL)})},
+		{})}},
 		ParserTestParams{{
 				new_token("cat", WORD),
 				new_token("7<", REDIRECT_IN),

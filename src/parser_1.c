@@ -54,15 +54,23 @@ t_redirection	*parse_redirection_token(t_token t)
 		r->type = IN;
 	else if (t.type == REDIRECT_APPEND)
 		r->type = APPEND;
+	else if (t.type == HERE_DOC)
+		r->type = HERED;
 	return (r);
 }
 
 t_redirection	*parse_redirection_word(t_token t, t_redirection *r)
 {
-	if (t.type == WORD)
+	if (r->type == HERED && (t.type != SINGLE_QUOTE && t.type != DOUBLE_QUOTE)) {
+		free(r);
+		return NULL;
+	}
+	if (t.type == WORD || t.type == SINGLE_QUOTE)
 		r->word_type = LITERAL;
 	else if (t.type == DOLLAR)
 		r->word_type = ENV_EXP;
+	else if (t.type == DOUBLE_QUOTE)
+		r->word_type = DOUBLE_QUOTE_STR;
 	else
 	{
 		free(r);
