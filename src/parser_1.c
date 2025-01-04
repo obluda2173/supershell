@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "lexer.h"
 #include "parser.h"
 
 void	init_cmd_node(t_script_node *sn, t_token t)
@@ -28,7 +29,16 @@ t_redirection	*extract_redirection(t_dllist *tokens)
 	r = (t_redirection *)malloc(sizeof(t_redirection));
 	if (!r)
 		return (NULL);
-	r->type = OUT;
+	if (cur.type == REDIRECT_OUT) {
+		r->type = OUT;
+		r->fd = 1;
+	} else if  (cur.type == REDIRECT_IN){
+		r->type = IN;
+		r->fd = 0;
+	} else if  (cur.type == REDIRECT_APPEND){
+		r->type = APPEND;
+		r->fd = 1;
+	}
 	tokens = tokens->next;
 	cur = *(t_token *)(tokens->content);
 	if (cur.type != WORD)
@@ -36,7 +46,6 @@ t_redirection	*extract_redirection(t_dllist *tokens)
 		free(r);
 		return (NULL);
 	}
-	r->file = ft_strdup(cur.content);
 	r->word = ft_strdup(cur.content);
 	r->word_type = LITERAL;
 	return (r);

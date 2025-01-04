@@ -32,8 +32,8 @@ t_argument new_argument(const char* literal, t_word_type type) {
 	return (t_argument){(char*)literal, type};
 }
 
-t_redirection new_redirection(const char* literal, t_redirection_type type, const char* word, t_word_type wt) {
-	return (t_redirection){(char*)literal, type, (char*)word, wt};
+t_redirection new_redirection(int fd, t_redirection_type type, const char* word, t_word_type wt) {
+	return (t_redirection){fd, type, (char*)word, wt};
 }
 
 t_error_node new_error_node(const char* error) {
@@ -48,8 +48,8 @@ void compare_redirections(std::vector<t_redirection> want, t_list *got) {
 	}
 	ASSERT_NE(got, nullptr);
 	t_redirection r = *(t_redirection*)got->content;
-	EXPECT_STREQ(want[0].file, r.file);
-	EXPECT_EQ(OUT, r.type);
+	EXPECT_EQ(want[0].fd, r.fd);
+	EXPECT_EQ(want[0].type, r.type);
 	EXPECT_STREQ(want[0].word, r.word);
 	EXPECT_EQ(OUT, r.word_type);
 }

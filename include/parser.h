@@ -46,7 +46,7 @@ typedef struct s_argument
 
 typedef struct s_redirection
 {
-	char				*file;
+	int				fd;
 	t_redirection_type	type;
 	char				*word;
 	t_word_type			word_type;

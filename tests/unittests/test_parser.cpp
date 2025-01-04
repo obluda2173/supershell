@@ -111,7 +111,7 @@ INSTANTIATE_TEST_SUITE_P(
 			{new_test_script_node(
 					CMD_NODE,
 					{new_test_cmd_node(new_token(">>", REDIRECT_APPEND), {},
-									   {new_redirection("test.txt", APPEND, "test.txt", LITERAL)})},
+									   {new_redirection(1, APPEND, "test.txt", LITERAL)})},
 					{})}},
 		ParserTestParams{{
 				new_token("cat", WORD),
@@ -122,7 +122,7 @@ INSTANTIATE_TEST_SUITE_P(
 						 {new_test_script_node(CMD_NODE,
 											   new_test_cmd_node(
 												   new_token("cat", WORD),
-												   {},  {new_redirection("input1", IN, "input1", LITERAL)}), {})}},
+												   {},  {new_redirection(0, IN, "input1", LITERAL)}), {})}},
 		ParserTestParams{
 			{
 				new_token("<", REDIRECT_IN),
@@ -132,7 +132,7 @@ INSTANTIATE_TEST_SUITE_P(
 			{new_test_script_node(
 					CMD_NODE,
 					{new_test_cmd_node(new_token("<", REDIRECT_IN), {},
-									   {new_redirection("test.txt", IN, "test.txt", LITERAL)})},
+									   {new_redirection(0, IN, "test.txt", LITERAL)})},
 					{})}},
 		ParserTestParams{
 			{
@@ -143,7 +143,7 @@ INSTANTIATE_TEST_SUITE_P(
 			{new_test_script_node(
 					CMD_NODE,
 					{new_test_cmd_node(new_token(">", REDIRECT_OUT), {},
-									   {new_redirection("test.txt", OUT, "test.txt", LITERAL)})},
+									   {new_redirection(1, OUT, "test.txt", LITERAL)})},
 					{})}},
 		ParserTestParams{{
 				new_token("echo", BUILTIN),
@@ -157,7 +157,7 @@ INSTANTIATE_TEST_SUITE_P(
 												   new_token("echo", BUILTIN),
 												   {
 													   new_argument("string1 ", LITERAL),
-												   },  {new_redirection("output1", OUT, "output1", LITERAL)}), {})}}
+												   },  {new_redirection(1, OUT, "output1", LITERAL)}), {})}}
 
 		)
 	);

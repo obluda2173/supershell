@@ -26,7 +26,6 @@ void	free_redirection(void *content)
 	t_redirection	*r;
 
 	r = (t_redirection *)content;
-	free(r->file);
 	free(r->word);
 	free(r);
 }
