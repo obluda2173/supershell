@@ -97,8 +97,8 @@ t_list	*fill_cmd_node(t_list *script, t_dllist *tokens)
 		cur = *(t_token *)(tokens->content);
 		if (cur.type == END_OF_FILE)
 			return (script);
-                if (cur.type == REDIRECT_OUT || cur.type == REDIRECT_IN ||
-                    cur.type == REDIRECT_APPEND || cur.type == HERE_DOC )
+		if (cur.type == REDIRECT_OUT || cur.type == REDIRECT_IN ||
+			cur.type == REDIRECT_APPEND || cur.type == HERE_DOC )
 		{
 			latest_node = create_and_add_redirection(&script, tokens,
 					script->content);

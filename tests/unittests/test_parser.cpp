@@ -113,7 +113,7 @@ INSTANTIATE_TEST_SUITE_P(
 		// 			CMD_NODE,
 		// 			{new_test_cmd_node(new_token("<<", HERE_DOC), {},
 		// 							   {new_redirection("line1\nline2\n", HERED)})},
-					// {})}},
+		// {})}},
 		ParserTestParams{{
 				new_token("cat", WORD),
 				new_token("7<", REDIRECT_IN),
@@ -200,7 +200,7 @@ INSTANTIATE_TEST_SUITE_P(
 											   new_test_cmd_node(
 												   new_token("echo", BUILTIN),
 												   {
-													   new_argument("string1 ", LITERAL),
+													   new_argument("string1 ", DOUBLE_QUOTE_STR),
 												   },  {new_redirection(1, OUT, "output1", LITERAL)}), {})}}
 
 		)
@@ -325,7 +325,7 @@ INSTANTIATE_TEST_SUITE_P(
 					new_test_cmd_node(
 						new_token("echo", BUILTIN),
 						{
-							new_argument("this is a double quoted string", LITERAL),
+							new_argument("this is a double quoted string", DOUBLE_QUOTE_STR),
 						},
 						{}),
 					{})}},
@@ -344,22 +344,21 @@ INSTANTIATE_TEST_SUITE_P(
 									  },
 									  {}),
 					{})}},
-		// TODO: the argument is incorrect
-		ParserTestParams {
-			{
-				new_token("echo", BUILTIN),   new_token("string1 ", DOUBLE_QUOTE),
-				new_token("PATH", DOLLAR),    new_token(" string2", DOUBLE_QUOTE),
+		ParserTestParams{{
+				new_token("echo", BUILTIN), new_token("string1 $PATH string2", DOUBLE_QUOTE),
+				new_token("string1 ", DOUBLE_QUOTE), new_token("PATH", DOLLAR),    new_token(" string2", DOUBLE_QUOTE),
 				new_token(NULL, END_OF_FILE),
 			},
-			{
-				new_test_script_node(
-					CMD_NODE,
-					new_test_cmd_node(new_token("echo", BUILTIN),
-									  {
-										  new_argument("string1 ", LITERAL),
-										  new_argument("PATH", ENV_EXP),
-										  new_argument(" string2", LITERAL),
-									  },
-									  {}),
-					{})}}
+						 {
+							 new_test_script_node(
+								 CMD_NODE,
+								 new_test_cmd_node(new_token("echo", BUILTIN),
+												   {
+													   new_argument("string1 $PATH string2", DOUBLE_QUOTE_STR),
+													   new_argument("string1 ", DOUBLE_QUOTE_STR),
+													   new_argument("PATH", ENV_EXP),
+													   new_argument(" string2", DOUBLE_QUOTE_STR),
+												   },
+												   {}),
+								 {})}}
 		));

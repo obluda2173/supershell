@@ -92,6 +92,8 @@ t_argument	*extract_argument(t_token *t)
 	arg->word = ft_strdup(t->content);
 	if (t->type == WORD || t->type == DOUBLE_QUOTE || t->type == SINGLE_QUOTE)
 		arg->type = LITERAL;
+	if (t->type == DOUBLE_QUOTE)
+		arg->type = DOUBLE_QUOTE_STR;
 	if (t->type == DOLLAR)
 	{
 		arg->type = ENV_EXP;
