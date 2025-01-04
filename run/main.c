@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:59:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/04 09:41:21 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/04 11:32:41 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,13 +81,6 @@ void	execute(t_data **data)
 	//todo
 }
 
-//check syntax
-bool	check_syntax(char *line)
-{
-	(void)line;
-	return (true);
-}
-
 int	main(int ac, char **av, char **ep)
 {
 	t_data	*data;
@@ -134,6 +127,12 @@ int	main(int ac, char **av, char **ep)
 			continue ;
 		}
 
+		if (!check_syntax(data->line))
+		{
+			data->not_exit = false;
+			continue ;
+		}
+		
 		t_dllist *tokens = tokenize(data->line);
 		ft_dllstclear(&tokens, free_token);
 

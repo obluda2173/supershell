@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:33:18 by erian             #+#    #+#             */
-/*   Updated: 2025/01/03 14:42:58 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/04 12:22:11 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,22 @@ static int	count_separators(char *line)
 	return (count);
 }
 
-//handle cases when commands and separators are not separated with spaces 
+static bool	is_fd_redirection(char *line, int i)
+{
+	if (ft_isdigit(line[i]) && line[i + 1] == '>' && (line[i + 2] == '&' || line[i + 2] == '-'))
+		return (true);
+	return (false);
+}
+
+static bool	is_logical_operator(char *line, int i)
+{
+	if (line[i] == '&' && line[i + 1] == '&')
+		return (true);
+	if (line[i] == '|' && line[i + 1] == '|')
+		return (true);
+	return (false);
+}
+
 char	*space_line(char *line)
 {
 	char	*new_line;
@@ -91,8 +106,23 @@ char	*space_line(char *line)
 		return (NULL);
 	while (line[i])
 	{
-		if (line[i] == '$' && quotes(line, i) != 2 && i && line[i - 1] != '\\')
-			new_line[j++] = (char)(line[i++]);
+		// Handle file descriptor redirection
+		if (is_fd_redirection(line, i))
+		{
+			new_line[j++] = ' ';
+			while (isdigit(line[i]) || line[i] == '>' || line[i] == '&' || line[i] == '-')
+				new_line[j++] = line[i++];
+			new_line[j++] = ' ';
+		}
+		// Handle logical operators
+		else if (is_logical_operator(line, i))
+		{
+			new_line[j++] = ' ';
+			new_line[j++] = line[i++];
+			new_line[j++] = line[i++];
+			new_line[j++] = ' ';
+		}
+		// Handle separators outside quotes
 		else if (quotes(line, i) == 0 && is_separator(line[i]))
 		{
 			new_line[j++] = ' ';
@@ -105,5 +135,6 @@ char	*space_line(char *line)
 			new_line[j++] = line[i++];
 	}
 	new_line[j] = '\0';
+	printf("%s\n", new_line);
 	return (new_line);
 }

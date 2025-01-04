@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2025/01/04 10:04:53 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/04 12:33:29 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ static char *extract_word(t_line_container *lc)
 	char *word_2 = NULL;
     static bool in_double_quote = false;
 
-    if (!lc->line)
-        return NULL;
-
     if (!in_double_quote)
         skip_spaces((char *)lc->line, &(lc->pos));
+        
+    if (!lc->line[lc->pos])
+        return NULL;
 
     start = lc->pos;
 
@@ -40,10 +40,11 @@ static char *extract_word(t_line_container *lc)
     if (lc->line[lc->pos] == '<' || lc->line[lc->pos] == '>' 
         || lc->line[lc->pos] == '|' || lc->line[lc->pos] == '&')
     {
-        if ((lc->line[lc->pos] == '<' && lc->line[lc->pos + 1] == '<') ||
+        if ((lc->pos + 1 < (int)ft_strlen(lc->line)) && (
+            (lc->line[lc->pos] == '<' && lc->line[lc->pos + 1] == '<') ||
             (lc->line[lc->pos] == '>' && lc->line[lc->pos + 1] == '>') ||
             (lc->line[lc->pos] == '&' && lc->line[lc->pos + 1] == '&') ||
-            (lc->line[lc->pos] == '|' && lc->line[lc->pos + 1] == '|'))
+            (lc->line[lc->pos] == '|' && lc->line[lc->pos + 1] == '|')))
             lc->pos += 2;
         else
             lc->pos++;
@@ -95,7 +96,7 @@ static char *extract_word(t_line_container *lc)
     {
         while (lc->line[lc->pos] && lc->line[lc->pos] != '\"')
         {
-            if (lc->line[lc->pos] == '$') // Handle $ symbol inside quotes
+            if (lc->line[lc->pos] == '$')
                 break;
             lc->pos++;
         }
@@ -118,6 +119,7 @@ static char *extract_word(t_line_container *lc)
     }
 
     // Ensure that lc->pos has not gone out of bounds
+    printf("%i, %i\n", lc->pos, start);
     if (lc->line[lc->pos] == '\0' && lc->pos == start)
 	{
         printf("Error: Empty token.\n");
@@ -127,7 +129,7 @@ static char *extract_word(t_line_container *lc)
     len = lc->pos - start;
 
     // Validate word length
-    if (len <= 0 || len > ft_strlen(lc->line))
+    if (len <= 0 || lc->pos > (int)ft_strlen(lc->line))
     {
         printf("Error: Invalid word length.\n");
         return NULL;
@@ -175,42 +177,45 @@ bool	is_builtin(char *str)
 static token_type	assign_type(char *str)
 {
 	/* printf("here is assign type: %s\n", str); */
-	if (ft_strncmp(str, "||", 2) == 0)
-		return (OR);
-	else if (ft_strncmp(str, "&&", 2) == 0)
-		return (AND);
-	else if (ft_strncmp(str, "|", 1) == 0)
-		return (PIPE);
-	else if (ft_strncmp(str, "$", 1) == 0 && ft_strlen(str) == 1)
-		return (WORD);
-	else if (ft_strncmp(str, "$", 1) == 0)
-		return (DOLLAR);
-	else if (ft_strchr(str, '*') != 0)
-		return (WILDCARD);
-	else if (ft_strncmp(str, "<<", 2) == 0)
-		return (HERE_DOC);
-	else if (ft_strncmp(str, ">>", 2) == 0)
-		return (REDIRECT_APPEND);
-	else if (ft_strncmp(str, "<", 1) == 0)
-		return (REDIRECT_IN);
-	else if (ft_strncmp(str, ">", 1) == 0)
-		return (REDIRECT_OUT);
-	else if (ft_strncmp(str, "'", 1) == 0)
-		return (SINGLE_QUOTE);
-	else if (ft_strncmp(str, "\"", 1) == 0)
-		return (DOUBLE_QUOTE);
-	else if (ft_strncmp(str, ";", 1) == 0)
-		return (INVALID);
-	else if (ft_strncmp(str, "\\", 1) == 0)
-		return (INVALID);
-	else if (ft_strlen(str) > 0)
-	{
-		if (is_builtin(str))
-			return (BUILTIN);
-		else
-			return (WORD);
-		//implement invalid
-	}
+    if (str)
+    {
+        if (ft_strncmp(str, "||", 2) == 0)
+            return (OR);
+        else if (ft_strncmp(str, "&&", 2) == 0)
+            return (AND);
+        else if (ft_strncmp(str, "|", 1) == 0)
+            return (PIPE);
+        else if (ft_strncmp(str, "$", 1) == 0 && ft_strlen(str) == 1)
+            return (WORD);
+        else if (ft_strncmp(str, "$", 1) == 0)
+            return (DOLLAR);
+        else if (ft_strchr(str, '*') != 0)
+            return (WILDCARD);
+        else if (ft_strncmp(str, "<<", 2) == 0)
+            return (HERE_DOC);
+        else if (ft_strncmp(str, ">>", 2) == 0)
+            return (REDIRECT_APPEND);
+        else if (ft_strncmp(str, "<", 1) == 0)
+            return (REDIRECT_IN);
+        else if (ft_strncmp(str, ">", 1) == 0)
+            return (REDIRECT_OUT);
+        else if (ft_strncmp(str, "'", 1) == 0)
+            return (SINGLE_QUOTE);
+        else if (ft_strncmp(str, "\"", 1) == 0)
+            return (DOUBLE_QUOTE);
+        else if (ft_strncmp(str, ";", 1) == 0)
+            return (INVALID);
+        else if (ft_strncmp(str, "\\", 1) == 0)
+            return (INVALID);
+        else if (ft_strlen(str) > 0)
+        {
+            if (is_builtin(str))
+                return (BUILTIN);
+            else
+                return (WORD);
+            //implement invalid
+        }
+    }
 	return END_OF_FILE;
 }
 
@@ -223,6 +228,7 @@ t_token	*get_next_token(t_line_container *lc)
 
 	if (!lc->line)
 		return NULL;
+    //printf("in get_next_token:%s\n", lc->line);
 
 	if (lc->line[lc->pos] == '\0')
 	{
@@ -233,6 +239,7 @@ t_token	*get_next_token(t_line_container *lc)
 		token->type = END_OF_FILE;
 		return (token);
 	}
+
 
 	word = extract_word(lc);
 
