@@ -23,14 +23,8 @@ void compare_cmd_node(t_test_script_node want, t_cmd_node got) {
 		EXPECT_EQ(want.cmd_node.arguments[j].type, got_arg->type);
 		head = head->next;
 	}
-	if (want.cmd_node.redirects.size() > 0) {
-		ASSERT_NE(got.redirections, nullptr);
-		t_redirection r = *(t_redirection*)got.redirections->content;
-		EXPECT_STREQ(want.cmd_node.redirects[0].file, r.file);
-		EXPECT_EQ(OUT, r.type);
-		EXPECT_STREQ(want.cmd_node.redirects[0].word, r.word);
-		EXPECT_EQ(OUT, r.word_type);
-	}
+	if (want.cmd_node.redirects.size() > 0)
+		compare_redirections(want.cmd_node.redirects, got.redirections);
 }
 
 TEST_P(ParserTestSuite, ParserTest) {
