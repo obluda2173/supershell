@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "lexer.h"
+#include "libft.h"
 #include "parser.h"
 
 void	init_cmd_node(t_script_node *sn, t_token t)
@@ -20,44 +21,65 @@ void	init_cmd_node(t_script_node *sn, t_token t)
 	sn->node_data.cmd_node.redirections = NULL;
 }
 
-t_redirection *parse_redirection_token(t_token t) {
-	t_redirection *r = (t_redirection *)malloc(sizeof(t_redirection));
-	if (!r)
-		return (NULL);
-	if (t.type == REDIRECT_OUT) {
-		r->type = OUT;
-		r->fd = 1;
-	} else if  (t.type == REDIRECT_IN){
-		r->type = IN;
-		r->fd = 0;
-	} else if  (t.type == REDIRECT_APPEND){
-		r->type = APPEND;
-		r->fd = 1;
-	}
-	return r;
+int	check_redirection_token(t_token t)
+{
+	char	*content;
+
+	content = t.content;
+	while (*content != '<' && *content != '>')
+		if (ft_isalpha(*(content++)))
+			return (-1);
+	if (t.content[0] == '>')
+		return (1);
+	if (t.content[0] != '>' && t.content[0] != '<')
+		return (ft_atoi(t.content));
+	return (0);
 }
 
-t_redirection *parse_redirection_word( t_token t, t_redirection *r) {
+t_redirection	*parse_redirection_token(t_token t)
+{
+	int				fd;
+	t_redirection	*r;
+
+	fd = check_redirection_token(t);
+	if (fd == -1)
+		return (NULL);
+	r = (t_redirection *)malloc(sizeof(t_redirection));
+	if (!r)
+		return (NULL);
+	r->fd = fd;
+	if (t.type == REDIRECT_OUT)
+		r->type = OUT;
+	else if (t.type == REDIRECT_IN)
+		r->type = IN;
+	else if (t.type == REDIRECT_APPEND)
+		r->type = APPEND;
+	return (r);
+}
+
+t_redirection	*parse_redirection_word(t_token t, t_redirection *r)
+{
 	if (t.type == WORD)
 		r->word_type = LITERAL;
 	else if (t.type == DOLLAR)
 		r->word_type = ENV_EXP;
-	else {
+	else
+	{
 		free(r);
 		return (NULL);
 	}
 	r->word = ft_strdup(t.content);
-	return r;
+	return (r);
 }
 
 t_redirection	*extract_redirection(t_dllist *tokens)
 {
 	t_redirection	*r;
 
-	r = parse_redirection_token(*(t_token*)tokens->content);
+	r = parse_redirection_token(*(t_token *)tokens->content);
 	if (!r)
-		return NULL;
-	return parse_redirection_word(*(t_token*)(tokens->next->content), r);
+		return (NULL);
+	return (parse_redirection_word(*(t_token *)(tokens->next->content), r));
 }
 
 t_argument	*extract_argument(t_token *t)

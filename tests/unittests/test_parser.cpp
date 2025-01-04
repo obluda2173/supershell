@@ -50,6 +50,18 @@ INSTANTIATE_TEST_SUITE_P(
 	ParserTestSuite,
 	testing::Values(
 		ParserTestParams{{
+				new_token(">", REDIRECT_APPEND),
+				new_token("echo", BUILTIN),
+				new_token("Hello", DOUBLE_QUOTE),
+				new_token("file.txt", WORD),
+				new_token(NULL, END_OF_FILE),
+			}, {new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error redirection"))}},
+		ParserTestParams{{
+				new_token("asdf>>", REDIRECT_APPEND),
+				new_token("LOGNAME", DOLLAR),
+				new_token(NULL, END_OF_FILE),
+			}, {new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error redirection"))}},
+		ParserTestParams{{
 				new_token(">>", REDIRECT_APPEND),
 				new_token(NULL, END_OF_FILE),
 			}, {new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error redirection"))}},
@@ -102,6 +114,16 @@ INSTANTIATE_TEST_SUITE_P(
 		// 			{new_test_cmd_node(new_token("<<", HERE_DOC), {},
 		// 							   {new_redirection("line1\nline2\n", HERED)})},
 					// {})}},
+		ParserTestParams{{
+				new_token("cat", WORD),
+				new_token("7<", REDIRECT_IN),
+				new_token("LOGNAME", DOLLAR),
+				new_token(NULL, END_OF_FILE),
+			},
+						 {new_test_script_node(CMD_NODE,
+											   new_test_cmd_node(
+												   new_token("cat", WORD),
+												   {},  {new_redirection(7, IN, "LOGNAME", ENV_EXP)}), {})}},
 		ParserTestParams{
 			{
 				new_token("4>>", REDIRECT_APPEND),
@@ -110,7 +132,7 @@ INSTANTIATE_TEST_SUITE_P(
 			},
 			{new_test_script_node(
 					CMD_NODE,
-					{new_test_cmd_node(new_token(">>", REDIRECT_APPEND), {},
+					{new_test_cmd_node(new_token("4>>", REDIRECT_APPEND), {},
 									   {new_redirection(4, APPEND, "PATH", ENV_EXP)})},
 					{})}},
 		ParserTestParams{
@@ -322,6 +344,7 @@ INSTANTIATE_TEST_SUITE_P(
 									  },
 									  {}),
 					{})}},
+		// TODO: the argument is incorrect
 		ParserTestParams {
 			{
 				new_token("echo", BUILTIN),   new_token("string1 ", DOUBLE_QUOTE),
