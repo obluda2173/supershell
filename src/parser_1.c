@@ -20,37 +20,44 @@ void	init_cmd_node(t_script_node *sn, t_token t)
 	sn->node_data.cmd_node.redirections = NULL;
 }
 
-t_redirection	*extract_redirection(t_dllist *tokens)
-{
-	t_token			cur;
-	t_redirection	*r;
-
-	cur = *(t_token *)(tokens->content);
-	r = (t_redirection *)malloc(sizeof(t_redirection));
+t_redirection *parse_redirection_token(t_token t) {
+	t_redirection *r = (t_redirection *)malloc(sizeof(t_redirection));
 	if (!r)
 		return (NULL);
-	if (cur.type == REDIRECT_OUT) {
+	if (t.type == REDIRECT_OUT) {
 		r->type = OUT;
 		r->fd = 1;
-	} else if  (cur.type == REDIRECT_IN){
+	} else if  (t.type == REDIRECT_IN){
 		r->type = IN;
 		r->fd = 0;
-	} else if  (cur.type == REDIRECT_APPEND){
+	} else if  (t.type == REDIRECT_APPEND){
 		r->type = APPEND;
 		r->fd = 1;
 	}
-	tokens = tokens->next;
-	cur = *(t_token *)(tokens->content);
-	if (cur.type == WORD) 
+	return r;
+}
+
+t_redirection *parse_redirection_word( t_token t, t_redirection *r) {
+	if (t.type == WORD)
 		r->word_type = LITERAL;
-	else if (cur.type == DOLLAR) 
+	else if (t.type == DOLLAR)
 		r->word_type = ENV_EXP;
 	else {
 		free(r);
 		return (NULL);
 	}
-	r->word = ft_strdup(cur.content);
-	return (r);
+	r->word = ft_strdup(t.content);
+	return r;
+}
+
+t_redirection	*extract_redirection(t_dllist *tokens)
+{
+	t_redirection	*r;
+
+	r = parse_redirection_token(*(t_token*)tokens->content);
+	if (!r)
+		return NULL;
+	return parse_redirection_word(*(t_token*)(tokens->next->content), r);
 }
 
 t_argument	*extract_argument(t_token *t)
