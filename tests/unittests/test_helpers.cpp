@@ -28,12 +28,12 @@ t_test_script_node new_test_script_node(t_node_type type, t_test_cmd_node cn, t_
 	return (t_test_script_node){type, cn, en};
 }
 
-t_argument new_argument(const char* literal, t_argument_type type) {
+t_argument new_argument(const char* literal, t_word_type type) {
 	return (t_argument){(char*)literal, type};
 }
 
-t_redirection new_redirection(const char* literal, t_redirection_type type) {
-	return (t_redirection){(char*)literal, type};
+t_redirection new_redirection(const char* literal, t_redirection_type type, const char* word, t_word_type wt) {
+	return (t_redirection){(char*)literal, type, (char*)word, wt};
 }
 
 t_error_node new_error_node(const char* error) {

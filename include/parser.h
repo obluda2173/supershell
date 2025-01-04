@@ -22,13 +22,13 @@ typedef enum e_node_type
 	ERROR_NODE,
 }						t_node_type;
 
-typedef enum e_argument_type
+typedef enum e_word_type
 {
 	LITERAL,
 	ENV_EXP,
 	WILDCARD_EXP,
 	EXIT_STATUS_EXP
-}						t_argument_type;
+}						t_word_type;
 
 typedef enum e_redirection_type
 {
@@ -40,14 +40,16 @@ typedef enum e_redirection_type
 
 typedef struct s_argument
 {
-	char				*literal;
-	t_argument_type		type;
+	char				*word;
+	t_word_type		type;
 }						t_argument;
 
 typedef struct s_redirection
 {
 	char				*file;
 	t_redirection_type	type;
+	char				*word;
+	t_word_type			word_type;
 }						t_redirection;
 
 typedef struct s_error_node

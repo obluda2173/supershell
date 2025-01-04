@@ -37,6 +37,8 @@ t_redirection	*extract_redirection(t_dllist *tokens)
 		return (NULL);
 	}
 	r->file = ft_strdup(cur.content);
+	r->word = ft_strdup(cur.content);
+	r->word_type = LITERAL;
 	return (r);
 }
 
@@ -47,13 +49,13 @@ t_argument	*extract_argument(t_token *t)
 	arg = (t_argument *)malloc(sizeof(t_argument));
 	if (!arg)
 		return (NULL);
-	arg->literal = ft_strdup(t->content);
+	arg->word = ft_strdup(t->content);
 	if (t->type == WORD || t->type == DOUBLE_QUOTE || t->type == SINGLE_QUOTE)
 		arg->type = LITERAL;
 	if (t->type == DOLLAR)
 	{
 		arg->type = ENV_EXP;
-		if (!ft_strncmp(arg->literal, "?", 1))
+		if (!ft_strncmp(arg->word, "?", 1))
 			arg->type = EXIT_STATUS_EXP;
 	}
 	if (t->type == WILDCARD)

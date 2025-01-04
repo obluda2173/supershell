@@ -8,7 +8,7 @@ int execute(t_list *script) {
 	t_list* head = sn.node_data.cmd_node.arguments;
 	while (head) {
 		t_argument arg = *(t_argument*)head->content;
-		ft_putstr_fd(arg.literal, STDOUT_FILENO);
+		ft_putstr_fd(arg.word, STDOUT_FILENO);
 		head = head->next;
 		if (head)
 			ft_putstr_fd(" ", STDOUT_FILENO);

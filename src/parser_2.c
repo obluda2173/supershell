@@ -17,7 +17,7 @@ void	free_arguments(void *content)
 	t_argument	*a;
 
 	a = (t_argument *)content;
-	free(a->literal);
+	free(a->word);
 	free(a);
 }
 
@@ -27,6 +27,7 @@ void	free_redirection(void *content)
 
 	r = (t_redirection *)content;
 	free(r->file);
+	free(r->word);
 	free(r);
 }
 

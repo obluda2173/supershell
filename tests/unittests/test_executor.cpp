@@ -8,7 +8,7 @@ t_list *create_script(std::vector<t_argument> args) {
 	sn->node_data.cmd_node.redirections = NULL;
 	for (auto want_arg : args) {
 		t_argument *arg = (t_argument*)malloc(sizeof(t_argument));
-		arg->literal = ft_strdup(want_arg.literal);
+		arg->word = ft_strdup(want_arg.word);
 		ft_lstadd_back(&sn->node_data.cmd_node.arguments, ft_lstnew(arg));
 	}
 	ft_lstadd_back(&script, ft_lstnew(sn));
