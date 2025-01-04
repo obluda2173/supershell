@@ -46,7 +46,7 @@ TEST_P(ParserTestSuite, ParserTest) {
 }
 
 INSTANTIATE_TEST_SUITE_P(
-	ParserTestsErrorHandling,
+	ParserTestsErrorsRedirections,
 	ParserTestSuite,
 	testing::Values(
 		ParserTestParams{{
