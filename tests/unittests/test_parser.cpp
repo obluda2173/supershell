@@ -7,13 +7,6 @@ struct ParserTestParams {
 
 class ParserTestSuite : public::testing::TestWithParam<ParserTestParams>{};
 
-void compare_cmd_node(t_test_script_node want, t_cmd_node got) {
-	EXPECT_STREQ(want.cmd_node.cmd_token.content, got.cmd_token.content);
-	EXPECT_EQ(want.cmd_node.cmd_token.type, got.cmd_token.type);
-	compare_arguments(want.cmd_node.arguments, got.arguments);
-	compare_redirections(want.cmd_node.redirects, got.redirections);
-}
-
 TEST_P(ParserTestSuite, ParserTest) {
 	ParserTestParams params = GetParam();
 	std::vector<t_test_script_node> want_nodes = params.want_nodes;
