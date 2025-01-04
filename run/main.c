@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:59:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/04 11:32:41 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/04 13:02:11 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,8 @@ int	main(int ac, char **av, char **ep)
 
 		if (!check_syntax(data->line))
 		{
-			data->not_exit = false;
+			free(data->line);
+			data->line = NULL;
 			continue ;
 		}
 		

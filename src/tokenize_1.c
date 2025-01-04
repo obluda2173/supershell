@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2025/01/04 12:33:29 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/04 13:03:04 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,6 @@ static char *extract_word(t_line_container *lc)
     }
 
     // Ensure that lc->pos has not gone out of bounds
-    printf("%i, %i\n", lc->pos, start);
     if (lc->line[lc->pos] == '\0' && lc->pos == start)
 	{
         printf("Error: Empty token.\n");
