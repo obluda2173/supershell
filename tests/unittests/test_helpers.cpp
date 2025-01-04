@@ -51,7 +51,7 @@ void compare_redirections(std::vector<t_redirection> want, t_list *got) {
 	EXPECT_EQ(want[0].fd, r.fd);
 	EXPECT_EQ(want[0].type, r.type);
 	EXPECT_STREQ(want[0].word, r.word);
-	EXPECT_EQ(OUT, r.word_type);
+	EXPECT_EQ(want[0].word_type, r.word_type);
 }
 
 void compare_arguments(std::vector<t_argument> want, t_list* got) {

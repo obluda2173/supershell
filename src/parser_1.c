@@ -41,13 +41,15 @@ t_redirection	*extract_redirection(t_dllist *tokens)
 	}
 	tokens = tokens->next;
 	cur = *(t_token *)(tokens->content);
-	if (cur.type != WORD)
-	{
+	if (cur.type == WORD) 
+		r->word_type = LITERAL;
+	else if (cur.type == DOLLAR) 
+		r->word_type = ENV_EXP;
+	else {
 		free(r);
 		return (NULL);
 	}
 	r->word = ft_strdup(cur.content);
-	r->word_type = LITERAL;
 	return (r);
 }
 
