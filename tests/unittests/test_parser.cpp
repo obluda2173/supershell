@@ -10,19 +10,7 @@ class ParserTestSuite : public::testing::TestWithParam<ParserTestParams>{};
 void compare_cmd_node(t_test_script_node want, t_cmd_node got) {
 	EXPECT_STREQ(want.cmd_node.cmd_token.content, got.cmd_token.content);
 	EXPECT_EQ(want.cmd_node.cmd_token.type, got.cmd_token.type);
-	t_list* got_arguments = got.arguments;
-	int got_arg_count = ft_lstsize(got_arguments);
-	EXPECT_EQ(want.cmd_node.arguments.size(), got_arg_count);
-	if (want.cmd_node.arguments.size() == 0)
-		EXPECT_EQ(NULL, got_arguments);
-
-	t_list* head = got_arguments;
-	for (size_t j = 0; j < want.cmd_node.arguments.size(); j++) {
-		t_argument *got_arg = (t_argument*)head->content;
-		EXPECT_STREQ(want.cmd_node.arguments[j].word, got_arg->word);
-		EXPECT_EQ(want.cmd_node.arguments[j].type, got_arg->type);
-		head = head->next;
-	}
+	compare_arguments(want.cmd_node.arguments, got.arguments);
 	if (want.cmd_node.redirects.size() > 0)
 		compare_redirections(want.cmd_node.redirects, got.redirections);
 }

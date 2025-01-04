@@ -48,3 +48,18 @@ void compare_redirections(std::vector<t_redirection> want, t_list *got) {
 		EXPECT_STREQ(want[0].word, r.word);
 		EXPECT_EQ(OUT, r.word_type);
 }
+
+void compare_arguments(std::vector<t_argument> want, t_list* got) {
+	int got_arg_count = ft_lstsize(got);
+	EXPECT_EQ(want.size(), got_arg_count);
+	if (want.size() == 0)
+		EXPECT_EQ(NULL, got);
+
+	t_list* head = got;
+	for (size_t j = 0; j < want.size(); j++) {
+		t_argument *got_arg = (t_argument*)head->content;
+		EXPECT_STREQ(want[j].word, got_arg->word);
+		EXPECT_EQ(want[j].type, got_arg->type);
+		head = head->next;
+	}
+}
