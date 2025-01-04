@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2025/01/03 15:19:14 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/04 10:04:53 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,12 @@ static char *extract_word(t_line_container *lc)
     if (!lc->line)
         return NULL;
 
+    if (!in_double_quote)
+        skip_spaces((char *)lc->line, &(lc->pos));
+
     start = lc->pos;
 
+    //Operators case
     if (lc->line[lc->pos] == '<' || lc->line[lc->pos] == '>' 
         || lc->line[lc->pos] == '|' || lc->line[lc->pos] == '&')
     {
@@ -45,6 +49,7 @@ static char *extract_word(t_line_container *lc)
             lc->pos++;
     }
 	
+    //Single quote case
     else if (lc->line[lc->pos] == '\'')
     {
         lc->pos++;
@@ -57,14 +62,15 @@ static char *extract_word(t_line_container *lc)
         }
         lc->pos++;
     }
-	
+    
+	//Double quotes case 1
     else if (lc->line[lc->pos] == '\"' && !in_double_quote)
     {
         lc->pos++;
         in_double_quote = true;
         while (lc->line[lc->pos] && lc->line[lc->pos] != '\"')
         {
-            if (lc->line[lc->pos] == '$') // Handle $ symbol inside quotes
+            if (lc->line[lc->pos] == '$')
                 break;
             lc->pos++;
         }
@@ -76,13 +82,15 @@ static char *extract_word(t_line_container *lc)
         }
     }
 	
+    //Dollar case 
     else if (lc->line[lc->pos] == '$')
     {
         lc->pos++;
-        while (lc->line[lc->pos] && (ft_isalnum(lc->line[lc->pos]) || lc->line[lc->pos] == '_'))
+        while (lc->line[lc->pos] && (ft_isalnum(lc->line[lc->pos]) || lc->line[lc->pos] == '_' || lc->line[lc->pos] == '?'))
             lc->pos++;
     }
 	
+    //Double quote case 2
     else if (in_double_quote)
     {
         while (lc->line[lc->pos] && lc->line[lc->pos] != '\"')
@@ -97,7 +105,8 @@ static char *extract_word(t_line_container *lc)
             in_double_quote = false;
         }
     }
-	
+    
+	//Word case
     else
     {
         while (lc->line[lc->pos] && lc->line[lc->pos] != ' ' &&
@@ -214,8 +223,6 @@ t_token	*get_next_token(t_line_container *lc)
 
 	if (!lc->line)
 		return NULL;
-	
-	skip_spaces((char *)lc->line, &(lc->pos));
 
 	if (lc->line[lc->pos] == '\0')
 	{

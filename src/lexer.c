@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:07:34 by erian             #+#    #+#             */
-/*   Updated: 2025/01/03 14:59:05 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/04 10:02:11 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,34 +41,34 @@ void	free_token(void *content)
 }
 
 //function to print the content of doubly list of tokens
-/* static void print_tokens(t_dllist *head) */
-/* { */
-/* 	t_dllist *current; */
-/* 	t_token *token; */
+static void print_tokens(t_dllist *head)
+{
+	t_dllist *current;
+	t_token *token;
 
-/* 	if (!head) */
-/* 	{ */
-/* 		printf("The token list is empty.\n"); */
-/* 		return; */
-/* 	} */
+	if (!head)
+ 	{
+ 		printf("The token list is empty.\n");
+ 		return;
+ 	}
 
-/* 	current = head; */
-/* 	printf("Tokens in the doubly linked list:\n"); */
-/* 	while (current && current->content) */
-/* 	{ */
-/* 		if (!current->content) */
-/* 		{ */
-/* 			printf("Corrupted token node detected.\n"); */
-/* 			break; */
-/* 		} */
-/* 		token = (t_token *)current->content; */
-/* 		if (token) */
-/* 		{ */
-/* 			printf("Content: %s, Type: %s\n", token->content, token_strings[token->type]); */
-/* 		} */
-/* 		current = current->next; */
-/* 	} */
-/* } */
+ 	current = head;
+ 	printf("Tokens in the doubly linked list:\n");
+ 	while (current && current->content)
+ 	{
+ 		if (!current->content)
+ 		{
+ 			printf("Corrupted token node detected.\n");
+ 			break;
+ 		}
+ 		token = (t_token *)current->content;
+ 		if (token)
+ 		{
+ 			printf("Content: %s, Type: %s\n", token->content, token_strings[token->type]);
+ 		}
+ 		current = current->next;
+ 	}
+}
 
 void	quotes(t_dllist **tokens)
 {
@@ -86,7 +86,7 @@ void	quotes(t_dllist **tokens)
 		
 		if (current_token->type == DOUBLE_QUOTE)
 		{
-			char *trimmed_content = ft_strtrim(current_token->content, "'");
+			char *trimmed_content = ft_strtrim(current_token->content, "\"");
 			free(current_token->content);
 			current_token->content = trimmed_content;
 			tokens_lst = tokens_lst->next;
@@ -148,6 +148,6 @@ t_dllist *tokenize(char* line)
 	free(line);
 	
 	
-	/* print_tokens(tokens); */
+	print_tokens(tokens);
 	return tokens;
 }
