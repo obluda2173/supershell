@@ -11,8 +11,7 @@ void compare_cmd_node(t_test_script_node want, t_cmd_node got) {
 	EXPECT_STREQ(want.cmd_node.cmd_token.content, got.cmd_token.content);
 	EXPECT_EQ(want.cmd_node.cmd_token.type, got.cmd_token.type);
 	compare_arguments(want.cmd_node.arguments, got.arguments);
-	if (want.cmd_node.redirects.size() > 0)
-		compare_redirections(want.cmd_node.redirects, got.redirections);
+	compare_redirections(want.cmd_node.redirects, got.redirections);
 }
 
 TEST_P(ParserTestSuite, ParserTest) {

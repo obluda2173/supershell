@@ -41,12 +41,17 @@ t_error_node new_error_node(const char* error) {
 }
 
 void compare_redirections(std::vector<t_redirection> want, t_list *got) {
-		ASSERT_NE(got, nullptr);
-		t_redirection r = *(t_redirection*)got->content;
-		EXPECT_STREQ(want[0].file, r.file);
-		EXPECT_EQ(OUT, r.type);
-		EXPECT_STREQ(want[0].word, r.word);
-		EXPECT_EQ(OUT, r.word_type);
+
+	if (want.size() == 0) {
+		ASSERT_EQ(got, nullptr);
+		return;
+	}
+	ASSERT_NE(got, nullptr);
+	t_redirection r = *(t_redirection*)got->content;
+	EXPECT_STREQ(want[0].file, r.file);
+	EXPECT_EQ(OUT, r.type);
+	EXPECT_STREQ(want[0].word, r.word);
+	EXPECT_EQ(OUT, r.word_type);
 }
 
 void compare_arguments(std::vector<t_argument> want, t_list* got) {
