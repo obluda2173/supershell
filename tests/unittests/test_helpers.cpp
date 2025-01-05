@@ -1,4 +1,6 @@
 #include "test_main.hpp"
+#include <cstddef>
+#include <gtest/gtest.h>
 
 t_token new_token(const char* content, token_type type) {
 	return (t_token){(char*)content, type};
@@ -47,16 +49,22 @@ void compare_redirections(std::vector<t_redirection> want, t_list *got) {
 		return;
 	}
 	ASSERT_NE(got, nullptr);
-	t_redirection r = *(t_redirection*)got->content;
-	EXPECT_EQ(want[0].fd, r.fd);
-	EXPECT_EQ(want[0].type, r.type);
-	EXPECT_STREQ(want[0].word, r.word);
-	EXPECT_EQ(want[0].word_type, r.word_type);
+	ASSERT_EQ(want.size(), ft_lstsize(got));
+
+	t_list* head = got;
+	for (size_t j = 0; j < want.size(); j++) {
+		t_redirection r = *(t_redirection*)head->content;
+		EXPECT_EQ(want[j].fd, r.fd);
+		EXPECT_EQ(want[j].type, r.type);
+		EXPECT_STREQ(want[j].word, r.word);
+		EXPECT_EQ(want[j].word_type, r.word_type);
+		head = head->next;
+	}
+	ASSERT_EQ(NULL, head);
 }
 
 void compare_arguments(std::vector<t_argument> want, t_list* got) {
-	int got_arg_count = ft_lstsize(got);
-	EXPECT_EQ(want.size(), got_arg_count);
+	EXPECT_EQ(want.size(), ft_lstsize(got));
 	if (want.size() == 0)
 		EXPECT_EQ(NULL, got);
 
@@ -67,6 +75,7 @@ void compare_arguments(std::vector<t_argument> want, t_list* got) {
 		EXPECT_EQ(want[j].type, got_arg->type);
 		head = head->next;
 	}
+	ASSERT_EQ(NULL, head);
 }
 
 void compare_cmd_node(t_test_script_node want, t_cmd_node got) {
