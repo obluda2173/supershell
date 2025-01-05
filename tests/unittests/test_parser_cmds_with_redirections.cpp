@@ -69,7 +69,7 @@ INSTANTIATE_TEST_SUITE_P(
 		new_token("cat", WORD),
 		new_token("<<", HERE_DOC),
 		new_token("line1\n$PATH\nline2", DOUBLE_QUOTE),
-		new_token("3>", REDIRECT_OUT),
+		new_token("3>", REDIRECT_OUT), // here I added the file descriptor 3 before the command
 		new_token("line3 $PATH line4", DOUBLE_QUOTE),
 		new_token(NULL, END_OF_FILE),
 	},
