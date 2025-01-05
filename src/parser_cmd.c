@@ -50,6 +50,8 @@ static t_script_node	*create_and_add_cmd_node(t_list **script,
 		return (NULL);
 	init_cmd_node(sn, (*(t_token *)tokens->content));
 	sn->node_type = CMD_NODE;
+	sn->num_children = 0;
+	sn->child1 = NULL;
 	*script = ft_lstnew(sn);
 	if (!script)
 	{

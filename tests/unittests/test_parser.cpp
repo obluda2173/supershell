@@ -28,6 +28,8 @@ TEST_P(ParserTestSuite, ParserTest) {
 	t_list *head = script;
 	for (t_test_script_node want_node : want_nodes) {
 		EXPECT_EQ(CMD_NODE, (*(t_script_node*)head->content).node_type);
+		EXPECT_EQ(0, (*(t_script_node*)head->content).num_children);
+		EXPECT_EQ(nullptr, (*(t_script_node*)head->content).child1);
 		compare_cmd_node(want_node, (*(t_script_node*)head->content).node_data.cmd_node);
 		head=head->next;
 	}
@@ -51,6 +53,9 @@ TEST(ParserTestsSuite, TestPipes) {
 	ASSERT_NE(nullptr, script);
 	t_script_node *sn = (t_script_node*)script->content;
 	ASSERT_EQ(sn->node_type, PIPE_NODE);
+	ASSERT_EQ(sn->num_children, 2);
+	ASSERT_NE(nullptr,sn->child1);
+	ASSERT_EQ(CMD_NODE, sn->child1->node_type);
 
 	ft_lstclear(&script, free_script_node);
 	ft_dllstclear(&tokens, free_token);

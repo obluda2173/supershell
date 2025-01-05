@@ -43,12 +43,12 @@ typedef enum e_redirection_type
 typedef struct s_argument
 {
 	char				*word;
-	t_word_type		type;
+	t_word_type			type;
 }						t_argument;
 
 typedef struct s_redirection
 {
-	int				fd;
+	int					fd;
 	t_redirection_type	type;
 	char				*word;
 	t_word_type			word_type;
@@ -76,6 +76,8 @@ typedef struct s_script_node
 {
 	t_node_type			node_type;
 	t_node_data			node_data;
+	struct s_script_node *child1;
+	unsigned int		num_children;
 }						t_script_node;
 
 void					init_cmd_node(t_script_node *sn, t_token t);
@@ -84,18 +86,18 @@ t_token					copy_token(t_token token);
 void					free_script_node(void *sn);
 
 /* parser cmd */
-t_list	*parse_cmd(t_list *script, t_dllist *tokens);
+t_list					*parse_cmd(t_list *script, t_dllist *tokens);
 t_redirection			*extract_redirection(t_dllist *tokens);
 t_argument				*extract_argument(t_token *t);
 
 /* node creation */
-t_script_node	*create_and_add_error_node(t_list **script, const char *error);
+t_script_node			*create_and_add_error_node(t_list **script,
+							const char *error);
 
 /* free */
 void					free_arguments(void *content);
 void					free_redirection(void *content);
 void					free_script_node(void *sn);
 t_token					copy_token(t_token token);
-
 
 #endif // PARSER_H

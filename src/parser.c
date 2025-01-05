@@ -28,6 +28,7 @@ t_list	*parse(t_dllist *tokens)
 		if (((t_token*)tokens->content)->type == PIPE) {
 			t_script_node* sn = (t_script_node*)malloc(sizeof(t_script_node));
 			sn->node_type = PIPE_NODE;
+			sn->num_children=2;
 			return ft_lstnew(sn);
 		}
 		tokens = tokens->next;
