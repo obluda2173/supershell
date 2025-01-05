@@ -75,6 +75,11 @@ INSTANTIATE_TEST_SUITE_P(
 				new_token(NULL, END_OF_FILE),
 			}, {new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error redirection"))}},
 		ParserTestParams{{
+				new_token("-1>>", REDIRECT_APPEND),
+				new_token("LOGNAME", DOLLAR),
+				new_token(NULL, END_OF_FILE),
+			}, {new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error redirection"))}},
+		ParserTestParams{{
 				new_token("asdf>>", REDIRECT_APPEND),
 				new_token("LOGNAME", DOLLAR),
 				new_token(NULL, END_OF_FILE),
