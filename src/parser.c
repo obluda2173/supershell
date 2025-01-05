@@ -11,11 +11,29 @@
 /* ************************************************************************** */
 
 #include "parser.h"
+#include "libft.h"
 
 t_list	*parse(t_dllist *tokens)
 {
 	t_list	*script;
 
 	script = NULL;
+
+	if (!tokens) {
+		create_and_add_error_node(&script, "no tokens");
+		return script;
+	}
+
+	while (tokens->next) {
+		if (((t_token*)tokens->content)->type == PIPE) {
+			t_script_node* sn = (t_script_node*)malloc(sizeof(t_script_node));
+			sn->node_type = PIPE_NODE;
+			return ft_lstnew(sn);
+		}
+		tokens = tokens->next;
+	}
+	while (tokens->prev)
+		tokens = tokens->prev;
+
 	return (parse_cmd(script, tokens));
 }

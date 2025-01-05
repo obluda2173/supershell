@@ -84,3 +84,9 @@ void compare_cmd_node(t_test_script_node want, t_cmd_node got) {
 	compare_arguments(want.cmd_node.arguments, got.arguments);
 	compare_redirections(want.cmd_node.redirects, got.redirections);
 }
+
+void compare_error_node(t_test_script_node want, t_script_node *sn) {
+	ASSERT_NE(nullptr, sn);
+	ASSERT_EQ(ERROR_NODE, sn->node_type);
+	ASSERT_STREQ(want.err_node.error, sn->node_data.error_node.error);
+}

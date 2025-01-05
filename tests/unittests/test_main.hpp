@@ -25,6 +25,13 @@ typedef struct s_test_script_node {
 } t_test_script_node;
 
 
+struct ParserTestParams {
+	std::vector<t_token> token_vec;
+	std::vector<t_test_script_node> want_nodes;
+};
+
+class ParserTestSuite : public::testing::TestWithParam<ParserTestParams>{};
+
 t_token new_token(const char* content, token_type type);
 t_dllist *create_token_dllist(std::vector<t_token> tokens);
 
@@ -34,5 +41,6 @@ t_test_script_node new_test_script_node(t_node_type type, t_test_cmd_node cn, t_
 t_argument new_argument(const char* literal, t_word_type type);
 t_redirection new_redirection(int fd, t_redirection_type type, const char* word, t_word_type wt);
 void compare_cmd_node(t_test_script_node want, t_cmd_node got);
+void compare_error_node(t_test_script_node want, t_script_node *sn);
 
 #endif // TESTS_MAIN_H

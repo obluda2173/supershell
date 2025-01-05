@@ -43,8 +43,6 @@ static t_script_node	*create_and_add_cmd_node(t_list **script,
 {
 	t_script_node	*sn;
 
-	if (!tokens)
-		return (create_and_add_error_node(script, "no tokens"));
 	if ((*(t_token *)tokens->content).type == END_OF_FILE)
 		return (NULL);
 	sn = (t_script_node *)malloc(sizeof(t_script_node));
