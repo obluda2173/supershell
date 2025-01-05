@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:07:34 by erian             #+#    #+#             */
-/*   Updated: 2025/01/04 11:51:45 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/05 16:45:16 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ t_dllist *tokenize_line(const char *line)
 
 t_dllist *tokenize(char *line)
 {
-	line = space_line(line);
+	line = preprocess_input(line);
 	if (!line)
 		return NULL;
 

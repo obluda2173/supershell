@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 16:26:34 by erian             #+#    #+#             */
-/*   Updated: 2024/12/25 14:29:02 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/05 17:09:47 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_strnstr(const char *s1, const char *s2, size_t len);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
+int		ft_strcmp(const char *s1, const char *s2);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 /* ************************************************************************** */

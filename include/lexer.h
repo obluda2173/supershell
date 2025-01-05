@@ -50,7 +50,7 @@ void free_token(void *content);
 /* ************************************************************************** */
 
 // operators_separator.c
-char	*space_line(char *line);
+char	*preprocess_input(char *line);
 
 // lexer.c
 t_dllist *tokenize(char* line);
