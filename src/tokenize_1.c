@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2025/01/05 18:07:34 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/06 15:01:52 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,21 +37,24 @@ static char *extract_word(t_line_container *lc)
     if (ft_strchr("<>|", lc->line[lc->pos])
 		|| (lc->line[lc->pos] == '&' && lc->line[lc->pos + 1] == '&'))
 	{
-        if (lc->line[lc->pos + 1] == lc->line[lc->pos])
+		if (lc->line[lc->pos] == '<' && lc->line[lc->pos + 1] == '<' && lc->line[lc->pos + 2] != ' ')
+		{
+			lc->pos += 2;
+			while (lc->line[lc->pos] && lc->line[lc->pos] != ' ')
+				lc->pos++;
+		}
+        else if (lc->line[lc->pos + 1] == lc->line[lc->pos])
             lc->pos += 2;
         else
             lc->pos++;
     }
+	else if (lc->line[lc->pos] >= '0' && lc->line[lc->pos] <= '2' && lc->line[lc->pos + 1] == '>' && lc->line[lc->pos + 2] != '>')
+		lc->pos += 2;
 	else if ((quote = lc->line[lc->pos]) == '\'' || quote == '\"')
 	{
         lc->pos++; 
         while (lc->line[lc->pos] && lc->line[lc->pos] != quote)
             lc->pos++;
-        if (lc->line[lc->pos] != quote)
-		{
-            printf("Error: Unmatched %c quote.\n", quote);
-            return NULL;
-        }
         lc->pos++;
     }
 	else if (lc->line[lc->pos] == '$')
@@ -65,15 +68,18 @@ static char *extract_word(t_line_container *lc)
             lc->pos++;
 
     len = lc->pos - start;
+	
     if (len == 0)
         return NULL;
 
     word = malloc(len + 1);
-    if (!word) {
+    if (!word)
+	{
         printf("Error: Memory allocation failed.\n");
         return NULL;
     }
     ft_strlcpy(word, lc->line + start, len + 1);
+	
     return word;
 }
 
@@ -91,7 +97,6 @@ bool is_builtin(char *str) {
 //returns token of given content
 static token_type	assign_type(char *str)
 {
-	printf("%s\n", str);
 	if (!str)
 		return END_OF_FILE;
 	if (!ft_strncmp(str, "\'", 1))
@@ -132,7 +137,6 @@ t_token	*get_next_token(t_line_container *lc)
 
 	if (!lc->line)
 		return NULL;
-    //printf("in get_next_token:%s\n", lc->line);
 
 	if (lc->line[lc->pos] == '\0')
 	{
@@ -144,10 +148,7 @@ t_token	*get_next_token(t_line_container *lc)
 		return (token);
 	}
 
-
 	word = extract_word(lc);
-
-	/* printf("%s\n", word); */
 
 	token = malloc(sizeof(t_token));
 	

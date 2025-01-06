@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:33:18 by erian             #+#    #+#             */
-/*   Updated: 2025/01/05 17:56:41 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/06 14:20:33 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char *preprocess_input(char *input) {
     }
     result[j] = '\0';
 
-    printf("\nLine: %s\n", result);
+    printf("\nLine: %s\n\n", result);
     
     return result;
 }
