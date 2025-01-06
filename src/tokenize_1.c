@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2025/01/06 15:01:52 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/06 15:08:40 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ static char *extract_word(t_line_container *lc)
         return NULL;
     }
     ft_strlcpy(word, lc->line + start, len + 1);
+
+	printf("%s\n", word);
 	
     return word;
 }
@@ -153,7 +155,7 @@ t_token	*get_next_token(t_line_container *lc)
 	token = malloc(sizeof(t_token));
 	
 	token->type = assign_type(word);
-	if (token->type == DOLLAR && ft_strlen(token->content) > 1)
+	if (token->type == DOLLAR && ft_strlen(word) > 1)
 	{
 		if_dollar = ft_substr(word, 1, ft_strlen(word));
 		token->content = if_dollar;
