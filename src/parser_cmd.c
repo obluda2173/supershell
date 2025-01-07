@@ -15,6 +15,27 @@
 #include "parser.h"
 #include <unistd.h>
 
+static t_script_node	*create_and_add_cmd_node(t_list **script,
+		t_dllist *tokens)
+{
+	t_script_node	*sn;
+
+	if ((*(t_token *)tokens->content).type == END_OF_FILE)
+		return (NULL);
+	sn = (t_script_node *)malloc(sizeof(t_script_node));
+	if (!sn)
+		return (NULL);
+	init_cmd_node(sn);
+	sn->node_data.cmd_node.cmd_token = copy_token(*(t_token *)tokens->content);
+	*script = ft_lstnew(sn);
+	if (!script)
+	{
+		free_script_node(sn);
+		return (NULL);
+	}
+	return (sn);
+}
+
 static t_script_node	*create_and_add_redirection(t_list **script,
 		t_dllist *head, t_script_node *sn)
 {
@@ -35,27 +56,6 @@ static t_script_node	*create_and_add_redirection(t_list **script,
 		return (NULL);
 	}
 	ft_lstadd_back(&sn->node_data.cmd_node.redirections, tmp);
-	return (sn);
-}
-
-static t_script_node	*create_and_add_cmd_node(t_list **script,
-		t_dllist *tokens)
-{
-	t_script_node	*sn;
-
-	if ((*(t_token *)tokens->content).type == END_OF_FILE)
-		return (NULL);
-	sn = (t_script_node *)malloc(sizeof(t_script_node));
-	if (!sn)
-		return (NULL);
-	init_cmd_node(sn);
-	sn->node_data.cmd_node.cmd_token = copy_token(*(t_token *)tokens->content);
-	*script = ft_lstnew(sn);
-	if (!script)
-	{
-		free_script_node(sn);
-		return (NULL);
-	}
 	return (sn);
 }
 

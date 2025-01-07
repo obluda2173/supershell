@@ -44,6 +44,8 @@ t_list	*parse(t_dllist *tokens)
 			}
 
 			init_cmd_node(sn->child1);
+			tokens = tokens->prev;
+			sn->child1->node_data.cmd_node.cmd_token = copy_token(*(t_token *)tokens->content);
 			init_cmd_node(sn->child2);
 			return ft_lstnew(sn);
 		}
