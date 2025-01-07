@@ -14,13 +14,13 @@
 #include "libft.h"
 #include "parser.h"
 
-void	init_cmd_node(t_script_node *sn)
+void	init_cmd_node(t_script_node *sn, t_token t)
 {
 
 	sn->node_type = CMD_NODE;
 	sn->node_data.cmd_node.arguments = NULL;
 	sn->node_data.cmd_node.redirections = NULL;
-	sn->node_data.cmd_node.cmd_token.content = NULL;
+	sn->node_data.cmd_node.cmd_token = copy_token(t);
 	sn->num_children = 0;
 	sn->child1 = NULL;
 }

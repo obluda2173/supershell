@@ -41,14 +41,14 @@ TEST_P(ParserTestSuite, ParserTest) {
 
 
 TEST(ParserTestsSuite, TestPipes) {
-	std::vector<t_token> token_vec;
-
-	token_vec.push_back(new_token("echo", BUILTIN));
-	token_vec.push_back(new_token("|", PIPE));
-	token_vec.push_back(new_token("echo", BUILTIN));
-	token_vec.push_back(new_token(NULL, END_OF_FILE));
-
+	std::vector<t_token> token_vec = {
+		new_token("echo", BUILTIN),
+		new_token("|", PIPE),
+		new_token("echo", BUILTIN),
+		new_token(NULL, END_OF_FILE)
+	};
 	t_dllist *tokens = create_token_dllist(token_vec);
+
 
 	t_list *script = parse(tokens);
 	ASSERT_NE(nullptr, script);
@@ -62,6 +62,34 @@ TEST(ParserTestsSuite, TestPipes) {
 
 	t_test_script_node want = new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {});
 	compare_cmd_node(want, (t_cmd_node)sn->child1->node_data.cmd_node);
+	compare_cmd_node(want, (t_cmd_node)sn->child2->node_data.cmd_node);
+
+	ft_lstclear(&script, free_script_node);
+	ft_dllstclear(&tokens, free_token);
+	// second test
+
+	token_vec = {
+		new_token("echo", BUILTIN),
+		new_token("|", PIPE),
+		new_token("ls", WORD),
+		new_token(NULL, END_OF_FILE)
+	};
+	tokens = create_token_dllist(token_vec);
+
+	script = parse(tokens);
+	ASSERT_NE(nullptr, script);
+	sn = (t_script_node*)script->content;
+	ASSERT_EQ(sn->node_type, PIPE_NODE);
+	ASSERT_EQ(sn->num_children, 2);
+	ASSERT_NE(nullptr,sn->child1);
+	ASSERT_EQ(CMD_NODE, sn->child1->node_type);
+	ASSERT_NE(nullptr,sn->child2);
+	ASSERT_EQ(CMD_NODE, sn->child2->node_type);
+
+	want = new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {});
+	compare_cmd_node(want, (t_cmd_node)sn->child1->node_data.cmd_node);
+	want = new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("ls", WORD), {}, {}), {});
+	compare_cmd_node(want, (t_cmd_node)sn->child2->node_data.cmd_node);
 
 	ft_lstclear(&script, free_script_node);
 	ft_dllstclear(&tokens, free_token);
