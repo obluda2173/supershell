@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:33:18 by erian             #+#    #+#             */
-/*   Updated: 2025/01/06 14:20:33 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/07 12:11:03 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <ctype.h>
 
 char *preprocess_input(char *input) {
-    const char *operators[] = {">>", ">>", "<<", "||", "&&", "|", "<", ">"};
+    const char *operators[] = {">>", ">>", "<<", "||", "&&", "|", "<", ">", "="};
     size_t len = strlen(input);
     char *result = malloc(len * 2 + 1); // Allocate extra space for added spaces
     if (!result) return NULL;

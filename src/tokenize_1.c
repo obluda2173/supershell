@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2025/01/07 11:25:27 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/07 12:11:55 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,8 @@ static token_type	assign_type(char *str)
 		return OR;
 	if (!ft_strcmp(str, "&&\0"))
 		return AND;
+	if (!ft_strcmp(str, "=\0"))	
+		return EQUAL_SIGN;
 	if (!ft_strcmp(str, "|\0"))	
 		return PIPE;
 	if (!ft_strncmp(str, "<<", 2))

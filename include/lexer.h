@@ -25,7 +25,8 @@ typedef enum
 	AND,				//11
 	OR,					//12
 	WILDCARD,			//13
-	INVALID				//14
+	EQUAL_SIGN,			//14
+	INVALID				//15
 }	token_type;
 
 //structure for line container

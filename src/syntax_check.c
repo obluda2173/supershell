@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 09:40:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/07 11:50:58 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/07 12:08:17 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static int	count_consequitives(char *str, char c)
 	return (c_counter);
 }
 
-bool	check_consecutive_chars(const char *str, char c)
+bool	check_consecutive_chars(char *str, char c)
 {
 	if (count_consequitives(str, c) > 2)
 	{
@@ -51,7 +51,7 @@ bool	check_consecutive_chars(const char *str, char c)
 	return (true);
 }
 
-bool	check_unclosed_quotes(const char *str)
+bool	check_unclosed_quotes(char *str)
 {
 	int	i;
 	int	single_quote_count;
@@ -80,6 +80,19 @@ bool	check_unclosed_quotes(const char *str)
 	return (true);
 }
 
+bool	check_invalid_symbol(char *str)
+{
+	if (ft_strchr(str, ';') || ft_strchr(str, '\\')
+		|| ft_strchr(str, '(') || ft_strchr(str, ')')
+		|| ft_strchr(str, '{') || ft_strchr(str, '}')
+		|| ft_strchr(str, '[') || ft_strchr(str, ']'))
+	{
+		printf("Invalid input\n");
+		return (false);
+	}
+	return (true);
+}
+
 bool	check_syntax(char *str)
 {
 	int		i;
@@ -95,5 +108,7 @@ bool	check_syntax(char *str)
 	while (++i < 4)
 		if (!check_consecutive_chars(str, special_chars[i]))
 			return (false);
+	if (!check_invalid_symbol(str))
+		return (false);
 	return (true);
 }
