@@ -12,7 +12,7 @@
 
 #include "parser.h"
 
-t_script_node	*create_and_add_error_node(const char *error)
+t_script_node	*get_error_node(const char *error)
 {
 	t_script_node	*sn;
 

@@ -35,7 +35,7 @@ struct ParserTestParams {
   int test_nbr;
   t_test_type test_type;
   std::vector<t_token> token_vec;
-  std::vector<t_test_script_node> want_nodes;
+  t_test_script_node want;
 };
 
 class ParserTestSuite : public::testing::TestWithParam<ParserTestParams>{};
@@ -49,9 +49,9 @@ t_error_node new_error_node(const char* error);
 t_argument new_argument(const char* literal, t_word_type type);
 t_redirection new_redirection(int fd, t_redirection_type type, const char* word, t_word_type wt);
 
-void test_pipe_cases(std::vector<t_test_script_node> want_nodes, t_script_node *sn, t_dllist* tokens);
-void test_error_cases(std::vector<t_test_script_node> want_nodes, t_script_node *sn, t_dllist* tokens);
-void test_cmd_cases(std::vector<t_test_script_node> want_nodes, t_script_node *sn, t_dllist* tokens);
+void test_cmd_cases(t_test_script_node want, t_script_node *sn, t_dllist* tokens);
+void test_pipe_cases(t_test_script_node want, t_script_node *sn, t_dllist* tokens);
+void test_error_cases(t_test_script_node want, t_script_node *sn, t_dllist* tokens);
 void compare_cmd_node(t_test_script_node want, t_cmd_node got);
 
 #endif // TESTS_MAIN_H

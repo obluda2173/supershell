@@ -1,8 +1,6 @@
 #include "test_main.hpp"
 
-
-void test_pipe_cases(std::vector<t_test_script_node> want_nodes, t_script_node *sn, t_dllist* tokens) {
-    t_test_script_node want = want_nodes[0];
+void test_pipe_cases(t_test_script_node want, t_script_node *sn, t_dllist* tokens) {
     ASSERT_NE(nullptr, sn);
     ASSERT_EQ(sn->node_type, PIPE_NODE);
     ASSERT_EQ(sn->num_children, 2);
@@ -19,87 +17,91 @@ void test_pipe_cases(std::vector<t_test_script_node> want_nodes, t_script_node *
 }
 
 INSTANTIATE_TEST_SUITE_P(
-    ParserTestsPipes,
-    ParserTestSuite,
+    ParserTestsPipes, ParserTestSuite,
     testing::Values(
         ParserTestParams{
-            0, PIPE_TEST, {
-                {
-                    new_token("echo", BUILTIN),
-                    new_token("|", PIPE),
-                    new_token("echo", BUILTIN),
-                    new_token(NULL, END_OF_FILE)
-                }
-            },
-            {
-                new_test_script_node(PIPE_NODE, {}, {},
-                                     {
-                                         new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {}, {}),
-                                         new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {}, {})
-                                     })}},
+        0,
+        PIPE_TEST,
+        {{new_token("echo", BUILTIN), new_token("|", PIPE),
+             new_token("echo", BUILTIN), new_token(NULL, END_OF_FILE)}},
+        new_test_script_node(
+            PIPE_NODE, {}, {},
+            {new_test_script_node(
+                    CMD_NODE,
+                    new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {},
+                    {}),
+             new_test_script_node(
+                 CMD_NODE,
+                 new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {},
+                 {})})},
         ParserTestParams{
-            0, PIPE_TEST, {
-                {
-                    new_token("echo", BUILTIN),
-                    new_token("|", PIPE),
-                    new_token("ls", WORD),
-                    new_token(NULL, END_OF_FILE)
-                }
-            },
-            {
-                new_test_script_node(PIPE_NODE, {}, {},
-                                     {
-                                         new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {}, {}),
-                                         new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("ls", WORD), {}, {}), {}, {})
-                                     })}},
+        1,
+        PIPE_TEST,
+        {{new_token("echo", BUILTIN), new_token("|", PIPE),
+             new_token("ls", WORD), new_token(NULL, END_OF_FILE)}},
+        new_test_script_node(
+            PIPE_NODE, {}, {},
+            {new_test_script_node(
+                    CMD_NODE,
+                    new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {},
+                    {}),
+             new_test_script_node(
+                 CMD_NODE, new_test_cmd_node(new_token("ls", WORD), {}, {}),
+                 {}, {})})},
         ParserTestParams{
-            0, PIPE_TEST, {
-                {
-                    new_token("echo", BUILTIN),
-                    new_token("file.txt", WORD),
-                    new_token("|", PIPE),
-                    new_token("ls", WORD),
-                    new_token(NULL, END_OF_FILE)
-                }
-            },
+        2,
+        PIPE_TEST,
+        {{new_token("echo", BUILTIN), new_token("file.txt", WORD),
+             new_token("|", PIPE), new_token("ls", WORD),
+             new_token(NULL, END_OF_FILE)}},
+        new_test_script_node(
+            PIPE_NODE, {}, {},
             {
-                new_test_script_node(PIPE_NODE, {}, {},
-                                     {
-                                     new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {new_argument("file.txt", LITERAL),}, {}), {}, {}),
-                                     new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("ls", WORD), {}, {}), {}, {}),
-                                     })}},
+            new_test_script_node(
+                CMD_NODE,
+                new_test_cmd_node(new_token("echo", BUILTIN),
+                                  {
+                                  new_argument("file.txt", LITERAL),
+                              },
+                                  {}),
+                {}, {}),
+            new_test_script_node(
+                CMD_NODE,
+                new_test_cmd_node(new_token("ls", WORD), {}, {}), {},
+                {}),
+        })},
         ParserTestParams{
-            0, PIPE_TEST, {
-                {
-                    new_token("echo", BUILTIN),
-                    new_token("file.txt", WORD),
-                    new_token("file2.txt", WORD),
-                    new_token("|", PIPE),
-                    new_token("ls", WORD),
-                    new_token(NULL, END_OF_FILE)
-                }
-            },
+        3,
+        PIPE_TEST,
+        {{new_token("echo", BUILTIN), new_token("file.txt", WORD),
+             new_token("file2.txt", WORD), new_token("|", PIPE),
+             new_token("ls", WORD), new_token(NULL, END_OF_FILE)}},
+        new_test_script_node(
+            PIPE_NODE, {}, {},
             {
-                new_test_script_node(PIPE_NODE, {}, {},
-                                     {
-                                     new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {new_argument("file.txt", LITERAL), new_argument("file2.txt", LITERAL)}, {}), {}, {}),
-                                     new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("ls", WORD), {}, {}), {}, {}),
-                                     })}},
+            new_test_script_node(
+                CMD_NODE,
+                new_test_cmd_node(new_token("echo", BUILTIN),
+                                  {new_argument("file.txt", LITERAL),
+                                   new_argument("file2.txt", LITERAL)},
+                                  {}),
+                {}, {}),
+            new_test_script_node(
+                CMD_NODE,
+                new_test_cmd_node(new_token("ls", WORD), {}, {}), {},
+                {}),
+        })},
         ParserTestParams{
-            0, PIPE_TEST, {
-                {
-                    new_token("echo", BUILTIN),
-                    new_token("|", PIPE),
-                    new_token("ls", WORD),
-                    new_token("-a", WORD),
-                    new_token(NULL, END_OF_FILE)
-                }
-            },
-            {
-                new_test_script_node(PIPE_NODE, {}, {},
-                                     {
-                                     new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {}, {}),
-                                     new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("ls", WORD), {new_argument("-a", LITERAL)}, {}), {}, {}),
-                                     })}}
-        )
-    );
+        4,
+        PIPE_TEST,
+        {{new_token("echo", BUILTIN), new_token("|", PIPE),
+             new_token("ls", WORD), new_token("-a", WORD),
+             new_token(NULL, END_OF_FILE)}},
+
+        new_test_script_node(PIPE_NODE, {}, {},
+                             {
+                             new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {}, {}),
+                             new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("ls", WORD), {new_argument("-a", LITERAL)}, {}), {}, {}),
+                         })}
+    )
+);

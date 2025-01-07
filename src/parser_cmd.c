@@ -24,7 +24,7 @@ static t_script_node	*create_and_add_cmd_node(t_dllist *tokens)
 	sn = (t_script_node *)malloc(sizeof(t_script_node));
 	if (!sn)
 		return (NULL);
-	init_cmd_node(sn, *(t_token *)tokens->content);
+	get_cmd_node(sn, *(t_token *)tokens->content);
 	return sn;
 }
 
@@ -37,7 +37,7 @@ static t_script_node	*create_and_add_redirection(t_dllist *head, t_script_node *
 	if (!r)
 	{
 		free_script_node(sn);
-		return (create_and_add_error_node("parsing error redirection"));
+		return (get_error_node("parsing error redirection"));
 	}
 	tmp = ft_lstnew(r);
 	if (!tmp)

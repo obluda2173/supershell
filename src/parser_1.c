@@ -14,7 +14,7 @@
 #include "libft.h"
 #include "parser.h"
 
-void	init_cmd_node(t_script_node *sn, t_token t)
+void	get_cmd_node(t_script_node *sn, t_token t)
 {
 
 	sn->node_type = CMD_NODE;

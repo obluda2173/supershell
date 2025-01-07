@@ -81,7 +81,7 @@ typedef struct s_script_node
 	unsigned int		num_children;
 }						t_script_node;
 
-void	init_cmd_node(t_script_node *sn, t_token t);
+void	get_cmd_node(t_script_node *sn, t_token t);
 t_script_node					*parse(t_dllist *tokens);
 t_token					copy_token(t_token token);
 void					free_script_node(void *sn);
@@ -92,7 +92,7 @@ t_redirection			*extract_redirection(t_dllist *tokens);
 t_argument				*extract_argument(t_token *t);
 
 /* node creation */
-t_script_node			*create_and_add_error_node(const char *error);
+t_script_node			*get_error_node(const char *error);
 t_script_node	*fill_cmd_node(t_script_node *sn, t_dllist *tokens);
 
 /* free */

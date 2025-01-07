@@ -14,6 +14,7 @@
 #include "libft.h"
 #include <unistd.h>
 
+
 t_script_node *parse_pipe(t_dllist *tokens) {
 	t_script_node* sn = (t_script_node*)malloc(sizeof(t_script_node));
 	sn->node_type = PIPE_NODE;
@@ -21,24 +22,24 @@ t_script_node *parse_pipe(t_dllist *tokens) {
 	sn->child1 = malloc(sizeof(t_script_node));
 	if (!sn->child1) {
 		free_script_node(sn);
-		return create_and_add_error_node("no tokens");
+		return get_error_node("no tokens");
 	}
 	sn->child2 = malloc(sizeof(t_script_node));
 	if (!sn->child2) {
 		free(sn->child1);
 		free(sn);
-		return create_and_add_error_node( "no tokens");
+		return get_error_node( "no tokens");
 	}
 
 	while (tokens->prev)
 		tokens = tokens->prev;
-	init_cmd_node(sn->child1, *(t_token*)tokens->content);
+	get_cmd_node(sn->child1, *(t_token*)tokens->content);
 	fill_cmd_node(sn->child1, tokens);
 
 	while (((t_token*)tokens->content)->type != PIPE)
 		tokens = tokens->next;
 	tokens = tokens->next;
-	init_cmd_node(sn->child2, *(t_token*)tokens->content);
+	get_cmd_node(sn->child2, *(t_token*)tokens->content);
 	fill_cmd_node(sn->child2, tokens);
 	return sn;
 }
@@ -46,7 +47,7 @@ t_script_node *parse_pipe(t_dllist *tokens) {
 t_script_node	*parse(t_dllist *tokens)
 {
 	if (!tokens)
-		return create_and_add_error_node("no tokens");
+		return get_error_node("no tokens");
 
 	while (tokens->next) {
 		if (((t_token*)tokens->content)->type == PIPE)
