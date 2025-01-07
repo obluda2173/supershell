@@ -60,10 +60,6 @@ t_script_node *new_fill_cmd_node(t_script_node *sn, t_dllist *tokens) {
 
 t_script_node	*parse(t_dllist *tokens)
 {
-	/* t_list	*script; */
-
-	/* script = NULL; */
-
 	if (!tokens)
 		return create_and_add_error_node("no tokens");
 
