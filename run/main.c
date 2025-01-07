@@ -137,10 +137,11 @@ int	main(int ac, char **av, char **ep)
 		}
 
 		t_dllist *tokens = tokenize(data->line);
-		t_list *script = parse(tokens);
+		t_script_node *script = parse(tokens);
 		ft_dllstclear(&tokens, free_token);
-		execute(script);
-		ft_lstclear(&script, free_script_node);
+		(void)script;
+		/* execute(script); */
+		/* ft_lstclear(&script, free_script_node); */
 
 		free(data->line);
 		data->line = NULL;

@@ -12,7 +12,7 @@
 
 #include "parser.h"
 
-t_script_node	*create_and_add_error_node(t_list **script, const char *error)
+t_script_node	*create_and_add_error_node(const char *error)
 {
 	t_script_node	*sn;
 
@@ -21,6 +21,6 @@ t_script_node	*create_and_add_error_node(t_list **script, const char *error)
 		return (NULL);
 	sn->node_type = ERROR_NODE;
 	sn->node_data.error_node.error = error;
-	ft_lstadd_back(script, ft_lstnew(sn));
+	/* ft_lstadd_back(script, ft_lstnew(sn)); */
 	return (sn);
 }

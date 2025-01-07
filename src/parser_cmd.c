@@ -15,8 +15,7 @@
 #include "parser.h"
 #include <unistd.h>
 
-static t_script_node	*create_and_add_cmd_node(t_list **script,
-		t_dllist *tokens)
+static t_script_node	*create_and_add_cmd_node(t_dllist *tokens)
 {
 	t_script_node	*sn;
 
@@ -26,17 +25,10 @@ static t_script_node	*create_and_add_cmd_node(t_list **script,
 	if (!sn)
 		return (NULL);
 	init_cmd_node(sn, *(t_token *)tokens->content);
-	*script = ft_lstnew(sn);
-	if (!script)
-	{
-		free_script_node(sn);
-		return (NULL);
-	}
-	return (sn);
+	return sn;
 }
 
-static t_script_node	*create_and_add_redirection(t_list **script,
-		t_dllist *head, t_script_node *sn)
+static t_script_node	*create_and_add_redirection(t_dllist *head, t_script_node *sn)
 {
 	t_redirection	*r;
 	t_list			*tmp;
@@ -44,21 +36,22 @@ static t_script_node	*create_and_add_redirection(t_list **script,
 	r = extract_redirection(head);
 	if (!r)
 	{
-		ft_lstclear(script, free_script_node);
-		return (create_and_add_error_node(script, "parsing error redirection"));
+		free_script_node(sn);
+		return (create_and_add_error_node("parsing error redirection"));
 	}
 	tmp = ft_lstnew(r);
 	if (!tmp)
 	{
 		free_redirection(r);
-		ft_lstclear(script, free_script_node);
+		free_script_node(sn);
+		/* ft_lstclear(script, free_script_node); */
 		return (NULL);
 	}
 	ft_lstadd_back(&sn->node_data.cmd_node.redirections, tmp);
 	return (sn);
 }
 
-static t_list	*create_and_add_argument(t_list **script, t_token *t)
+static t_script_node	*create_and_add_argument(t_script_node *sn, t_token *t)
 {
 	t_argument	*arg;
 	t_list		*tmp;
@@ -66,22 +59,22 @@ static t_list	*create_and_add_argument(t_list **script, t_token *t)
 	arg = extract_argument(t);
 	if (!arg)
 	{
-		ft_lstclear(script, free_script_node);
+		free_script_node(sn);
+		/* ft_lstclear(script, free_script_node); */
 		return (NULL);
 	}
 	tmp = ft_lstnew(arg);
 	if (!tmp)
 	{
-		ft_lstclear(script, free_script_node);
+		free_script_node(sn);
+		/* ft_lstclear(script, free_script_node); */
 		return (NULL);
 	}
-	ft_lstadd_back(
-		&((t_script_node *)((*script)->content))->node_data.cmd_node.arguments,
-		tmp);
-	return (tmp);
+	ft_lstadd_back(&sn->node_data.cmd_node.arguments, tmp);
+	return sn;
 }
 
-t_list	*fill_cmd_node(t_list *script, t_dllist *tokens)
+t_script_node	*fill_cmd_node(t_script_node *sn, t_dllist *tokens)
 {
 	t_token			cur;
 	t_script_node	*latest_node;
@@ -93,32 +86,31 @@ t_list	*fill_cmd_node(t_list *script, t_dllist *tokens)
 	{
 		cur = *(t_token *)(tokens->content);
 		if (cur.type == PIPE)
-			return script;
+			return sn;
 		if (cur.type == END_OF_FILE)
-			return (script);
+			return sn;
 		if (cur.type == REDIRECT_OUT || cur.type == REDIRECT_IN ||
 			cur.type == REDIRECT_APPEND || cur.type == HERE_DOC )
 		{
-			latest_node = create_and_add_redirection(&script, tokens,
-					script->content);
+			latest_node = create_and_add_redirection( tokens, sn);
 			if (latest_node && latest_node->node_type == ERROR_NODE)
-				return (script);
+				return latest_node;
 			tokens = tokens->next->next;
 			continue ;
 		}
-		if (!create_and_add_argument(&script, tokens->content))
+		if (!create_and_add_argument(sn, tokens->content))
 			return (NULL);
 		tokens = tokens->next;
 	}
-	return (script);
+	return sn;
 }
 
-t_list	*parse_cmd(t_list *script, t_dllist *tokens)
+t_script_node	*parse_cmd( t_dllist *tokens)
 {
-	t_script_node	*latest_node;
+	t_script_node	*cmd_node;
 
-	latest_node = create_and_add_cmd_node(&script, tokens);
-	if (latest_node && latest_node->node_type == ERROR_NODE)
-		return (script);
-	return (fill_cmd_node(script, tokens));
+	cmd_node = create_and_add_cmd_node(tokens);
+	if (cmd_node && cmd_node->node_type == ERROR_NODE)
+		return cmd_node;
+	return (fill_cmd_node(cmd_node, tokens));
 }

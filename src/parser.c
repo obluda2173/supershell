@@ -58,16 +58,14 @@ t_script_node *new_fill_cmd_node(t_script_node *sn, t_dllist *tokens) {
 	return sn;
 }
 
-t_list	*parse(t_dllist *tokens)
+t_script_node	*parse(t_dllist *tokens)
 {
-	t_list	*script;
+	/* t_list	*script; */
 
-	script = NULL;
+	/* script = NULL; */
 
-	if (!tokens) {
-		create_and_add_error_node(&script, "no tokens");
-		return script;
-	}
+	if (!tokens)
+		return create_and_add_error_node("no tokens");
 
 	while (tokens->next) {
 		if (((t_token*)tokens->content)->type == PIPE) {
@@ -77,15 +75,13 @@ t_list	*parse(t_dllist *tokens)
 			sn->child1 = malloc(sizeof(t_script_node));
 			if (!sn->child1) {
 				free_script_node(sn);
-				create_and_add_error_node(&script, "no tokens");
-				return script;
+				return create_and_add_error_node("no tokens");
 			}
 			sn->child2 = malloc(sizeof(t_script_node));
 			if (!sn->child2) {
 				free(sn->child1);
 				free(sn);
-				create_and_add_error_node(&script, "no tokens");
-				return script;
+				return create_and_add_error_node( "no tokens");
 			}
 
 			while (tokens->prev)
@@ -98,11 +94,11 @@ t_list	*parse(t_dllist *tokens)
 			tokens = tokens->next;
 			init_cmd_node(sn->child2, *(t_token*)tokens->content);
 			new_fill_cmd_node(sn->child2, tokens);
-			return ft_lstnew(sn);
+			return sn;
 		}
 		tokens = tokens->next;
 	}
 	while (tokens->prev)
 		tokens = tokens->prev;
-	return (parse_cmd(script, tokens));
+	return (parse_cmd(tokens));
 }
