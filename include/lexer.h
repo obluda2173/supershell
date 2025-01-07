@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/07 14:58:41 by erian             #+#    #+#             */
+/*   Updated: 2025/01/07 15:18:08 by erian            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef LEXER_H
 # define LEXER_H
 
@@ -50,8 +62,19 @@ void free_token(void *content);
 /* lexer                                                                    * */
 /* ************************************************************************** */
 
-// operators_separator.c
-char	*preprocess_input(char *line);
+// debuging.c
+void	print_tokens(t_dllist *head);
+
+// format_input_1.c
+char	*format_input(char *line);
+
+// format_input_2.c
+char	*handle_redirection(char *input, size_t *i, char *result, size_t *j);
+char	*handle_heredoc(char *input, size_t *i, char *result, size_t *j);
+char	*handle_quotes(const char *input, size_t *i,
+							char *result, size_t *j);
+char	*handle_operators(const char *input, size_t *i,
+								char *result, size_t *j);
 
 // lexer.c
 t_dllist *tokenize(char* line);
@@ -69,7 +92,6 @@ void	skip_spaces(char *line, int *i);
 // typedef struct s_argument {
 // 	t_arg_type type;
 // 	t_token token;
-
 // }
 
 // typedef struct s_command {
