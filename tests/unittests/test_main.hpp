@@ -22,8 +22,8 @@ typedef struct s_test_script_node {
 	t_node_type type;
 	t_test_cmd_node cmd_node;
 	t_error_node err_node;
+	std::vector<struct s_test_script_node> pipe_node_childs;
 } t_test_script_node;
-
 
 struct ParserTestParams {
 	std::vector<t_token> token_vec;
@@ -37,7 +37,7 @@ t_dllist *create_token_dllist(std::vector<t_token> tokens);
 
 t_test_cmd_node new_test_cmd_node(t_token cmd_token, std::vector<t_argument> args, std::vector<t_redirection> redirects);
 t_error_node new_error_node(const char* error);
-t_test_script_node new_test_script_node(t_node_type type, t_test_cmd_node cn, t_error_node en);
+t_test_script_node new_test_script_node(t_node_type type, t_test_cmd_node cn, t_error_node en, std::vector<t_test_script_node> pipe_node_childs);
 t_argument new_argument(const char* literal, t_word_type type);
 t_redirection new_redirection(int fd, t_redirection_type type, const char* word, t_word_type wt);
 void compare_cmd_node(t_test_script_node want, t_cmd_node got);

@@ -11,7 +11,7 @@ INSTANTIATE_TEST_SUITE_P(
 			},
 			{new_test_script_node(
 					CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {}),
-					{})}},
+					{}, {})}},
 		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
@@ -25,7 +25,7 @@ INSTANTIATE_TEST_SUITE_P(
 																	 LITERAL),
 													},
 													{}),
-								  {})}},
+								  {}, {})}},
 		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
@@ -39,7 +39,7 @@ INSTANTIATE_TEST_SUITE_P(
 									  {new_argument("file1.txt", LITERAL),
 									   new_argument("file2.txt", LITERAL)},
 									  {}),
-					{})}},
+					{}, {})}},
 		ParserTestParams{{
 				new_token("wc", WORD),
 				new_token("-l", WORD),
@@ -52,7 +52,7 @@ INSTANTIATE_TEST_SUITE_P(
 													   new_argument("-l", LITERAL),
 												   },
 												   {}),
-								 {})}},
+								 {}, {})}},
 		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
@@ -66,7 +66,7 @@ INSTANTIATE_TEST_SUITE_P(
 																	 ENV_EXP),
 													},
 													{}),
-								  {})}},
+								  {}, {})}},
 		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
@@ -80,7 +80,7 @@ INSTANTIATE_TEST_SUITE_P(
 										  new_argument("?", EXIT_STATUS_EXP),
 									  },
 									  {}),
-					{})}},
+					{}, {})}},
 		ParserTestParams{{
 				new_token("echo", BUILTIN),
 				new_token("", DOLLAR),
@@ -93,7 +93,7 @@ INSTANTIATE_TEST_SUITE_P(
 													   new_argument("", ENV_EXP),
 												   },
 												   {}),
-								 {})}},
+								 {}, {})}},
 		ParserTestParams{{
 				new_token("echo", BUILTIN),
 				new_token("some_*_file.c", WILDCARD),
@@ -107,7 +107,7 @@ INSTANTIATE_TEST_SUITE_P(
 																	WILDCARD_EXP),
 												   },
 												   {}),
-								 {})}},
+								 {}, {})}},
 		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
@@ -122,7 +122,7 @@ INSTANTIATE_TEST_SUITE_P(
 							new_argument("this is a double quoted string", DOUBLE_QUOTE_STR),
 						},
 						{}),
-					{})}},
+					{}, {})}},
 		ParserTestParams{
 			{
 				new_token("echo", BUILTIN),
@@ -137,7 +137,7 @@ INSTANTIATE_TEST_SUITE_P(
 													   LITERAL),
 									  },
 									  {}),
-					{})}},
+					{}, {})}},
 		ParserTestParams{{
 				new_token("echo", BUILTIN), new_token("string1 $PATH string2", DOUBLE_QUOTE),
 				new_token("string1 ", DOUBLE_QUOTE), new_token("PATH", DOLLAR),    new_token(" string2", DOUBLE_QUOTE),
@@ -154,5 +154,5 @@ INSTANTIATE_TEST_SUITE_P(
 													   new_argument(" string2", DOUBLE_QUOTE_STR),
 												   },
 												   {}),
-								 {})}}
+								 {}, {})}}
 		));

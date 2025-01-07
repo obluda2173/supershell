@@ -1,5 +1,5 @@
 #include "test_main.hpp"
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"
 
 TEST_P(ParserTestSuite, ParserTest) {
 	ParserTestParams params = GetParam();
@@ -60,14 +60,27 @@ TEST(ParserTestsSuite, TestPipes) {
 	ASSERT_NE(nullptr,sn->child2);
 	ASSERT_EQ(CMD_NODE, sn->child2->node_type);
 
-	t_test_script_node want = new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {});
-	compare_cmd_node(want, (t_cmd_node)sn->child1->node_data.cmd_node);
-	compare_cmd_node(want, (t_cmd_node)sn->child2->node_data.cmd_node);
+	t_test_script_node want = new_test_script_node(PIPE_NODE, {}, {},
+												   {
+													   new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {}, {}),
+													   new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {}, {})
+												   }
+		);
+
+	compare_cmd_node(want.pipe_node_childs[0], (t_cmd_node)sn->child1->node_data.cmd_node);
+	compare_cmd_node(want.pipe_node_childs[1], (t_cmd_node)sn->child2->node_data.cmd_node);
 
 	ft_lstclear(&script, free_script_node);
 	ft_dllstclear(&tokens, free_token);
 	// second test
 
+
+	want = new_test_script_node(PIPE_NODE, {}, {},
+								{
+									new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {}, {}),
+									new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("ls", WORD), {}, {}), {}, {})
+								}
+		);
 	token_vec = {
 		new_token("echo", BUILTIN),
 		new_token("|", PIPE),
@@ -86,10 +99,8 @@ TEST(ParserTestsSuite, TestPipes) {
 	ASSERT_NE(nullptr,sn->child2);
 	ASSERT_EQ(CMD_NODE, sn->child2->node_type);
 
-	want = new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {});
-	compare_cmd_node(want, (t_cmd_node)sn->child1->node_data.cmd_node);
-	want = new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("ls", WORD), {}, {}), {});
-	compare_cmd_node(want, (t_cmd_node)sn->child2->node_data.cmd_node);
+	compare_cmd_node(want.pipe_node_childs[0], (t_cmd_node)sn->child1->node_data.cmd_node);
+	compare_cmd_node(want.pipe_node_childs[1], (t_cmd_node)sn->child2->node_data.cmd_node);
 
 	ft_lstclear(&script, free_script_node);
 	ft_dllstclear(&tokens, free_token);

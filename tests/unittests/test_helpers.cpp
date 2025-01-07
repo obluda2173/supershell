@@ -1,6 +1,4 @@
 #include "test_main.hpp"
-#include <cstddef>
-#include <gtest/gtest.h>
 
 t_token new_token(const char* content, token_type type) {
 	return (t_token){(char*)content, type};
@@ -26,8 +24,8 @@ t_test_cmd_node new_test_cmd_node(t_token cmd_token, std::vector<t_argument> arg
 	return (t_test_cmd_node){cmd_token, args,  redirects};
 }
 
-t_test_script_node new_test_script_node(t_node_type type, t_test_cmd_node cn, t_error_node en) {
-	return (t_test_script_node){type, cn, en};
+t_test_script_node new_test_script_node(t_node_type type, t_test_cmd_node cn, t_error_node en, std::vector<t_test_script_node> pipe_node_childs) {
+	return (t_test_script_node){type, cn, en, pipe_node_childs};
 }
 
 t_argument new_argument(const char* literal, t_word_type type) {
