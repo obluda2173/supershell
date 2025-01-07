@@ -39,6 +39,7 @@ void	free_script_node(void *sn)
 	node = (t_script_node *)sn;
 	if (node->node_type == PIPE_NODE) {
 		free_script_node(node->child1);
+		free_script_node(node->child2);
 	}
 	if (node->node_type == CMD_NODE)
 	{

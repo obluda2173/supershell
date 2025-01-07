@@ -56,6 +56,9 @@ TEST(ParserTestsSuite, TestPipes) {
 	ASSERT_EQ(sn->num_children, 2);
 	ASSERT_NE(nullptr,sn->child1);
 	ASSERT_EQ(CMD_NODE, sn->child1->node_type);
+	ASSERT_NE(nullptr,sn->child2);
+	ASSERT_EQ(CMD_NODE, sn->child2->node_type);
+	// ASSERT_EQ(CMD_NODE, sn->child1->node_type);
 
 	ft_lstclear(&script, free_script_node);
 	ft_dllstclear(&tokens, free_token);

@@ -31,12 +31,20 @@ t_list	*parse(t_dllist *tokens)
 			sn->num_children=2;
 			sn->child1 = malloc(sizeof(t_script_node));
 			if (!sn->child1) {
+				free_script_node(sn);
+				create_and_add_error_node(&script, "no tokens");
+				return script;
+			}
+			sn->child2 = malloc(sizeof(t_script_node));
+			if (!sn->child2) {
+				free(sn->child1);
 				free(sn);
 				create_and_add_error_node(&script, "no tokens");
 				return script;
 			}
 
 			init_cmd_node(sn->child1);
+			init_cmd_node(sn->child2);
 			return ft_lstnew(sn);
 		}
 		tokens = tokens->next;
