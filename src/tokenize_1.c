@@ -6,130 +6,46 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2025/01/07 15:52:10 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/07 17:35:04 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 
 // Skips spaces in the input string
-void skip_spaces(char *line, int *i)
+static void	skip_spaces(char *line, int *i)
 {
 	while (line[*i] && line[*i] == ' ')
 		(*i)++;
 }
- 
+
 //extract allocated word from line
-static char *extract_word(t_line_container *lc)
+static char	*extract_word(t_line_container *lc)
 {
-    char quote;
-    int start;
-	size_t len;
-	char *word;
-	
-    skip_spaces((char *)lc->line, &(lc->pos));
-	
+	int		start;
+	char	*word;
+	size_t	len;
+
+	skip_spaces((char *)lc->line, &(lc->pos));
 	start = lc->pos;
-
-    if (!lc->line[lc->pos])
-        return NULL;
-
-    if (ft_strchr("<>&|", lc->line[lc->pos]))
-	{
-		if (lc->line[lc->pos] == '<' && lc->line[lc->pos + 1] == '<' && lc->line[lc->pos + 2] != ' ')
-		{
-			lc->pos += 2;
-			while (lc->line[lc->pos] && lc->line[lc->pos] != ' ')
-				lc->pos++;
-		}
-        else if (lc->line[lc->pos + 1] == lc->line[lc->pos])
-            lc->pos += 2;
-        else
-            lc->pos++;
-    }
-	else if (lc->line[lc->pos] >= '0' && lc->line[lc->pos] <= '2' && lc->line[lc->pos + 1] == '>' && lc->line[lc->pos + 2] != '>')
+	if (!lc->line[lc->pos])
+		return (NULL);
+	if (ft_strchr("<>&|", lc->line[lc->pos]))
+		skip_operator(lc);
+	else if (lc->line[lc->pos] >= '0' && lc->line[lc->pos] <= '2'
+		&& lc->line[lc->pos + 1] == '>' && lc->line[lc->pos + 2] != '>')
 		lc->pos += 2;
-	else if ((quote = lc->line[lc->pos]) == '\'' || quote == '\"')
-	{
-        lc->pos++; 
-        while (lc->line[lc->pos] && lc->line[lc->pos] != quote)
-            lc->pos++;
-        lc->pos++;
-    }
+	else if (lc->line[lc->pos] == '\'' || lc->line[lc->pos] == '\"')
+		skip_quoted_text(lc);
 	else if (lc->line[lc->pos] == '$')
-	{
-        lc->pos++;
-        while (lc->line[lc->pos] && (ft_isalnum(lc->line[lc->pos]) || lc->line[lc->pos] == '_' || lc->line[lc->pos] == '?'))
-            lc->pos++;
-    }
+		skip_variable(lc);
 	else
-        while (lc->line[lc->pos] && !ft_strchr(" \'\"<>|&$", lc->line[lc->pos]))
-            lc->pos++;
-
-    len = lc->pos - start;
-	
-    if (len == 0)
-        return NULL;
-
-    word = malloc(len + 1);
-    if (!word)
-	{
-        printf("Error: Memory allocation failed.\n");
-        return NULL;
-    }
-    ft_strlcpy(word, lc->line + start, len + 1);
-
-	printf("%s\n", word);
-	
-    return word;
-}
-
-
-bool is_builtin(char *str)
-{
-    return (!ft_strcmp(str, "echo\0")
-		|| !ft_strcmp(str, "cd\0")
-		|| !ft_strcmp(str, "pwd\0")
-		|| !ft_strcmp(str, "export\0")
-		|| !ft_strcmp(str, "unset\0")
-		|| !ft_strcmp(str, "env\0")
-		|| !ft_strcmp(str, "exit\0"));
-}
-
-//returns token of given content
-static token_type	assign_type(char *str)
-{
-	if (!str)
-		return END_OF_FILE;
-	if (!ft_strncmp(str, "\'", 1))
-		return SINGLE_QUOTE;
-	if (!ft_strncmp(str, "\"", 1))
-		return DOUBLE_QUOTE;
-	if (!ft_strcmp(str, "||\0"))
-		return OR;
-	if (!ft_strcmp(str, "&&\0"))
-		return AND;
-	if (!ft_strcmp(str, "=\0"))	
-		return EQUAL_SIGN;
-	if (!ft_strcmp(str, "|\0"))	
-		return PIPE;
-	if (!ft_strncmp(str, "<<", 2))
-		return HERE_DOC;
-	if (!ft_strcmp(str, ">>\0"))
-		return REDIRECT_APPEND;
-	if (!ft_strcmp(str, "<\0"))
-		return REDIRECT_IN;
-	if (ft_strchr(str, '>'))
-		return REDIRECT_OUT;
-	if (!ft_strncmp(str, "$", 1) && ft_strlen(str) > 1)
-		return DOLLAR;
-	if (ft_strchr(str, '*'))
-		return WILDCARD;
-	if (ft_strchr(str, ';') || ft_strchr(str, '\\')) //not sure
-		return INVALID;
-	if (is_builtin(str))
-		return BUILTIN;
-	return WORD;
+		skip_unquoted_word(lc);
+	len = lc->pos - start;
+	if (len == 0)
+		return (NULL);
+	word = allocate_word(lc->line, start, len);
+	return (word);
 }
 
 // Tokenizes the input line into a doubly linked list
@@ -139,7 +55,7 @@ t_token	*get_next_token(t_line_container *lc)
 	char	*word;
 
 	if (!lc->line)
-		return NULL;
+		return (NULL);
 	if (lc->line[lc->pos] == '\0')
 	{
 		token = malloc(sizeof(t_token));
