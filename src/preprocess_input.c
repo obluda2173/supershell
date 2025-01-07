@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:33:18 by erian             #+#    #+#             */
-/*   Updated: 2025/01/07 12:11:03 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/07 13:48:28 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,62 +16,95 @@
 #include <string.h>
 #include <ctype.h>
 
-char *preprocess_input(char *input) {
-    const char *operators[] = {">>", ">>", "<<", "||", "&&", "|", "<", ">", "="};
-    size_t len = strlen(input);
-    char *result = malloc(len * 2 + 1); // Allocate extra space for added spaces
-    if (!result) return NULL;
+// Handle numbers preceding `>` or `>>`
+static char	*handle_redirection(char *input, size_t *i, char *result, size_t *j)
+{
+	while (ft_isdigit(input[*i]))
+		result[(*j)++] = input[(*i)++];
+	if (input[*i] == '>')
+	{
+		result[(*j)++] = input[(*i)++];
+		if (input[*i] == '>')
+			result[(*j)++] = input[(*i)++];
+	}
+	if (input[*i] && input[*i] != ' ')
+		result[(*j)++] = ' ';
+	return (result);
+}
 
-    size_t i = 0, j = 0;
-    while (input[i]) {
-        // Handle numbers preceding `>` or `>>`
-        if (isdigit(input[i]) && (input[i + 1] == '>' || (input[i + 1] == '>' && input[i + 2] == '>'))) {
-            result[j++] = input[i++]; // Add the number
-            result[j++] = input[i++]; // Add the `>`
-            if (input[i] == '>') result[j++] = input[i++]; // Add `>>` if present
-            if (input[i] && input[i] != ' ') result[j++] = ' '; // Add space after
-        }
-        // Handle heredoc `<<` without space separation
-        else if (input[i] == '<' && input[i + 1] == '<') {
-            result[j++] = input[i++];
-            result[j++] = input[i++];
-            while (input[i] && !isspace(input[i]) && input[i] != '>' && input[i] != '|') {
-                result[j++] = input[i++]; // Append heredoc identifier without spaces
-            }
-            if (input[i] && input[i] != ' ') result[j++] = ' '; // Add space after heredoc
-        }
-        // Handle quotes
-        else if (input[i] == '\'' || input[i] == '\"') {
-            char quote = input[i++];
-            result[j++] = quote;
-            while (input[i] && input[i] != quote) {
-                result[j++] = input[i++];
-            }
-            if (input[i]) result[j++] = input[i++];
-        }
-        // Handle operators
-        else {
-            int is_operator = 0;
-            for (size_t k = 0; k < sizeof(operators) / sizeof(operators[0]); k++) {
-                size_t op_len = strlen(operators[k]);
-                if (strncmp(&input[i], operators[k], op_len) == 0) {
-                    if (j > 0 && result[j - 1] != ' ') result[j++] = ' '; // Add space before
-                    strncpy(&result[j], operators[k], op_len);
-                    j += op_len;
-                    i += op_len;
-                    if (input[i] && input[i] != ' ') result[j++] = ' '; // Add space after
-                    is_operator = 1;
-                    break;
-                }
-            }
-            if (!is_operator) {
-                result[j++] = input[i++];
-            }
+// Handle heredoc `<<` without space separation
+static char	*handle_heredoc(char *input, size_t *i, char *result, size_t *j)
+{
+	while (input[*i] == '<')
+		result[(*j)++] = input[(*i)++];
+	while (input[*i] && !isspace(input[*i]))
+		result[(*j)++] = input[(*i)++];
+	if (input[*i] && input[*i] != ' ')
+		result[(*j)++] = ' ';
+	return (result);
+}
+
+// Handle quotes
+static char	*handle_quotes(const char *input, size_t *i, char *result, size_t *j)
+{
+	char quote;
+
+	quote = input[(*i)++];
+	result[(*j)++] = quote;
+	while (input[*i] && input[*i] != quote)
+		result[(*j)++] = input[(*i)++];
+	if (input[*i])
+		result[(*j)++] = input[(*i)++];
+	return (result);
+}
+
+char *handle_operators(const char *input, size_t *i, char *result, size_t *j)
+{
+    char *operators[] = {">>", "<<", "||", "&&", "|", "<", ">", "="};
+    size_t op_len;
+    size_t k;
+    size_t l;
+
+    op_len = 0;
+    k = -1;
+    while (++k < 8)
+	{
+        op_len = strlen(operators[k]);
+        if (strncmp(&input[*i], operators[k], op_len) == 0) 
+		{
+            l = -1;
+            if (*j > 0 && result[*j - 1] != ' ')
+                result[(*j)++] = ' ';
+            while (++l < op_len)
+                result[(*j)++] = input[(*i)++];
+            if (input[*i] && input[*i] != ' ')
+                result[(*j)++] = ' ';
+            return result;
         }
     }
-    result[j] = '\0';
+    result[(*j)++] = input[(*i)++];
+    return (result);
+}
 
+char *preprocess_input(char *input)
+{
+    size_t len = strlen(input);
+    char *result = malloc(len * 2 + 1);
+    size_t i = 0, j = 0;
+
+    if (!result) return NULL;
+    while (input[i])
+    {
+        if (isdigit(input[i]) && (input[i + 1] == '>' || (input[i + 1] == '>' && input[i + 2] == '>')))
+            result = handle_redirection(input, &i, result, &j);
+        else if (input[i] == '<' && input[i + 1] == '<')
+			result = handle_heredoc(input, &i, result, &j);
+        else if (input[i] == '\'' || input[i] == '\"')
+			result = handle_quotes(input, &i, result, &j);
+        else 
+			result = handle_operators(input, &i, result, &j);
+    }
+    result[j] = '\0';
     printf("\nLine: %s\n\n", result);
-    
-    return result;
+    return (result);
 }

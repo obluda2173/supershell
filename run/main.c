@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:59:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/04 13:02:11 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/07 12:47:57 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ int	main(int ac, char **av, char **ep)
 		}
 		
 		t_dllist *tokens = tokenize(data->line);
+		
 		ft_dllstclear(&tokens, free_token);
 
 		if (check_syntax(data->line))
