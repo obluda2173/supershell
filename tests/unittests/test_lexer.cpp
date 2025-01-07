@@ -172,13 +172,17 @@ INSTANTIATE_TEST_SUITE_P(
 					TestTokenizeParams{
 						"export VAR=value", {
 							new_token("export", BUILTIN),
-							new_token("VAR=value", WORD),
+							new_token("VAR", WORD),
+							new_token("=", EQUAL_SIGN),
+							new_token("value", WORD),
 							new_token(NULL, END_OF_FILE),
 						}},
 					TestTokenizeParams{
 						"export VAR=\"value with spaces\"", {
 							new_token("export", BUILTIN),
-							new_token("VAR=value with spaces", DOUBLE_QUOTE),
+							new_token("VAR", WORD),
+							new_token("=", EQUAL_SIGN),
+							new_token("value with spaces", DOUBLE_QUOTE),
 							new_token(NULL, END_OF_FILE),
 						}},
 					TestTokenizeParams{
