@@ -101,4 +101,5 @@ void					free_redirection(void *content);
 void					free_script_node(void *sn);
 t_token					copy_token(t_token token);
 
+t_script_node	*create_and_add_argument(t_script_node *sn, t_token *t);
 #endif // PARSER_H

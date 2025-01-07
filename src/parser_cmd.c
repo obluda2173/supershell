@@ -51,7 +51,7 @@ static t_script_node	*create_and_add_redirection(t_dllist *head, t_script_node *
 	return (sn);
 }
 
-static t_script_node	*create_and_add_argument(t_script_node *sn, t_token *t)
+t_script_node	*create_and_add_argument(t_script_node *sn, t_token *t)
 {
 	t_argument	*arg;
 	t_list		*tmp;
@@ -60,14 +60,12 @@ static t_script_node	*create_and_add_argument(t_script_node *sn, t_token *t)
 	if (!arg)
 	{
 		free_script_node(sn);
-		/* ft_lstclear(script, free_script_node); */
 		return (NULL);
 	}
 	tmp = ft_lstnew(arg);
 	if (!tmp)
 	{
 		free_script_node(sn);
-		/* ft_lstclear(script, free_script_node); */
 		return (NULL);
 	}
 	ft_lstadd_back(&sn->node_data.cmd_node.arguments, tmp);

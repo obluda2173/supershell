@@ -12,30 +12,6 @@
 
 #include "parser.h"
 #include "libft.h"
-#include <unistd.h>
-
-
-static t_list	*create_and_add_argument(t_list **arguments, t_token *t)
-{
-	t_argument	*arg;
-	t_list		*tmp;
-
-	arg = extract_argument(t);
-	/* if (!arg) */
-	/* { */
-	/* 	ft_lstclear(script, free_script_node); */
-	/* 	return (NULL); */
-	/* } */
-	tmp = ft_lstnew(arg);
-	/* if (!tmp) */
-	/* { */
-	/* 	ft_lstclear(script, free_script_node); */
-	/* 	return (NULL); */
-	/* } */
-	ft_lstadd_back(arguments, tmp);
-	return (tmp);
-}
-
 
 t_script_node *new_fill_cmd_node(t_script_node *sn, t_dllist *tokens) {
 	t_token			cur;
@@ -51,7 +27,7 @@ t_script_node *new_fill_cmd_node(t_script_node *sn, t_dllist *tokens) {
 			return sn;
 		if (cur.type == END_OF_FILE)
 			return sn;
-		if (!create_and_add_argument(&sn->node_data.cmd_node.arguments, tokens->content))
+		if (!create_and_add_argument(sn, tokens->content))
 			return (NULL);
 		tokens = tokens->next;
 	}
