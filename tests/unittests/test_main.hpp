@@ -25,7 +25,15 @@ typedef struct s_test_script_node {
 	std::vector<struct s_test_script_node> pipe_node_childs;
 } t_test_script_node;
 
+typedef enum e_test {
+  ERROR_TEST,
+  CMD_TEST,
+  PIPE_TEST,
+} t_test_type;
+
 struct ParserTestParams {
+	int test_nbr;
+	t_test_type test_type;
 	std::vector<t_token> token_vec;
 	std::vector<t_test_script_node> want_nodes;
 };
