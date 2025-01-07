@@ -92,6 +92,8 @@ t_list	*fill_cmd_node(t_list *script, t_dllist *tokens)
 	while (tokens)
 	{
 		cur = *(t_token *)(tokens->content);
+		if (cur.type == PIPE)
+			return script;
 		if (cur.type == END_OF_FILE)
 			return (script);
 		if (cur.type == REDIRECT_OUT || cur.type == REDIRECT_IN ||

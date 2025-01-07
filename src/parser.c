@@ -43,9 +43,16 @@ t_list	*parse(t_dllist *tokens)
 				return script;
 			}
 
-			tokens = tokens->prev;
+			while (tokens->prev)
+				tokens = tokens->prev;
 			init_cmd_node(sn->child1, *(t_token*)tokens->content);
-			tokens = tokens->next->next;
+			/* fill_cmd_node(script, tokens) */
+			tokens = tokens->next;
+
+			while (((t_token*)tokens->content)->type != PIPE)
+				tokens = tokens->next;
+
+			tokens = tokens->next;
 			init_cmd_node(sn->child2, *(t_token*)tokens->content);
 			return ft_lstnew(sn);
 		}

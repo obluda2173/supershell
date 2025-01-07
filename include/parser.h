@@ -94,6 +94,7 @@ t_argument				*extract_argument(t_token *t);
 /* node creation */
 t_script_node			*create_and_add_error_node(t_list **script,
 							const char *error);
+t_list	*fill_cmd_node(t_list *script, t_dllist *tokens);
 
 /* free */
 void					free_arguments(void *content);
