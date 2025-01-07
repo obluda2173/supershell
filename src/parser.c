@@ -36,12 +36,14 @@ t_list	*parse(t_dllist *tokens)
 				return script;
 			}
 			sn->child1->node_type = CMD_NODE;
+			sn->child1->node_data.cmd_node.arguments = NULL;
+			sn->child1->node_data.cmd_node.redirections = NULL;
+			sn->child1->node_data.cmd_node.cmd_token.content = NULL;
 			return ft_lstnew(sn);
 		}
 		tokens = tokens->next;
 	}
 	while (tokens->prev)
 		tokens = tokens->prev;
-
 	return (parse_cmd(script, tokens));
 }

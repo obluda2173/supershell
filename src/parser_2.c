@@ -42,11 +42,8 @@ void	free_script_node(void *sn)
 	}
 	if (node->node_type == CMD_NODE)
 	{
-		if (node->node_data.cmd_node.arguments) {
-			ft_putendl_fd("hello", STDOUT_FILENO);
-			printf("%p\n", node->node_data.cmd_node.arguments);
+		if (node->node_data.cmd_node.arguments)
 			ft_lstclear(&node->node_data.cmd_node.arguments, free_arguments);
-		}
 		if (node->node_data.cmd_node.redirections)
 			ft_lstclear(&node->node_data.cmd_node.redirections, free_redirection);
 		free(node->node_data.cmd_node.cmd_token.content);
