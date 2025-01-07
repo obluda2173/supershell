@@ -97,6 +97,7 @@ t_list	*parse(t_dllist *tokens)
 				tokens = tokens->next;
 			tokens = tokens->next;
 			init_cmd_node(sn->child2, *(t_token*)tokens->content);
+			new_fill_cmd_node(sn->child2, tokens);
 			return ft_lstnew(sn);
 		}
 		tokens = tokens->next;
