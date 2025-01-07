@@ -6,19 +6,19 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 09:40:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/04 13:21:02 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/07 11:50:58 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	count_consequitives(char *str, char c)
+static int	count_consequitives(char *str, char c)
 {
 	int	c_counter;
 	int	counter;
 	int	i;
 	int	j;
-	
+
 	c_counter = 0;
 	counter = 0;
 	i = 0;
@@ -41,58 +41,59 @@ int	count_consequitives(char *str, char c)
 	return (c_counter);
 }
 
-bool	check_syntax(char *str)
+bool	check_consecutive_chars(const char *str, char c)
 {
-	int	double_quote_count;
-	int	single_quote_count;
-	
-	int	i;
+	if (count_consequitives(str, c) > 2)
+	{
+		printf("Parse error near '%c'\n", c);
+		return (false);
+	}
+	return (true);
+}
 
-	double_quote_count = 0;
-	single_quote_count = 0;
+bool	check_unclosed_quotes(const char *str)
+{
+	int	i;
+	int	single_quote_count;
+	int	double_quote_count;
+
 	i = -1;
-	while(str[++i])
+	single_quote_count = 0;
+	double_quote_count = 0;
+	while (str[++i])
 	{
 		if (str[i] == '\'')
 			single_quote_count++;
 		else if (str[i] == '\"')
 			double_quote_count++;
 	}
-
-	//check for <<< and etc
-	if (count_consequitives(str, '<') > 2)
-	{
-		printf("Parse error near '<'\n");
-		return (false);
-	}
-	
-	if (count_consequitives(str, '>') > 2)
-	{
-		printf("Parse error near '>'\n");
-		return (false);
-	}
-
-	if (count_consequitives(str, '|') > 2)
-	{
-		printf("Parse error near '|'\n");
-		return (false);
-	}
-
-	if (count_consequitives(str, '&') > 2)
-	{
-		printf("Parse error near '&'\n");
-		return (false);
-	}
-
 	if (single_quote_count % 2 != 0)
 	{
 		printf("Unclosed single quote\n");
 		return (false);
 	}
-	else if (double_quote_count % 2 != 0)
+	if (double_quote_count % 2 != 0)
 	{
 		printf("Unclosed double quote\n");
 		return (false);
 	}
+	return (true);
+}
+
+bool	check_syntax(char *str)
+{
+	int		i;
+	char	special_chars[4];
+
+	i = -1;
+	special_chars[0] = '<';
+	special_chars[1] = '>';
+	special_chars[2] = '|';
+	special_chars[3] = '&';
+	if (!check_unclosed_quotes(str))
+		return (false);
+	while (++i < 4)
+		if (!check_consecutive_chars(str, special_chars[i]))
+			return (false);
 	return (true);
 }

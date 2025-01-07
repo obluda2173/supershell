@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2025/01/06 15:08:40 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/07 11:25:27 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,7 @@ static char *extract_word(t_line_container *lc)
     if (!lc->line[lc->pos])
         return NULL;
 
-    if (ft_strchr("<>|", lc->line[lc->pos])
-		|| (lc->line[lc->pos] == '&' && lc->line[lc->pos + 1] == '&'))
+    if (ft_strchr("<>&|", lc->line[lc->pos]))
 	{
 		if (lc->line[lc->pos] == '<' && lc->line[lc->pos + 1] == '<' && lc->line[lc->pos + 2] != ' ')
 		{
@@ -119,7 +118,7 @@ static token_type	assign_type(char *str)
 		return REDIRECT_IN;
 	if (ft_strchr(str, '>'))
 		return REDIRECT_OUT;
-	if (!ft_strncmp(str, "$", 1))
+	if (!ft_strncmp(str, "$", 1) && ft_strlen(str) > 1)
 		return DOLLAR;
 	if (ft_strchr(str, '*'))
 		return WILDCARD;
