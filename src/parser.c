@@ -19,27 +19,27 @@ t_script_node *parse_pipe(t_dllist *tokens) {
 	t_script_node* sn = (t_script_node*)malloc(sizeof(t_script_node));
 	sn->node_type = PIPE_NODE;
 	sn->num_children=2;
-	sn->child1 = malloc(sizeof(t_script_node));
+
+	while (tokens->prev)
+		tokens = tokens->prev;
+
+	sn->child1 = get_cmd_node(*(t_token*)tokens->content);
 	if (!sn->child1) {
 		free_script_node(sn);
 		return get_error_node("no tokens");
 	}
-	sn->child2 = malloc(sizeof(t_script_node));
-	if (!sn->child2) {
-		free(sn->child1);
-		free(sn);
-		return get_error_node( "no tokens");
-	}
-
-	while (tokens->prev)
-		tokens = tokens->prev;
-	get_cmd_node(sn->child1, *(t_token*)tokens->content);
 	fill_cmd_node(sn->child1, tokens);
 
 	while (((t_token*)tokens->content)->type != PIPE)
 		tokens = tokens->next;
 	tokens = tokens->next;
-	get_cmd_node(sn->child2, *(t_token*)tokens->content);
+
+	sn->child2 = get_cmd_node(*(t_token*)tokens->content);
+	if (!sn->child2) {
+		free(sn->child1);
+		free(sn);
+		return get_error_node( "no tokens");
+	}
 	fill_cmd_node(sn->child2, tokens);
 	return sn;
 }
