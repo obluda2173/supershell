@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2025/01/07 12:11:55 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/07 15:52:10 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,8 @@ static char *extract_word(t_line_container *lc)
 }
 
 
-bool is_builtin(char *str) {
+bool is_builtin(char *str)
+{
     return (!ft_strcmp(str, "echo\0")
 		|| !ft_strcmp(str, "cd\0")
 		|| !ft_strcmp(str, "pwd\0")
@@ -136,11 +137,9 @@ t_token	*get_next_token(t_line_container *lc)
 {
 	t_token	*token;
 	char	*word;
-	char	*if_dollar;
 
 	if (!lc->line)
 		return NULL;
-
 	if (lc->line[lc->pos] == '\0')
 	{
 		token = malloc(sizeof(t_token));
@@ -150,20 +149,9 @@ t_token	*get_next_token(t_line_container *lc)
 		token->type = END_OF_FILE;
 		return (token);
 	}
-
 	word = extract_word(lc);
-
 	token = malloc(sizeof(t_token));
-	
 	token->type = assign_type(word);
-	if (token->type == DOLLAR && ft_strlen(word) > 1)
-	{
-		if_dollar = ft_substr(word, 1, ft_strlen(word));
-		token->content = if_dollar;
-		free(word);
-	}
-	else
-		token->content = word;
-
+	token->content = word;
 	return (token);
 }

@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:07:34 by erian             #+#    #+#             */
-/*   Updated: 2025/01/07 15:33:05 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/07 15:56:01 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,29 +24,29 @@ void	free_token(void *content)
 
 void	quotes(t_dllist **tokens)
 {
-	t_token		*current_token;
+	char		*new_content;
+	t_token		*t;
 	t_dllist	*tokens_lst;
-	char		*trimmed_content;
 
 	if (!tokens || !*tokens)
 		return ;
 	tokens_lst = *tokens;
 	while (tokens_lst)
 	{
-		current_token = (t_token *)tokens_lst->content;
-		if (current_token->type == SINGLE_QUOTE
-			|| current_token->type == DOUBLE_QUOTE)
+		t = (t_token *)tokens_lst->content;
+		if (t->type == SINGLE_QUOTE || t->type == DOUBLE_QUOTE
+			|| t->type == DOLLAR)
 		{
-			if (current_token->type == SINGLE_QUOTE)
-				trimmed_content = ft_strtrim(current_token->content, "'");
-			else
-				trimmed_content = ft_strtrim(current_token->content, "\"");
-			free(current_token->content);
-			current_token->content = trimmed_content;
-			tokens_lst = tokens_lst->next;
+			if (t->type == SINGLE_QUOTE)
+				new_content = ft_strtrim(t->content, "'");
+			else if (t->type == DOUBLE_QUOTE)
+				new_content = ft_strtrim(t->content, "\"");
+			else if (t->type == DOLLAR)
+				new_content = ft_substr(t->content, 1, ft_strlen(t->content));
+			free(t->content);
+			t->content = new_content;
 		}
-		else
-			tokens_lst = tokens_lst->next;
+		tokens_lst = tokens_lst->next;
 	}
 }
 
