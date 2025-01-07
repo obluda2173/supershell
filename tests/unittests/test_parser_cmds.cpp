@@ -47,6 +47,7 @@ void test_cmd_cases(t_test_script_node want, t_script_node *sn, t_dllist* tokens
     EXPECT_EQ(CMD_NODE, sn->node_type);
     EXPECT_EQ(0, sn->num_children);
     EXPECT_EQ(nullptr, sn->child1);
+    EXPECT_EQ(nullptr, sn->child2);
     compare_cmd_node(want, sn->node_data.cmd_node);
     free_script_node(sn);
     ft_dllstclear(&tokens, free_token);
