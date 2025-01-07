@@ -48,10 +48,8 @@ static t_script_node	*create_and_add_cmd_node(t_list **script,
 	sn = (t_script_node *)malloc(sizeof(t_script_node));
 	if (!sn)
 		return (NULL);
-	init_cmd_node(sn, (*(t_token *)tokens->content));
-	sn->node_type = CMD_NODE;
-	sn->num_children = 0;
-	sn->child1 = NULL;
+	init_cmd_node(sn);
+	sn->node_data.cmd_node.cmd_token = copy_token(*(t_token *)tokens->content);
 	*script = ft_lstnew(sn);
 	if (!script)
 	{

@@ -14,11 +14,15 @@
 #include "libft.h"
 #include "parser.h"
 
-void	init_cmd_node(t_script_node *sn, t_token t)
+void	init_cmd_node(t_script_node *sn)
 {
-	sn->node_data.cmd_node.cmd_token = copy_token(t);
+
+	sn->node_type = CMD_NODE;
 	sn->node_data.cmd_node.arguments = NULL;
 	sn->node_data.cmd_node.redirections = NULL;
+	sn->node_data.cmd_node.cmd_token.content = NULL;
+	sn->num_children = 0;
+	sn->child1 = NULL;
 }
 
 int	check_redirection_token(t_token t)

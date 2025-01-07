@@ -80,7 +80,7 @@ typedef struct s_script_node
 	unsigned int		num_children;
 }						t_script_node;
 
-void					init_cmd_node(t_script_node *sn, t_token t);
+void					init_cmd_node(t_script_node *sn);
 t_list					*parse(t_dllist *tokens);
 t_token					copy_token(t_token token);
 void					free_script_node(void *sn);
