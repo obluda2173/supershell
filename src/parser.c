@@ -46,7 +46,11 @@ t_script_node	*parse_logical(t_dllist *tokens)
 	t_script_node	*sn;
 
 	sn = (t_script_node *)malloc(sizeof(t_script_node));
-	sn->node_type = AND_NODE;
+
+	if (((t_token*)tokens->content)->type == AND)
+		sn->node_type = AND_NODE;
+	if (((t_token*)tokens->content)->type == OR)
+		sn->node_type = OR_NODE;
 	sn->num_children = 2;
 
 	sn->downstream = parse_cmd(tokens->next);
@@ -67,12 +71,24 @@ t_script_node	*parse_logical(t_dllist *tokens)
 	return (sn);
 }
 
-t_dllist *find_last_type(t_dllist *tokens, token_type token_type) {
+t_dllist *find_last_logical(t_dllist *tokens) {
 
 	tokens = ft_dllstlast(tokens);
 	while (tokens->prev)
 	{
-		if (((t_token *)tokens->content)->type == token_type)
+		if (((t_token *)tokens->content)->type == AND || ((t_token *)tokens->content)->type == OR)
+			return tokens;
+		tokens = tokens->prev;
+	}
+	return tokens;
+}
+
+t_dllist *find_last_pipe(t_dllist *tokens) {
+
+	tokens = ft_dllstlast(tokens);
+	while (tokens->prev)
+	{
+		if (((t_token *)tokens->content)->type == PIPE)
 			return tokens;
 		tokens = tokens->prev;
 	}
@@ -84,11 +100,11 @@ t_script_node	*parse(t_dllist *tokens)
 	if (!tokens)
 		return (get_error_node("no tokens"));
 
-	tokens = find_last_type(tokens, AND);
-	if (((t_token *)tokens->content)->type == AND)
+	tokens = find_last_logical(tokens);
+	if (((t_token *)tokens->content)->type == AND || ((t_token *)tokens->content)->type == OR)
 		return (parse_logical(tokens));
 
-	tokens = find_last_type(tokens, PIPE);
+	tokens = find_last_pipe(tokens);
 	if (((t_token *)tokens->content)->type == PIPE)
 		return (parse_pipe(tokens));
 

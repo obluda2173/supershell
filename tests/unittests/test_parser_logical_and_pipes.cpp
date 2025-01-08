@@ -259,6 +259,22 @@ INSTANTIATE_TEST_SUITE_P(
                                          new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("wc", WORD), {new_argument("-l", LITERAL)}, {}), {}, {}),
                                      }),
                                  new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("ls", WORD), {new_argument("-a", LITERAL)}, {}), {}, {})
+                             })},
+        ParserTestParams{2,
+                         PIPE_TEST,
+                         {new_token("echo", BUILTIN), new_token("hello", WORD),
+                          new_token("||", OR), new_token("wc", WORD),
+                          new_token("-l", WORD), new_token("||", OR),
+                          new_token("ls", WORD), new_token("-a", WORD),
+                          new_token(NULL, END_OF_FILE)},
+                         new_test_script_node(
+                             OR_NODE, {}, {},
+                             {
+                                 new_test_script_node(OR_NODE, {}, {}, {
+                                         new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {new_argument("hello", LITERAL)}, {}), {}, {}),
+                                         new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("wc", WORD), {new_argument("-l", LITERAL)}, {}), {}, {}),
+                                     }),
+                                 new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("ls", WORD), {new_argument("-a", LITERAL)}, {}), {}, {})
                              })}
         )
     );

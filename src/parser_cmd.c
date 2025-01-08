@@ -90,7 +90,7 @@ t_script_node	*fill_cmd_node(t_script_node *sn, t_dllist *tokens)
 	return sn;
 }
 
-t_script_node	*parse_cmd( t_dllist *tokens)
+t_script_node	*parse_cmd(t_dllist *tokens)
 {
 	t_script_node	*sn;
 
