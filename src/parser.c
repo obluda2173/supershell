@@ -57,6 +57,24 @@ t_script_node	*parse(t_dllist *tokens)
 	if (!tokens)
 		return (get_error_node("no tokens"));
 
+	while (tokens->next)
+	{
+		if (((t_token *)tokens->content)->type == AND) {
+			t_script_node *sn = (t_script_node*)malloc(sizeof(t_script_node));
+			sn->node_type = LOGICAL_NODE;
+			sn->num_children = 2;
+
+			tokens = tokens->prev;
+			ft_dllstclear(&tokens->next, free_token);
+			while (tokens->prev)
+				tokens = tokens->prev;
+			sn->upstream = parse_cmd(tokens->next);
+			sn->downstream = (t_script_node*)malloc(sizeof(t_script_node));
+			return sn;
+		}
+		tokens = tokens->next;
+	}
+
 	tokens = ft_dllstlast(tokens);
 	while (tokens->prev)
 	{
