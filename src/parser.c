@@ -21,24 +21,25 @@ t_script_node	*parse_pipe(t_dllist *tokens)
 	sn = (t_script_node *)malloc(sizeof(t_script_node));
 	sn->node_type = PIPE_NODE;
 	sn->num_children = 2;
-	while (tokens->prev)
-		tokens = tokens->prev;
-	sn->child1 = parse_cmd(tokens);
-	if (!sn->child1)
+
+	sn->downstream = parse_cmd(tokens->next);
+	if (!sn->downstream)
 	{
-		free_script_node(sn);
-		return (get_error_node("could not alloc space for pipe upstream"));
-	}
-	while (((t_token *)tokens->content)->type != PIPE)
-		tokens = tokens->next;
-	tokens = tokens->next;
-	sn->child2 = parse_cmd(tokens);
-	if (!sn->child2)
-	{
-		free(sn->child1);
 		free(sn);
 		return (get_error_node("could not alloc space for pipe downstream"));
 	}
+
+	while (tokens->prev)
+		tokens = tokens->prev;
+	
+	sn->upstream = parse_cmd(tokens);
+	if (!sn->upstream)
+	{
+		free_script_node(sn);
+		free(sn->downstream);
+		return (get_error_node("could not alloc space for pipe upstream"));
+	}
+
 	return (sn);
 }
 
@@ -46,11 +47,13 @@ t_script_node	*parse(t_dllist *tokens)
 {
 	if (!tokens)
 		return (get_error_node("no tokens"));
-	while (tokens->next)
+
+	tokens = ft_dllstlast(tokens);
+	while (tokens->prev)
 	{
 		if (((t_token *)tokens->content)->type == PIPE)
 			return (parse_pipe(tokens));
-		tokens = tokens->next;
+		tokens = tokens->prev;
 	}
 	while (tokens->prev)
 		tokens = tokens->prev;

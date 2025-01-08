@@ -24,8 +24,8 @@ t_script_node	*get_cmd_node(t_token t)
 	sn->node_data.cmd_node.redirections = NULL;
 	sn->node_data.cmd_node.cmd_token = copy_token(t);
 	sn->num_children = 0;
-	sn->child1 = NULL;
-	sn->child2 = NULL;
+	sn->upstream = NULL;
+	sn->downstream = NULL;
 	return sn;
 }
 

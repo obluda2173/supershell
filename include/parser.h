@@ -76,8 +76,8 @@ typedef struct s_script_node
 {
 	t_node_type			node_type;
 	t_node_data			node_data;
-	struct s_script_node *child1;
-	struct s_script_node *child2;
+	struct s_script_node *upstream;
+	struct s_script_node *downstream;
 	unsigned int		num_children;
 }						t_script_node;
 
