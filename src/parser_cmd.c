@@ -70,7 +70,7 @@ t_script_node	*fill_cmd_node(t_script_node *sn, t_dllist *tokens)
 	while (tokens)
 	{
 		cur = *(t_token *)(tokens->content);
-		if (cur.type == PIPE)
+		if (cur.type == PIPE || cur.type == AND)
 			return sn;
 		if (cur.type == END_OF_FILE)
 			return sn;

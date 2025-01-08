@@ -66,7 +66,7 @@ t_script_node	*parse(t_dllist *tokens)
 
 			while (tokens->prev)
 				tokens = tokens->prev;
-			sn->upstream = parse_cmd(tokens->next);
+			sn->upstream = parse_cmd(tokens);
 
 			while (tokens->next && ((t_token *)tokens->content)->type != AND)
 				tokens = tokens->next;

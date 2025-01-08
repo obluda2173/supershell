@@ -36,6 +36,10 @@ TEST(ParserTestSuite, ParserTestsLogicalOperators) {
 	ASSERT_EQ(want.pipe_node_childs[0].type, sn->upstream->node_type);
 	ASSERT_NE(nullptr,sn->downstream);
 	ASSERT_EQ(want.pipe_node_childs[1].type, sn->downstream->node_type);
+
+	compare_cmd_node(want.pipe_node_childs[0], (t_cmd_node)sn->upstream->node_data.cmd_node);
+	compare_cmd_node(want.pipe_node_childs[1], (t_cmd_node)sn->downstream->node_data.cmd_node);
+
 	free_script_node(sn);
 	ft_dllstclear(&tokens, free_token);
 }

@@ -15,8 +15,7 @@ void compare_pipe_node(t_test_script_node want, t_script_node *sn) {
     if (sn->upstream->node_type == PIPE_NODE)
         compare_pipe_node(want.pipe_node_childs[0], sn->upstream);
 
-    if (sn->downstream->node_type == CMD_NODE)
-        compare_cmd_node(want.pipe_node_childs[1], (t_cmd_node)sn->downstream->node_data.cmd_node);
+    compare_cmd_node(want.pipe_node_childs[1], (t_cmd_node)sn->downstream->node_data.cmd_node);
 }
 
 void test_pipe_cases(t_test_script_node want, t_script_node *sn, t_dllist* tokens) {
