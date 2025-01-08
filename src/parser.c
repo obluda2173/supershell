@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "lexer.h"
+#include "lexer_kay.h"
 #include "libft.h"
 #include "parser.h"
 #include <unistd.h>
@@ -31,11 +32,8 @@ t_script_node	*parse_pipe(t_dllist *tokens)
 	}
 	tokens = tokens->prev;
 	ft_dllstclear(&tokens->next, free_token);
-	t_token *eof = (t_token*)malloc(sizeof(t_token));
-	eof->content = NULL;
-	eof->type = END_OF_FILE;
-	ft_dllstadd_back(&tokens, ft_dllstnew(eof));
 
+	ft_dllstadd_back(&tokens, ft_dllstnew(new_eof_token()));
 	while (tokens->prev && ((t_token*)tokens->content)->type != PIPE)
 		tokens = tokens->prev;
 
