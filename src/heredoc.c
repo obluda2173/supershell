@@ -6,17 +6,17 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 11:00:40 by erian             #+#    #+#             */
-/*   Updated: 2025/01/08 12:55:35 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/08 15:49:52 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
 
-t_dllist	*search_heredoc(t_dllist *tokens)
+static t_dllist	*search_heredoc(t_dllist *tokens)
 {
-	t_token  *token_content;
-	t_dllist *token_pointer;
+	t_token		*token_content;
+	t_dllist	*token_pointer;
 	
 	token_pointer = tokens;
 	while (token_pointer)
@@ -40,12 +40,6 @@ t_token	*new_token(char *content, token_type type)
 	return (token);
 }
 
-void replace_heredoc_token(t_dllist *old_token, t_dllist *new_token)
-{
-	new_token->next = old_token->next;
-	new_token->prev = old_token;
-	old_token->next = new_token;
-}
 
 t_dllist *create_heredoc_token(char *heredoc_input)
 {
@@ -89,13 +83,27 @@ char *read_heredoc_input(char *delimiter)
 	return (heredoc_input);
 }
 
-char *extract_delimiter(t_dllist *heredoc_token)
+char *extract_delimiter(t_dllist **heredoc_token)
 {
-	t_token *token_content;
 	char	*delimiter;
+	t_token *token;
+	t_token	*next_token;
 
-	token_content = (t_token *)heredoc_token->content;
-	delimiter = ft_strdup(token_content->content + 2); // Skip "<<"
+	if (!heredoc_token || !*heredoc_token)
+        return (NULL);
+    delimiter = NULL;
+    token = (t_token *)(*heredoc_token)->content;
+    if (ft_strlen(token->content) > 2)
+        delimiter = ft_strdup(token->content + 2);
+    else if ((*heredoc_token)->next)
+    {
+        next_token = (t_token *)(*heredoc_token)->next->content;
+        if (next_token->type == WORD)
+        {
+            delimiter = ft_strdup(next_token->content);
+            *heredoc_token = (*heredoc_token)->next;
+        }
+    }
 	if (!delimiter)
 	{
 		printf("Error: Memory allocation failed.\n");
@@ -113,7 +121,7 @@ int heredoc_loop(t_dllist **tokens)
 
 	if (!heredoc_token)
 		return (1);
-	delimiter = extract_delimiter(heredoc_token);
+	delimiter = extract_delimiter(&heredoc_token);
 	if (!delimiter)
 		return (0);
 	heredoc_input = read_heredoc_input(delimiter);
@@ -123,6 +131,8 @@ int heredoc_loop(t_dllist **tokens)
 	new_token_node = create_heredoc_token(heredoc_input);
 	if (!new_token_node)
 		return (0);
-	replace_heredoc_token(heredoc_token, new_token_node);
+	new_token_node->next = heredoc_token->next;
+	new_token_node->prev = heredoc_token;
+	heredoc_token->next = new_token_node;
 	return (1);
 }
