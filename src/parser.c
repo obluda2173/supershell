@@ -21,10 +21,7 @@ t_script_node	*parse_pipe(t_dllist *tokens)
 	t_script_node	*sn;
 
 	sn = (t_script_node *)malloc(sizeof(t_script_node));
-	if (((t_token*)tokens->content)->type == PIPE)
-		sn->node_type = PIPE_NODE;
-	if (((t_token*)tokens->content)->type == AND)
-		sn->node_type = AND_NODE;
+	sn->node_type = PIPE_NODE;
 	sn->num_children = 2;
 
 	sn->downstream = parse_cmd(tokens->next);
@@ -37,10 +34,10 @@ t_script_node	*parse_pipe(t_dllist *tokens)
 	ft_dllstclear(&tokens->next, free_token);
 
 	ft_dllstadd_back(&tokens, ft_dllstnew(new_eof_token()));
-	while (tokens->prev && ((t_token*)tokens->content)->type != PIPE && ((t_token*)tokens->content)->type != AND)
+	while (tokens->prev && ((t_token*)tokens->content)->type != PIPE)
 		tokens = tokens->prev;
 
-	if (((t_token*)tokens->content)->type == PIPE || ((t_token*)tokens->content)->type == AND)
+	if (((t_token*)tokens->content)->type == PIPE )
 		sn->upstream = parse_pipe(tokens);
 	else
 		sn->upstream = parse_cmd(tokens);
@@ -51,14 +48,57 @@ t_script_node	*parse_pipe(t_dllist *tokens)
 		free_script_node(sn);
 		return (get_error_node("could not alloc space for pipe upstream"));
 	}
-
 	return (sn);
 }
+
+t_script_node	*parse_and(t_dllist *tokens)
+{
+	t_script_node	*sn;
+
+	sn = (t_script_node *)malloc(sizeof(t_script_node));
+	sn->node_type = AND_NODE;
+	sn->num_children = 2;
+
+	sn->downstream = parse_cmd(tokens->next);
+	if (!sn->downstream)
+	{
+		free(sn);
+		return (get_error_node("could not alloc space for pipe downstream"));
+	}
+	tokens = tokens->prev;
+
+	ft_dllstclear(&tokens->next, free_token);
+	ft_dllstadd_back(&tokens, ft_dllstnew(new_eof_token()));
+
+	while (tokens->prev && ((t_token*)tokens->content)->type != AND)
+		tokens = tokens->prev;
+	if (((t_token*)tokens->content)->type == AND)
+		sn->upstream = parse_and(tokens);
+	else
+		sn->upstream = parse_cmd(tokens);
+
+	if (!sn->upstream)
+	{
+		free(sn->downstream);
+		free_script_node(sn);
+		return (get_error_node("could not alloc space for pipe upstream"));
+	}
+	return (sn);
+}
+
 
 t_script_node	*parse(t_dllist *tokens)
 {
 	if (!tokens)
 		return (get_error_node("no tokens"));
+
+	tokens = ft_dllstlast(tokens);
+	while (tokens->prev)
+	{
+		if (((t_token *)tokens->content)->type == AND)
+			return (parse_and(tokens));
+		tokens = tokens->prev;
+	}
 
 	tokens = ft_dllstlast(tokens);
 	while (tokens->prev)
