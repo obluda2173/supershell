@@ -4,12 +4,14 @@ void compare_pipe_node(t_test_script_node want, t_script_node *sn) {
     ASSERT_NE(nullptr, sn);
     ASSERT_EQ(sn->node_type, PIPE_NODE);
     ASSERT_EQ(sn->num_children, 2);
+    ASSERT_NE(nullptr,sn->upstream);
     ASSERT_EQ(want.pipe_node_childs[0].type, sn->upstream->node_type);
     ASSERT_NE(nullptr,sn->downstream);
-    ASSERT_EQ(want.pipe_node_childs[1].type, sn->upstream->node_type);
+    ASSERT_EQ(want.pipe_node_childs[1].type, sn->downstream->node_type);
 
     if (sn->upstream->node_type == CMD_NODE)
         compare_cmd_node(want.pipe_node_childs[0], (t_cmd_node)sn->upstream->node_data.cmd_node);
+
     if (sn->upstream->node_type == PIPE_NODE)
         compare_pipe_node(want.pipe_node_childs[0], sn->upstream);
 
@@ -150,24 +152,24 @@ INSTANTIATE_TEST_SUITE_P(
                                  {
                                      new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {new_redirection(1, OUT, "file.txt", LITERAL)}), {}, {}),
                                      new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("ls", WORD), {new_argument("-a", LITERAL)}, {}), {}, {}),
+                                 })},
+        ParserTestParams{7,
+            PIPE_TEST,
+            {{
+                    new_token("wc", WORD),
+                        new_token("|", PIPE),
+                    new_token("echo", BUILTIN),
+                    new_token("|", PIPE),
+                    new_token("ls", WORD),
+                    new_token(NULL, END_OF_FILE)
+                }},
+            new_test_script_node(PIPE_NODE, {}, {},
+                                 {
+                                     new_test_script_node(PIPE_NODE, {}, {}, {
+                                             new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("wc", WORD), {}, {}), {}, {}),
+                                             new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {}, {})
+                                         }),
+                                     new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("ls", WORD), {}, {}), {}, {}),
                                  })}
-        // ParserTestParams{7,
-        //     PIPE_TEST,
-        //     {{
-        //             new_token("wc", WORD),
-        //                 new_token("|", PIPE),
-        //             new_token("echo", BUILTIN),
-        //             new_token("|", PIPE),
-        //             new_token("ls", WORD),
-        //             new_token(NULL, END_OF_FILE)
-        //         }},
-        //     new_test_script_node(PIPE_NODE, {}, {},
-        //                          {
-        //                              new_test_script_node(PIPE_NODE, {}, {}, {
-        //                                      new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("wc", WORD), {}, {}), {}, {}),
-        //                                      new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("ls", BUILTIN), {}, {}), {}, {})
-        //                                  }),
-        //                              new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("ls", WORD), {new_argument("-a", LITERAL)}, {}), {}, {}),
-        //                          })}
         )
     );
