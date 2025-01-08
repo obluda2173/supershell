@@ -11,12 +11,12 @@ void compare_logical_or_pipe_node(t_test_script_node want, t_script_node *sn) {
 
     if (sn->upstream->node_type == CMD_NODE)
         compare_cmd_node(want.childs[0], (t_cmd_node)sn->upstream->node_data.cmd_node);
-    if (sn->upstream->node_type == PIPE_NODE || sn->upstream->node_type == LOGICAL_NODE)
+    if (sn->upstream->node_type == PIPE_NODE || sn->upstream->node_type == AND_NODE)
         compare_logical_or_pipe_node(want.childs[0], sn->upstream);
 
     if (sn->downstream->node_type == CMD_NODE)
         compare_cmd_node(want.childs[1], (t_cmd_node)sn->downstream->node_data.cmd_node);
-    if (sn->downstream->node_type == PIPE_NODE || sn->downstream->node_type == LOGICAL_NODE)
+    if (sn->downstream->node_type == PIPE_NODE || sn->downstream->node_type == AND_NODE)
         compare_logical_or_pipe_node(want.childs[1], sn->downstream);
 }
 
@@ -233,7 +233,7 @@ INSTANTIATE_TEST_SUITE_P(
              new_token("&&", AND), new_token("ls", WORD), new_token("-a", WORD),
              new_token(NULL, END_OF_FILE)},
             new_test_script_node(
-                LOGICAL_NODE, {}, {},
+                AND_NODE, {}, {},
                 {new_test_script_node(
                      CMD_NODE,
                      new_test_cmd_node(new_token("echo", BUILTIN),
@@ -243,22 +243,22 @@ INSTANTIATE_TEST_SUITE_P(
                      CMD_NODE,
                      new_test_cmd_node(new_token("ls", WORD),
                                        {new_argument("-a", LITERAL)}, {}),
-                     {}, {})})}
-        // ParserTestParams{0,
-        //                  PIPE_TEST,
-        //                  {new_token("echo", BUILTIN), new_token("hello", WORD),
-        //                   new_token("&&", AND), new_token("wc", WORD),
-        //                   new_token("-l", WORD), new_token("&&", AND),
-        //                   new_token("ls", WORD), new_token("-a", WORD),
-        //                   new_token(NULL, END_OF_FILE)},
-        //                  new_test_script_node(
-        //                      LOGICAL_NODE, {}, {},
-        //                      {
-        //                          new_test_script_node(LOGICAL_NODE, {}, {}, {
-        //                                  new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {new_argument("hello", LITERAL)}, {}), {}, {}),
-        //                                  new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("wc", WORD), {new_argument("-l", LITERAL)}, {}), {}, {}),
-        //                              }),
-        //                          new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("ls", WORD), {new_argument("-a", LITERAL)}, {}), {}, {})
-        //                      })}
+                     {}, {})})},
+        ParserTestParams{1,
+                         PIPE_TEST,
+                         {new_token("echo", BUILTIN), new_token("hello", WORD),
+                          new_token("&&", AND), new_token("wc", WORD),
+                          new_token("-l", WORD), new_token("&&", AND),
+                          new_token("ls", WORD), new_token("-a", WORD),
+                          new_token(NULL, END_OF_FILE)},
+                         new_test_script_node(
+                             AND_NODE, {}, {},
+                             {
+                                 new_test_script_node(AND_NODE, {}, {}, {
+                                         new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {new_argument("hello", LITERAL)}, {}), {}, {}),
+                                         new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("wc", WORD), {new_argument("-l", LITERAL)}, {}), {}, {}),
+                                     }),
+                                 new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("ls", WORD), {new_argument("-a", LITERAL)}, {}), {}, {})
+                             })}
         )
     );
