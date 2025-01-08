@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 11:00:40 by erian             #+#    #+#             */
-/*   Updated: 2025/01/08 15:49:52 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/08 16:17:51 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,19 @@ t_token	*new_token(char *content, token_type type)
 	return (token);
 }
 
-
-t_dllist *create_heredoc_token(char *heredoc_input)
+t_dllist *create_heredoc_token(t_dllist *heredoc_token, char *heredoc_input)
 {
-	t_dllist *new_token_node;
+	t_token		*token;
+	t_dllist	*new_token_node;
 
-	new_token_node = ft_dllstnew(new_token(heredoc_input, DOUBLE_QUOTE));
+	token = (t_token *)heredoc_token->content;
+	if (ft_strchr(token->content, '\'') || token->type == SINGLE_QUOTE)
+		new_token_node = ft_dllstnew(new_token(heredoc_input, SINGLE_QUOTE));
+	else
+		new_token_node = ft_dllstnew(new_token(heredoc_input, DOUBLE_QUOTE));
 	if (!new_token_node)
 	{
-		printf("Error: Memory allocation failed.\n");
+		printf("Error: Memory allocation failed 2.\n");
 		return (NULL);
 	}
 	return (new_token_node);
@@ -76,7 +80,7 @@ char *read_heredoc_input(char *delimiter)
 		free(line);
 		if (!heredoc_input)
 		{
-			printf("Error: Memory allocation failed.\n");
+			printf("Error: Memory allocation failed 1.\n");
 			return (NULL);
 		}
 	}
@@ -98,7 +102,7 @@ char *extract_delimiter(t_dllist **heredoc_token)
     else if ((*heredoc_token)->next)
     {
         next_token = (t_token *)(*heredoc_token)->next->content;
-        if (next_token->type == WORD)
+        if (next_token->type == WORD || next_token->type == SINGLE_QUOTE)
         {
             delimiter = ft_strdup(next_token->content);
             *heredoc_token = (*heredoc_token)->next;
@@ -106,7 +110,7 @@ char *extract_delimiter(t_dllist **heredoc_token)
     }
 	if (!delimiter)
 	{
-		printf("Error: Memory allocation failed.\n");
+		printf("Error: Memory allocation failed 3.\n");
 		return (NULL);
 	}
 	return (delimiter);
@@ -128,7 +132,7 @@ int heredoc_loop(t_dllist **tokens)
 	free(delimiter);
 	if (!heredoc_input)
 		return (0);
-	new_token_node = create_heredoc_token(heredoc_input);
+	new_token_node = create_heredoc_token(heredoc_token, heredoc_input);
 	if (!new_token_node)
 		return (0);
 	new_token_node->next = heredoc_token->next;
