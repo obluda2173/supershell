@@ -22,7 +22,7 @@ typedef struct s_test_script_node {
   t_node_type type;
   t_test_cmd_node cmd_node;
   t_error_node err_node;
-  std::vector<struct s_test_script_node> pipe_node_childs;
+  std::vector<struct s_test_script_node> childs;
 } t_test_script_node;
 
 typedef enum e_test {
