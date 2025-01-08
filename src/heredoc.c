@@ -6,18 +6,17 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 11:00:40 by erian             #+#    #+#             */
-/*   Updated: 2025/01/08 16:17:51 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/08 16:54:57 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "minishell.h"
 
 static t_dllist	*search_heredoc(t_dllist *tokens)
 {
 	t_token		*token_content;
 	t_dllist	*token_pointer;
-	
+
 	token_pointer = tokens;
 	while (token_pointer)
 	{
@@ -28,28 +27,17 @@ static t_dllist	*search_heredoc(t_dllist *tokens)
 	}
 	return (NULL);
 }
-t_token	*new_token(char *content, token_type type)
-{
-	t_token	*token;
 
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	token->content = content;
-	token->type = type;
-	return (token);
-}
-
-t_dllist *create_heredoc_token(t_dllist *heredoc_token, char *heredoc_input)
+t_dllist	*create_heredoc_token(t_dllist *heredoc_token, char *heredoc_input)
 {
 	t_token		*token;
 	t_dllist	*new_token_node;
 
 	token = (t_token *)heredoc_token->content;
 	if (ft_strchr(token->content, '\'') || token->type == SINGLE_QUOTE)
-		new_token_node = ft_dllstnew(new_token(heredoc_input, SINGLE_QUOTE));
+		new_token_node = ft_dllstnew(create_token(heredoc_input, SINGLE_QUOTE));
 	else
-		new_token_node = ft_dllstnew(new_token(heredoc_input, DOUBLE_QUOTE));
+		new_token_node = ft_dllstnew(create_token(heredoc_input, DOUBLE_QUOTE));
 	if (!new_token_node)
 	{
 		printf("Error: Memory allocation failed 2.\n");
@@ -58,7 +46,7 @@ t_dllist *create_heredoc_token(t_dllist *heredoc_token, char *heredoc_input)
 	return (new_token_node);
 }
 
-char *read_heredoc_input(char *delimiter)
+char	*read_heredoc_input(char *delimiter)
 {
 	char	*line;
 	char	*heredoc_input;
@@ -71,7 +59,7 @@ char *read_heredoc_input(char *delimiter)
 		if (!line || ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
-			break;
+			break ;
 		}
 		tmp = ft_strjoin(heredoc_input, line);
 		free(heredoc_input);
@@ -87,27 +75,27 @@ char *read_heredoc_input(char *delimiter)
 	return (heredoc_input);
 }
 
-char *extract_delimiter(t_dllist **heredoc_token)
+char	*extract_delimiter(t_dllist **heredoc_token)
 {
 	char	*delimiter;
-	t_token *token;
+	t_token	*token;
 	t_token	*next_token;
 
 	if (!heredoc_token || !*heredoc_token)
-        return (NULL);
-    delimiter = NULL;
-    token = (t_token *)(*heredoc_token)->content;
-    if (ft_strlen(token->content) > 2)
-        delimiter = ft_strdup(token->content + 2);
-    else if ((*heredoc_token)->next)
-    {
-        next_token = (t_token *)(*heredoc_token)->next->content;
-        if (next_token->type == WORD || next_token->type == SINGLE_QUOTE)
-        {
-            delimiter = ft_strdup(next_token->content);
-            *heredoc_token = (*heredoc_token)->next;
-        }
-    }
+		return (NULL);
+	delimiter = NULL;
+	token = (t_token *)(*heredoc_token)->content;
+	if (ft_strlen(token->content) > 2)
+		delimiter = ft_strdup(token->content + 2);
+	else if ((*heredoc_token)->next)
+	{
+		next_token = (t_token *)(*heredoc_token)->next->content;
+		if (next_token->type == WORD || next_token->type == SINGLE_QUOTE)
+		{
+			delimiter = ft_strdup(next_token->content);
+			*heredoc_token = (*heredoc_token)->next;
+		}
+	}
 	if (!delimiter)
 	{
 		printf("Error: Memory allocation failed 3.\n");
@@ -116,13 +104,14 @@ char *extract_delimiter(t_dllist **heredoc_token)
 	return (delimiter);
 }
 
-int heredoc_loop(t_dllist **tokens)
+int	heredoc_loop(t_dllist **tokens)
 {
-	char	*delimiter;
-	char	*heredoc_input;
-	t_dllist *new_token_node;
-	t_dllist *heredoc_token = search_heredoc(*tokens);
+	char		*delimiter;
+	char		*heredoc_input;
+	t_dllist	*new_token_node;
+	t_dllist	*heredoc_token;
 
+	heredoc_token = search_heredoc(*tokens);
 	if (!heredoc_token)
 		return (1);
 	delimiter = extract_delimiter(&heredoc_token);

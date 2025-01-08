@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 14:58:41 by erian             #+#    #+#             */
-/*   Updated: 2025/01/08 14:40:46 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/08 16:54:23 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ void		free_token(void *content);
 t_dllist	*tokenize(char* line);
 
 // tokenize_1.c
+t_token		*create_token(char *content, token_type type);
 t_token		*get_next_token(t_line_container *lc);
 
 // tokenize_2.c
