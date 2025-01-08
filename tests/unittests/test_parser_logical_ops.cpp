@@ -34,6 +34,8 @@ TEST(ParserTestSuite, ParserTestsLogicalOperators) {
 	ASSERT_EQ(sn->num_children, 2);
 	ASSERT_NE(nullptr,sn->upstream);
 	ASSERT_EQ(want.pipe_node_childs[0].type, sn->upstream->node_type);
+	ASSERT_NE(nullptr,sn->downstream);
+	ASSERT_EQ(want.pipe_node_childs[1].type, sn->downstream->node_type);
 	free_script_node(sn);
 	ft_dllstclear(&tokens, free_token);
 }

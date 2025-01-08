@@ -64,12 +64,13 @@ t_script_node	*parse(t_dllist *tokens)
 			sn->node_type = LOGICAL_NODE;
 			sn->num_children = 2;
 
-			tokens = tokens->prev;
-			ft_dllstclear(&tokens->next, free_token);
 			while (tokens->prev)
 				tokens = tokens->prev;
 			sn->upstream = parse_cmd(tokens->next);
-			sn->downstream = (t_script_node*)malloc(sizeof(t_script_node));
+
+			while (tokens->next && ((t_token *)tokens->content)->type != AND)
+				tokens = tokens->next;
+			sn->downstream = parse_cmd(tokens->next);
 			return sn;
 		}
 		tokens = tokens->next;
