@@ -37,21 +37,11 @@ t_script_node	*parse_pipe(t_dllist *tokens)
 	while (tokens->prev && ((t_token*)tokens->content)->type != PIPE)
 		tokens = tokens->prev;
 
-	if (((t_token*)tokens->content)->type == PIPE )
-		sn->upstream = parse_pipe(tokens);
-	else
-		sn->upstream = parse_cmd(tokens);
-
-	if (!sn->upstream)
-	{
-		free(sn->downstream);
-		free_script_node(sn);
-		return (get_error_node("could not alloc space for pipe upstream"));
-	}
+	sn->upstream = parse(tokens);
 	return (sn);
 }
 
-t_script_node	*parse_and(t_dllist *tokens)
+t_script_node	*parse_logical(t_dllist *tokens)
 {
 	t_script_node	*sn;
 
@@ -72,42 +62,35 @@ t_script_node	*parse_and(t_dllist *tokens)
 
 	while (tokens->prev && ((t_token*)tokens->content)->type != AND)
 		tokens = tokens->prev;
-	if (((t_token*)tokens->content)->type == AND)
-		sn->upstream = parse_and(tokens);
-	else
-		sn->upstream = parse_cmd(tokens);
 
-	if (!sn->upstream)
-	{
-		free(sn->downstream);
-		free_script_node(sn);
-		return (get_error_node("could not alloc space for pipe upstream"));
-	}
+	sn->upstream = parse(tokens);
 	return (sn);
 }
 
+t_dllist *find_last_type(t_dllist *tokens, token_type token_type) {
+
+	tokens = ft_dllstlast(tokens);
+	while (tokens->prev)
+	{
+		if (((t_token *)tokens->content)->type == token_type)
+			return tokens;
+		tokens = tokens->prev;
+	}
+	return tokens;
+}
 
 t_script_node	*parse(t_dllist *tokens)
 {
 	if (!tokens)
 		return (get_error_node("no tokens"));
 
-	tokens = ft_dllstlast(tokens);
-	while (tokens->prev)
-	{
-		if (((t_token *)tokens->content)->type == AND)
-			return (parse_and(tokens));
-		tokens = tokens->prev;
-	}
+	tokens = find_last_type(tokens, AND);
+	if (((t_token *)tokens->content)->type == AND)
+		return (parse_logical(tokens));
 
-	tokens = ft_dllstlast(tokens);
-	while (tokens->prev)
-	{
-		if (((t_token *)tokens->content)->type == PIPE || ((t_token *)tokens->content)->type == AND)
-			return (parse_pipe(tokens));
-		tokens = tokens->prev;
-	}
-	while (tokens->prev)
-		tokens = tokens->prev;
+	tokens = find_last_type(tokens, PIPE);
+	if (((t_token *)tokens->content)->type == PIPE)
+		return (parse_pipe(tokens));
+
 	return (parse_cmd(tokens));
 }
