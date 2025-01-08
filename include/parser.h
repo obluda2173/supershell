@@ -20,6 +20,7 @@ typedef enum e_node_type
 {
 	CMD_NODE,
 	PIPE_NODE,
+	LOGICAL_NODE,
 	ERROR_NODE,
 }						t_node_type;
 
