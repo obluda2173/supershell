@@ -53,14 +53,15 @@ t_script_node	*parse_logical(t_dllist *tokens)
 		sn->node_type = OR_NODE;
 	sn->num_children = 2;
 
-	sn->downstream = parse_cmd(tokens->next);
+	tokens->next->prev = NULL;
+	sn->downstream = parse(tokens->next);
 	if (!sn->downstream)
 	{
 		free(sn);
 		return (get_error_node("could not alloc space for pipe downstream"));
 	}
-	tokens = tokens->prev;
 
+	tokens = tokens->prev;
 	ft_dllstclear(&tokens->next, free_token);
 	ft_dllstadd_back(&tokens, ft_dllstnew(new_eof_token()));
 
