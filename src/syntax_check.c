@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 09:40:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/07 12:08:17 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/08 10:39:12 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static int	count_consequitives(char *str, char c)
 	return (c_counter);
 }
 
-bool	check_consecutive_chars(char *str, char c)
+static bool	check_consecutive_chars(char *str, char c)
 {
 	if (count_consequitives(str, c) > 2)
 	{
@@ -51,7 +51,7 @@ bool	check_consecutive_chars(char *str, char c)
 	return (true);
 }
 
-bool	check_unclosed_quotes(char *str)
+static bool	check_unclosed_quotes(char *str)
 {
 	int	i;
 	int	single_quote_count;
@@ -80,7 +80,7 @@ bool	check_unclosed_quotes(char *str)
 	return (true);
 }
 
-bool	check_invalid_symbol(char *str)
+static bool	check_invalid_symbol(char *str)
 {
 	if (ft_strchr(str, ';') || ft_strchr(str, '\\')
 		|| ft_strchr(str, '(') || ft_strchr(str, ')')

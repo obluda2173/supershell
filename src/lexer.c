@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:07:34 by erian             #+#    #+#             */
-/*   Updated: 2025/01/07 15:56:01 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/08 12:20:07 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,11 +84,11 @@ t_dllist	*tokenize(char *line)
 	t_dllist	*tokens;
 
 	line = format_input(line);
-	printf("\nLine: %s\n\n", line); //testing
+	//printf("\nLine: %s\n\n", line); //testing
 	if (!line)
 		return (NULL);
 	tokens = tokenize_line(line);
 	free(line);
-	print_tokens(tokens); //testing
+	//print_tokens(tokens); //testing
 	return (tokens);
 }

@@ -4,7 +4,7 @@
 NAME		=	minishell
 
 # Compiler and flags
-CC 			=	@cc
+CC 			=	@cc -g
 CFLAGS		=	-Wall -Wextra -Werror
 LIBS 		= 	-lreadline -Llibft -lft
 

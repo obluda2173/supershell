@@ -13,7 +13,7 @@ FetchContent_MakeAvailable(googletest)
 project(minishell)
 
 option(BUILD_TEST "Build tests" ON)
-option(BUILD_MINISHELL "Build minishell" ON)
+option(BUILD_MINISHELL "Build minishell" OFF)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -Wextra -fsanitize=address")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -fsanitize=address")
@@ -27,7 +27,8 @@ if(BUILD_TEST)
   set(UNITTEST_EXECUTABLE "run_unittests")
 
   add_executable(${UNITTEST_EXECUTABLE} ${MINISHELL_SOURCES} ${UNITTEST_FILES})
-  target_link_libraries(${UNITTEST_EXECUTABLE} gtest gtest_main pthread gmock ft)
+  target_link_libraries(${UNITTEST_EXECUTABLE} gtest gtest_main pthread gmock)
+  target_link_libraries(${UNITTEST_EXECUTABLE} ft readline)
 
   target_include_directories(${UNITTEST_EXECUTABLE} PRIVATE libft)
   target_include_directories(${UNITTEST_EXECUTABLE} PRIVATE include)
@@ -40,7 +41,7 @@ if(BUILD_MINISHELL)
   set(MINISHELL "minishell")
 
   add_executable(${MINISHELL} ${MINISHELL_SOURCES} ${PARSER_SOURCES} run/main.c)
-  target_link_libraries(${MINISHELL} gtest gtest_main pthread gmock ft readline)
+  target_link_libraries(${MINISHELL} ft readline)
 
   target_include_directories(${MINISHELL} PRIVATE libft)
   target_include_directories(${MINISHELL} PRIVATE include)

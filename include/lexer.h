@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 14:58:41 by erian             #+#    #+#             */
-/*   Updated: 2025/01/07 17:32:48 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/08 12:12:48 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ char		*handle_quotes(const char *input, size_t *i,
 							char *result, size_t *j);
 char		*handle_operators(const char *input, size_t *i,
 								char *result, size_t *j);
+
+int heredoc_loop(t_dllist **tokens);
 
 // lexer.c
 void		free_token(void *content);

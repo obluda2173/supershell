@@ -1,6 +1,5 @@
 #include "test_main.hpp"
-#include "gtest/gtest.h"
-#include <gtest/gtest.h>
+
 extern "C" {
 #include "lexer.h"
 }
@@ -16,7 +15,7 @@ TEST_P(TestTokenizer, firstTests) {
 	TestTokenizeParams params = GetParam();
 	std::vector<t_token> want_tokens = params.want_tokens;
 
-	testing::internal::CaptureStdout();
+	testing::internal::CaptureStdout();	
 	t_dllist *tokens = tokenize((char*)params.line.c_str());
 	testing::internal::GetCapturedStdout();
 	t_dllist *head = tokens;
@@ -220,21 +219,5 @@ INSTANTIATE_TEST_SUITE_P(
 							new_token("line1\nline2", DOUBLE_QUOTE),
 							new_token(NULL, END_OF_FILE),
 						}}
-					// TestTokenizeParams{
-					// 	"cat <<EOF\nline1\nline2\nEOF", {
-					// 		new_token("cat", WORD),
-					// 		new_token("<<", HERE_DOC),
-					// 		new_token("line1\nline2\n", WORD),	
-					// 		new_token(NULL, END_OF_FILE),
-					// 	}},
-					// 	TestTokenizeParams{
-					// 	"cat <<EOF\nline1\n$PATH\nline2\nEOF", {
-					// 		new_token("cat", WORD),
-					// 		new_token("<<", HERE_DOC),
-					// 		new_token("line1\n", WORD),	
-					// 		new_token("PATH", DOLLAR),	
-					// 		new_token("line2\n", WORD),	
-					// 		new_token(NULL, END_OF_FILE),
-					// 	}}
 		)
 	);
