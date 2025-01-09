@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:59:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/08 16:44:17 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/09 12:00:48 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ int	main(int ac, char **av, char **ep)
 		t_script_node *script = parse(tokens);
 		ft_dllstclear(&tokens, free_token);
 		free_script_node(script);
-		/* execute(script); */
+		execute(script, data->ep);
 
 		free(data->line);
 		data->line = NULL;
