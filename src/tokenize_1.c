@@ -6,20 +6,18 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2025/01/08 16:59:08 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/09 09:51:29 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 
-// Skips spaces in the input string
 static void	skip_spaces(char *line, int *i)
 {
 	while (line[*i] && line[*i] == ' ')
 		(*i)++;
 }
 
-//extract allocated word from line
 static char	*extract_word(t_line_container *lc)
 {
 	int		start;
@@ -48,7 +46,7 @@ static char	*extract_word(t_line_container *lc)
 	return (word);
 }
 
-t_token	*create_token(char *content, token_type type)
+t_token	*create_token(char *content, t_token_type type)
 {
 	t_token	*token;
 
@@ -60,7 +58,6 @@ t_token	*create_token(char *content, token_type type)
 	return (token);
 }
 
-// Tokenizes the input line into a doubly linked list
 t_token	*get_next_token(t_line_container *lc)
 {
 	char	*word;

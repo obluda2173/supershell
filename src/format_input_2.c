@@ -6,13 +6,12 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 14:55:43 by erian             #+#    #+#             */
-/*   Updated: 2025/01/07 15:10:59 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/09 09:43:37 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Handle numbers preceding `>` or `>>`
 char	*handle_redirection(char *input, size_t *i, char *result, size_t *j)
 {
 	while (ft_isdigit(input[*i]))
@@ -28,7 +27,6 @@ char	*handle_redirection(char *input, size_t *i, char *result, size_t *j)
 	return (result);
 }
 
-// Handle heredoc `<<` without space separation
 char	*handle_heredoc(char *input, size_t *i, char *result, size_t *j)
 {
 	while (input[*i] == '<')
@@ -40,7 +38,6 @@ char	*handle_heredoc(char *input, size_t *i, char *result, size_t *j)
 	return (result);
 }
 
-// Handle quotes
 char	*handle_quotes(const char *input, size_t *i,
 							char *result, size_t *j)
 {
@@ -67,7 +64,6 @@ void	init_operators_list(char **operators)
 	operators[7] = "=";
 }
 
-//separate operators with space
 char	*handle_operators(const char *input, size_t *i,
 								char *result, size_t *j)
 {

@@ -6,13 +6,12 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:33:18 by erian             #+#    #+#             */
-/*   Updated: 2025/01/07 15:19:28 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/09 09:43:22 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//formating input for easier tokenizing/parsing
 char	*format_input(char *input)
 {
 	size_t	i;

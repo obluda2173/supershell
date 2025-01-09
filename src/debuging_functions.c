@@ -6,13 +6,12 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 15:16:10 by erian             #+#    #+#             */
-/*   Updated: 2025/01/08 16:46:49 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/09 09:43:17 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//global function to help print out tokens 
 const char *token_strings[] = {
 	"BUILTIN",
 	"WORD",
@@ -32,7 +31,6 @@ const char *token_strings[] = {
 	"INV"
 };
 
-//function to print the content of doubly list of tokens
 void    print_tokens(t_dllist *head)
 {
 	t_dllist *current;

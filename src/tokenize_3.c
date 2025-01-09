@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 17:23:51 by erian             #+#    #+#             */
-/*   Updated: 2025/01/07 17:34:08 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/09 09:51:58 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static bool	is_builtin(char *str)
 		|| !ft_strcmp(str, "exit\0"));
 }
 
-static token_type	assign_operator_type(char *str)
+static t_token_type	assign_operator_type(char *str)
 {
 	if (!ft_strcmp(str, "||\0"))
 		return (OR);
@@ -44,7 +44,7 @@ static token_type	assign_operator_type(char *str)
 	return (WORD);
 }
 
-static token_type	assign_general_type(char *str)
+static t_token_type	assign_general_type(char *str)
 {
 	if (!str)
 		return (END_OF_FILE);
@@ -63,9 +63,9 @@ static token_type	assign_general_type(char *str)
 	return (WORD);
 }
 
-token_type	assign_type(char *str)
+t_token_type	assign_type(char *str)
 {
-	token_type	type;
+	t_token_type	type;
 
 	type = assign_operator_type(str);
 	if (type != WORD)
