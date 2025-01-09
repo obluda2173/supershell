@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: erian <erian@student.42>                   +#+  +:+       +#+        */
+/*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/05 19:43:00 by erian             #+#    #+#             */
-/*   Updated: 2024/08/05 19:47:48 by erian            ###   ########.fr       */
+/*   Created: 2025/01/05 17:10:35 by erian             #+#    #+#             */
+/*   Updated: 2025/01/05 17:22:57 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,13 @@
 
 char	*ft_strchr(const char *str, int chr)
 {
-	while (*str && *str != (char)chr)
+	while (*str)
+	{
+		if (*str == (char)chr)
+			return ((char *)str);
 		str++;
-	if (*str != (char)chr)
-		return (NULL);
-	return ((char *)str);
+	}
+	if ((char)chr == '\0')
+		return ((char *)str);
+	return (NULL);
 }

@@ -16,7 +16,7 @@ t_dllist *create_token_dllist(std::vector<t_token> tokens) {
 	return token_dllist;
 }
 
-t_token new_token(const char* content, token_type type) {
+t_token new_token(const char* content, t_token_type type) {
 	return (t_token){(char*)content, type};
 }
 

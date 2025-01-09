@@ -37,6 +37,7 @@ SRC += ft_strtrim.c
 SRC += ft_strnstr.c
 SRC += ft_substr.c
 SRC += ft_strmapi.c
+SRC += ft_strcmp.c
 SRC += ft_strncmp.c
 SRC += ft_striteri.c
 # **************************************************************************** #

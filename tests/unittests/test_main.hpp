@@ -40,7 +40,7 @@ struct ParserTestParams {
 
 class ParserTestSuite : public::testing::TestWithParam<ParserTestParams>{};
 
-t_token new_token(const char* content, token_type type);
+t_token new_token(const char* content, t_token_type type);
 t_dllist *create_token_dllist(std::vector<t_token> tokens);
 
 t_test_script_node new_test_script_node(t_node_type type, t_test_cmd_node cn, t_error_node en, std::vector<t_test_script_node> pipe_node_childs);

@@ -9,7 +9,7 @@
 # include <readline/readline.h>
 
 # include "libft.h"
-#include "lexer.h"
+# include "lexer.h"
 
 /* ************************************************************************** */
 /* structures                                                               * */
@@ -23,14 +23,14 @@ typedef struct	s_data
 	bool			not_exit;
 }				t_data;
 
-
 /* ************************************************************************** */
 /* src                                                                      * */
 /* ************************************************************************** */
 
 // free.c
-
 void	free_all(t_data **data);
 
+// syntax_check.c
+bool	check_syntax(char *str);
 
 #endif

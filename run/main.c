@@ -6,11 +6,10 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:59:08 by erian             #+#    #+#             */
-/*   Updated: 2024/12/29 13:09:00 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/08 16:44:17 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "minishell.h"
 #include "parser.h"
 #include "executor.h"
@@ -83,13 +82,6 @@ char	*meeting_line(t_data **data)
 /* 	//todo */
 /* } */
 
-//check syntax
-bool	check_syntax(char *line)
-{
-	(void)line;
-	return (true);
-}
-
 int	main(int ac, char **av, char **ep)
 {
 	t_data	*data;
@@ -136,12 +128,25 @@ int	main(int ac, char **av, char **ep)
 			continue ;
 		}
 
+		if (!check_syntax(data->line))
+		{
+			free(data->line);
+			data->line = NULL;
+			continue ;
+		}
+
 		t_dllist *tokens = tokenize(data->line);
+		if (!heredoc_loop(&tokens))
+		{
+			printf("Error: Heredoc processing failed.\n");
+			ft_dllstclear(&tokens, free_token);
+			continue ;
+		}
+
 		t_script_node *script = parse(tokens);
 		ft_dllstclear(&tokens, free_token);
-		(void)script;
+		free_script_node(script);
 		/* execute(script); */
-		/* ft_lstclear(&script, free_script_node); */
 
 		free(data->line);
 		data->line = NULL;

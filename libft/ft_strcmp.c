@@ -1,18 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfreyer <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/29 13:12/20 by kfreyer           #+#    #+#             */
-/*   Updated: 2024/12/29 13:12:20 by kfreyer          ###   ########.fr       */
+/*   Created: 2025/01/05 17:07:11 by erian             #+#    #+#             */
+/*   Updated: 2025/01/05 17:11:29 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-typedef union NodeData
+#include "libft.h"
+
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	TextNode		text_node;
-	CommandNode		command_node;
-	ExpansionNode	expansion_node;
-}					t_NodeData;
+	while (*s1 && (*s1 == *s2))
+	{
+		s1++;
+		s2++;
+	}
+	return ((unsigned char)*s1 - (unsigned char)*s2);
+}
