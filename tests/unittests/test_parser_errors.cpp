@@ -93,5 +93,10 @@ INSTANTIATE_TEST_SUITE_P(
                 new_token(NULL, END_OF_FILE),
             },
             new_test_script_node(ERROR_NODE, {}, new_error_node("error parsing command before pipe"), {})}
+        // ParserTestParams{0, ERROR_TEST, {
+        //         new_token("&&", AND),
+        //         new_token(NULL, END_OF_FILE),
+        //     },
+        //     new_test_script_node(ERROR_NODE, {}, new_error_node("error parsing command after logical operator"), {})}
         )
     );
