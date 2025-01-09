@@ -13,6 +13,16 @@ void test_error_cases(t_test_script_node want, t_script_node *sn, t_dllist* toke
 }
 
 INSTANTIATE_TEST_SUITE_P(
+    ParserTestsErrorsGeneral,
+    ParserTestSuite,
+    testing::Values(
+        ParserTestParams{4, ERROR_TEST, {
+                new_token("&&", AND),
+            },
+            new_test_script_node(ERROR_NODE, {}, new_error_node("no end of file token"), {})}
+        ));
+
+INSTANTIATE_TEST_SUITE_P(
     ParserTestsErrorsRedirections,
     ParserTestSuite,
     testing::Values(
@@ -80,23 +90,36 @@ INSTANTIATE_TEST_SUITE_P(
                 new_token(NULL, END_OF_FILE),
             },
             new_test_script_node(ERROR_NODE, {}, new_error_node("error parsing command after pipe"), {})},
-        ParserTestParams{0, ERROR_TEST, {
+        ParserTestParams{1, ERROR_TEST, {
                 new_token("|", PIPE),
                 new_token("echo", BUILTIN),
                 new_token(NULL, END_OF_FILE),
             },
             new_test_script_node(ERROR_NODE, {}, new_error_node("error parsing command before pipe"), {})},
-        ParserTestParams{0, ERROR_TEST, {
+        ParserTestParams{2, ERROR_TEST, {
                 new_token("|", PIPE),
                 new_token("|", PIPE),
                 new_token("echo", BUILTIN),
                 new_token(NULL, END_OF_FILE),
             },
-            new_test_script_node(ERROR_NODE, {}, new_error_node("error parsing command before pipe"), {})}
-        // ParserTestParams{0, ERROR_TEST, {
-        //         new_token("&&", AND),
-        //         new_token(NULL, END_OF_FILE),
-        //     },
-        //     new_test_script_node(ERROR_NODE, {}, new_error_node("error parsing command after logical operator"), {})}
+            new_test_script_node(ERROR_NODE, {}, new_error_node("error parsing command before pipe"), {})},
+        ParserTestParams{3, ERROR_TEST, {
+                new_token("&&", AND),
+                new_token(NULL, END_OF_FILE),
+            },
+            new_test_script_node(ERROR_NODE, {}, new_error_node("error parsing pipeline after logical operator"), {})},
+        ParserTestParams{4, ERROR_TEST, {
+                new_token("&&", AND),
+                new_token("echo", BUILTIN),
+                new_token(NULL, END_OF_FILE),
+            },
+            new_test_script_node(ERROR_NODE, {}, new_error_node("error parsing pipeline before logical operator"), {})},
+        ParserTestParams{5, ERROR_TEST, {
+                new_token("&&", AND),
+                new_token("&&", AND),
+                new_token("echo", BUILTIN),
+                new_token(NULL, END_OF_FILE),
+            },
+            new_test_script_node(ERROR_NODE, {}, new_error_node("error parsing pipeline before logical operator"), {})}
         )
     );

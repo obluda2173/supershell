@@ -63,19 +63,29 @@ t_script_node	*parse_logical(t_dllist *tokens)
 		sn = get_branch_node(AND_NODE);
 	if (((t_token *)tokens->content)->type == OR)
 		sn = get_branch_node(OR_NODE);
-	sn->num_children = 2;
 	tokens->next->prev = NULL;
 	sn->downstream = parse(tokens->next);
 	if (!sn->downstream)
 	{
 		free(sn);
-		return (get_error_node("could not alloc space for pipe downstream"));
+		return (get_error_node("error parsing pipeline after logical operator"));
 	}
 	tokens = tokens->prev;
+	if (!tokens)
+	{
+		free_script_node(sn);
+		return (get_error_node("error parsing pipeline before logical operator"));
+	}
+
 	ft_dllstclear(&tokens->next, free_token);
 	ft_dllstadd_back(&tokens, ft_dllstnew(new_eof_token()));
 	while (tokens->prev && ((t_token *)tokens->content)->type != AND)
 		tokens = tokens->prev;
 	sn->upstream = parse(tokens);
+	if (sn->upstream->node_type == ERROR_NODE)
+	{
+		free_script_node(sn);
+		return (get_error_node("error parsing pipeline before logical operator"));
+	}
 	return (sn);
 }
