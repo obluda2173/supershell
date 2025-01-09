@@ -2,14 +2,16 @@
 #define EXECUTOR_H
 
 #include "libft.h"
+#include "parser.h"
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
-int execute(t_list *script, t_list *ep);
+int execute_script(t_script_node *script_node, char **envp);
 
 char	*find_path(char *cmd, char **ep);
 
-void free_matrix(char **matrix)
+// executor_free.c
+void free_matrix(char **matrix);
 
-#endif // EXECUTOR_H
+#endif // EXECUTOR_

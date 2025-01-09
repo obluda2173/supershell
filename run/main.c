@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:59:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/09 12:00:48 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/09 13:32:30 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,6 @@ char	*meeting_line(t_data **data)
 	return (NULL);
 }
 
-//execution
-/* void	execute(t_data **data) */
-/* { */
-/* 	(void)data; */
-/* 	//todo */
-/* } */
-
 int	main(int ac, char **av, char **ep)
 {
 	t_data	*data;
@@ -144,9 +137,10 @@ int	main(int ac, char **av, char **ep)
 		}
 
 		t_script_node *script = parse(tokens);
+		execute_script(script, ep);
+		
 		ft_dllstclear(&tokens, free_token);
 		free_script_node(script);
-		execute(script, data->ep);
 
 		free(data->line);
 		data->line = NULL;

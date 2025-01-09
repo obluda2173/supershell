@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/09 13:36:00 by erian             #+#    #+#             */
+/*   Updated: 2025/01/09 14:24:19 by erian            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "executor.h"
 #include "libft.h"
 #include "parser.h"
@@ -16,103 +28,92 @@
 // 	return 0;
 // }
 
-char **list_to_argv(t_list *list)
+char **list_to_argv(t_list *list, char *cmd_path)
 {
-    char **argv;
-    size_t count = 0;
-    size_t i = 0;
-    t_list *tmp = list;
+	char **argv;
+	size_t count = 0;
+	size_t i = 1;
+	t_list *tmp = list;
 
-    while (tmp)
-    {
-        count++;
-        tmp = tmp->next;
-    }
+	while (tmp)
+	{
+		count++;
+		tmp = tmp->next;
+	}
 
-    argv = malloc((count + 1) * sizeof(char *));
-    if (!argv)
-        return (NULL);
+	argv = malloc(sizeof(char *) * (count + 2));
+	if (!argv)
+		return (NULL);
 
-    tmp = list;
-    while (tmp)
-    {
-        argv[i] = ft_strdup(((t_argument *)tmp->content)->word);
-        if (!argv[i++])
-        {
-            free_matrix(argv);
-            return (NULL);
-        }
-        tmp = tmp->next;
-    }
-    argv[i] = NULL;
+	argv[0] = cmd_path;
+	tmp = list;
+	while (tmp)
+	{
+		t_argument *argument = (t_argument *)list->content;
+		argv[i] = ft_strdup(argument->word);
 
-    return (argv);
-}
+		if (!argv[i++])
+		{
+			free_matrix(argv);
+			return (NULL);
+		}
+		tmp = tmp->next;
+	}
+	argv[i] = NULL;
 
-void free_matrix(char **matrix)
-{
-    size_t i = 0;
-
-    if (!matrix)
-        return;
-
-    while (matrix[i])
-    {
-        free(matrix[i]);
-        i++;
-    }
-    free(matrix);
+	return (argv);
 }
 
 int execute_command(t_cmd_node *cmd_node, char **envp)
 {
-    pid_t pid;
-    int status;
-    char *cmd_path;
+	pid_t pid;
+	int status;
+	char *cmd_path;
+	char **arg;
 
-    cmd_path = find_path(cmd_node->cmd_token.content, envp);
-    if (!cmd_path)
-    {
-        fprintf(stderr, "Command not found: %s\n", cmd_node->cmd_token.content);
-        return 127; // Standard shell exit code for "command not found"
-    }
+	cmd_path = find_path(cmd_node->cmd_token.content, envp);
+	if (!cmd_path)
+	{
+		fprintf(stderr, "Command not found: %s\n", cmd_node->cmd_token.content);
+		return 127;
+	}
 
-    pid = fork();
-    if (pid < 0)
-    {
-        perror("fork");
-        free(cmd_path);
-        return 1;
-    }
-    else if (pid == 0)
-    {
-        // In child process
-        if (execve(cmd_path, cmd_node->cmd_token.arguments, envp) == -1)
-        {
-            perror("execve");
-            free(cmd_path);
-            exit(1); // Exit with an error code
-        }
-    }
-    else
-    {
-        free(cmd_path);
-        if (waitpid(pid, &status, 0) == -1)
-        {
-            perror("waitpid");
-            return 1;
-        }
-        if (WIFEXITED(status))
-        {
-            return WEXITSTATUS(status);
-        }
-        else
-        {
-            fprintf(stderr, "Child process did not terminate normally\n");
-            return 1;
-        }
-    }
-    return 0;
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("fork");
+		free(cmd_path);
+		return 1;
+	}
+	else if (pid == 0)
+	{
+		arg = list_to_argv(cmd_node->arguments, cmd_path);
+		if (execve(cmd_path, arg, envp) == -1)
+		{
+			perror("execve");
+			free(cmd_path);
+			exit(1); // Exit with an error code
+		}
+	}
+	else
+	{
+		free(cmd_path);
+		if (waitpid(pid, &status, 0) == -1)
+		{
+			perror("waitpid");
+			return 1;
+		}
+		if (WIFEXITED(status))
+		{
+			return WEXITSTATUS(status);
+		}
+		else
+		{
+			fprintf(stderr, "Child process did not terminate normally\n");
+			return 1;
+		}
+	}
+	return 0;
 }
 
 int execute_script(t_script_node *script_node, char **envp)
