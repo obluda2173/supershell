@@ -140,8 +140,8 @@ int	main(int ac, char **av, char **ep)
 		execute_script(script, ep);
 
 		ft_dllstclear(&tokens, free_token);
-		free_script_node(script);
 		execute_script(script, ep);
+		free_script_node(script);
 
 		free(data->line);
 		data->line = NULL;
