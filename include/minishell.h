@@ -33,4 +33,5 @@ void	free_all(t_data **data);
 // syntax_check.c
 bool	check_syntax(char *str);
 
+
 #endif

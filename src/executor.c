@@ -1,9 +1,10 @@
 #include "executor.h"
-#include "libft.h"
 #include "parser.h"
+#include "libft.h"
 
-int execute(t_script_node *script) {
-	t_list* args = sn.node_data.cmd_node.arguments;
+int execute(t_script_node *script, char** envp) {
+	(void)envp;
+	t_list* args = script->node_data.cmd_node.arguments;
 	while (args) {
 		t_argument arg = *(t_argument*)args->content;
 		ft_putstr_fd(arg.word, STDOUT_FILENO);

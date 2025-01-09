@@ -6,6 +6,6 @@ auto main(int argc, char *argv[]) -> int {
     // ::testing::GTEST_FLAG(filter) = "LexerTests*";
     // ::testing::GTEST_FLAG(filter) = "ParserTest*";
     ::testing::GTEST_FLAG(filter) = "Lexer*:*Parser*";
-    // ::testing::GTEST_FLAG(filter) = "ExecutorTests*";
+    ::testing::GTEST_FLAG(filter) = "ExecutorTests*";
     return RUN_ALL_TESTS();
 }
