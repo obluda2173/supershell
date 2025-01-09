@@ -14,21 +14,6 @@
 #include "libft.h"
 #include "parser.h"
 
-t_script_node	*get_cmd_node(t_token t)
-{
-	t_script_node* sn = (t_script_node*)malloc(sizeof(t_script_node));
-	if (!sn)
-		return NULL;
-	sn->node_type = CMD_NODE;
-	sn->node_data.cmd_node.arguments = NULL;
-	sn->node_data.cmd_node.redirections = NULL;
-	sn->node_data.cmd_node.cmd_token = copy_token(t);
-	sn->num_children = 0;
-	sn->upstream = NULL;
-	sn->downstream = NULL;
-	return sn;
-}
-
 int	check_redirection_token(t_token t)
 {
 	char	*content;
@@ -69,9 +54,10 @@ t_redirection	*parse_redirection_token(t_token t)
 
 t_redirection	*parse_redirection_word(t_token t, t_redirection *r)
 {
-	if (r->type == HERED && (t.type != SINGLE_QUOTE && t.type != DOUBLE_QUOTE)) {
+	if (r->type == HERED && (t.type != SINGLE_QUOTE && t.type != DOUBLE_QUOTE))
+	{
 		free(r);
-		return NULL;
+		return (NULL);
 	}
 	if (t.type == WORD || t.type == SINGLE_QUOTE)
 		r->word_type = LITERAL;
@@ -88,35 +74,19 @@ t_redirection	*parse_redirection_word(t_token t, t_redirection *r)
 	return (r);
 }
 
-t_redirection	*extract_redirection(t_dllist *tokens)
+t_token	copy_token(t_token token)
 {
-	t_redirection	*r;
+	t_token	copy;
 
-	r = parse_redirection_token(*(t_token *)tokens->content);
-	if (!r)
-		return (NULL);
-	return (parse_redirection_word(*(t_token *)(tokens->next->content), r));
+	copy.content = ft_strdup(token.content);
+	copy.type = token.type;
+	return (copy);
 }
 
-t_argument	*extract_argument(t_token *t)
+bool	is_redirection_token(t_token t)
 {
-	t_argument	*arg;
-
-	arg = (t_argument *)malloc(sizeof(t_argument));
-	if (!arg)
-		return (NULL);
-	arg->word = ft_strdup(t->content);
-	if (t->type == WORD || t->type == DOUBLE_QUOTE || t->type == SINGLE_QUOTE)
-		arg->type = LITERAL;
-	if (t->type == DOUBLE_QUOTE)
-		arg->type = DOUBLE_QUOTE_STR;
-	if (t->type == DOLLAR)
-	{
-		arg->type = ENV_EXP;
-		if (!ft_strncmp(arg->word, "?", 1))
-			arg->type = EXIT_STATUS_EXP;
-	}
-	if (t->type == WILDCARD)
-		arg->type = WILDCARD_EXP;
-	return (arg);
+	if (t.type == REDIRECT_OUT || t.type == REDIRECT_IN
+		|| t.type == REDIRECT_APPEND || t.type == HERE_DOC)
+		return (true);
+	return (false);
 }
