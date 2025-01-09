@@ -1,6 +1,25 @@
-// #include "test_main.hpp"
+#include "test_main.hpp"
 
-// t_script_node *create_script(std::vector<t_argument> args) {
+TEST(ExecutorTests, TestBinaries) {
+	t_script_node *script = (t_script_node*)malloc(sizeof(t_script_node));
+	script->node_type = CMD_NODE;
+	script->node_data.cmd_node.cmd_token = new_token(ft_strdup("random_cmd"), BUILTIN);
+	script->node_data.cmd_node.arguments = NULL;
+	script->node_data.cmd_node.redirections = NULL;
+	script->upstream = NULL;
+	script->downstream = NULL;
+
+	testing::internal::CaptureStderr();
+	int got_return = execute_script(script, NULL);
+	EXPECT_EQ(127, got_return);
+	std::string got = testing::internal::GetCapturedStderr();
+	EXPECT_STREQ("Command not found: random_cmd\n", got.c_str());
+
+	free_script_node(script);
+}
+
+
+// t_script_node *create_cmd_node(std::vector<t_argument> args) {
 // 	t_script_node *script = (t_script_node*)malloc(sizeof(t_script_node));
 // 	script->node_type = CMD_NODE;
 // 	script->node_data.cmd_node.cmd_token = new_token(ft_strdup("echo"), BUILTIN);
@@ -24,10 +43,11 @@
 
 // TEST_P(ExecutorTestSuite, ExecutorTests) {
 // 	ExecutorTestParams params = GetParam();
-// 	t_script_node *script = create_script(params.args);
+// 	t_script_node *script = create_cmd_node(params.args);
 
 // 	testing::internal::CaptureStdout();
-// 	EXPECT_EQ(params.want_return, execute(script, NULL));
+// 	testing::internal::CaptureStderr();
+// 	EXPECT_EQ(params.want_return, execute_script(script, NULL));
 // 	std::string got = testing::internal::GetCapturedStdout();
 // 	EXPECT_STREQ(params.want_output.c_str(), got.c_str());
 // 	free_script_node(script);
