@@ -59,11 +59,10 @@ t_script_node	*parse_logical(t_dllist *tokens)
 {
 	t_script_node	*sn;
 
-	sn = (t_script_node *)malloc(sizeof(t_script_node));
 	if (((t_token *)tokens->content)->type == AND)
-		sn->node_type = AND_NODE;
+		sn = get_branch_node(AND_NODE);
 	if (((t_token *)tokens->content)->type == OR)
-		sn->node_type = OR_NODE;
+		sn = get_branch_node(OR_NODE);
 	sn->num_children = 2;
 	tokens->next->prev = NULL;
 	sn->downstream = parse(tokens->next);
