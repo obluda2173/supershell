@@ -21,7 +21,7 @@ INCLUDES 	:= 	-Ilibft -Iinclude
 
 RUN_DIR		=	run
 PRS_RDIR	=	src/parser
-SRC_FILES 	:= 	$(wildcard $(SRC_DIR)/*.c)
+SRC_FILES 	:= $(wildcard src/*.c) $(wildcard src/lexer/*.c) $(wildcard src/parser/*.c)
 OBJ_FILES 	:= 	$(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 # **************************************************************************** #
@@ -52,6 +52,8 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(OBJ_DIR)/lexer
+	@mkdir -p $(OBJ_DIR)/parser
 
 $(BIN_DIR):
 	@mkdir -p $(BIN_DIR)

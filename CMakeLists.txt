@@ -19,8 +19,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -Wextra -fsanitize=address")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -fsanitize=address")
 
 add_subdirectory(libft)
-file(GLOB MINISHELL_SOURCES "src/*.c")
-file(GLOB PARSER_SOURCES "src/parser/*.c")
+file(GLOB_RECURSE MINISHELL_SOURCES "src/*.c")
 
 if(BUILD_TEST)
   file(GLOB UNITTEST_FILES "tests/unittests/*.cpp")
@@ -37,6 +36,7 @@ if(BUILD_TEST)
   gtest_discover_tests(${UNITTEST_EXECUTABLE})
 endif()
 
+file(GLOB PARSER_SOURCES "src/parser/*.c")
 if(BUILD_MINISHELL)
   set(MINISHELL "minishell")
 
