@@ -40,6 +40,12 @@ INSTANTIATE_TEST_SUITE_P(
 					// 		new_token("\"", DOUBLE_QUOTE),
 					// 		new_token(NULL, END_OF_FILE),
 					// 	}},
+					// TestTokenizeParams{
+					// 	"cat CMake\tLists.txt", {
+					// 		new_token("cat", WORD),
+					// 		new_token("CMakeLists.txt", WORD),
+					// 		new_token(NULL, END_OF_FILE),
+					// 	}},
 					TestTokenizeParams{
 						"<", {
 							new_token("<", REDIRECT_IN),
