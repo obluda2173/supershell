@@ -37,6 +37,7 @@ t_script_node	*parse_pipe(t_dllist *tokens)
 		free_script_node(sn);
 		return (get_error_node("error parsing command before pipe"));
 	}
+
 	ft_dllstclear(&tokens->next, free_token);
 	ft_dllstadd_back(&tokens, ft_dllstnew(new_eof_token()));
 
@@ -44,6 +45,10 @@ t_script_node	*parse_pipe(t_dllist *tokens)
 		tokens = tokens->prev;
 
 	sn->upstream = parse(tokens);
+	if (sn->upstream->node_type == ERROR_NODE) {
+		free_script_node(sn);
+		return get_error_node("error parsing command before pipe");
+	}
 	return (sn);
 }
 
