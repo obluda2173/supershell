@@ -2,7 +2,7 @@
 #include "parser.h"
 #include "libft.h"
 
-int execute(t_script_node *script, char** envp) {
+int execute_script(t_script_node *script, char** envp) {
 	(void)envp;
 	t_list* args = script->node_data.cmd_node.arguments;
 	while (args) {
