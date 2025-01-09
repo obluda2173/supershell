@@ -38,8 +38,10 @@ void	free_script_node(void *sn)
 
 	node = (t_script_node *)sn;
 	if (node->node_type == PIPE_NODE || node->node_type == AND_NODE || node->node_type == OR_NODE) {
-		free_script_node(node->upstream);
-		free_script_node(node->downstream);
+		if (node->upstream)
+			free_script_node(node->upstream);
+		if (node->downstream)
+			free_script_node(node->downstream);
 	}
 	if (node->node_type == CMD_NODE)
 	{

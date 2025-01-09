@@ -23,17 +23,23 @@ t_script_node	*parse_pipe(t_dllist *tokens)
 	sn = (t_script_node *)malloc(sizeof(t_script_node));
 	sn->node_type = PIPE_NODE;
 	sn->num_children = 2;
+	sn->downstream = NULL;
+	sn->upstream = NULL;
 
 	sn->downstream = parse_cmd(tokens->next);
 	if (!sn->downstream)
 	{
-		free(sn);
-		return (get_error_node("could not alloc space for pipe downstream"));
+		free_script_node(sn);
+		return (get_error_node("error parsing command after pipe"));
 	}
 	tokens = tokens->prev;
+	if (!tokens) {
+		free_script_node(sn);
+		return (get_error_node("error parsing command before pipe"));
+	}
 	ft_dllstclear(&tokens->next, free_token);
-
 	ft_dllstadd_back(&tokens, ft_dllstnew(new_eof_token()));
+
 	while (tokens->prev && ((t_token*)tokens->content)->type != PIPE)
 		tokens = tokens->prev;
 

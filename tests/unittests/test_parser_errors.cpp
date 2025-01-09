@@ -70,3 +70,21 @@ INSTANTIATE_TEST_SUITE_P(
         ParserTestParams{10, ERROR_TEST,{}, new_test_script_node(ERROR_NODE, {}, new_error_node("no tokens"), {})}
         )
     );
+
+INSTANTIATE_TEST_SUITE_P(
+    ParserTestsErrorsPipes,
+    ParserTestSuite,
+    testing::Values(
+        ParserTestParams{0, ERROR_TEST, {
+                new_token("|", PIPE),
+                new_token(NULL, END_OF_FILE),
+            },
+            new_test_script_node(ERROR_NODE, {}, new_error_node("error parsing command after pipe"), {})},
+        ParserTestParams{0, ERROR_TEST, {
+                new_token("|", PIPE),
+                new_token("echo", BUILTIN),
+                new_token(NULL, END_OF_FILE),
+            },
+            new_test_script_node(ERROR_NODE, {}, new_error_node("error parsing command before pipe"), {})}
+        )
+    );
