@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "mock_system_calls.h"
 #include "parser.h"
 #include "executor.h"
 
@@ -138,7 +139,8 @@ int	main(int ac, char **av, char **ep)
 
 		t_script_node *script = parse(tokens);
 		ft_dllstclear(&tokens, free_token);
-		execute_script(script, ep, fork);
+		t_system_calls sc = {fork};
+		execute_script(script, ep, sc);
 		free_script_node(script);
 
 		free(data->line);

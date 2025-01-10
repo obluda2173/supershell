@@ -44,48 +44,74 @@ struct ExecutorTestsParams {
 class ExecutorTestSuite : public::testing::TestWithParam<ExecutorTestsParams>{};
 
 TEST(ExecutorTestSuite, ErrorTestsFork){
+	////////////////////////////////////////////
 	// mock stuff
 	SystemWrapper sysMock;
 	g_systemWrapper = &sysMock;
 	EXPECT_CALL(sysMock, mockFork()).WillOnce(Invoke(&ForkFailure));
-	// mock stuff
+	t_system_calls system_calls = {mock_fork};
+	////////////////////////////////////////////
 
+	////////////////////////////////////////////
+	// environment
 	std::string path_env = "PATH=" + std::string(std::getenv("PATH"));
 	char* envp[] = {
 		(char*)path_env.c_str(),
 		nullptr // Null terminator for the array
 	};
+	////////////////////////////////////////////
 
 	t_script_node *script = new_script_node((char*)"ls");
-	// testing::internal::CaptureStdout();
-	int got_return = execute_script(script, envp, mock_fork);
+	testing::internal::CaptureStderr();
+	int got_return = execute_script(script, envp, system_calls);
 
 
 	EXPECT_EQ(1, got_return);
-	// std::string got = testing::internal::GetCapturedStdout();
-	// EXPECT_STREQ("Command not found: random_cmd\n", got.c_str());
+	std::string got = testing::internal::GetCapturedStderr();
+	EXPECT_STREQ("fork: Resource temporarily unavailable\n", got.c_str());
 	free_script_node(script);
 }
 
-// TEST_P(ExecutorTestSuite, ErrorTests) {
-// 	ExecutorTestsParams params = GetParam();
+char **get_envp() {
+	char** envp = (char**)malloc(sizeof(char*) * 2);
+	envp[0] = (char*)("PATH=" + std::string(std::getenv("PATH"))).c_str();
+	envp[1] = NULL;
+	return envp;
 
-// 	t_script_node *script = new_script_node((char*)params.cmd);
-// 	testing::internal::CaptureStderr();
-// 	int got_return = execute_script(script, NULL, fork);
-// 	EXPECT_EQ(127, got_return);
-// 	std::string got = testing::internal::GetCapturedStderr();
-// 	EXPECT_STREQ("Command not found: random_cmd\n", got.c_str());
+}
 
-// 	free_script_node(script);
-// }
 
-// INSTANTIATE_TEST_SUITE_P(
-// 	ExecutorTests,
-// 	ExecutorTestSuite,
-// 	testing::Values(
-// 		ExecutorTestsParams{"random_cmd", 127, "Command not found: random_cmd\n"}
-// // 		ExecutorTestParams{{new_argument("Hello", LITERAL)}, "Hello\n", 0},
-// // 		ExecutorTestParams{{new_argument("Hello", LITERAL), new_argument("World", LITERAL)}, "Hello World\n", 0}
-// 		)
-// 	);
+TEST_P(ExecutorTestSuite, ErrorTests) {
+	ExecutorTestsParams params = GetParam();
+	t_system_calls sc = {fork};
+
+	////////////////////////////////////////////
+	// environment
+	std::string path_env = "PATH=" + std::string(std::getenv("PATH"));
+	char* envp[] = {
+		(char*)path_env.c_str(),
+		nullptr // Null terminator for the array
+	};
+	// char** envp = get_envp();
+	////////////////////////////////////////////
+
+	t_script_node *script = new_script_node((char*)params.cmd);
+	// testing::internal::CaptureStderr();
+	int got_return = execute_script(script, envp, sc);
+	EXPECT_EQ(127, got_return);
+	// std::string got = testing::internal::GetCapturedStderr();
+	// EXPECT_STREQ("Command not found: random_cmd\n", got.c_str());
+
+	// free(envp);
+	free_script_node(script);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+	ExecutorTests,
+	ExecutorTestSuite,
+	testing::Values(
+		ExecutorTestsParams{"random_cmd", 127, "Command not found: random_cmd\n"}
+// 		ExecutorTestParams{{new_argument("Hello", LITERAL)}, "Hello\n", 0},
+// 		ExecutorTestParams{{new_argument("Hello", LITERAL), new_argument("World", LITERAL)}, "Hello World\n", 0}
+		)
+	);

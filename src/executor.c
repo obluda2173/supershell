@@ -65,7 +65,7 @@ char **list_to_argv(t_list *list, char *cmd_path)
 	return (argv);
 }
 
-int execute_command(t_cmd_node *cmd_node, char **envp, t_fork_func fork)
+int execute_command(t_cmd_node *cmd_node, char **envp, t_system_calls sc)
 {
 	pid_t pid;
 	int status;
@@ -80,7 +80,7 @@ int execute_command(t_cmd_node *cmd_node, char **envp, t_fork_func fork)
 		return 127;
 	}
 
-	pid = fork();
+	pid = sc.fork();
 	if (pid < 0)
 	{
 		perror("fork");
@@ -120,7 +120,7 @@ int execute_command(t_cmd_node *cmd_node, char **envp, t_fork_func fork)
 
 
 
-int execute_script(t_script_node *script_node, char **envp, t_fork_func fork)
+int execute_script(t_script_node *script_node, char **envp, t_system_calls sc)
 {
 	if (!script_node)
 		return (0);
@@ -128,7 +128,7 @@ int execute_script(t_script_node *script_node, char **envp, t_fork_func fork)
 
 	if (script_node->node_type == CMD_NODE)
 	{
-		return execute_command(&(script_node->node_data.cmd_node), envp, fork);
+		return execute_command(&(script_node->node_data.cmd_node), envp, sc);
 	}
 
 	ft_putendl_fd("", STDOUT_FILENO);
