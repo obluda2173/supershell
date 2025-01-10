@@ -5,3 +5,4 @@
 *.o
 /libft/libft.a
 /minishell
+/tests/end_to_end_tests/__pycache__/*
