@@ -14,6 +14,7 @@
 #include "parser.h"
 #include "libft.h"
 #include "mock_system_calls.h"
+#include <unistd.h>
 
 // int execute(t_script_node *script) {
 // 	t_list* args = sn.node_data.cmd_node.arguments;
@@ -72,7 +73,6 @@ int execute_command(t_cmd_node *cmd_node, char **envp, t_system_calls sc)
 	char *cmd_path;
 	char **arg;
 
-	/* printf("%s\n", path_env); */
 	cmd_path = find_path(cmd_node->cmd_token.content, envp);
 	if (!cmd_path)
 	{

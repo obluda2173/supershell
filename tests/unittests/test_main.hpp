@@ -57,5 +57,17 @@ void test_pipe_cases(t_test_script_node want, t_script_node *sn, t_dllist* token
 void test_error_cases(t_test_script_node want, t_script_node *sn, t_dllist* tokens);
 void compare_cmd_node(t_test_script_node want, t_cmd_node got);
 
+// executor
+struct ExecutorTestsParams {
+  const char* cmd;
+  int want_return;
+  const char* want_stdout;
+};
+
+class ExecutorTestSuite : public::testing::TestWithParam<ExecutorTestsParams>{};
+
+
+t_script_node *new_script_node(char *cmd);
+char **get_envp();
 
 #endif // TESTS_MAIN_H
