@@ -13,6 +13,7 @@
 #include "executor.h"
 #include "parser.h"
 #include "libft.h"
+#include "mock_system_calls.h"
 
 // int execute(t_script_node *script) {
 // 	t_list* args = sn.node_data.cmd_node.arguments;
@@ -64,13 +65,14 @@ char **list_to_argv(t_list *list, char *cmd_path)
 	return (argv);
 }
 
-int execute_command(t_cmd_node *cmd_node, char **envp)
+int execute_command(t_cmd_node *cmd_node, char **envp, t_fork_func fork)
 {
 	pid_t pid;
 	int status;
 	char *cmd_path;
 	char **arg;
 
+	/* printf("%s\n", path_env); */
 	cmd_path = find_path(cmd_node->cmd_token.content, envp);
 	if (!cmd_path)
 	{
@@ -116,7 +118,9 @@ int execute_command(t_cmd_node *cmd_node, char **envp)
 	return 0;
 }
 
-int execute_script(t_script_node *script_node, char **envp)
+
+
+int execute_script(t_script_node *script_node, char **envp, t_fork_func fork)
 {
 	if (!script_node)
 		return (0);
@@ -124,7 +128,7 @@ int execute_script(t_script_node *script_node, char **envp)
 
 	if (script_node->node_type == CMD_NODE)
 	{
-		return execute_command(&(script_node->node_data.cmd_node), envp);
+		return execute_command(&(script_node->node_data.cmd_node), envp, fork);
 	}
 
 	ft_putendl_fd("", STDOUT_FILENO);

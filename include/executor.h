@@ -6,8 +6,10 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include "mock_system_calls.h"
 
-int execute_script(t_script_node *script_node, char **envp);
+/* int execute_script(t_script_node *script_node, char **envp); */
+int execute_script(t_script_node *script_node, char **envp, t_fork_func fork);
 
 char	*find_path(char *cmd, char **ep);
 

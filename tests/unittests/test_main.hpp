@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <gtest/gtest.h>
+# include <gmock/gmock.h>
 
 extern "C" {
 #include "lexer.h"
