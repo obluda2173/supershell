@@ -13,6 +13,8 @@ extern "C" {
 #include "libft.h"
 }
 
+using ::testing::Invoke;
+
 typedef struct s_test_cmd_node {
   t_token cmd_token;
   std::vector<t_argument> arguments;
@@ -41,9 +43,9 @@ struct ParserTestParams {
 
 class ParserTestSuite : public::testing::TestWithParam<ParserTestParams>{};
 
-t_token new_token(const char* content, t_token_type type);
 t_dllist *create_token_dllist(std::vector<t_token> tokens);
 
+t_token new_token(const char* content, t_token_type type);
 t_test_script_node new_test_script_node(t_node_type type, t_test_cmd_node cn, t_error_node en, std::vector<t_test_script_node> pipe_node_childs);
 t_test_cmd_node new_test_cmd_node(t_token cmd_token, std::vector<t_argument> args, std::vector<t_redirection> redirects);
 t_error_node new_error_node(const char* error);
@@ -54,5 +56,6 @@ void test_cmd_cases(t_test_script_node want, t_script_node *sn, t_dllist* tokens
 void test_pipe_cases(t_test_script_node want, t_script_node *sn, t_dllist* tokens);
 void test_error_cases(t_test_script_node want, t_script_node *sn, t_dllist* tokens);
 void compare_cmd_node(t_test_script_node want, t_cmd_node got);
+
 
 #endif // TESTS_MAIN_H
