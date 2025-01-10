@@ -215,6 +215,105 @@ INSTANTIATE_TEST_SUITE_P(
 							new_token("-e", WORD),
 							new_token("line1\nline2", DOUBLE_QUOTE),
 							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"ls -l ", {
+							new_token("ls", WORD),
+							new_token("-l", WORD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						" ls -l ", {
+							new_token("ls", WORD),
+							new_token("-l", WORD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"  ls -l ", {
+							new_token("ls", WORD),
+							new_token("-l", WORD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"  ls -l  ", {
+							new_token("ls", WORD),
+							new_token("-l", WORD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"  cat  cat  ls  ", {
+							new_token("cat", WORD),
+							new_token("cat", WORD),
+							new_token("ls", WORD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"cat  file.txt ", {
+							new_token("cat", WORD),
+							new_token("file.txt", WORD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						" echo  hello world  ", {
+							new_token("echo", BUILTIN),
+							new_token("hello", WORD),
+							new_token("world", WORD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"  grep -r test  ", {
+							new_token("grep", WORD),
+							new_token("-r", WORD),
+							new_token("test", WORD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"   touch file1.txt  ", {
+							new_token("touch", WORD),
+							new_token("file1.txt", WORD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"  ls -a -l  ", {
+							new_token("ls", WORD),
+							new_token("-a", WORD),
+							new_token("-l", WORD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"   mv file1.txt file2.txt ", {
+							new_token("mv", WORD),
+							new_token("file1.txt", WORD),
+							new_token("file2.txt", WORD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"   rm -rf folder ", {
+							new_token("rm", WORD),
+							new_token("-rf", WORD),
+							new_token("folder", WORD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"   echo \"hello world\" ", {
+							new_token("echo", BUILTIN),
+							new_token("hello world", DOUBLE_QUOTE),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"  cat -n file1.txt ", {
+							new_token("cat", WORD),
+							new_token("-n", WORD),
+							new_token("file1.txt", WORD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"   ls -l -a -h ", {
+							new_token("ls", WORD),
+							new_token("-l", WORD),
+							new_token("-a", WORD),
+							new_token("-h", WORD),
+							new_token(NULL, END_OF_FILE),
 						}}
 		)
 	);
