@@ -1,6 +1,4 @@
 #include "test_main.hpp"
-#include "gtest/gtest.h"
-#include <gtest/gtest.h>
 
 struct ExecutorTestsParams {
 	const char* cmd;
