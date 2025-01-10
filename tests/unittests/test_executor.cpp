@@ -1,21 +1,25 @@
 #include "test_main.hpp"
 
-TEST(ExecutorTests, TestBinaries) {
-	t_script_node *script = (t_script_node*)malloc(sizeof(t_script_node));
-	script->node_type = CMD_NODE;
-	script->node_data.cmd_node.cmd_token = new_token(ft_strdup("random_cmd"), BUILTIN);
-	script->node_data.cmd_node.arguments = NULL;
-	script->node_data.cmd_node.redirections = NULL;
-	script->upstream = NULL;
-	script->downstream = NULL;
+t_script_node *new_script_node() {
+	t_script_node *sn = (t_script_node*)malloc(sizeof(t_script_node));
+	sn->node_type = CMD_NODE;
+	sn->node_data.cmd_node.cmd_token = new_token(ft_strdup("random_cmd"), BUILTIN);
+	sn->node_data.cmd_node.arguments = NULL;
+	sn->node_data.cmd_node.redirections = NULL;
+	sn->upstream = NULL;
+	sn->downstream = NULL;
+	return sn;
+}
 
+TEST(ExecutorTests, TestBinaries) {
+	t_script_node *sn = new_script_node();
 	testing::internal::CaptureStderr();
-	int got_return = execute_script(script, NULL);
+	int got_return = execute_script(sn, NULL);
 	EXPECT_EQ(127, got_return);
 	std::string got = testing::internal::GetCapturedStderr();
 	EXPECT_STREQ("Command not found: random_cmd\n", got.c_str());
 
-	free_script_node(script);
+	free_script_node(sn);
 }
 
 
