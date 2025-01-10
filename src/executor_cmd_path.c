@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "libft.h"
-#include <unistd.h>
 
 static char	*get_paths(char **ep)
 {
