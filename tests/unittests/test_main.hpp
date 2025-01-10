@@ -62,6 +62,7 @@ struct ExecutorTestsParams {
   const char* cmd;
   int want_return;
   const char* want_stdout;
+  const char* want_stderr;
 };
 
 class ExecutorTestSuite : public::testing::TestWithParam<ExecutorTestsParams>{};
