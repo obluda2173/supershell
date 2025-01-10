@@ -14,7 +14,7 @@ int execute_script(t_script_node *script_node, char **envp, t_system_calls sc);
 char	*find_path(char *cmd, char **ep);
 void free_matrix(char **matrix);
 
-int execute_command(t_cmd_node *cmd_node, char **envp, t_system_calls sc);
+int execute_command(t_cmd_node cmd_node, char **envp, t_system_calls sc);
 char *handle_double_quotes(const char *word);
 
 // executor_free.c

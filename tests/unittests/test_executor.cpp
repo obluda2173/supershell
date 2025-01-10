@@ -15,7 +15,8 @@ TEST(ExecutorTestSuite, ErrorTestsFork){
 
 	t_script_node *script = new_script_node((char*)"ls");
 	testing::internal::CaptureStderr();
-	int got_return = execute_script(script, envp, system_calls);
+	int got_return = execute_command(script->node_data.cmd_node, envp, system_calls);
+
 
 	EXPECT_EQ(1, got_return);
 	std::string got = testing::internal::GetCapturedStderr();

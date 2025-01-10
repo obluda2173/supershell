@@ -60,17 +60,17 @@ static char **list_to_argv(t_list *list, char *cmd_path)
 	return (argv);
 }
 
-int execute_command(t_cmd_node *cmd_node, char **envp, t_system_calls sc)
+int execute_command(t_cmd_node cmd_node, char **envp, t_system_calls sc)
 {
 	pid_t pid;
 	int status;
 	char *cmd_path;
 	char **arg;
 
-	cmd_path = find_path(cmd_node->cmd_token.content, envp);
+	cmd_path = find_path(cmd_node.cmd_token.content, envp);
 	if (!cmd_path)
 	{
-		fprintf(stderr, "Command not found: %s\n", cmd_node->cmd_token.content);
+		fprintf(stderr, "Command not found: %s\n", cmd_node.cmd_token.content);
 		return 127;
 	}
 
@@ -83,7 +83,7 @@ int execute_command(t_cmd_node *cmd_node, char **envp, t_system_calls sc)
 	}
 	else if (pid == 0)
 	{
-		arg = list_to_argv(cmd_node->arguments, cmd_path);
+		arg = list_to_argv(cmd_node.arguments, cmd_path);
 		if (execve(cmd_path, arg, envp) == -1)
 		{
 			perror("execve");
