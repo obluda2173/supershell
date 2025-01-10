@@ -138,7 +138,7 @@ int	main(int ac, char **av, char **ep)
 
 		t_script_node *script = parse(tokens);
 		execute_script(script, ep);
-		
+
 		ft_dllstclear(&tokens, free_token);
 		free_script_node(script);
 

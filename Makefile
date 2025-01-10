@@ -67,6 +67,10 @@ unittest:
 	cmake --build build && \
 	./build/run_unittests
 
+pytest: $(NAME)
+	@make FSANITIZE=-fsanitize=address && \
+	pytest
+
 # **************************************************************************** #
 # PHONY                                                                        #
 # **************************************************************************** #
