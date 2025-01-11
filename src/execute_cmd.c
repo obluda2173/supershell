@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "mock_system_calls.h"
 
 static char **list_to_argv(t_list *list, char *cmd_path)
 {
@@ -29,7 +30,7 @@ static char **list_to_argv(t_list *list, char *cmd_path)
 		return (NULL);
 
 	argv[0] = cmd_path;
-    
+
 	tmp = list;
 	while (tmp)
 	{
@@ -60,12 +61,38 @@ static char **list_to_argv(t_list *list, char *cmd_path)
 	return (argv);
 }
 
+static int custom_exec(char *cmd_path, char **args, char **envp, t_system_calls sc) {
+	pid_t pid = sc.fork();
+	int status;
+
+	if (pid < 0)
+	{
+		perror("fork");
+		return 1;
+	}
+	if (pid == 0)
+	{
+		if (sc.execve(cmd_path, args, envp) == -1)
+		{
+			perror("execve");
+			exit(1); // Exit with an error code
+		}
+	}
+	if (waitpid(pid, &status, 0) == -1)
+	{
+		perror("waitpid");
+		return 1;
+	}
+	if (WIFEXITED(status))
+		return WEXITSTATUS(status);
+	fprintf(stderr, "Child process did not terminate normally\n");
+	return 1;
+}
+
 int execute_command(t_cmd_node cmd_node, char **envp, t_system_calls sc)
 {
-	pid_t pid;
-	int status;
 	char *cmd_path;
-	char **arg;
+	char **args;
 
 	cmd_path = find_path(cmd_node.cmd_token.content, envp);
 	if (!cmd_path)
@@ -73,41 +100,9 @@ int execute_command(t_cmd_node cmd_node, char **envp, t_system_calls sc)
 		fprintf(stderr, "Command not found: %s\n", cmd_node.cmd_token.content);
 		return 127;
 	}
+	args = list_to_argv(cmd_node.arguments, cmd_path);
+	int res = custom_exec(cmd_path, args, envp, sc);
+	free_matrix(args);
 
-	pid = sc.fork();
-	if (pid < 0)
-	{
-		perror("fork");
-		free(cmd_path);
-		return 1;
-	}
-	else if (pid == 0)
-	{
-		arg = list_to_argv(cmd_node.arguments, cmd_path);
-		if (sc.execve(cmd_path, arg, envp) == -1)
-		{
-			perror("execve");
-			free(cmd_path);
-			exit(1); // Exit with an error code
-		}
-	}
-	else
-	{
-		free(cmd_path);
-		if (waitpid(pid, &status, 0) == -1)
-		{
-			perror("waitpid");
-			return 1;
-		}
-		if (WIFEXITED(status))
-		{
-			return WEXITSTATUS(status);
-		}
-		else
-		{
-			fprintf(stderr, "Child process did not terminate normally\n");
-			return 1;
-		}
-	}
-	return 0;
+	return res;
 }

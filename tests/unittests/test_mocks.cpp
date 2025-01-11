@@ -27,10 +27,7 @@ extern "C" int mock_execve(const char *pathname, char *const  argv[], char *cons
 	return 0;
 }
 
-int ExecveFailure(const char *pathname, char *const argv[],
-                  char *const envp[]) {
-	(void)pathname;
-	(void)argv;
-	(void)envp;
-  return -1;
+int ExecveFailure(int error) {
+	errno = error;
+	return -1;
 }

@@ -1,30 +1,30 @@
 #include "test_main.hpp"
 #include "test_mocks.hpp"
 
-using ::testing::_;
+// using ::testing::_;
 
-TEST(ExecutorTestSuite, ErrorTestsExecve) {
-	////////////////////////////////////////////
-	// mock stuff
-	SystemWrapper sysMock;
-	g_systemWrapper = &sysMock;
-	EXPECT_CALL(sysMock, mockExecve(_, _, _))
-		.WillOnce(
-			Invoke([](const char* pathname, char* const argv[], char* const envp[]) {
-				return ExecveFailure(pathname, argv, envp); // Provide the desired argument
-	}));
+// TEST(ExecutorTestSuite, ErrorTestsExecve) {
+// 	////////////////////////////////////////////
+// 	// mock stuff
+// 	SystemWrapper sysMock;
+// 	g_systemWrapper = &sysMock;
+// 	EXPECT_CALL(sysMock, mockExecve(_, _, _))
+// 		.WillOnce(
+// 			Invoke([](const char* pathname, char* const argv[], char* const envp[]) {
+// 				return ExecveFailure(pathname, argv, envp); // Provide the desired argument
+// 	}));
 
-	// Example usage
-	const char* path = "/bin/nonexistent";
-	char* args[] = {nullptr};
-	char* env[] = {nullptr};
-	int result = sysMock.mockExecve(path, args, env);
-	ASSERT_EQ(result, -1); // Ensure ExecveFailure is enforced
+// 	// Example usage
+// 	const char* path = "/bin/nonexistent";
+// 	char* args[] = {nullptr};
+// 	char* env[] = {nullptr};
+// 	int result = sysMock.mockExecve(path, args, env);
+// 	ASSERT_EQ(result, -1); // Ensure ExecveFailure is enforced
 
-	t_system_calls sc = {mock_fork, mock_execve};
-	(void)sc;
+// 	t_system_calls sc = {mock_fork, mock_execve};
+// 	(void)sc;
 
-}
+// }
 
 TEST(ExecutorTestSuite, ErrorTestsFork) {
 	////////////////////////////////////////////

@@ -17,6 +17,6 @@ extern "C" int mock_execve(const char *pathname, char *const  argv[], char *cons
 
 // failure functions
 pid_t ForkFailure(int error);
-int ExecveFailure(const char *pathname, char *const argv[], char *const envp[]);
+int ExecveFailure(int error);
 
 #endif // TEST_MOCKS_H_
