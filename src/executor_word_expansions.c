@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:57:45 by erian             #+#    #+#             */
-/*   Updated: 2025/01/11 13:30:15 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/11 17:19:36 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,59 +31,74 @@ static char *expand_variable(const char *str, size_t *i)
     return var_value ? var_value : ft_strdup("");
 }
 
-char *handle_dollar(const char *word)
+static char *append_to_result(char *result, size_t *result_len, const char *addition, size_t addition_len)
 {
-    size_t len = strlen(word);
+    char *new_result = malloc(*result_len + addition_len + 1);
+    if (!new_result)
+    {
+        free(result);
+        return NULL;
+    }
+    if (result)
+    {
+        ft_memcpy(new_result, result, *result_len);
+        free(result);
+    }
+    ft_memcpy(new_result + *result_len, addition, addition_len);
+    *result_len += addition_len;
+    new_result[*result_len] = '\0';
+    return new_result;
+}
+
+char *handle_dollar(const char *word, t_data *data)
+{
+    size_t len = ft_strlen(word);
     char *result = malloc(1);
     size_t result_len = 0;
     size_t i = 0;
 
     if (!result)
         return NULL;
+
+    result[0] = '\0'; // Initialize as empty string
 
     while (i < len)
     {
         if (word[i] == '?')
         {
-            int exit_status = last_exit_status(0, 0);
-            char *exit_status_str = ft_itoa(exit_status);
-            size_t exit_status_len = strlen(exit_status_str);
-            result = realloc(result, result_len + exit_status_len + 1);
+            // printf("my: %i\n", data->exit_status); // Debug print
+            char *exit_status_str = ft_itoa(data->exit_status);
+            size_t exit_status_len = ft_strlen(exit_status_str);
+            result = append_to_result(result, &result_len, exit_status_str, exit_status_len);
+            free(exit_status_str);
             if (!result)
                 return NULL;
-            strcpy(result + result_len, exit_status_str);
-            result_len += exit_status_len;
-            free(exit_status_str);
             i++;
         }
         else if (ft_isalnum(word[i]) || word[i] == '_')
         {
             char *var_value = expand_variable(word, &i);
-            size_t var_value_len = strlen(var_value);
-            result = realloc(result, result_len + var_value_len + 1);
+            size_t var_value_len = ft_strlen(var_value);
+            result = append_to_result(result, &result_len, var_value, var_value_len);
+            free(var_value);
             if (!result)
                 return NULL;
-            strcpy(result + result_len, var_value);
-            result_len += var_value_len;
-            free(var_value);
         }
         else
         {
-            result = realloc(result, result_len + 2);
+            char temp[2] = {word[i++], '\0'};
+            result = append_to_result(result, &result_len, temp, 1);
             if (!result)
                 return NULL;
-            result[result_len++] = '$';
-            while (word[i])
-                result[result_len++] = word[i++];
         }
     }
-    result[result_len] = '\0';
     return result;
 }
 
-char *handle_double_quotes(const char *word)
+
+char *handle_double_quotes(const char *word, t_data *data)
 {
-    size_t len = strlen(word);
+    size_t len = ft_strlen(word);
     char *result = malloc(1);
     size_t result_len = 0;
     size_t i = 0;
@@ -91,32 +106,33 @@ char *handle_double_quotes(const char *word)
     if (!result)
         return NULL;
 
+    result[0] = '\0'; // Initialize as empty string
+            // printf("my: %i\n", data->exit_status); // Debug print
     while (i < len)
     {
         if (word[i] == '$')
         {
-            char *dollar_expansion = handle_dollar(&word[i]);
-            if (!dollar_expansion)
-                return NULL;
-            size_t expansion_len = strlen(dollar_expansion);
-            result = realloc(result, result_len + expansion_len + 1);
+            i++;
+            char *dollar_expansion = handle_dollar(&word[i], data);
+            size_t expansion_len = ft_strlen(dollar_expansion);
+            result = append_to_result(result, &result_len, dollar_expansion, expansion_len);
+            free(dollar_expansion);
+
             if (!result)
                 return NULL;
-            strcpy(result + result_len, dollar_expansion);
-            result_len += expansion_len;
-            free(dollar_expansion);
-            while (word[i] && word[i] != '$' && (ft_isalnum(word[i]) || word[i] == '_'))
+
+            // Adjust `i` to skip over the variable being expanded
+            while (word[i] && (ft_isalnum(word[i]) || word[i] == '_'))
                 i++;
         }
         else
         {
-            result = realloc(result, result_len + 2);
+            char temp[2] = {word[i++], '\0'};
+            result = append_to_result(result, &result_len, temp, 1);
             if (!result)
                 return NULL;
-            result[result_len++] = word[i++];
         }
     }
-
-    result[result_len] = '\0';
+    // printf("\nresult: %s\n\n", result);
     return result;
 }

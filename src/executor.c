@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 13:36:00 by erian             #+#    #+#             */
-/*   Updated: 2025/01/10 15:37:42 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/11 17:29:36 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,14 @@
 // 	return 0;
 // }
 
-int execute_script(t_script_node *script_node, char **envp)
+int execute_script(t_script_node *script_node, char **envp, t_system_calls sc, t_data *data)
 {
 	if (!script_node)
 		return (0);
 
-
 	if (script_node->node_type == CMD_NODE)
 	{
-		return execute_command(script_node->node_data.cmd_node, envp);
+		return execute_command(script_node->node_data.cmd_node, envp, sc, data);
 	}
 	// else if (script_node->node_type == PIPE_NODE)
 	// 	// Add logic for executing pipes
@@ -50,7 +49,7 @@ int execute_script(t_script_node *script_node, char **envp)
 	// }
 
 	if (script_node->downstream)
-		return execute_script(script_node->downstream, envp);
+		return execute_script(script_node->downstream, envp, sc, data);
 
 	return (0);
 }
