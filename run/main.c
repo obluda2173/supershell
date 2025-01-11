@@ -139,7 +139,7 @@ int	main(int ac, char **av, char **ep)
 
 		t_script_node *script = parse(tokens);
 		ft_dllstclear(&tokens, free_token);
-		t_system_calls sc = {fork};
+		t_system_calls sc = {fork, execve};
 		execute_script(script, ep, sc);
 		free_script_node(script);
 
