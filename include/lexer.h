@@ -36,7 +36,8 @@ typedef enum e_token_type
 	OR,					// 12
 	WILDCARD,			// 13
 	EQUAL_SIGN,			// 14
-	INVALID				// 15
+	INVALID,			// 15
+	NONE				/* added by Kay to have a null-value for t_token_type*/
 }	t_token_type;
 
 typedef struct s_line_container

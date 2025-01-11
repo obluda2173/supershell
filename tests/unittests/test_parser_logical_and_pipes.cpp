@@ -219,6 +219,47 @@ INSTANTIATE_TEST_SUITE_P(
                         CMD_NODE,
                         new_test_cmd_node(new_token("ls", WORD), {}, {}), {},
                         {}),
+                })},
+        ParserTestParams{
+            8,
+            PIPE_TEST,
+            {new_token("wc", WORD),
+             new_token("-l", WORD),
+             new_token(">>", REDIRECT_APPEND),
+             new_token("file.txt", WORD),
+             new_token("<", REDIRECT_IN),
+             new_token("var", DOLLAR),
+             new_token("|", PIPE),
+             new_token("<", REDIRECT_IN),
+             new_token("file2.txt", WORD),
+             new_token("|", PIPE),
+             new_token(">", REDIRECT_OUT),
+             new_token("file3.txt", WORD),
+             new_token("ls", WORD),
+             new_token(NULL, END_OF_FILE)},
+            new_test_script_node(
+                PIPE_NODE, {}, {},
+                {
+                    new_test_script_node(
+                        PIPE_NODE, {}, {},
+                        {new_test_script_node(
+                             CMD_NODE,
+                             new_test_cmd_node(
+                                 new_token("wc", WORD),
+                                 {new_argument("-l", LITERAL)},
+                                 {new_redirection(1, APPEND, "file.txt",
+                                                  LITERAL),
+                                  new_redirection(0, IN, "var", ENV_EXP)}),
+                             {}, {}),
+                         new_test_script_node(
+                             CMD_NODE,
+                             new_test_cmd_node(new_token(NULL, NONE), {},
+                                               {new_redirection(0, IN, "file2.txt", LITERAL)}),
+                             {}, {})}),
+                    new_test_script_node(
+                        CMD_NODE,
+                        new_test_cmd_node(new_token("ls", WORD), {}, {new_redirection(1, OUT, "file3.txt", LITERAL)}), {},
+                        {}),
                 })}
         )
     );

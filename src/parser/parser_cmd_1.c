@@ -95,15 +95,22 @@ t_script_node	*create_and_add_argument(t_script_node *sn, t_token *t)
 t_script_node	*fill_cmd_node(t_script_node *sn, t_dllist *tokens)
 {
 	t_script_node	*latest_node;
+	t_token_type cur_type;
 
-	if (!is_redirection_token(*(t_token *)(tokens->content)))
-		tokens = tokens->next;
+	/* if (!is_redirection_token(*(t_token *)(tokens->content))) */
+	/* 	tokens = tokens->next; */
 	while (tokens)
 	{
-		if (((t_token *)tokens->content)->type == PIPE)
+		cur_type = ((t_token *)tokens->content)->type;
+		if (cur_type == PIPE)
 			return (sn);
-		if (((t_token *)tokens->content)->type == END_OF_FILE)
+		if (cur_type == END_OF_FILE)
 			return (sn);
+		if (sn->node_data.cmd_node.cmd_token.type == NONE && (cur_type == BUILTIN || cur_type == WORD)) {
+			sn->node_data.cmd_node.cmd_token = copy_token(*(t_token*)tokens->content);
+			tokens = tokens->next;
+			continue;
+		}
 		if (is_redirection_token(*(t_token *)tokens->content))
 		{
 			latest_node = create_and_add_redirection(tokens, sn);

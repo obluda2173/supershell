@@ -130,7 +130,7 @@ INSTANTIATE_TEST_SUITE_P(
             },
             new_test_script_node(
                 CMD_NODE,
-                {new_test_cmd_node(new_token("<<", HERE_DOC), {},
+                {new_test_cmd_node(new_token(NULL, NONE), {},
                                    {new_redirection(0, HERED,
                                                     "line1\n$PATH\nline2",
                                                     DOUBLE_QUOTE_STR)})},
@@ -145,7 +145,7 @@ INSTANTIATE_TEST_SUITE_P(
             },
             new_test_script_node(
                 CMD_NODE,
-                {new_test_cmd_node(new_token("<<", HERE_DOC), {},
+                {new_test_cmd_node(new_token(NULL, NONE), {},
                                    {new_redirection(0, HERED, "line1\nline2",
                                                     LITERAL)})},
                 {}, {})},
@@ -173,7 +173,7 @@ INSTANTIATE_TEST_SUITE_P(
             },
             new_test_script_node(
                 CMD_NODE,
-                {new_test_cmd_node(new_token("4>>", REDIRECT_APPEND), {},
+                {new_test_cmd_node(new_token(NULL, NONE), {},
                                    {new_redirection(4, APPEND, "PATH",
                                                     ENV_EXP)})},
                 {}, {})},
@@ -187,7 +187,7 @@ INSTANTIATE_TEST_SUITE_P(
             },
             new_test_script_node(
                 CMD_NODE,
-                {new_test_cmd_node(new_token(">>", REDIRECT_APPEND), {},
+                {new_test_cmd_node(new_token(NULL, NONE), {},
                                    {new_redirection(1, APPEND, "PATH",
                                                     ENV_EXP)})},
                 {}, {})},
@@ -201,7 +201,7 @@ INSTANTIATE_TEST_SUITE_P(
             },
             new_test_script_node(
                 CMD_NODE,
-                {new_test_cmd_node(new_token(">>", REDIRECT_APPEND), {},
+                {new_test_cmd_node(new_token(NULL, NONE), {},
                                    {new_redirection(1, APPEND, "test.txt",
                                                     LITERAL)})},
                 {}, {})},
@@ -229,7 +229,7 @@ INSTANTIATE_TEST_SUITE_P(
             },
             new_test_script_node(
                 CMD_NODE,
-                {new_test_cmd_node(new_token("<", REDIRECT_IN), {},
+                {new_test_cmd_node(new_token(NULL, NONE), {},
                                    {new_redirection(0, IN, "test.txt",
                                                     LITERAL)})},
                 {}, {})},
@@ -243,7 +243,7 @@ INSTANTIATE_TEST_SUITE_P(
             },
             new_test_script_node(
                 CMD_NODE,
-                {new_test_cmd_node(new_token(">", REDIRECT_OUT), {},
+                {new_test_cmd_node(new_token(NULL, NONE), {},
                                    {new_redirection(1, OUT, "test.txt",
                                                     LITERAL)})},
                 {}, {})},
@@ -297,7 +297,30 @@ INSTANTIATE_TEST_SUITE_P(
                     new_redirection(10, OUT, "text text", LITERAL),
 
                 })},
-            {}, {})}
+            {}, {})},
+        ParserTestParams{
+            14,
+            CMD_TEST,
+            {
+                new_token("<<", HERE_DOC),
+                new_token("line1\n$PATH\nline2", DOUBLE_QUOTE),
+                new_token("cat", WORD),
+                new_token(">", REDIRECT_OUT),
+                new_token("line3 $PATH line4", DOUBLE_QUOTE),
+                new_token(NULL, END_OF_FILE),
+            },
+            new_test_script_node(
+                CMD_NODE,
+                {new_test_cmd_node(
+                        new_token("cat", WORD), {},
+                        {
+                            new_redirection(0, HERED, "line1\n$PATH\nline2",
+                                            DOUBLE_QUOTE_STR),
+                            new_redirection(1, OUT, "line3 $PATH line4",
+                                            DOUBLE_QUOTE_STR),
+
+                        })},
+                {}, {})}
     )
 );
 

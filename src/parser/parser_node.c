@@ -36,6 +36,11 @@ t_script_node	*parse_pipe(t_dllist *tokens)
 		free_script_node(sn);
 		return (get_error_node("error parsing command after pipe"));
 	}
+	if (sn->downstream->node_type == ERROR_NODE) {
+		t_script_node *err_node = sn->downstream;
+		free(sn);
+		return err_node;
+	}
 	tokens = tokens->prev;
 	if (!tokens)
 	{
@@ -47,10 +52,17 @@ t_script_node	*parse_pipe(t_dllist *tokens)
 	while (tokens->prev && ((t_token *)tokens->content)->type != PIPE)
 		tokens = tokens->prev;
 	sn->upstream = parse(tokens);
-	if (sn->upstream->node_type == ERROR_NODE)
+	if (!sn->upstream)
 	{
 		free_script_node(sn);
 		return (get_error_node("error parsing command before pipe"));
+	}
+
+	if (sn->upstream->node_type == ERROR_NODE) {
+		t_script_node *err_node = sn->upstream;
+		free_script_node(sn->downstream);
+		free(sn);
+		return err_node;
 	}
 	return (sn);
 }
