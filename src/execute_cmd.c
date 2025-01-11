@@ -84,7 +84,7 @@ int execute_command(t_cmd_node cmd_node, char **envp, t_system_calls sc)
 	else if (pid == 0)
 	{
 		arg = list_to_argv(cmd_node.arguments, cmd_path);
-		if (execve(cmd_path, arg, envp) == -1)
+		if (sc.execve(cmd_path, arg, envp) == -1)
 		{
 			perror("execve");
 			free(cmd_path);

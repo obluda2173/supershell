@@ -15,11 +15,11 @@ TEST(ExecutorTestSuite, ErrorTestsExecve) {
 	}));
 
 	// Example usage
-    const char* path = "/bin/nonexistent";
-    char* args[] = {nullptr};
-    char* env[] = {nullptr};
-    int result = sysMock.mockExecve(path, args, env);
-    ASSERT_EQ(result, -1); // Ensure ExecveFailure is enforced
+	const char* path = "/bin/nonexistent";
+	char* args[] = {nullptr};
+	char* env[] = {nullptr};
+	int result = sysMock.mockExecve(path, args, env);
+	ASSERT_EQ(result, -1); // Ensure ExecveFailure is enforced
 
 	t_system_calls sc = {mock_fork, mock_execve};
 	(void)sc;
