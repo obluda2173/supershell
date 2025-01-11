@@ -11,7 +11,9 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "libft.h"
 #include "mock_system_calls.h"
+#include <unistd.h>
 
 int last_exit_status(int new_status, int update)
 {
@@ -38,7 +40,7 @@ static char **list_to_argv(t_list *list, char *cmd_path)
 	if (!argv)
 		return (NULL);
 
-	argv[0] = cmd_path;
+	argv[0] = ft_strdup(cmd_path);
 
 	tmp = list;
 	while (tmp)
@@ -74,13 +76,12 @@ static char **list_to_argv(t_list *list, char *cmd_path)
 }
 
 static int custom_exec(char *cmd_path, char **args, char **envp, t_system_calls sc) {
-	pid_t pid = sc.fork();
 	int status;
+	pid_t pid = sc.fork();
 
 	if (pid < 0)
 	{
 		perror("fork");
-		free(cmd_path);
 		last_exit_status(1, 1);
 		return (1);
 	}
@@ -103,7 +104,7 @@ static int custom_exec(char *cmd_path, char **args, char **envp, t_system_calls 
 		last_exit_status(WEXITSTATUS(status), 1);	
 		return WEXITSTATUS(status);
 	}
-	fprintf(stderr, "Child process did not terminate normally\n");
+	ft_putendl_fd("Child process did not terminate normally", STDOUT_FILENO);
 	last_exit_status(1, 1);
 	return (1);
 }
@@ -122,6 +123,8 @@ int execute_command(t_cmd_node cmd_node, char **envp, t_system_calls sc)
 	}
 	args = list_to_argv(cmd_node.arguments, cmd_path);
 	int res = custom_exec(cmd_path, args, envp, sc);
+
+	free(cmd_path);
 	free_matrix(args);
 
 	return res;
