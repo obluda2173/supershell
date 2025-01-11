@@ -8,6 +8,7 @@ import pytest
     [
         (["ls -a", "ls -l"]),
         (["cat CMakeLists.txt"]),
+        (["echo \"asdf asdf  $PATH asdf  asdf\""])
     ],
 )
 def test_minishell(cmd):

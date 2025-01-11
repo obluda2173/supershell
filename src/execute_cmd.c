@@ -6,12 +6,21 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:36:06 by erian             #+#    #+#             */
-/*   Updated: 2025/01/10 16:09:16 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/11 13:30:43 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 #include "mock_system_calls.h"
+
+int last_exit_status(int new_status, int update)
+{
+    static int status = 0;
+
+    if (update)
+        status = new_status;
+    return status;
+}
 
 static char **list_to_argv(t_list *list, char *cmd_path)
 {
@@ -36,18 +45,21 @@ static char **list_to_argv(t_list *list, char *cmd_path)
 	{
 		t_argument *argument = (t_argument *)tmp->content;
 		char *processed_word = NULL;
-
 		if (argument->type == LITERAL)
 			processed_word = ft_strdup(argument->word);
 		else if (argument->type == DOUBLE_QUOTE_STR)
 			processed_word = handle_double_quotes(argument->word);
-		else if (argument->type == ENV_EXP)
-			processed_word = getenv(argument->word);
+		else if (argument->type == EXIT_STATUS_EXP || argument->type == ENV_EXP)
+		{
+			processed_word = handle_dollar(argument->word);
+		}
+		// else if (argument->type == ENV_EXP)
+		// 	processed_word = getenv(argument->word);
 		// else if (argument->type == WILDCARD_EXP)
 		// 	processed_word = handle_wildcard_expansion(argument->word);
 		// else if (argument->type == EXIT_STATUS_EXP)
 		// 	processed_word = ft_itoa(get_exit_status());
-
+		// printf("my line: %s\n", processed_word);
 		if (!processed_word)
 		{
 			free_matrix(argv);
@@ -68,25 +80,32 @@ static int custom_exec(char *cmd_path, char **args, char **envp, t_system_calls 
 	if (pid < 0)
 	{
 		perror("fork");
-		return 1;
+		free(cmd_path);
+		last_exit_status(1, 1);
+		return (1);
 	}
 	if (pid == 0)
 	{
 		if (sc.execve(cmd_path, args, envp) == -1)
 		{
 			perror("execve");
-			exit(1); // Exit with an error code
+			exit(1);
 		}
 	}
 	if (waitpid(pid, &status, 0) == -1)
 	{
 		perror("waitpid");
+		last_exit_status(1, 1);
 		return 1;
 	}
 	if (WIFEXITED(status))
+	{
+		last_exit_status(WEXITSTATUS(status), 1);	
 		return WEXITSTATUS(status);
+	}
 	fprintf(stderr, "Child process did not terminate normally\n");
-	return 1;
+	last_exit_status(1, 1);
+	return (1);
 }
 
 int execute_command(t_cmd_node cmd_node, char **envp, t_system_calls sc)
@@ -98,6 +117,7 @@ int execute_command(t_cmd_node cmd_node, char **envp, t_system_calls sc)
 	if (!cmd_path)
 	{
 		fprintf(stderr, "Command not found: %s\n", cmd_node.cmd_token.content);
+		last_exit_status(127, 1);
 		return 127;
 	}
 	args = list_to_argv(cmd_node.arguments, cmd_path);
