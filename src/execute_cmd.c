@@ -13,6 +13,7 @@
 #include "executor.h"
 #include "libft.h"
 #include <unistd.h>
+#include <fcntl.h>
 
 int last_exit_status(int new_status, int update)
 {
@@ -74,23 +75,29 @@ static char **list_to_argv(t_list *list, char *cmd_path)
 	return (argv);
 }
 
-static int custom_exec(char *cmd_path, char **args, char **envp) {
+int error_fork() {
+	perror("fork");
+	last_exit_status(1, 1);
+	return (1);
+}
+
+static int custom_exec(char *cmd_path, char **args, char **envp, int fd_in) {
+
 	int status;
 	pid_t pid = fork();
 
 	if (pid < 0)
-	{
-		perror("fork");
-		last_exit_status(1, 1);
-		return (1);
-	}
+		return error_fork();
 	if (pid == 0)
 	{
+		dup2(fd_in, STDIN_FILENO);
 		if (execve(cmd_path, args, envp) == -1)
 		{
 			perror("execve");
 			exit(1);
 		}
+		close(fd_in);
+		return EXIT_SUCCESS;
 	}
 	if (waitpid(pid, &status, 0) == -1)
 	{
@@ -121,7 +128,15 @@ int execute_command(t_cmd_node cmd_node, char **envp)
 		return 127;
 	}
 	args = list_to_argv(cmd_node.arguments, cmd_path);
-	int res = custom_exec(cmd_path, args, envp);
+
+	int fd = 0;
+	if (cmd_node.redirections)
+		fd = open("tests/end_to_end_tests/test_files/input1.txt", O_RDONLY);
+
+	int res = custom_exec(cmd_path, args, envp, fd);
+	if (fd) {
+		close(fd);
+	}
 
 	free(cmd_path);
 	free_matrix(args);
