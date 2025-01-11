@@ -13,7 +13,6 @@
 #include "executor.h"
 #include "parser.h"
 #include "libft.h"
-#include "mock_system_calls.h"
 #include <unistd.h>
 
 // int execute(t_script_node *script) {
@@ -30,7 +29,7 @@
 // 	return 0;
 // }
 
-int execute_script(t_script_node *script_node, char **envp, t_system_calls sc)
+int execute_script(t_script_node *script_node, char **envp)
 {
 	if (!script_node)
 		return (0);
@@ -38,7 +37,7 @@ int execute_script(t_script_node *script_node, char **envp, t_system_calls sc)
 
 	if (script_node->node_type == CMD_NODE)
 	{
-		return execute_command(script_node->node_data.cmd_node, envp, sc);
+		return execute_command(script_node->node_data.cmd_node, envp);
 	}
 	// else if (script_node->node_type == PIPE_NODE)
 	// 	// Add logic for executing pipes
@@ -51,7 +50,7 @@ int execute_script(t_script_node *script_node, char **envp, t_system_calls sc)
 	// }
 
 	if (script_node->downstream)
-		return execute_script(script_node->downstream, envp, sc);
+		return execute_script(script_node->downstream, envp);
 
 	return (0);
 }

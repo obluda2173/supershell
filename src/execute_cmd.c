@@ -12,7 +12,6 @@
 
 #include "executor.h"
 #include "libft.h"
-#include "mock_system_calls.h"
 #include <unistd.h>
 
 int last_exit_status(int new_status, int update)
@@ -75,9 +74,9 @@ static char **list_to_argv(t_list *list, char *cmd_path)
 	return (argv);
 }
 
-static int custom_exec(char *cmd_path, char **args, char **envp, t_system_calls sc) {
+static int custom_exec(char *cmd_path, char **args, char **envp) {
 	int status;
-	pid_t pid = sc.fork();
+	pid_t pid = fork();
 
 	if (pid < 0)
 	{
@@ -87,7 +86,7 @@ static int custom_exec(char *cmd_path, char **args, char **envp, t_system_calls 
 	}
 	if (pid == 0)
 	{
-		if (sc.execve(cmd_path, args, envp) == -1)
+		if (execve(cmd_path, args, envp) == -1)
 		{
 			perror("execve");
 			exit(1);
@@ -109,7 +108,7 @@ static int custom_exec(char *cmd_path, char **args, char **envp, t_system_calls 
 	return (1);
 }
 
-int execute_command(t_cmd_node cmd_node, char **envp, t_system_calls sc)
+int execute_command(t_cmd_node cmd_node, char **envp)
 {
 	char *cmd_path;
 	char **args;
@@ -122,7 +121,7 @@ int execute_command(t_cmd_node cmd_node, char **envp, t_system_calls sc)
 		return 127;
 	}
 	args = list_to_argv(cmd_node.arguments, cmd_path);
-	int res = custom_exec(cmd_path, args, envp, sc);
+	int res = custom_exec(cmd_path, args, envp);
 
 	free(cmd_path);
 	free_matrix(args);

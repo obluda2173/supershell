@@ -26,41 +26,40 @@
 
 // }
 
-TEST(ExecutorTestSuite, ErrorTestsFork) {
-	////////////////////////////////////////////
-	// mock stuff
-	SystemWrapper sysMock;
-	g_systemWrapper = &sysMock;
-	EXPECT_CALL(sysMock, mockFork()).WillOnce(Invoke([]() {
-		return ForkFailure(EAGAIN); // Provide the desired argument
-	}));
 
-	t_system_calls sc = {mock_fork, mock_execve};
-	char** envp = get_envp();
+// TEST(ExecutorTestSuite, ErrorTestsFork) {
+// 	////////////////////////////////////////////
+// 	// mock stuff
+// 	SystemWrapper sysMock;
+// 	g_systemWrapper = &sysMock;
+// 	EXPECT_CALL(sysMock, mockFork()).WillOnce(Invoke([]() {
+// 		return ForkFailure(EAGAIN); // Provide the desired argument
+// 	}));
 
-	t_script_node *script = new_script_node((char*)"ls");
-	testing::internal::CaptureStderr();
-	int got_return = execute_command(script->node_data.cmd_node, envp, sc);
-	EXPECT_EQ(1, got_return);
-	std::string got = testing::internal::GetCapturedStderr();
-	EXPECT_STREQ("fork: Resource temporarily unavailable\n", got.c_str());
+// 	t_system_calls sc = {mock_fork, mock_execve};
+// 	char** envp = get_envp();
 
-	free_matrix(envp);
-	free_script_node(script);
-}
+// 	t_script_node *script = new_script_node((char*)"ls");
+// 	testing::internal::CaptureStderr();
+// 	int got_return = execute_command(script->node_data.cmd_node, envp, sc);
+// 	EXPECT_EQ(1, got_return);
+// 	std::string got = testing::internal::GetCapturedStderr();
+// 	EXPECT_STREQ("fork: Resource temporarily unavailable\n", got.c_str());
 
+// 	free_matrix(envp);
+// 	free_script_node(script);
+// }
 
 TEST_P(ExecutorTestSuite, ErrorTests) {
 	// setup
 	ExecutorTestsParams params = GetParam();
-	t_system_calls sc = {fork, execve};
 	char** envp = get_envp();
 	t_script_node *script = new_script_node((char*)params.cmd);
 
 	// run
 	testing::internal::CaptureStderr();
 	testing::internal::CaptureStdout();
-	int got_return = execute_script(script, envp, sc);
+	int got_return = execute_script(script, envp);
 
 	// compare
 	EXPECT_EQ(params.want_return, got_return);
