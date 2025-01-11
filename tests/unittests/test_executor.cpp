@@ -10,20 +10,23 @@ TEST(ExecutorTestSuite, ErrorTestsExecve) {
 	g_systemWrapper = &sysMock;
 	EXPECT_CALL(sysMock, mockExecve(_, _, _))
 		.WillOnce(
-			Invoke([](const char* pathname, char* const argv[], char* const envp[]) {
-				return ExecveFailure(pathname, argv, envp); // Provide the desired argument
+			Invoke([]() {
+				return ExecveFailure(EAGAIN); // Provide the desired argument
 	}));
 
-	// Example usage
-    const char* path = "/bin/nonexistent";
-    char* args[] = {nullptr};
-    char* env[] = {nullptr};
-    int result = sysMock.mockExecve(path, args, env);
-    ASSERT_EQ(result, -1); // Ensure ExecveFailure is enforced
+	t_system_calls sc = {fork, mock_execve};
+	char** envp = get_envp();
 
-	t_system_calls sc = {mock_fork, mock_execve};
-	(void)sc;
+	t_script_node *script = new_script_node((char*)"ls");
+	testing::internal::CaptureStderr();
+	int got_return = execute_command(script->node_data.cmd_node, envp, sc);
 
+	EXPECT_EQ(1, got_return);
+	std::string got = testing::internal::GetCapturedStderr();
+	EXPECT_STREQ("execve: Resource temporarily unavailable\n", got.c_str());
+
+	free_matrix(envp);
+	free_script_node(script);
 }
 
 TEST(ExecutorTestSuite, ErrorTestsFork) {
