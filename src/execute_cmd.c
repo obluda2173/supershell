@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:36:06 by erian             #+#    #+#             */
-/*   Updated: 2025/01/11 17:26:44 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/12 11:01:33 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,6 @@
 #include "libft.h"
 #include <unistd.h>
 #include <unistd.h>
-
-int last_exit_status(int new_status, int update)
-{
-    static int status = 0;
-
-    if (update)
-        status = new_status;
-    return status;
-}
 
 static char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
 {
@@ -41,7 +32,7 @@ static char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
 	if (!argv)
 		return (NULL);
 
-	argv[0] = ft_strdup(ft_strdup(cmd_path));
+	argv[0] = ft_strdup(cmd_path);
 
 	tmp = list;
 	while (tmp)
@@ -65,7 +56,7 @@ static char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
 		// printf("my line: %s\n", processed_word);
 		if (!processed_word)
 		{
-			// free_matrix(argv);
+			free_matrix(argv);
 			return (NULL);
 		}
 
@@ -76,9 +67,9 @@ static char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
 	return (argv);
 }
 
-static int custom_exec(char *cmd_path, char **args, char **envp, t_system_calls sc, t_data *data)
+static int custom_exec(char *cmd_path, char **args, char **envp, t_data *data)
 {
-	pid_t pid = sc.fork();
+	pid_t pid = fork();
 
 	if (pid < 0)
 	{
@@ -111,7 +102,7 @@ static int custom_exec(char *cmd_path, char **args, char **envp, t_system_calls 
 	return (1);
 }
 
-int execute_command(t_cmd_node cmd_node, char **envp, t_system_calls sc, t_data *data)
+int execute_command(t_cmd_node cmd_node, char **envp, t_data *data)
 {
 	char *cmd_path;
 	char **args;
@@ -124,7 +115,7 @@ int execute_command(t_cmd_node cmd_node, char **envp, t_system_calls sc, t_data 
 		return 127;
 	}
 	args = list_to_argv(cmd_node.arguments, cmd_path, data);
-	int res = custom_exec(cmd_path, args, envp, sc, data);
+	int res = custom_exec(cmd_path, args, envp, data);
 	free_matrix(args);
 	free(cmd_path);
 

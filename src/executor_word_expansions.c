@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:57:45 by erian             #+#    #+#             */
-/*   Updated: 2025/01/11 17:19:36 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/12 11:35:02 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 char *handle_env_expansion(const char *var_name)
 {
     char *value = getenv(var_name);
-    if (!value)
-        return (ft_strdup(""));
-    return (ft_strdup(value));
+    if (value)
+        return (ft_strdup(value));
+    return (ft_strdup(""));
 }
 
 static char *expand_variable(const char *str, size_t *i)
@@ -28,7 +28,9 @@ static char *expand_variable(const char *str, size_t *i)
     char *var_name = ft_strndup(&str[start], *i - start);
     char *var_value = handle_env_expansion(var_name);
     free(var_name);
-    return var_value ? var_value : ft_strdup("");
+    if (var_value)
+        return (var_value);
+    return (ft_strdup(""));
 }
 
 static char *append_to_result(char *result, size_t *result_len, const char *addition, size_t addition_len)
@@ -60,13 +62,11 @@ char *handle_dollar(const char *word, t_data *data)
     if (!result)
         return NULL;
 
-    result[0] = '\0'; // Initialize as empty string
-
+    result[0] = '\0';
     while (i < len)
     {
         if (word[i] == '?')
         {
-            // printf("my: %i\n", data->exit_status); // Debug print
             char *exit_status_str = ft_itoa(data->exit_status);
             size_t exit_status_len = ft_strlen(exit_status_str);
             result = append_to_result(result, &result_len, exit_status_str, exit_status_len);
@@ -106,24 +106,34 @@ char *handle_double_quotes(const char *word, t_data *data)
     if (!result)
         return NULL;
 
-    result[0] = '\0'; // Initialize as empty string
-            // printf("my: %i\n", data->exit_status); // Debug print
+    result[0] = '\0';
+    
     while (i < len)
     {
         if (word[i] == '$')
         {
             i++;
-            char *dollar_expansion = handle_dollar(&word[i], data);
-            size_t expansion_len = ft_strlen(dollar_expansion);
-            result = append_to_result(result, &result_len, dollar_expansion, expansion_len);
-            free(dollar_expansion);
-
-            if (!result)
-                return NULL;
-
-            // Adjust `i` to skip over the variable being expanded
-            while (word[i] && (ft_isalnum(word[i]) || word[i] == '_'))
+            if (word[i] == '?')
+            {
+                char *exit_status_str = ft_itoa(data->exit_status);
+                size_t exit_status_len = ft_strlen(exit_status_str);
+                result = append_to_result(result, &result_len, exit_status_str, exit_status_len);
+                free(exit_status_str);
+                if (!result)
+                    return NULL;
                 i++;
+            }
+            else
+            {
+                char *dollar_expansion = handle_dollar(&word[i], data);
+                size_t expansion_len = ft_strlen(dollar_expansion);
+                result = append_to_result(result, &result_len, dollar_expansion, expansion_len);
+                free(dollar_expansion);
+                if (!result)
+                    return NULL;
+                while (word[i] && (ft_isalnum(word[i]) || word[i] == '_'))
+                    i++;
+            }
         }
         else
         {
@@ -133,6 +143,5 @@ char *handle_double_quotes(const char *word, t_data *data)
                 return NULL;
         }
     }
-    // printf("\nresult: %s\n\n", result);
     return result;
 }
