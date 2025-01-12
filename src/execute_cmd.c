@@ -6,15 +6,11 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:36:06 by erian             #+#    #+#             */
-/*   Updated: 2025/01/12 11:01:33 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/12 12:57:32 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "libft.h"
-#include "libft.h"
-#include <unistd.h>
-#include <unistd.h>
 
 static char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
 {
@@ -44,16 +40,12 @@ static char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
 		else if (argument->type == DOUBLE_QUOTE_STR)
 			processed_word = handle_double_quotes(argument->word, data);
 		else if (argument->type == EXIT_STATUS_EXP || argument->type == ENV_EXP)
-		{
 			processed_word = handle_dollar(argument->word, data);
+		else if (argument->type == WILDCARD_EXP)
+		{
+			processed_word = handle_wildcard(argument->word);
+			printf("line: %s\n", processed_word);
 		}
-		// else if (argument->type == ENV_EXP)
-		// 	processed_word = getenv(argument->word);
-		// else if (argument->type == WILDCARD_EXP)
-		// 	processed_word = handle_wildcard_expansion(argument->word);
-		// else if (argument->type == EXIT_STATUS_EXP)
-		// 	processed_word = ft_itoa(get_exit_status());
-		// printf("my line: %s\n", processed_word);
 		if (!processed_word)
 		{
 			free_matrix(argv);
