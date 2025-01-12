@@ -36,7 +36,8 @@ int execute_script(t_script_node *script_node, char **envp, t_data *data)
 
 	if (script_node->node_type == CMD_NODE)
 	{
-		return execute_command(script_node->node_data.cmd_node, envp, data);
+		data->exit_status = execute_command(script_node->node_data.cmd_node, envp, data);
+		return data->exit_status;
 	}
 	// else if (script_node->node_type == PIPE_NODE)
 	// 	// Add logic for executing pipes

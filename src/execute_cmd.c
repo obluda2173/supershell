@@ -62,12 +62,12 @@ static char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
 
 int error_fork() {
 	perror("fork");
-	return (1);
+	return EXIT_FAILURE;
 }
 
-static int custom_exec(char *cmd_path, char **args, char **envp, int fd_in, t_data *data) {
-
+static int custom_exec(char *cmd_path, char **args, char **envp, int fd_in) {
 	pid_t pid = fork();
+	int status;
 
 	if (pid < 0)
 		return error_fork();
@@ -77,51 +77,45 @@ static int custom_exec(char *cmd_path, char **args, char **envp, int fd_in, t_da
 		if (execve(cmd_path, args, envp) == -1)
 		{
 			perror("execve");
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
 		close(fd_in);
 		return EXIT_SUCCESS;
 	}
-	if (waitpid(pid, &data->exit_status, 0) == -1)
+	if (waitpid(pid, &status, 0) == -1)
 	{
 		perror("waitpid");
-		data->exit_status = 1;
 		return 1;
 	}
-	if (WIFEXITED(data->exit_status))
-	{
-		data->exit_status = WEXITSTATUS(data->exit_status);
-		return (data->exit_status);
-	}
+	if (WIFEXITED(status))
+		return  WEXITSTATUS(status);
 	fprintf(stderr, "Child process did not terminate normally\n");
-	data->exit_status = 1;
-	return (1);
+	return EXIT_FAILURE;
 }
 
 int execute_command(t_cmd_node cmd_node, char **envp, t_data *data)
 {
 	char *cmd_path;
-	char **args;
+	char **argv;
 
 	cmd_path = find_path(cmd_node.cmd_token.content, envp);
 	if (!cmd_path)
 	{
 		fprintf(stderr, "Command not found: %s\n", cmd_node.cmd_token.content);
-		data->exit_status = 127;
 		return 127;
 	}
-	args = list_to_argv(cmd_node.arguments, cmd_path, data);
+	argv = list_to_argv(cmd_node.arguments, cmd_path, data);
 
 	int fd = 0;
 	if (cmd_node.redirections)
 		fd = open("tests/end_to_end_tests/test_files/input1.txt", O_RDONLY);
 
-	int res = custom_exec(cmd_path, args, envp, fd, data);
+	int res = custom_exec(cmd_path, argv, envp, fd);
 	if (fd) {
 		close(fd);
 	}
 
-	free_matrix(args);
+	free_matrix(argv);
 	free(cmd_path);
 
 	return res;
