@@ -54,12 +54,13 @@ TEST_P(ExecutorTestSuite, ErrorTests) {
 	// setup
 	ExecutorTestsParams params = GetParam();
 	char** envp = get_envp();
+	t_data data = {NULL, NULL, 0, false};
 	t_script_node *script = new_script_node((char*)params.cmd);
 
 	// run
 	testing::internal::CaptureStderr();
 	testing::internal::CaptureStdout();
-	int got_return = execute_script(script, envp);
+	int got_return = execute_script(script, envp, &data);
 
 	// compare
 	EXPECT_EQ(params.want_return, got_return);
