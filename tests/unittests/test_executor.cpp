@@ -50,6 +50,11 @@
 // 	free_script_node(script);
 // }
 
+// TEST(ExecutorTestSuite, MeetingLine) {
+// 	char** envp = get_envp();
+// 	char* res = meeting_line(envp);
+// }
+
 TEST_P(ExecutorTestSuite, ErrorTests) {
 	// setup
 	ExecutorTestsParams params = GetParam();
