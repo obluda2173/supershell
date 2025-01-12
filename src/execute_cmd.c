@@ -6,25 +6,14 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:36:06 by erian             #+#    #+#             */
-/*   Updated: 2025/01/11 13:30:43 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/12 12:57:32 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "libft.h"
-#include <unistd.h>
 #include <fcntl.h>
 
-int last_exit_status(int new_status, int update)
-{
-    static int status = 0;
-
-    if (update)
-        status = new_status;
-    return status;
-}
-
-static char **list_to_argv(t_list *list, char *cmd_path)
+static char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
 {
 	char **argv;
 	size_t count = 0;
@@ -50,18 +39,14 @@ static char **list_to_argv(t_list *list, char *cmd_path)
 		if (argument->type == LITERAL)
 			processed_word = ft_strdup(argument->word);
 		else if (argument->type == DOUBLE_QUOTE_STR)
-			processed_word = handle_double_quotes(argument->word);
+			processed_word = handle_double_quotes(argument->word, data);
 		else if (argument->type == EXIT_STATUS_EXP || argument->type == ENV_EXP)
+			processed_word = handle_dollar(argument->word, data);
+		else if (argument->type == WILDCARD_EXP)
 		{
-			processed_word = handle_dollar(argument->word);
+			processed_word = handle_wildcard(argument->word);
+			printf("line: %s\n", processed_word);
 		}
-		// else if (argument->type == ENV_EXP)
-		// 	processed_word = getenv(argument->word);
-		// else if (argument->type == WILDCARD_EXP)
-		// 	processed_word = handle_wildcard_expansion(argument->word);
-		// else if (argument->type == EXIT_STATUS_EXP)
-		// 	processed_word = ft_itoa(get_exit_status());
-		// printf("my line: %s\n", processed_word);
 		if (!processed_word)
 		{
 			free_matrix(argv);
@@ -77,13 +62,11 @@ static char **list_to_argv(t_list *list, char *cmd_path)
 
 int error_fork() {
 	perror("fork");
-	last_exit_status(1, 1);
 	return (1);
 }
 
-static int custom_exec(char *cmd_path, char **args, char **envp, int fd_in) {
+static int custom_exec(char *cmd_path, char **args, char **envp, int fd_in, t_data *data) {
 
-	int status;
 	pid_t pid = fork();
 
 	if (pid < 0)
@@ -99,23 +82,23 @@ static int custom_exec(char *cmd_path, char **args, char **envp, int fd_in) {
 		close(fd_in);
 		return EXIT_SUCCESS;
 	}
-	if (waitpid(pid, &status, 0) == -1)
+	if (waitpid(pid, &data->exit_status, 0) == -1)
 	{
 		perror("waitpid");
-		last_exit_status(1, 1);
+		data->exit_status = 1;
 		return 1;
 	}
-	if (WIFEXITED(status))
+	if (WIFEXITED(data->exit_status))
 	{
-		last_exit_status(WEXITSTATUS(status), 1);	
-		return WEXITSTATUS(status);
+		data->exit_status = WEXITSTATUS(data->exit_status);
+		return (data->exit_status);
 	}
-	ft_putendl_fd("Child process did not terminate normally", STDOUT_FILENO);
-	last_exit_status(1, 1);
+	fprintf(stderr, "Child process did not terminate normally\n");
+	data->exit_status = 1;
 	return (1);
 }
 
-int execute_command(t_cmd_node cmd_node, char **envp)
+int execute_command(t_cmd_node cmd_node, char **envp, t_data *data)
 {
 	char *cmd_path;
 	char **args;
@@ -124,22 +107,22 @@ int execute_command(t_cmd_node cmd_node, char **envp)
 	if (!cmd_path)
 	{
 		fprintf(stderr, "Command not found: %s\n", cmd_node.cmd_token.content);
-		last_exit_status(127, 1);
+		data->exit_status = 127;
 		return 127;
 	}
-	args = list_to_argv(cmd_node.arguments, cmd_path);
+	args = list_to_argv(cmd_node.arguments, cmd_path, data);
 
 	int fd = 0;
 	if (cmd_node.redirections)
 		fd = open("tests/end_to_end_tests/test_files/input1.txt", O_RDONLY);
 
-	int res = custom_exec(cmd_path, args, envp, fd);
+	int res = custom_exec(cmd_path, args, envp, fd, data);
 	if (fd) {
 		close(fd);
 	}
 
-	free(cmd_path);
 	free_matrix(args);
+	free(cmd_path);
 
 	return res;
 }

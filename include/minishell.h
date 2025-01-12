@@ -20,6 +20,7 @@ typedef struct	s_data
 {
 	t_list			*ep;
 	char			*line;
+	int				exit_status;
 	bool			not_exit;
 }				t_data;
 
