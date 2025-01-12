@@ -14,7 +14,6 @@ t_script_node *new_script_node(char *cmd) {
 char **get_envp() {
 	char** envp = (char**)malloc(sizeof(char*) * 2);
 	envp[0] = ft_strdup((char*)("PATH=" + std::string(std::getenv("PATH"))).c_str());
-	envp[1] = ft_strdup("LOGNAME=some_name");
-	envp[2] = NULL;
+	envp[1] = NULL;
 	return envp;
 }
