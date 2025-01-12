@@ -99,6 +99,7 @@ int	main(int ac, char **av, char **ep)
 	//main loop
 	while (data->not_exit)
 	{
+
 		read = meeting_line(&data);
 		data->line = readline(read);
 		free(read);
