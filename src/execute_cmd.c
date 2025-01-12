@@ -65,7 +65,7 @@ int error_fork() {
 	return EXIT_FAILURE;
 }
 
-static int custom_exec(char *cmd_path, char **args, char **envp, int fd_in) {
+static int custom_exec(char *cmd_path, char **args, char **ep, int fd_in) {
 	pid_t pid = fork();
 	int status;
 
@@ -74,7 +74,7 @@ static int custom_exec(char *cmd_path, char **args, char **envp, int fd_in) {
 	if (pid == 0)
 	{
 		dup2(fd_in, STDIN_FILENO);
-		if (execve(cmd_path, args, envp) == -1)
+		if (execve(cmd_path, args, ep) == -1)
 		{
 			perror("execve");
 			exit(EXIT_FAILURE);
@@ -93,12 +93,12 @@ static int custom_exec(char *cmd_path, char **args, char **envp, int fd_in) {
 	return EXIT_FAILURE;
 }
 
-int execute_command(t_cmd_node cmd_node, char **envp, t_data *data)
+int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 {
 	char *cmd_path;
 	char **argv;
 
-	cmd_path = find_path(cmd_node.cmd_token.content, envp);
+	cmd_path = find_path(cmd_node.cmd_token.content, ep);
 	if (!cmd_path)
 	{
 		fprintf(stderr, "Command not found: %s\n", cmd_node.cmd_token.content);
@@ -110,7 +110,7 @@ int execute_command(t_cmd_node cmd_node, char **envp, t_data *data)
 	if (cmd_node.redirections)
 		fd = open("tests/end_to_end_tests/test_files/input1.txt", O_RDONLY);
 
-	int res = custom_exec(cmd_path, argv, envp, fd);
+	int res = custom_exec(cmd_path, argv, ep, fd);
 	if (fd) {
 		close(fd);
 	}
