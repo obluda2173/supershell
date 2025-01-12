@@ -11,7 +11,9 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "libft.h"
 #include <fcntl.h>
+#include <unistd.h>
 
 static char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
 {
@@ -98,6 +100,8 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 	char *cmd_path;
 	char **argv;
 
+	if (cmd_node.cmd_token.type == NONE)
+		return 0;
 	cmd_path = find_path(cmd_node.cmd_token.content, ep);
 	if (!cmd_path)
 	{
@@ -107,8 +111,17 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 	argv = list_to_argv(cmd_node.arguments, cmd_path, data);
 
 	int fd = 0;
-	if (cmd_node.redirections)
-		fd = open("tests/end_to_end_tests/test_files/input1.txt", O_RDONLY);
+	if (cmd_node.redirections) {
+		t_list *head = cmd_node.redirections;
+		fd = open(((t_redirection*)head->content)->word, O_RDONLY);
+		if (fd < 0) {
+			perror(((t_redirection*)head->content)->word);
+			close(fd);
+			free_matrix(argv);
+			free(cmd_path);
+			return 1;
+		}
+	}
 
 	int res = custom_exec(cmd_path, argv, ep, fd);
 	if (fd) {
