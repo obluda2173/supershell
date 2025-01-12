@@ -7,7 +7,10 @@ import time
     "cmd, err_msg",
     [
         (["wc < asdf"], "No such file or directory"),
-        (["wc > asdf"], "No such file or directory"),
+        (
+            ["wc < tests/end_to_end_tests/test_files/input1.txt > error/error"],
+            "No such file or directory",
+        ),
     ],
 )
 def test_redirection_errors(cmd, err_msg):

@@ -12,6 +12,7 @@
 
 #include "executor.h"
 #include "libft.h"
+#include "parser.h"
 #include <fcntl.h>
 #include <unistd.h>
 
@@ -111,16 +112,30 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 	argv = list_to_argv(cmd_node.arguments, cmd_path, data);
 
 	int fd = 0;
-	if (cmd_node.redirections) {
-		t_list *head = cmd_node.redirections;
-		fd = open(((t_redirection*)head->content)->word, O_RDONLY);
-		if (fd < 0) {
-			perror(((t_redirection*)head->content)->word);
-			close(fd);
-			free_matrix(argv);
-			free(cmd_path);
-			return 1;
+	t_list *head = cmd_node.redirections;
+	while (head) {
+		t_redirection r = *((t_redirection*)head->content);
+		if (r.type == IN) {
+			fd = open(r.word, O_RDONLY);
+			if (fd < 0) {
+				perror(r.word);
+				close(fd);
+				free_matrix(argv);
+				free(cmd_path);
+				return 1;
+			}
 		}
+		if (r.type == OUT) {
+			fd = open(r.word, O_CREAT|O_WRONLY|O_TRUNC);
+			if (fd < 0) {
+				perror(r.word);
+				close(fd);
+				free_matrix(argv);
+				free(cmd_path);
+				return 1;
+			}
+		}
+		head = head->next;
 	}
 
 	int res = custom_exec(cmd_path, argv, ep, fd);
