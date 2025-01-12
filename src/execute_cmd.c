@@ -68,7 +68,7 @@ int error_fork() {
 	return EXIT_FAILURE;
 }
 
-static int custom_exec(char *cmd_path, char **args, char **ep, int fd_in) {
+static int custom_exec(char *cmd_path, char **args, char **ep, int fd_in, int fd_out) {
 	pid_t pid = fork();
 	int status;
 
@@ -77,12 +77,14 @@ static int custom_exec(char *cmd_path, char **args, char **ep, int fd_in) {
 	if (pid == 0)
 	{
 		dup2(fd_in, STDIN_FILENO);
+		dup2(fd_out, STDOUT_FILENO);
 		if (execve(cmd_path, args, ep) == -1)
 		{
 			perror("execve");
 			exit(EXIT_FAILURE);
 		}
 		close(fd_in);
+		close(fd_out);
 		return EXIT_SUCCESS;
 	}
 	if (waitpid(pid, &status, 0) == -1)
@@ -111,25 +113,26 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 	}
 	argv = list_to_argv(cmd_node.arguments, cmd_path, data);
 
-	int fd = 0;
+	int fd_in = STDIN_FILENO;
+	int fd_out = STDOUT_FILENO;
 	t_list *head = cmd_node.redirections;
 	while (head) {
 		t_redirection r = *((t_redirection*)head->content);
 		if (r.type == IN) {
-			fd = open(r.word, O_RDONLY);
-			if (fd < 0) {
+			fd_in = open(r.word, O_RDONLY);
+			if (fd_in < 0) {
 				perror(r.word);
-				close(fd);
+				close(fd_in);
 				free_matrix(argv);
 				free(cmd_path);
 				return 1;
 			}
 		}
 		if (r.type == OUT) {
-			fd = open(r.word, O_CREAT|O_WRONLY|O_TRUNC);
-			if (fd < 0) {
+			fd_out = open(r.word, O_CREAT|O_WRONLY);
+			if (fd_out < 0) {
 				perror(r.word);
-				close(fd);
+				close(fd_out);
 				free_matrix(argv);
 				free(cmd_path);
 				return 1;
@@ -138,10 +141,11 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 		head = head->next;
 	}
 
-	int res = custom_exec(cmd_path, argv, ep, fd);
-	if (fd) {
-		close(fd);
-	}
+	int res = custom_exec(cmd_path, argv, ep, fd_in, fd_out);
+	if (fd_in != STDIN_FILENO)
+		close(fd_in);
+	if (fd_out != STDOUT_FILENO)
+		close(fd_out);
 
 	free_matrix(argv);
 	free(cmd_path);

@@ -69,7 +69,7 @@ unittest:
 
 pytest: $(NAME)
 	@make FSANITIZE=-fsanitize=address && \
-	python3 -m pytest
+	python3 -m pytest 
 
 # **************************************************************************** #
 # PHONY                                                                        #
