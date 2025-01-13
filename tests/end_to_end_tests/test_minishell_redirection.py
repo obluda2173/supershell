@@ -1,5 +1,6 @@
 import pytest
 import os
+import time
 from conftest import start_process, get_prompt_minishell
 
 
@@ -19,21 +20,34 @@ def test_out_redirections(cmd):
     assert bash.stdin is not None
 
     cmds = "\n".join(cmd + ["echo $?\n"])
-    stdout_bash, _ = bash.communicate(cmds.encode())
+    stdout_bash, stderr_bash = bash.communicate(cmds.encode())
     stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
 
-    with open("tests/end_to_end_tests/test_files/non_existent.txt", "r") as f:
+    tmp_path = "tests/end_to_end_tests/test_files/non_existent.txt"
+    assert os.path.isfile(tmp_path), f"file does not exist {tmp_path}"
+    while not os.access(tmp_path, os.R_OK):
+        time.sleep(0.1)
+    with open(tmp_path, "r") as f:
         file_bash = f.readlines()
-    os.remove("tests/end_to_end_tests/test_files/non_existent.txt")
+
+    os.remove(tmp_path)
+    while os.path.isfile(tmp_path):
+        time.sleep(0.1)
 
     prompt = get_prompt_minishell()
     minishell = start_process("./minishell")
     assert minishell.stdin is not None
     stdout_minishell, stderr_minishell = minishell.communicate(cmds.encode())
 
+    assert os.path.isfile(tmp_path), f"file does not exist {tmp_path}"
+    while not os.access(tmp_path, os.R_OK):
+        time.sleep(0.1)
     with open("tests/end_to_end_tests/test_files/non_existent.txt", "r") as f:
         file_minishell = f.readlines()
     os.remove("tests/end_to_end_tests/test_files/non_existent.txt")
+    while os.path.isfile(tmp_path):
+        time.sleep(0.1)
+
     stdout_minishell = [
         line
         for line in stdout_minishell.decode().split("\n")

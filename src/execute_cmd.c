@@ -121,7 +121,7 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 		if (r.type == IN) {
 			fd_in = open(r.word, O_RDONLY);
 			if (fd_in < 0) {
-				perror(r.word);
+				perror("open");
 				close(fd_in);
 				free_matrix(argv);
 				free(cmd_path);
@@ -129,9 +129,9 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 			}
 		}
 		if (r.type == OUT) {
-			fd_out = open(r.word, O_CREAT|O_WRONLY);
+			fd_out = open(r.word, O_CREAT|O_WRONLY|O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 			if (fd_out < 0) {
-				perror(r.word);
+				perror("open");
 				close(fd_out);
 				free_matrix(argv);
 				free(cmd_path);
@@ -146,6 +146,7 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 		close(fd_in);
 	if (fd_out != STDOUT_FILENO)
 		close(fd_out);
+
 
 	free_matrix(argv);
 	free(cmd_path);
