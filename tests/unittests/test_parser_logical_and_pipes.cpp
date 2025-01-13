@@ -27,6 +27,50 @@ void test_pipe_cases(t_test_script_node want, t_script_node *sn, t_dllist* token
 }
 
 INSTANTIATE_TEST_SUITE_P(
+    ParserTestsPipesWithParanthesis, ParserTestSuite,
+    testing::Values(ParserTestParams{
+        0,
+        PIPE_TEST,
+        {
+            new_token("(", LPAREN),
+            new_token("echo", BUILTIN),
+            new_token("hello", WORD),
+            new_token(")", RPAREN),
+            new_token("|", PIPE),
+            new_token("(", LPAREN),
+            new_token("echo", BUILTIN),
+            new_token("world", WORD),
+            new_token(")", RPAREN),
+            new_token("|", PIPE),
+            new_token("(", LPAREN),
+            new_token("echo", BUILTIN),
+            new_token("welt", WORD),
+            new_token(")", RPAREN),
+            new_token(NULL, END_OF_FILE),
+        },
+        new_test_script_node(PIPE_NODE, {}, {}, {
+         new_test_script_node(
+            PIPE_NODE, {}, {},
+            {
+                new_test_script_node(
+                    CMD_NODE,
+                    new_test_cmd_node(new_token("echo", BUILTIN),
+                                      {new_argument("hello", LITERAL)}, {}),
+                    {}, {}),
+                new_test_script_node(
+                    CMD_NODE,
+                    new_test_cmd_node(new_token("echo", BUILTIN),
+                                      {new_argument("world", LITERAL)}, {}),
+                    {}, {})
+            }),
+         new_test_script_node(
+                    CMD_NODE,
+                    new_test_cmd_node(new_token("echo", BUILTIN),
+                                      {new_argument("welt", LITERAL)}, {}),
+                    {}, {})})}
+        ));
+
+INSTANTIATE_TEST_SUITE_P(
     ParserTestsPipes, ParserTestSuite,
     testing::Values(
         ParserTestParams{

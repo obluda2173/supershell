@@ -13,6 +13,7 @@
 #include "lexer.h"
 #include "libft.h"
 #include "parser.h"
+#include <unistd.h>
 
 t_script_node	*parse_cmd(t_dllist *tokens)
 {
@@ -21,7 +22,19 @@ t_script_node	*parse_cmd(t_dllist *tokens)
 	if ((*(t_token *)tokens->content).type == END_OF_FILE)
 		return (NULL);
 	if ((*(t_token *)tokens->content).type == LPAREN)
-		return get_error_node("parsing error near )");
+	{
+		t_dllist* head = tokens;
+		head = head->next;
+		if ((*(t_token *)head->content).type == RPAREN)
+			return get_error_node("parsing error near )");
+
+		while ((*(t_token *)head->content).type != RPAREN)
+			head = head->next;
+		head = head->prev;
+		ft_dllstclear(&head->next, free_token);
+		ft_dllstadd_back(&tokens, ft_dllstnew(create_token(NULL, END_OF_FILE)));
+		return parse_cmd(tokens->next);
+	}
 	sn = get_cmd_node(*(t_token *)tokens->content);
 	if (!sn)
 		return (NULL);

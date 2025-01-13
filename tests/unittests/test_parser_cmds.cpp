@@ -488,18 +488,18 @@ INSTANTIATE_TEST_SUITE_P(
                              {}, {})}
     ));
 
-// INSTANTIATE_TEST_SUITE_P(
-//     ParserTestsCmdsWithParanthesis, ParserTestSuite,
-//     testing::Values(
-//         ParserTestParams{11, CMD_TEST,
-//                          {
-//                          new_token("(", LPAREN),
-//                          new_token("echo", BUILTIN),
-//                          new_token("hello", WORD),
-//                          new_token(")", RPAREN),
-//                          new_token(NULL, END_OF_FILE),
-//                      },
-//                          new_test_script_node(
-//                              CMD_NODE,
-//                              new_test_cmd_node(new_token("echo", BUILTIN), {new_argument("hello", LITERAL),}, {}), {}, {})}
-//     ));
+INSTANTIATE_TEST_SUITE_P(
+    ParserTestsCmdsWithParanthesis, ParserTestSuite,
+    testing::Values(
+        ParserTestParams{11, CMD_TEST,
+                         {
+                         new_token("(", LPAREN),
+                         new_token("echo", BUILTIN),
+                         new_token("hello", WORD),
+                         new_token(")", RPAREN),
+                         new_token(NULL, END_OF_FILE),
+                     },
+                         new_test_script_node(
+                             CMD_NODE,
+                             new_test_cmd_node(new_token("echo", BUILTIN), {new_argument("hello", LITERAL),}, {}), {}, {})}
+    ));
