@@ -3,6 +3,8 @@ import subprocess
 import pytest
 import time
 
+from tests.end_to_end_tests.conftest import get_prompt_minishell, start_process
+
 
 @pytest.mark.parametrize(
     "cmd",
@@ -26,26 +28,9 @@ import time
     ],
 )
 def test_minishell(cmd):
-
-    minishell = subprocess.Popen(
-        ["./minishell"],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    prompt, _ = minishell.communicate()
-    prompt = prompt.decode()
-
-    bash = subprocess.Popen(
-        ["bash"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    )
-
-    minishell = subprocess.Popen(
-        ["./minishell"],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
+    prompt = get_prompt_minishell()
+    bash = start_process("bash")
+    minishell = start_process("./minishell")
 
     assert bash.stdin is not None
     assert minishell.stdin is not None

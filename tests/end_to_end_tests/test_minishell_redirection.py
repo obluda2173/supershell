@@ -1,22 +1,6 @@
-import subprocess
 import pytest
-import time
 import os
-
-
-def start_process(shell):
-    return subprocess.Popen(
-        [shell],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-
-
-def get_prompt_minishell():
-    minishell = start_process("./minishell")
-    prompt, _ = minishell.communicate()
-    return prompt.decode()
+from conftest import start_process, get_prompt_minishell
 
 
 @pytest.mark.parametrize(
@@ -41,7 +25,7 @@ def test_out_redirections(cmd):
     stdout_minishell, stderr_minishell = minishell.communicate(cmds.encode())
 
     with open("tests/end_to_end_tests/test_files/non_existent.txt", "r") as f:
-        file_minisehell = f.readlines()
+        file_minishell = f.readlines()
     os.remove("tests/end_to_end_tests/test_files/non_existent.txt")
 
     stdout_minishell = [
@@ -58,6 +42,10 @@ def test_out_redirections(cmd):
     for out1, out2 in zip(stdout_bash, stdout_minishell):
         assert out1 == out2, f"{out1} != {out2}"
 
+    assert len(file_bash) == len(file_minishell)
+    for out1, out2 in zip(file_bash, file_minishell):
+        assert out1 == out2, f"{out1} != {out2}"
+
 
 @pytest.mark.parametrize(
     "cmd",
@@ -69,25 +57,12 @@ def test_out_redirections(cmd):
     ],
 )
 def test_in_redirections(cmd):
-    minishell = subprocess.Popen(
-        ["./minishell"],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
+    minishell = start_process("./minishell")
     prompt, _ = minishell.communicate()
     prompt = prompt.decode()
 
-    bash = subprocess.Popen(
-        ["bash"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    )
-
-    minishell = subprocess.Popen(
-        ["./minishell"],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
+    bash = start_process("bash")
+    minishell = start_process("./minishell")
 
     assert bash.stdin is not None
     assert minishell.stdin is not None
@@ -124,12 +99,7 @@ def test_in_redirections(cmd):
     ],
 )
 def test_redirection_errors(cmd, err_msg):
-    minishell = subprocess.Popen(
-        ["./minishell"],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
+    minishell = start_process("./minishell")
 
     assert minishell.stdin is not None
     cmds = "\n".join(cmd + ["echo $?\n"])
