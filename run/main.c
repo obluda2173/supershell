@@ -144,10 +144,11 @@ int	main(int ac, char **av, char **ep)
 		ft_dllstclear(&tokens, free_token);
 		if (script->node_type != ERROR_NODE)
 			execute_script(script, ep, data);
-		else
+		else {
 			ft_putendl_fd((char*)script->node_data.error_node.error, STDERR_FILENO);
+			data->exit_status = 2;
+		}
 		free_script_node(script);
-
 		free(data->line);
 		data->line = NULL;
 	}
