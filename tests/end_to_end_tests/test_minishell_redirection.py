@@ -5,7 +5,14 @@ from conftest import start_process, get_prompt_minishell
 
 @pytest.mark.parametrize(
     "cmd",
-    [(['echo "hello" > tests/end_to_end_tests/test_files/non_existent.txt'])],
+    [
+        (['echo "hello" > tests/end_to_end_tests/test_files/non_existent.txt']),
+        (
+            [
+                "wc -c < tests/end_to_end_tests/test_files/input1.txt > tests/end_to_end_tests/test_files/non_existent.txt"
+            ]
+        ),
+    ],
 )
 def test_out_redirections(cmd):
     bash = start_process("bash")
@@ -27,7 +34,6 @@ def test_out_redirections(cmd):
     with open("tests/end_to_end_tests/test_files/non_existent.txt", "r") as f:
         file_minishell = f.readlines()
     os.remove("tests/end_to_end_tests/test_files/non_existent.txt")
-
     stdout_minishell = [
         line
         for line in stdout_minishell.decode().split("\n")
