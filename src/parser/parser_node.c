@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "lexer.h"
+#include "libft.h"
 #include "parser.h"
 
 t_script_node	*parse_cmd(t_dllist *tokens)
@@ -19,6 +20,8 @@ t_script_node	*parse_cmd(t_dllist *tokens)
 
 	if ((*(t_token *)tokens->content).type == END_OF_FILE)
 		return (NULL);
+	if ((*(t_token *)tokens->content).type == LPAREN)
+		return get_error_node("parsing error near )");
 	sn = get_cmd_node(*(t_token *)tokens->content);
 	if (!sn)
 		return (NULL);

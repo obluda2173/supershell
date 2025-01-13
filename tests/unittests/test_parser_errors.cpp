@@ -142,3 +142,14 @@ INSTANTIATE_TEST_SUITE_P(
             // new_test_script_node(ERROR_NODE, {}, new_error_node("error parsing pipeline before logical operator"), {})}
         )
     );
+
+INSTANTIATE_TEST_SUITE_P(
+    ParserTestsWithParanthesisErrors, ParserTestSuite,
+    testing::Values(
+        ParserTestParams{0, ERROR_TEST, {
+                new_token("(", LPAREN),
+                new_token(")", RPAREN),
+                new_token(NULL, END_OF_FILE),
+            },
+            new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error near )"), {})}
+        ));
