@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenize_1.c                                       :+:      :+:    :+:   */
+/*   lexer_tokenize_1.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2025/01/09 09:51:29 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/13 14:06:31 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static char	*extract_word(t_line_container *lc)
 	start = lc->pos;
 	if (!lc->line[lc->pos])
 		return (NULL);
-	if (ft_strchr("<>&|", lc->line[lc->pos]))
+	if (ft_strchr("<>&|()", lc->line[lc->pos]))
 		skip_operator(lc);
 	else if (lc->line[lc->pos] >= '0' && lc->line[lc->pos] <= '2'
 		&& lc->line[lc->pos + 1] == '>' && lc->line[lc->pos + 2] != '>')

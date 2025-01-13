@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   syntax_check.c                                     :+:      :+:    :+:   */
+/*   lexer_syntax_check.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 09:40:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/08 10:39:12 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/13 13:35:08 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ static bool	check_unclosed_quotes(char *str)
 static bool	check_invalid_symbol(char *str)
 {
 	if (ft_strchr(str, ';') || ft_strchr(str, '\\')
-		|| ft_strchr(str, '(') || ft_strchr(str, ')')
 		|| ft_strchr(str, '{') || ft_strchr(str, '}')
 		|| ft_strchr(str, '[') || ft_strchr(str, ']'))
 	{
