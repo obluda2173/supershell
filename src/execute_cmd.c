@@ -135,6 +135,11 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 	char *cmd_path;
 	char **argv;
 
+	int fds[2] = {STDIN_FILENO, STDOUT_FILENO};
+	if (set_redirections(cmd_node.redirections, fds)) {
+		return 1;
+	}
+
 	if (cmd_node.cmd_token.type == NONE)
 		return 0;
 	cmd_path = find_path(cmd_node.cmd_token.content, ep);
@@ -144,13 +149,6 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 		return 127;
 	}
 	argv = list_to_argv(cmd_node.arguments, cmd_path, data);
-
-	int fds[2] = {STDIN_FILENO, STDOUT_FILENO};
-	if (set_redirections(cmd_node.redirections, fds)) {
-		free_matrix(argv);
-		free(cmd_path);
-		return 1;
-	}
 
 	int res = custom_exec(cmd_path, argv, ep, fds);
 	close_fds(fds);

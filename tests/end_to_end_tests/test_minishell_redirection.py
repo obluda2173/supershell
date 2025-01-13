@@ -6,12 +6,13 @@ from conftest import start_process, get_prompt_minishell, check_permission
 @pytest.mark.parametrize(
     "cmd",
     [
-        (['echo "hello" > tests/end_to_end_tests/test_files/non_existent.txt']),
+        (['echo "hello" > tests/end_to_end_tests/test_files/tmp.txt']),
         (
             [
-                "wc -c < tests/end_to_end_tests/test_files/input1.txt > tests/end_to_end_tests/test_files/non_existent.txt"
+                "wc -c < tests/end_to_end_tests/test_files/input1.txt > tests/end_to_end_tests/test_files/tmp.txt"
             ]
         ),
+        (["> tests/end_to_end_tests/test_files/tmp.txt"]),
     ],
 )
 def test_out_redirections(cmd):
@@ -22,7 +23,7 @@ def test_out_redirections(cmd):
     stdout_bash, _ = bash.communicate(cmds.encode())
     stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
 
-    tmp_path = "tests/end_to_end_tests/test_files/non_existent.txt"
+    tmp_path = "tests/end_to_end_tests/test_files/tmp.txt"
     assert os.path.isfile(tmp_path), f"file does not exist {tmp_path}"
     check_permission(644, tmp_path)
     with open(tmp_path, "r") as f:
@@ -36,9 +37,9 @@ def test_out_redirections(cmd):
 
     assert os.path.isfile(tmp_path), f"file does not exist {tmp_path}"
     check_permission(644, tmp_path)
-    with open("tests/end_to_end_tests/test_files/non_existent.txt", "r") as f:
+    with open(tmp_path, "r") as f:
         file_minishell = f.readlines()
-    os.remove("tests/end_to_end_tests/test_files/non_existent.txt")
+    os.remove(tmp_path)
     assert not os.path.isfile(tmp_path), f"file does still exist {tmp_path}"
 
     prompt = get_prompt_minishell()
@@ -113,6 +114,7 @@ def test_in_redirections(cmd):
         ),
         (["<"], "parsing error redirection", 2),
         (['echo "hello" | <'], "parsing error redirection", 2),
+        (["< file.txt"], "No such file or directory", 1),
     ],
 )
 def test_redirection_errors(cmd, err_msg, want_exit_status):

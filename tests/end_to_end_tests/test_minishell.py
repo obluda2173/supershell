@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-import subprocess
 import pytest
-import time
 
 from tests.end_to_end_tests.conftest import get_prompt_minishell, start_process
 
