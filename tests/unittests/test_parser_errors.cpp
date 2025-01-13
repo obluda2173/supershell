@@ -27,6 +27,11 @@ INSTANTIATE_TEST_SUITE_P(
     ParserTestSuite,
     testing::Values(
         ParserTestParams{0, ERROR_TEST, {
+                new_token("<", HERE_DOC),
+                new_token(NULL, END_OF_FILE),
+            },
+                         new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error redirection"), {})},
+        ParserTestParams{0, ERROR_TEST, {
                 new_token("<<", HERE_DOC),
                 new_token(NULL, END_OF_FILE),
             },

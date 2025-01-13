@@ -96,6 +96,7 @@ def test_in_redirections(cmd):
             ["wc < tests/end_to_end_tests/test_files/input1.txt > error/error"],
             "No such file or directory",
         ),
+        (["<"], "parsing error redirection"),
     ],
 )
 def test_redirection_errors(cmd, err_msg):

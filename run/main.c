@@ -10,9 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "minishell.h"
 #include "parser.h"
 #include "executor.h"
+#include <unistd.h>
 
 //initialise data structure and extract environment
 void	init(t_data **data, char **ep)
@@ -140,7 +142,10 @@ int	main(int ac, char **av, char **ep)
 
 		t_script_node *script = parse(tokens);
 		ft_dllstclear(&tokens, free_token);
-		execute_script(script, ep, data);
+		if (script->node_type != ERROR_NODE)
+			execute_script(script, ep, data);
+		else
+			ft_putendl_fd((char*)script->node_data.error_node.error, STDERR_FILENO);
 		free_script_node(script);
 
 		free(data->line);
