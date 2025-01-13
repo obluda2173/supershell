@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 09:40:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/13 13:35:08 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/13 15:35:31 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,30 @@ static bool	check_invalid_symbol(char *str)
 	return (true);
 }
 
+bool	check_unclosed_parenthesis(char *str)
+{
+	size_t	i;
+	size_t	l_paren;
+	size_t	r_paren;
+	
+	i = -1;
+	l_paren = 0;
+	r_paren = 0;
+	while (str[++i])
+	{
+		if (str[i] == '(')
+			l_paren++;
+		if (str[i] == ')')
+			r_paren++;
+	}
+	if (l_paren != r_paren)
+	{
+		ft_putendl_fd("Unclosed parenthesis", STDERR_FILENO);
+		return (false);
+	}
+	return (true);
+}
+
 bool	check_syntax(char *str)
 {
 	int		i;
@@ -112,6 +136,8 @@ bool	check_syntax(char *str)
 		if (!check_consecutive_chars(str, special_chars[i]))
 			return (false);
 	if (!check_invalid_symbol(str))
+		return (false);
+	if (!check_unclosed_parenthesis(str))
 		return (false);
 	return (true);
 }

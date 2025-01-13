@@ -120,9 +120,14 @@ def test_in_redirections(cmd):
         (["helllo ' hello"], "Unclosed single quote", 2),
         (["hello } whats up"], "Invalid input", 2),
         (["hello &&& whats up"], "Parse error near &", 2),
-        (["("], "Unclosed paranthesis", 2),
-        (['echo ( "hello" '], "Unclosed paranthesis", 2),
-        (['echo "hello" ) '], "Unclosed paranthesis", 2),
+        (["("], "Unclosed parenthesis", 2),
+        (['echo ( "hello" '], "Unclosed parenthesis", 2),
+        (['echo "hello" ) '], "Unclosed parenthesis", 2),
+        (["(("], "Unclosed parenthesis", 2),
+        (["(echo hello"], "Unclosed parenthesis", 2),
+        (["echo )"], "Unclosed parenthesis", 2),
+        (["((echo)"], "Unclosed parenthesis", 2),
+        (["(ls && (echo hi)"], "Unclosed parenthesis", 2),
     ],
 )
 def test_errors(cmd, err_msg, want_exit_status):
