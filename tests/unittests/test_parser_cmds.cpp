@@ -491,7 +491,7 @@ INSTANTIATE_TEST_SUITE_P(
 INSTANTIATE_TEST_SUITE_P(
     ParserTestsCmdsWithParanthesis, ParserTestSuite,
     testing::Values(
-        ParserTestParams{11, CMD_TEST,
+        ParserTestParams{0, CMD_TEST,
                          {
                          new_token("(", LPAREN),
                          new_token("echo", BUILTIN),

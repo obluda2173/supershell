@@ -151,5 +151,13 @@ INSTANTIATE_TEST_SUITE_P(
                 new_token(")", RPAREN),
                 new_token(NULL, END_OF_FILE),
             },
+            new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error near )"), {})},
+        ParserTestParams{1, ERROR_TEST, {
+                new_token("(", LPAREN),
+                new_token("echo", BUILTIN),
+                new_token(")", RPAREN),
+                new_token("hello", WORD),
+                new_token(NULL, END_OF_FILE),
+            },
             new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error near )"), {})}
         ));

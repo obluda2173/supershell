@@ -30,6 +30,8 @@ t_script_node	*parse_cmd(t_dllist *tokens)
 
 		while ((*(t_token *)head->content).type != RPAREN)
 			head = head->next;
+		if (((*(t_token *)head->next->content).type != END_OF_FILE ))
+			return get_error_node("parsing error near )");
 		head = head->prev;
 		ft_dllstclear(&head->next, free_token);
 		ft_dllstadd_back(&tokens, ft_dllstnew(create_token(NULL, END_OF_FILE)));
