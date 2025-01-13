@@ -1,30 +1,6 @@
 import pytest
 import os
-import time
-import stat
-from conftest import start_process, get_prompt_minishell
-
-
-def check_permission(want_perm, file_path):
-    mode = os.stat(file_path).st_mode
-
-    user_perm = (
-        4 * bool(mode & stat.S_IRUSR)
-        + 2 * bool(mode & stat.S_IWUSR)
-        + bool(mode & stat.S_IXUSR)
-    )
-    group_perm = (
-        4 * bool(mode & stat.S_IRGRP)
-        + 2 * bool(mode & stat.S_IWGRP)
-        + bool(mode & stat.S_IXGRP)
-    )
-    other_perm = (
-        4 * bool(mode & stat.S_IROTH)
-        + 2 * bool(mode & stat.S_IWOTH)
-        + bool(mode & stat.S_IXOTH)
-    )
-    got_perm = 100 * user_perm + 10 * group_perm + other_perm
-    assert got_perm == want_perm
+from conftest import start_process, get_prompt_minishell, check_permission
 
 
 @pytest.mark.parametrize(
@@ -43,7 +19,7 @@ def test_out_redirections(cmd):
     assert bash.stdin is not None
 
     cmds = "\n".join(cmd + ["echo $?\n"])
-    stdout_bash, stderr_bash = bash.communicate(cmds.encode())
+    stdout_bash, _ = bash.communicate(cmds.encode())
     stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
 
     tmp_path = "tests/end_to_end_tests/test_files/non_existent.txt"
@@ -54,7 +30,6 @@ def test_out_redirections(cmd):
     os.remove(tmp_path)
     assert not os.path.isfile(tmp_path), f"file does still exist {tmp_path}"
 
-    prompt = get_prompt_minishell()
     minishell = start_process("./minishell")
     assert minishell.stdin is not None
     stdout_minishell, stderr_minishell = minishell.communicate(cmds.encode())
@@ -66,6 +41,7 @@ def test_out_redirections(cmd):
     os.remove("tests/end_to_end_tests/test_files/non_existent.txt")
     assert not os.path.isfile(tmp_path), f"file does still exist {tmp_path}"
 
+    prompt = get_prompt_minishell()
     stdout_minishell = [
         line
         for line in stdout_minishell.decode().split("\n")

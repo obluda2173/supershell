@@ -68,7 +68,15 @@ int error_fork() {
 	return EXIT_FAILURE;
 }
 
-static int custom_exec(char *cmd_path, char **args, char **ep, int fd_in, int fd_out) {
+void close_fds(int fds[2]) {
+	if (fds[0] != STDIN_FILENO)
+		close(fds[0]);
+	if (fds[1] != STDOUT_FILENO)
+		close(fds[1]);
+	return;
+}
+
+static int custom_exec(char *cmd_path, char **args, char **ep, int fds[2]) {
 	pid_t pid = fork();
 	int status;
 
@@ -76,15 +84,14 @@ static int custom_exec(char *cmd_path, char **args, char **ep, int fd_in, int fd
 		return error_fork();
 	if (pid == 0)
 	{
-		dup2(fd_in, STDIN_FILENO);
-		dup2(fd_out, STDOUT_FILENO);
+		dup2(fds[0], STDIN_FILENO);
+		dup2(fds[1], STDOUT_FILENO);
 		if (execve(cmd_path, args, ep) == -1)
 		{
 			perror("execve");
 			exit(EXIT_FAILURE);
 		}
-		close(fd_in);
-		close(fd_out);
+		close_fds(fds);
 		return EXIT_SUCCESS;
 	}
 	if (waitpid(pid, &status, 0) == -1)
@@ -96,6 +103,31 @@ static int custom_exec(char *cmd_path, char **args, char **ep, int fd_in, int fd
 		return  WEXITSTATUS(status);
 	fprintf(stderr, "Child process did not terminate normally\n");
 	return EXIT_FAILURE;
+}
+
+int set_redirections(t_list* redirections, int fds[2]) {
+	t_list *head = redirections;
+	while (head) {
+		t_redirection r = *((t_redirection*)head->content);
+		if (r.type == IN) {
+			fds[0] = open(r.word, O_RDONLY);
+			if (fds[0]< 0) {
+				perror("open");
+				close_fds(fds);
+				return 1;
+			}
+		}
+		if (r.type == OUT) {
+			fds[1]  = open(r.word, O_CREAT|O_WRONLY|O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+			if (fds[1] < 0) {
+				perror("open");
+				close_fds(fds);
+				return 1;
+			}
+		}
+		head = head->next;
+	}
+	return 0;
 }
 
 int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
@@ -113,40 +145,15 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 	}
 	argv = list_to_argv(cmd_node.arguments, cmd_path, data);
 
-	int fd_in = STDIN_FILENO;
-	int fd_out = STDOUT_FILENO;
-	t_list *head = cmd_node.redirections;
-	while (head) {
-		t_redirection r = *((t_redirection*)head->content);
-		if (r.type == IN) {
-			fd_in = open(r.word, O_RDONLY);
-			if (fd_in < 0) {
-				perror("open");
-				close(fd_in);
-				free_matrix(argv);
-				free(cmd_path);
-				return 1;
-			}
-		}
-		if (r.type == OUT) {
-			fd_out = open(r.word, O_CREAT|O_WRONLY|O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-			if (fd_out < 0) {
-				perror("open");
-				close(fd_out);
-				free_matrix(argv);
-				free(cmd_path);
-				return 1;
-			}
-		}
-		head = head->next;
+	int fds[2] = {STDIN_FILENO, STDOUT_FILENO};
+	if (set_redirections(cmd_node.redirections, fds)) {
+		free_matrix(argv);
+		free(cmd_path);
+		return 1;
 	}
 
-	int res = custom_exec(cmd_path, argv, ep, fd_in, fd_out);
-	if (fd_in != STDIN_FILENO)
-		close(fd_in);
-	if (fd_out != STDOUT_FILENO)
-		close(fd_out);
-
+	int res = custom_exec(cmd_path, argv, ep, fds);
+	close_fds(fds);
 
 	free_matrix(argv);
 	free(cmd_path);
