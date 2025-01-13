@@ -188,11 +188,6 @@ INSTANTIATE_TEST_SUITE_P(
 							new_token(NULL, END_OF_FILE),
 						}},
 					TestTokenizeParams{
-						"((expression))", {
-							new_token("((expression))", WORD),
-							new_token(NULL, END_OF_FILE),
-						}},
-					TestTokenizeParams{
 						"ls | wc &", {
 							new_token("ls", WORD),
 							new_token("|", PIPE),
@@ -313,6 +308,108 @@ INSTANTIATE_TEST_SUITE_P(
 							new_token("-l", WORD),
 							new_token("-a", WORD),
 							new_token("-h", WORD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"   (ls -l) ", {
+							new_token("(", LPAREN),
+							new_token("ls", WORD),
+							new_token("-l", WORD),
+							new_token(")", RPAREN),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"(echo hello)", {
+							new_token("(", LPAREN),
+							new_token("echo", BUILTIN),
+							new_token("hello", WORD),
+							new_token(")", RPAREN),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"  (cd ..)", {
+							new_token("(", LPAREN),
+							new_token("cd", BUILTIN),
+							new_token("..", WORD),
+							new_token(")", RPAREN),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"(((ls)))", {
+							new_token("(", LPAREN),
+							new_token("(", LPAREN),
+							new_token("(", LPAREN),
+							new_token("ls", WORD),
+							new_token(")", RPAREN),
+							new_token(")", RPAREN),
+							new_token(")", RPAREN),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"(   ls   -a   )", {
+							new_token("(", LPAREN),
+							new_token("ls", WORD),
+							new_token("-a", WORD),
+							new_token(")", RPAREN),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"(mkdir new_dir) && (cd new_dir)", {
+							new_token("(", LPAREN),
+							new_token("mkdir", WORD),
+							new_token("new_dir", WORD),
+							new_token(")", RPAREN),
+							new_token("&&", AND),
+							new_token("(", LPAREN),
+							new_token("cd", BUILTIN),
+							new_token("new_dir", WORD),
+							new_token(")", RPAREN),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"(echo (nested))", {
+							new_token("(", LPAREN),
+							new_token("echo", BUILTIN),
+							new_token("(", LPAREN),
+							new_token("nested", WORD),
+							new_token(")", RPAREN),
+							new_token(")", RPAREN),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"((echo test) && (ls))", {
+							new_token("(", LPAREN),
+							new_token("(", LPAREN),
+							new_token("echo", BUILTIN),
+							new_token("test", WORD),
+							new_token(")", RPAREN),
+							new_token("&&", AND),
+							new_token("(", LPAREN),
+							new_token("ls", WORD),
+							new_token(")", RPAREN),
+							new_token(")", RPAREN),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"(ls echo done)", {
+							new_token("(", LPAREN),
+							new_token("ls", WORD),
+							new_token("echo", BUILTIN),
+							new_token("done", WORD),
+							new_token(")", RPAREN),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"(ls -l) || (echo 'Error')", {
+							new_token("(", LPAREN),
+							new_token("ls", WORD),
+							new_token("-l", WORD),
+							new_token(")", RPAREN),
+							new_token("||", OR),
+							new_token("(", LPAREN),
+							new_token("echo", BUILTIN),
+							new_token("Error", SINGLE_QUOTE),
+							new_token(")", RPAREN),
 							new_token(NULL, END_OF_FILE),
 						}}
 		)

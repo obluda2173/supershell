@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenize_2.c                                       :+:      :+:    :+:   */
+/*   lexer_tokenize_2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 17:06:20 by erian             #+#    #+#             */
-/*   Updated: 2025/01/07 17:16:19 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/13 13:50:41 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	skip_variable(t_line_container *lc)
 
 void	skip_unquoted_word(t_line_container *lc)
 {
-	while (lc->line[lc->pos] && !ft_strchr(" \'\"<>|&$", lc->line[lc->pos]))
+	while (lc->line[lc->pos] && !ft_strchr(" \'\"<>|&$()", lc->line[lc->pos]))
 		lc->pos++;
 }
 

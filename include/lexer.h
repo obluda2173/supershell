@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 14:58:41 by erian             #+#    #+#             */
-/*   Updated: 2025/01/09 10:08:49 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/13 13:34:36 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,9 @@ typedef enum e_token_type
 	OR,					// 12
 	WILDCARD,			// 13
 	EQUAL_SIGN,			// 14
-	INVALID,			// 15
+	LPAREN,				// 15
+	RPAREN,				// 16
+	INVALID,			// 17
 	NONE				/* added by Kay to have a null-value for t_token_type*/
 }	t_token_type;
 

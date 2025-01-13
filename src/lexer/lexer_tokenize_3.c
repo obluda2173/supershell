@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenize_3.c                                       :+:      :+:    :+:   */
+/*   lexer_tokenize_3.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 17:23:51 by erian             #+#    #+#             */
-/*   Updated: 2025/01/09 09:51:58 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/13 13:42:29 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,10 @@ static t_token_type	assign_operator_type(char *str)
 		return (REDIRECT_IN);
 	if (ft_strchr(str, '>'))
 		return (REDIRECT_OUT);
+	if (!ft_strcmp(str, "(\0"))
+		return (LPAREN);
+	if (!ft_strcmp(str, ")\0"))
+		return (RPAREN);
 	return (WORD);
 }
 
