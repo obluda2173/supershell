@@ -129,6 +129,7 @@ int	main(int ac, char **av, char **ep)
 		{
 			free(data->line);
 			data->line = NULL;
+			data->exit_status = 2;
 			continue ;
 		}
 

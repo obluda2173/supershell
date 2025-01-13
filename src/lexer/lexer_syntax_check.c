@@ -10,7 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "minishell.h"
+#include <unistd.h>
 
 static int	count_consequitives(char *str, char c)
 {
@@ -45,7 +47,9 @@ static bool	check_consecutive_chars(char *str, char c)
 {
 	if (count_consequitives(str, c) > 2)
 	{
-		printf("Parse error near '%c'\n", c);
+		ft_putstr_fd("Parse error near ", STDERR_FILENO);
+		ft_putchar_fd(c, STDERR_FILENO);
+		ft_putendl_fd("", STDERR_FILENO);
 		return (false);
 	}
 	return (true);
@@ -69,12 +73,12 @@ static bool	check_unclosed_quotes(char *str)
 	}
 	if (single_quote_count % 2 != 0)
 	{
-		printf("Unclosed single quote\n");
+		ft_putendl_fd("Unclosed single quote", STDERR_FILENO);
 		return (false);
 	}
 	if (double_quote_count % 2 != 0)
 	{
-		printf("Unclosed double quote\n");
+		ft_putendl_fd("Unclosed double quote", STDERR_FILENO);
 		return (false);
 	}
 	return (true);
@@ -86,7 +90,7 @@ static bool	check_invalid_symbol(char *str)
 		|| ft_strchr(str, '{') || ft_strchr(str, '}')
 		|| ft_strchr(str, '[') || ft_strchr(str, ']'))
 	{
-		printf("Invalid input\n");
+		ft_putendl_fd("Invalid input", STDERR_FILENO);
 		return (false);
 	}
 	return (true);

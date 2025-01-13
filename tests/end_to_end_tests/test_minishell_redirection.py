@@ -115,7 +115,11 @@ def test_in_redirections(cmd):
         (["<"], "parsing error redirection", 2),
         (['echo "hello" | <'], "parsing error redirection", 2),
         (["< file.txt"], "No such file or directory", 1),
-        # (['"'], "syntax error", 1),
+        (['"'], "Unclosed double quote", 2),
+        (['helllo " hello'], "Unclosed double quote", 2),
+        (["helllo ' hello"], "Unclosed single quote", 2),
+        (["hello } whats up"], "Invalid input", 2),
+        (["hello &&& whats up"], "Parse error near &", 2),
     ],
 )
 def test_errors(cmd, err_msg, want_exit_status):
