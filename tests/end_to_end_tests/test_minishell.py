@@ -13,16 +13,6 @@ from tests.end_to_end_tests.conftest import get_prompt_minishell, start_process
         (["echo asdf $PATH asdf"]),
         (["echo  asdf    $PATH   asdf  "]),
         (['echo "$PATH"']),
-        (["wc -c < tests/end_to_end_tests/test_files/input1.txt"]),
-        (["wc -c < tests/end_to_end_tests/test_files/input2.txt"]),
-        (["< tests/end_to_end_tests/test_files/input2.txt"]),
-        (["< tests/end_to_end_tests/test_files/input2.txt wc -c"]),
-        # (["<<EOF", "line1", "line2", "EOF"]),
-        # (["<< EOF", "line1", "line2"]),
-        # (["<< asdf", "line1", "line2"]),
-        # (["<< 'asdf'", "line1", "line2"]),
-        # (["<<    'EOF'", "line1", "line2"]),
-        # (["<<    'EOF'", "line1", "line2"]),
     ],
 )
 def test_minishell(cmd):

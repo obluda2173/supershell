@@ -3,6 +3,16 @@ import os
 from conftest import start_process, get_prompt_minishell, check_permission
 
 
+def get_file_content(tmp_path):
+    assert os.path.isfile(tmp_path), f"file does not exist {tmp_path}"
+    check_permission(644, tmp_path)
+    with open(tmp_path, "r") as f:
+        file_content = f.readlines()
+    os.remove(tmp_path)
+    assert not os.path.isfile(tmp_path), f"file does still exist {tmp_path}"
+    return file_content
+
+
 @pytest.mark.parametrize(
     "cmd",
     [
@@ -24,23 +34,13 @@ def test_out_redirections(cmd):
     stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
 
     tmp_path = "tests/end_to_end_tests/test_files/tmp.txt"
-    assert os.path.isfile(tmp_path), f"file does not exist {tmp_path}"
-    check_permission(644, tmp_path)
-    with open(tmp_path, "r") as f:
-        file_bash = f.readlines()
-    os.remove(tmp_path)
-    assert not os.path.isfile(tmp_path), f"file does still exist {tmp_path}"
+    file_bash = get_file_content(tmp_path)
 
     minishell = start_process("./minishell")
     assert minishell.stdin is not None
     stdout_minishell, stderr_minishell = minishell.communicate(cmds.encode())
 
-    assert os.path.isfile(tmp_path), f"file does not exist {tmp_path}"
-    check_permission(644, tmp_path)
-    with open(tmp_path, "r") as f:
-        file_minishell = f.readlines()
-    os.remove(tmp_path)
-    assert not os.path.isfile(tmp_path), f"file does still exist {tmp_path}"
+    file_minishell = get_file_content(tmp_path)
 
     prompt = get_prompt_minishell()
     stdout_minishell = [
