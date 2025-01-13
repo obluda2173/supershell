@@ -115,9 +115,10 @@ def test_in_redirections(cmd):
         (["<"], "parsing error redirection", 2),
         (['echo "hello" | <'], "parsing error redirection", 2),
         (["< file.txt"], "No such file or directory", 1),
+        # (['"'], "syntax error", 1),
     ],
 )
-def test_redirection_errors(cmd, err_msg, want_exit_status):
+def test_errors(cmd, err_msg, want_exit_status):
     prompt = get_prompt_minishell()
 
     minishell = start_process("./minishell")
