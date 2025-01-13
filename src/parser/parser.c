@@ -20,6 +20,11 @@ t_dllist	*find_last_logical(t_dllist *tokens)
 	tokens = ft_dllstlast(tokens);
 	while (tokens->prev)
 	{
+		if (((t_token *)tokens->content)->type == RPAREN) {
+			while (tokens->prev && ((t_token *)tokens->content)->type != LPAREN)
+				tokens = tokens->prev;
+			continue;
+		}
 		if (((t_token *)tokens->content)->type == AND
 			|| ((t_token *)tokens->content)->type == OR)
 			return (tokens);

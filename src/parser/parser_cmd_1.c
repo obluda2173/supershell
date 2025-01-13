@@ -97,8 +97,6 @@ t_script_node	*fill_cmd_node(t_script_node *sn, t_dllist *tokens)
 	t_script_node	*latest_node;
 	t_token_type cur_type;
 
-	/* if (!is_redirection_token(*(t_token *)(tokens->content))) */
-	/* 	tokens = tokens->next; */
 	while (tokens)
 	{
 		cur_type = ((t_token *)tokens->content)->type;
