@@ -159,5 +159,20 @@ INSTANTIATE_TEST_SUITE_P(
                 new_token("hello", WORD),
                 new_token(NULL, END_OF_FILE),
             },
-            new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error near )"), {})}
+            new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error near )"), {})},
+        ParserTestParams{2, PIPE_TEST,
+                         {
+                         new_token("echo", BUILTIN),
+                         new_token("string1", WORD),
+                         new_token("&&", AND),
+                         new_token("(", LPAREN),
+                         new_token("echo", BUILTIN),
+                         new_token("string2", WORD),
+                         new_token("|", PIPE),
+                         new_token(")", RPAREN),
+                         new_token("echo", BUILTIN),
+                         new_token("string3", WORD),
+                         new_token(NULL, END_OF_FILE),
+                     },
+            new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error near |"), {})}
         ));

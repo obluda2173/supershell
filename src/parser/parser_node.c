@@ -116,11 +116,17 @@ t_script_node	*parse_logical(t_dllist *tokens)
 		tokens->next->next->prev = NULL;
 		downstream = tokens->next->next;
 		t_dllist *head = downstream;
-		while (((t_token*)head->content)->type != RPAREN)
+		while (((t_token *)head->content)->type != RPAREN) {
+			if (((t_token*)head->content)->type == PIPE) {
+				ft_putendl_fd("hello", STDOUT_FILENO);
+				return get_error_node("parsing error near |");
+			}
 			head = head->next;
-		head = head->prev;
-		ft_dllstclear(&head->next, free_token);
-		ft_dllstadd_back(&downstream, ft_dllstnew(create_token(NULL, END_OF_FILE)));
+		}
+		head->next->prev = head->prev;
+		head->prev->next = head->next;
+		free_token(head->content);
+		free(head);
 	} else {
 		tokens->next->prev = NULL;
 		downstream = tokens->next;
