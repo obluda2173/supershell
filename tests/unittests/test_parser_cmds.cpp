@@ -485,7 +485,17 @@ INSTANTIATE_TEST_SUITE_P(
                                                new_argument(" string2", DOUBLE_QUOTE_STR),
                                            },
                                                {}),
-                             {}, {})}
+                             {}, {})},
+        ParserTestParams{
+            12,
+            CMD_TEST,
+            {
+                new_token("cat", WORD),
+                new_token("<", REDIRECT_IN),
+                new_token("*.txt", WILDCARD),
+                new_token(NULL, END_OF_FILE),
+            },
+            new_test_script_node(CMD_NODE, {new_test_cmd_node(new_token("cat", WORD), {}, {new_redirection(0, IN, "*.txt", WILDCARD_EXP)})}, {}, {})}
     ));
 
 INSTANTIATE_TEST_SUITE_P(

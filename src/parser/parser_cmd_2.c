@@ -65,6 +65,8 @@ t_redirection	*parse_redirection_word(t_token t, t_redirection *r)
 		r->word_type = ENV_EXP;
 	else if (t.type == DOUBLE_QUOTE)
 		r->word_type = DOUBLE_QUOTE_STR;
+	else if (t.type == WILDCARD)
+		r->word_type = WILDCARD_EXP;
 	else
 	{
 		free(r);
