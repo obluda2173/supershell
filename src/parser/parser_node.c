@@ -78,45 +78,52 @@ t_script_node	*parse_pipe(t_dllist *tokens)
 	return (sn);
 }
 
-t_script_node *fun(t_dllist* downstream, t_script_node *sn) {
-	t_dllist *head;
+/* removes last RPAREN from downstream; throws error if if appears at a wrong place */
+t_script_node	*remove_next_rparen(t_dllist *downstream, t_script_node *sn)
+{
+	t_dllist	*head;
 
 	if (((t_token *)downstream->content)->type == RPAREN)
-		return teardown(sn, "parsing error near (");
-	/* { */
-	/* 	free_script_node(sn); */
-	/* 	return (get_error_node("parsing error near (")); */
-	/* } */
+		return (teardown(sn, "parsing error near ("));
 	head = downstream;
 	while (((t_token *)head->content)->type != RPAREN)
 		head = head->next;
 	if (((t_token *)head->prev->content)->type == PIPE)
-	{
-		free_script_node(sn);
-		return (get_error_node("parsing error near |"));
-	}
+		return (teardown(sn, "parsing error near |"));
 	if (((t_token *)head->prev->content)->type == AND)
-	{
-		free_script_node(sn);
-		return (get_error_node("parsing error near &&"));
-	}
+		return (teardown(sn, "parsing error near &&"));
 	if (((t_token *)head->prev->content)->type == OR)
-	{
-		free_script_node(sn);
-		return (get_error_node("parsing error near ||"));
-	}
+		return (teardown(sn, "parsing error near ||"));
 	head->next->prev = head->prev;
 	head->prev->next = head->next;
 	free_token(head->content);
 	free(head);
-	return NULL;
+	return (NULL);
+}
+
+t_script_node *parse_upstream(t_script_node *sn, t_dllist *tokens) {
+	sn->upstream = parse(tokens);
+	if (sn->upstream->node_type == ERROR_NODE)
+		return (teardown_err_in_upstream(sn));
+	if (!sn->upstream)
+		return (teardown(sn, "error parsing pipeline before logical operator"));
+	return sn;
+}
+
+t_script_node *parse_downstream(t_script_node *sn, t_dllist *downstream) {
+	sn->downstream = parse(downstream);
+	if (!sn->downstream)
+		return (teardown(sn, "error parsing pipeline after logical operator"));
+	if (sn->downstream->node_type == ERROR_NODE)
+		return (teardown_err_in_downstream(sn));
+	return sn;
 }
 
 t_script_node	*parse_logical(t_dllist *tokens)
 {
 	t_script_node	*sn;
 	t_dllist		*downstream;
-	/* t_dllist		*head; */
+	t_script_node	*err;
 
 	if (((t_token *)tokens->content)->type == AND)
 		sn = get_branch_node(AND_NODE);
@@ -126,20 +133,19 @@ t_script_node	*parse_logical(t_dllist *tokens)
 	{
 		tokens->next->next->prev = NULL;
 		downstream = tokens->next->next;
-		t_script_node *err = fun(downstream, sn);
+		err = remove_next_rparen(downstream, sn);
 		if (err)
-			return err;
+			return (err);
 	}
 	else
 	{
 		tokens->next->prev = NULL;
 		downstream = tokens->next;
 	}
-	sn->downstream = parse(downstream);
-	if (!sn->downstream)
-		return (teardown(sn, "error parsing pipeline after logical operator"));
-	if (sn->downstream->node_type == ERROR_NODE)
-		return (teardown_err_in_downstream(sn));
+	sn = parse_downstream(sn, downstream);
+	if (sn->node_type == ERROR_NODE)
+		return sn;
+
 	tokens = tokens->prev;
 	if (!tokens)
 		return (teardown(sn, "error parsing pipeline before logical operator"));
@@ -147,10 +153,5 @@ t_script_node	*parse_logical(t_dllist *tokens)
 	ft_dllstadd_back(&tokens, ft_dllstnew(create_token(NULL, END_OF_FILE)));
 	while (tokens->prev)
 		tokens = tokens->prev;
-	sn->upstream = parse(tokens);
-	if (sn->upstream->node_type == ERROR_NODE)
-		return (teardown_err_in_upstream(sn));
-	if (!sn->upstream)
-		return (teardown(sn, "error parsing pipeline before logical operator"));
-	return (sn);
+	return parse_upstream(sn, tokens);
 }
