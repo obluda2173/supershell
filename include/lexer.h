@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 14:58:41 by erian             #+#    #+#             */
-/*   Updated: 2025/01/14 13:04:45 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/14 13:15:37 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,10 @@ typedef struct s_token
 /* c files                                                                    */
 /* ************************************************************************** */
 
-// debugging.c
-void		print_tokens(t_dllist *head);
-
-// format_input_1.c
+// lexer_format_input_1.c
 char		*format_input(char *line);
 
-// format_input_2.c
+// lexer_format_input_2.c
 char		*handle_redirection(char *input, size_t *i, char *result, size_t *j);
 char		*handle_heredoc(char *input, size_t *i, char *result, size_t *j);
 char		*handle_quotes(const char *input, size_t *i, char *result, size_t *j);
@@ -87,18 +84,18 @@ bool	check_unclosed_parenthesis(char *str, size_t open_paren);
 void		free_token(void *content);
 t_dllist	*tokenize(char *line);
 
-// tokenize_1.c
+// lexer_tokenize_1.c
 t_token		*create_token(char *content, t_token_type type);
 t_token		*get_next_token(t_line_container *lc);
 
-// tokenize_2.c
+// lexer_tokenize_2.c
 void		skip_operator(t_line_container *lc);
 void		skip_quoted_text(t_line_container *lc);
 void		skip_variable(t_line_container *lc);
 void		skip_unquoted_word(t_line_container *lc);
 char		*allocate_word(const char *line, int start, size_t len);
 
-// tokenize_3.c
+// lexer_tokenize_3.c
 t_token_type assign_type(char *str);
 
 #endif
