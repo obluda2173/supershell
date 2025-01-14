@@ -51,6 +51,21 @@ t_script_node	*parse(t_dllist *tokens)
 		return (get_error_node("no tokens"));
 	if (((t_token *)ft_dllstlast(tokens)->content)->type != END_OF_FILE)
 		return (get_error_node("no end of file token"));
+
+	/* remove surrounding parens */
+	if (((t_token *)tokens->content)->type == LPAREN) {
+		t_dllist *head = tokens;
+		head->next->prev = NULL;
+		tokens = head->next;
+		head->next = NULL;
+		ft_dllstclear(&head, free_token);
+		head = tokens;
+		int nbr_open_lparens = 0;
+		while (((t_token *)head->content)->type != RPAREN) {
+			if (((t_token *)tokens->content)->type == LPAREN) {
+
+		}
+	}
 	tokens = find_last_logical(tokens);
 	if (((t_token *)tokens->content)->type == AND
 		|| ((t_token *)tokens->content)->type == OR)
