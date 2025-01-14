@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 12:50:09 by erian             #+#    #+#             */
-/*   Updated: 2025/01/12 13:03:45 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/14 18:08:54 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,50 +41,66 @@ static int matches_pattern(const char *pattern, const char *str)
     return (!*pattern || (*pattern == '*' && !*(pattern + 1))) && !*str;
 }
 
-char *handle_wildcard(const char *word)
+char **handle_wildcard(const char *word, char **argv)
 {
-	DIR *dir;
-	struct dirent *entry;
-	char *result = malloc(1);
-	size_t result_len = 0;
+    DIR *dir;
+    struct dirent *entry;
+    char *result = malloc(1);
+    size_t result_len = 0;
 
-	if (!result)
-		return NULL;
+    if (!result)
+        return NULL;
 
-	result[0] = '\0';
+    result[0] = '\0';
 
-	dir = opendir(".");
-	if (!dir)
-	{
-		free(result);
-		return NULL;
-	}
+    dir = opendir(".");
+    if (!dir)
+    {
+        free(result);
+        return NULL;
+    }
 
-	while ((entry = readdir(dir)) != NULL)
-	{
-		if (matches_pattern(word, entry->d_name))
-		{
-			size_t entry_len = strlen(entry->d_name);
+    while ((entry = readdir(dir)) != NULL)
+    {
+        if (matches_pattern(word, entry->d_name))
+        {
+            size_t entry_len = ft_strlen(entry->d_name);
 
-			if (result_len > 0)
-				result = append_to_result(result, &result_len, " ", 1);
+            if (result_len > 0)
+                result = append_to_result(result, &result_len, " ", 1);
 
-			result = append_to_result(result, &result_len, entry->d_name, entry_len);
-			if (!result)
-			{
-				closedir(dir);
-				return NULL;
-			}
-		}
-	}
+            result = append_to_result(result, &result_len, entry->d_name, entry_len);
+            if (!result)
+            {
+                closedir(dir);
+                return NULL;
+            }
+        }
+    }
 
-	closedir(dir);
+    closedir(dir);
 
-	if (result_len == 0)
-	{
-		free(result);
-		return strdup(word);
-	}
+    if (result_len == 0)
+    {
+        free(result);
+        result = strdup(word);
+        if (!result)
+            return NULL;
+    }
 
-	return result;
+    // Append the expanded result to the existing argv matrix
+    char **split_result = ft_split(result, ' ');
+    char **new_argv = ft_matrix_join(argv, split_result);
+        
+    free_matrix(split_result);
+    if (!new_argv)
+    {
+        free(result);
+        return NULL;
+    }
+    
+
+    free(result);
+    
+    return new_argv;
 }
