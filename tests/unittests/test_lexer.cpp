@@ -411,6 +411,23 @@ INSTANTIATE_TEST_SUITE_P(
 							new_token("Error", SINGLE_QUOTE),
 							new_token(")", RPAREN),
 							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"(((echo) && (echo)) || echo)", {
+							new_token("(", LPAREN),
+							new_token("(", LPAREN),
+							new_token("(", LPAREN),
+							new_token("echo", BUILTIN),
+							new_token(")", RPAREN),
+							new_token("&&", AND),
+							new_token("(", LPAREN),
+							new_token("echo", BUILTIN),
+							new_token(")", RPAREN),
+							new_token(")", RPAREN),
+							new_token("||", OR),
+							new_token("echo", BUILTIN),
+							new_token(")", RPAREN),
+							new_token(NULL, END_OF_FILE),
 						}}
 		)
 	);
