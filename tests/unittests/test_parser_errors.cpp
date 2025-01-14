@@ -245,4 +245,25 @@ INSTANTIATE_TEST_SUITE_P(
                              new_token(NULL, END_OF_FILE),
                          },
             new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error near ("), {})}
+        // ParserTestParams{10, ERROR_TEST,
+        //                  {
+        //     new_token("(", LPAREN),
+        //     new_token("(", LPAREN),
+        //     new_token("echo", BUILTIN),
+        //     new_token("||", OR),
+        //     new_token("echo", BUILTIN),
+        //     new_token(")", RPAREN),
+        //     new_token(")", RPAREN),
+        //     new_token("&&", AND),
+        //     new_token("(", LPAREN),
+        //     new_token("(", LPAREN),
+        //     new_token("echo", BUILTIN),
+        //     new_token("||", OR),
+        //     new_token(")", RPAREN),
+        //     new_token("echo", BUILTIN),
+        //     new_token(")", RPAREN),
+        //     new_token(NULL, END_OF_FILE),
+        //                  },
+        //     new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error near ||"), {})}
+
         ));
