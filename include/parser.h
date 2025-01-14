@@ -111,4 +111,9 @@ void						free_script_node(void *sn);
 void						free_arguments(void *content);
 void						free_redirection(void *content);
 
+/* parser_teardowns.c */
+t_script_node	*teardown_err_in_upstream(t_script_node *sn);
+t_script_node	*teardown_err_in_downstream(t_script_node *sn);
+t_script_node	*teardown(t_script_node *sn, char *msg);
+
 #endif // PARSER_H
