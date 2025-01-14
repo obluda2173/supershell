@@ -100,6 +100,10 @@ t_script_node	*fill_cmd_node(t_script_node *sn, t_dllist *tokens)
 	while (tokens)
 	{
 		cur_type = ((t_token *)tokens->content)->type;
+		if (cur_type == LPAREN) {
+			free_script_node(sn);
+			return get_error_node("parsing error near (");
+		}
 		if (cur_type == PIPE)
 			return (sn);
 		if (cur_type == END_OF_FILE)
