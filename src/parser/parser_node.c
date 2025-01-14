@@ -158,6 +158,6 @@ t_script_node	*parse_logical(t_dllist *tokens)
 	if (sn->upstream->node_type == ERROR_NODE)
 		return teardown_err_in_upstream(sn);
 	if (!sn->upstream)
-		return (teardown(sn, "error parsing pipeline after logical operator"));
+		return (teardown(sn, "error parsing pipeline before logical operator"));
 	return (sn);
 }

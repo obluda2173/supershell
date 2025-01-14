@@ -125,7 +125,7 @@ INSTANTIATE_TEST_SUITE_P(
                 new_token("echo", BUILTIN),
                 new_token(NULL, END_OF_FILE),
             },
-            new_test_script_node(ERROR_NODE, {}, new_error_node("error parsing pipeline before logical operator"), {})},
+            new_test_script_node(ERROR_NODE, {}, new_error_node("error parsing pipeline after logical operator"), {})},
         ParserTestParams{6, ERROR_TEST, {
                 new_token("echo", BUILTIN),
                 new_token("|", PIPE),
