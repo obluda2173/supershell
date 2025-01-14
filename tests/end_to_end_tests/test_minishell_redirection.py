@@ -175,7 +175,6 @@ def test_heredoc_redirections(cmd):
         for line in stdout_minishell.decode().split("\n")
         if not (line.startswith(prompt) or line.startswith("heredoc>"))
     ]
-    print(stdout_minishell)
     stderr_minishell = stderr_minishell.decode()
 
     assert "ERROR" not in stdout_minishell

@@ -133,6 +133,15 @@ int set_redirections(t_list* redirections, int fds[2]) {
 				return 1;
 			}
 		}
+
+		if (r.type == HERED) {
+			fds[0]  = open("/tmp/minishell/here_doc", O_CREAT|O_RDWR|O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+			if (fds[0] < 0) {
+				perror("open");
+				close_fds(fds);
+				return 1;
+			}
+		}
 		head = head->next;
 	}
 	return 0;

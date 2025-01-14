@@ -141,6 +141,13 @@ int	main(int ac, char **av, char **ep)
 			continue ;
 		}
 
+
+		/* t_dllist *head = tokens; */
+		/* while (head) { */
+		/* 	printf("content: %s; type: %d\n", ((t_token*)head->content)->content, ((t_token*)head->content)->type); */
+		/* 	head = head->next; */
+		/* } */
+
 		t_script_node *script = parse(tokens);
 		ft_dllstclear(&tokens, free_token);
 		if (script->node_type != ERROR_NODE)
