@@ -1,49 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_syntax_check.c                               :+:      :+:    :+:   */
+/*   lexer_syntax_check_2.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/04 09:40:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/13 15:35:31 by erian            ###   ########.fr       */
+/*   Created: 2025/01/14 12:29:43 by erian             #+#    #+#             */
+/*   Updated: 2025/01/14 13:10:23 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "minishell.h"
-#include <unistd.h>
 
-static int	count_consequitives(char *str, char c)
-{
-	int	c_counter;
-	int	counter;
-	int	i;
-	int	j;
-
-	c_counter = 0;
-	counter = 0;
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == c)
-		{
-			j = i;
-			while (str[j] == c)
-			{
-				counter++;
-				j++;
-			}
-			if (c_counter < counter)
-				c_counter = counter;
-			counter = 0;
-		}
-		i++;
-	}
-	return (c_counter);
-}
-
-static bool	check_consecutive_chars(char *str, char c)
+bool	check_consecutive_chars(char *str, char c)
 {
 	if (count_consequitives(str, c) > 2)
 	{
@@ -55,7 +24,7 @@ static bool	check_consecutive_chars(char *str, char c)
 	return (true);
 }
 
-static bool	check_unclosed_quotes(char *str)
+bool	check_unclosed_quotes(char *str)
 {
 	int	i;
 	int	single_quote_count;
@@ -84,7 +53,7 @@ static bool	check_unclosed_quotes(char *str)
 	return (true);
 }
 
-static bool	check_invalid_symbol(char *str)
+bool	check_invalid_symbol(char *str)
 {
 	if (ft_strchr(str, ';') || ft_strchr(str, '\\')
 		|| ft_strchr(str, '{') || ft_strchr(str, '}')
@@ -96,48 +65,38 @@ static bool	check_invalid_symbol(char *str)
 	return (true);
 }
 
-bool	check_unclosed_parenthesis(char *str)
+static void	skip_double_quotes(char *str, size_t *i)
+{
+	(*i)++;
+	while (str[*i] != '\"' && str[*i])
+		(*i)++;
+}
+
+bool	check_unclosed_parenthesis(char *str, size_t open_paren)
 {
 	size_t	i;
-	size_t	l_paren;
-	size_t	r_paren;
-	
+
 	i = -1;
-	l_paren = 0;
-	r_paren = 0;
 	while (str[++i])
 	{
+		if (str[i] == '\"')
+			skip_double_quotes(str, &i);
 		if (str[i] == '(')
-			l_paren++;
-		if (str[i] == ')')
-			r_paren++;
+			open_paren++;
+		else if (str[i] == ')')
+		{
+			if (open_paren == 0)
+			{
+				ft_putendl_fd("Unclosed parenthesis", STDERR_FILENO);
+				return (false);
+			}
+			open_paren--;
+		}
 	}
-	if (l_paren != r_paren)
+	if (open_paren > 0)
 	{
 		ft_putendl_fd("Unclosed parenthesis", STDERR_FILENO);
 		return (false);
 	}
-	return (true);
-}
-
-bool	check_syntax(char *str)
-{
-	int		i;
-	char	special_chars[4];
-
-	i = -1;
-	special_chars[0] = '<';
-	special_chars[1] = '>';
-	special_chars[2] = '|';
-	special_chars[3] = '&';
-	if (!check_unclosed_quotes(str))
-		return (false);
-	while (++i < 4)
-		if (!check_consecutive_chars(str, special_chars[i]))
-			return (false);
-	if (!check_invalid_symbol(str))
-		return (false);
-	if (!check_unclosed_parenthesis(str))
-		return (false);
 	return (true);
 }
