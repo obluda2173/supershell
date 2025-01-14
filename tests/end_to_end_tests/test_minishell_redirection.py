@@ -128,6 +128,8 @@ def test_in_redirections(cmd):
         (["echo )"], "Unclosed parenthesis", 2),
         (["((echo)"], "Unclosed parenthesis", 2),
         (["(ls && (echo hi)"], "Unclosed parenthesis", 2),
+        ([")ls && (echo hi)("], "Unclosed parenthesis", 2),
+        (["(ls -l && echo \"((expression)))\""], "Unclosed parenthesis", 2),
     ],
 )
 def test_errors(cmd, err_msg, want_exit_status):

@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 14:58:41 by erian             #+#    #+#             */
-/*   Updated: 2025/01/13 13:34:36 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/14 13:04:45 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,16 @@ char		*handle_operators(const char *input, size_t *i, char *result, size_t *j);
 
 // heredoc.c
 int			heredoc_loop(t_dllist **tokens);
+
+// syntax_check_1.c
+int		count_consequitives(char *str, char c);
+bool	check_syntax(char *str);
+
+// lexer_syntax_check_2.c
+bool	check_consecutive_chars(char *str, char c);
+bool	check_unclosed_quotes(char *str);
+bool	check_invalid_symbol(char *str);
+bool	check_unclosed_parenthesis(char *str, size_t open_paren);
 
 // lexer.c
 void		free_token(void *content);
