@@ -78,7 +78,8 @@ t_script_node	*parse_pipe(t_dllist *tokens)
 	return (sn);
 }
 
-/* removes last RPAREN from downstream; throws error if if appears at a wrong place */
+/* removes last RPAREN from downstream;
+ * throws error if if appears at a wrong place */
 t_script_node	*remove_next_rparen(t_dllist *downstream, t_script_node *sn)
 {
 	t_dllist	*head;
@@ -101,57 +102,77 @@ t_script_node	*remove_next_rparen(t_dllist *downstream, t_script_node *sn)
 	return (NULL);
 }
 
-t_script_node *parse_upstream(t_script_node *sn, t_dllist *tokens) {
+t_script_node	*parse_upstream(t_script_node *sn, t_dllist *tokens)
+{
 	sn->upstream = parse(tokens);
 	if (sn->upstream->node_type == ERROR_NODE)
 		return (teardown_err_in_upstream(sn));
 	if (!sn->upstream)
 		return (teardown(sn, "error parsing pipeline before logical operator"));
-	return sn;
+	return (sn);
 }
 
-t_script_node *parse_downstream(t_script_node *sn, t_dllist *downstream) {
+t_script_node	*parse_downstream(t_script_node *sn, t_dllist *downstream)
+{
 	sn->downstream = parse(downstream);
 	if (!sn->downstream)
 		return (teardown(sn, "error parsing pipeline after logical operator"));
 	if (sn->downstream->node_type == ERROR_NODE)
 		return (teardown_err_in_downstream(sn));
-	return sn;
+	return (sn);
 }
 
-t_script_node	*parse_logical(t_dllist *tokens)
+/* t1->t2->tokens->t3->...->EOF becomes t1->t2->tokens->EOF */
+t_script_node	*truncate_tokens(t_script_node *sn, t_dllist **tokens)
 {
-	t_script_node	*sn;
-	t_dllist		*downstream;
+	*tokens = (*tokens)->prev;
+	if (!*tokens)
+		return (teardown(sn, "error parsing pipeline before logical operator"));
+	ft_dllstclear(&((*tokens)->next), free_token);
+	ft_dllstadd_back(tokens, ft_dllstnew(create_token(NULL, END_OF_FILE)));
+	return (NULL);
+}
+
+t_script_node	*set_downstream_tokens(t_dllist **downstream_tokens,
+		t_dllist *tokens, t_script_node *sn)
+{
 	t_script_node	*err;
 
-	if (((t_token *)tokens->content)->type == AND)
-		sn = get_branch_node(AND_NODE);
-	if (((t_token *)tokens->content)->type == OR)
-		sn = get_branch_node(OR_NODE);
 	if (((t_token *)tokens->next->content)->type == LPAREN)
 	{
 		tokens->next->next->prev = NULL;
-		downstream = tokens->next->next;
-		err = remove_next_rparen(downstream, sn);
+		*downstream_tokens = tokens->next->next;
+		err = remove_next_rparen(*downstream_tokens, sn);
 		if (err)
 			return (err);
 	}
 	else
 	{
 		tokens->next->prev = NULL;
-		downstream = tokens->next;
+		*downstream_tokens = tokens->next;
 	}
-	sn = parse_downstream(sn, downstream);
-	if (sn->node_type == ERROR_NODE)
-		return sn;
+	return (NULL);
+}
 
-	tokens = tokens->prev;
-	if (!tokens)
-		return (teardown(sn, "error parsing pipeline before logical operator"));
-	ft_dllstclear(&tokens->next, free_token);
-	ft_dllstadd_back(&tokens, ft_dllstnew(create_token(NULL, END_OF_FILE)));
-	while (tokens->prev)
-		tokens = tokens->prev;
-	return parse_upstream(sn, tokens);
+t_script_node	*parse_logical(t_dllist *tokens)
+{
+	t_script_node	*sn;
+	t_dllist		*downstream_tokens;
+	t_script_node	*err;
+
+	if (((t_token *)tokens->content)->type == AND)
+		sn = get_branch_node(AND_NODE);
+	if (((t_token *)tokens->content)->type == OR)
+		sn = get_branch_node(OR_NODE);
+	err = set_downstream_tokens(&downstream_tokens, tokens, sn);
+	if (err)
+		return (err);
+	sn = parse_downstream(sn, downstream_tokens);
+	if (sn->node_type == ERROR_NODE)
+		return (sn);
+	err = truncate_tokens(sn, &tokens);
+	if (err)
+		return (err);
+	tokens = ft_dllstfirst(tokens);
+	return (parse_upstream(sn, tokens));
 }

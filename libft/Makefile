@@ -80,6 +80,7 @@ BONUS += ft_lstdelone.c
 BONUS += ft_lstclear.c
 
 BONUS += ft_dllstlast.c
+BONUS += ft_dllstfirst.c
 BONUS += ft_dllstnew.c
 BONUS += ft_dllstmap.c
 BONUS += ft_dllstsize.c
