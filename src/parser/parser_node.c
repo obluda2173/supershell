@@ -154,6 +154,6 @@ t_script_node	*parse_logical(t_dllist *tokens)
 		tokens = tokens->prev;
 	sn->upstream = parse(tokens);
 	if (sn->upstream->node_type == ERROR_NODE)
-		return (teardown(sn, "error parsing pipeline before logical operator"));
+		return teardown_err_in_upstream(sn);
 	return (sn);
 }
