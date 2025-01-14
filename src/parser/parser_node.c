@@ -115,6 +115,10 @@ t_script_node	*parse_logical(t_dllist *tokens)
 	if (((t_token*)tokens->next->content)->type == LPAREN) {
 		tokens->next->next->prev = NULL;
 		downstream = tokens->next->next;
+		if (((t_token *)downstream->content)->type == RPAREN) {
+			free_script_node(sn);
+			return get_error_node("parsing error near (");
+		}
 		t_dllist *head = downstream;
 		while (((t_token *)head->content)->type != RPAREN)
 			head = head->next;
