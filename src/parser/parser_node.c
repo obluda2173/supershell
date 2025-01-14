@@ -116,12 +116,19 @@ t_script_node	*parse_logical(t_dllist *tokens)
 		tokens->next->next->prev = NULL;
 		downstream = tokens->next->next;
 		t_dllist *head = downstream;
-		while (((t_token *)head->content)->type != RPAREN) {
-			if (((t_token*)head->content)->type == PIPE) {
-				ft_putendl_fd("hello", STDOUT_FILENO);
-				return get_error_node("parsing error near |");
-			}
+		while (((t_token *)head->content)->type != RPAREN)
 			head = head->next;
+		if (((t_token *)head->prev->content)->type == PIPE) {
+			free_script_node(sn);
+			return get_error_node("parsing error near |");
+		}
+		if (((t_token *)head->prev->content)->type == AND) {
+			free_script_node(sn);
+			return get_error_node("parsing error near &&");
+		}
+		if (((t_token *)head->prev->content)->type == OR) {
+			free_script_node(sn);
+			return get_error_node("parsing error near ||");
 		}
 		head->next->prev = head->prev;
 		head->prev->next = head->next;
