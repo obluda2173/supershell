@@ -125,6 +125,14 @@ int set_redirections(t_list* redirections, int fds[2]) {
 				return 1;
 			}
 		}
+		if (r.type == APPEND) {
+			fds[1]  = open(r.word, O_APPEND|O_WRONLY|O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+			if (fds[1] < 0) {
+				perror("open");
+				close_fds(fds);
+				return 1;
+			}
+		}
 		head = head->next;
 	}
 	return 0;

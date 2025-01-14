@@ -38,3 +38,13 @@ def check_permission(want_perm, file_path):
     )
     got_perm = 100 * user_perm + 10 * group_perm + other_perm
     assert got_perm == want_perm
+
+
+def get_file_content(path):
+    assert os.path.isfile(path), f"file does not exist {path}"
+    check_permission(644, path)
+    with open(path, "r") as f:
+        file_content = f.readlines()
+    os.remove(path)
+    assert not os.path.isfile(path), f"file does still exist {path}"
+    return file_content

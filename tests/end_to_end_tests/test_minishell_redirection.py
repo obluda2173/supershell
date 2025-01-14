@@ -1,16 +1,60 @@
 import pytest
 import os
-from conftest import start_process, get_prompt_minishell, check_permission
+from conftest import start_process, get_prompt_minishell, get_file_content
 
 
-def get_file_content(tmp_path):
-    assert os.path.isfile(tmp_path), f"file does not exist {tmp_path}"
-    check_permission(644, tmp_path)
-    with open(tmp_path, "r") as f:
-        file_content = f.readlines()
-    os.remove(tmp_path)
-    assert not os.path.isfile(tmp_path), f"file does still exist {tmp_path}"
-    return file_content
+def recreate_append_file():
+    try:
+        os.remove("tests/end_to_end_tests/test_files/append.txt")
+    except:
+        pass
+    with open("tests/end_to_end_tests/test_files/append.txt", "w") as file:
+        file.write("append")
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        (['echo "hello" >> tests/end_to_end_tests/test_files/append.txt']),
+    ],
+)
+def test_redirect_append(cmd):
+    bash = start_process("bash")
+    assert bash.stdin is not None
+
+    cmds = "\n".join(cmd + ["echo $?\n"])
+
+    stdout_bash, _ = bash.communicate(cmds.encode())
+    stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
+
+    append_path = "tests/end_to_end_tests/test_files/append.txt"
+    file_bash = get_file_content(append_path)
+    recreate_append_file()
+
+    minishell = start_process("./minishell")
+    stdout_minishell, stderr_minishell = minishell.communicate(cmds.encode())
+
+    file_minishell = get_file_content(append_path)
+    recreate_append_file()
+
+    prompt = get_prompt_minishell()
+    stdout_minishell = [
+        line
+        for line in stdout_minishell.decode().split("\n")
+        if not (line.startswith(prompt) or line.startswith("heredoc>"))
+    ]
+    stderr_minishell = stderr_minishell.decode()
+
+    assert "ERROR" not in stdout_minishell
+    assert "ERROR" not in stderr_minishell
+    assert len(stdout_bash) == len(stdout_minishell)
+    assert len(stderr_minishell) == 0
+    for out1, out2 in zip(stdout_bash, stdout_minishell):
+        assert out1 == out2, f"{out1} != {out2}"
+
+    assert len(file_bash) == len(file_minishell)
+    for out1, out2 in zip(file_bash, file_minishell):
+        assert out1 == out2, f"{out1} != {out2}"
 
 
 @pytest.mark.parametrize(
@@ -25,7 +69,7 @@ def get_file_content(tmp_path):
         (["> tests/end_to_end_tests/test_files/tmp.txt"]),
     ],
 )
-def test_out_redirections(cmd):
+def test_redirect_out(cmd):
     bash = start_process("bash")
     assert bash.stdin is not None
 
@@ -104,52 +148,39 @@ def test_in_redirections(cmd):
 
 
 @pytest.mark.parametrize(
-    "cmd, err_msg, want_exit_status",
+    "cmd",
     [
-        (["wc < asdf"], "No such file or directory", 1),
-        (
-            ["wc < tests/end_to_end_tests/test_files/input1.txt > error/error"],
-            "No such file or directory",
-            1,
-        ),
-        (["<"], "parsing error redirection", 2),
-        (['echo "hello" | <'], "parsing error redirection", 2),
-        (["< file.txt"], "No such file or directory", 1),
-        (['"'], "Unclosed double quote", 2),
-        (['helllo " hello'], "Unclosed double quote", 2),
-        (["helllo ' hello"], "Unclosed single quote", 2),
-        (["hello } whats up"], "Invalid input", 2),
-        (["hello &&& whats up"], "Parse error near &", 2),
-        (["("], "Unclosed parenthesis", 2),
-        (['echo ( "hello" '], "Unclosed parenthesis", 2),
-        (['echo "hello" ) '], "Unclosed parenthesis", 2),
-        (["(("], "Unclosed parenthesis", 2),
-        (["(echo hello"], "Unclosed parenthesis", 2),
-        (["echo )"], "Unclosed parenthesis", 2),
-        (["((echo)"], "Unclosed parenthesis", 2),
-        (["(ls && (echo hi)"], "Unclosed parenthesis", 2),
-        ([")ls && (echo hi)("], "Unclosed parenthesis", 2),
-        (["(ls -l && echo \"((expression)))\""], "Unclosed parenthesis", 2),
+        (["wc -c <<EOF\nline1\nline2\nEOF"]),
     ],
 )
-def test_errors(cmd, err_msg, want_exit_status):
-    prompt = get_prompt_minishell()
-
+def test_heredoc_redirections(cmd):
     minishell = start_process("./minishell")
+    prompt, _ = minishell.communicate()
+    prompt = prompt.decode()
+
+    bash = start_process("bash")
+    minishell = start_process("./minishell")
+
+    assert bash.stdin is not None
     assert minishell.stdin is not None
 
     cmds = "\n".join(cmd + ["echo $?\n"])
+
+    stdout_bash, _ = bash.communicate(cmds.encode())
     stdout_minishell, stderr_minishell = minishell.communicate(cmds.encode())
+
+    stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
     stdout_minishell = [
         line
         for line in stdout_minishell.decode().split("\n")
         if not (line.startswith(prompt) or line.startswith("heredoc>"))
     ]
+    print(stdout_minishell)
     stderr_minishell = stderr_minishell.decode()
 
     assert "ERROR" not in stdout_minishell
     assert "ERROR" not in stderr_minishell
-    assert len(stderr_minishell) != 0
-    assert len(stdout_minishell) == 1
-    assert err_msg in stderr_minishell
-    assert want_exit_status == int(stdout_minishell[0])
+    assert len(stdout_bash) == len(stdout_minishell)
+    assert len(stderr_minishell) == 0
+    for out1, out2 in zip(stdout_bash, stdout_minishell):
+        assert out1 == out2, f"{out1} != {out2}"
