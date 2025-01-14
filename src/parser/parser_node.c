@@ -22,7 +22,7 @@ t_script_node	*treat_parens(t_dllist *tokens)
 	head = tokens;
 	head = head->next;
 	if ((*(t_token *)head->content).type == RPAREN)
-		return (get_error_node("parsing error near )"));
+		return (get_error_node("parsing error near ("));
 	while ((*(t_token *)head->content).type != RPAREN)
 		head = head->next;
 	if (((*(t_token *)head->next->content).type != END_OF_FILE))
