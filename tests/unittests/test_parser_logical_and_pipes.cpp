@@ -5,6 +5,9 @@ void compare_logical_or_pipe_node(t_test_script_node want, t_script_node *sn) {
     ASSERT_EQ(want.type, sn->node_type);
     ASSERT_EQ(sn->num_children, 2);
     ASSERT_NE(nullptr,sn->upstream);
+    std::cout << sn->node_type << "\n";
+    std::cout << sn->upstream->node_type << "\n";
+    std::cout << sn->downstream->node_type << "\n";
     ASSERT_EQ(want.childs[0].type, sn->upstream->node_type);
     ASSERT_NE(nullptr,sn->downstream);
     ASSERT_EQ(want.childs[1].type, sn->downstream->node_type);
@@ -28,46 +31,79 @@ void test_pipe_cases(t_test_script_node want, t_script_node *sn, t_dllist* token
 
 INSTANTIATE_TEST_SUITE_P(
     ParserTestsPipesWithParanthesis, ParserTestSuite,
-    testing::Values(ParserTestParams{
+    testing::Values(
+        ParserTestParams{
+            0,
+            PIPE_TEST,
+            {
+                new_token("(", LPAREN),
+                new_token("echo", BUILTIN),
+                new_token("hello", WORD),
+                new_token(")", RPAREN),
+                new_token("|", PIPE),
+                new_token("(", LPAREN),
+                new_token("echo", BUILTIN),
+                new_token("world", WORD),
+                new_token(")", RPAREN),
+                new_token("|", PIPE),
+                new_token("(", LPAREN),
+                new_token("echo", BUILTIN),
+                new_token("welt", WORD),
+                new_token(")", RPAREN),
+                new_token(NULL, END_OF_FILE),
+            },
+            new_test_script_node(
+                PIPE_NODE, {}, {},
+                {new_test_script_node(
+                     PIPE_NODE, {}, {},
+                     {new_test_script_node(
+                          CMD_NODE,
+                          new_test_cmd_node(new_token("echo", BUILTIN),
+                                            {new_argument("hello", LITERAL)},
+                                            {}),
+                          {}, {}),
+                      new_test_script_node(
+                          CMD_NODE,
+                          new_test_cmd_node(new_token("echo", BUILTIN),
+                                            {new_argument("world", LITERAL)},
+                                            {}),
+                          {}, {})}),
+                 new_test_script_node(
+                     CMD_NODE,
+                     new_test_cmd_node(new_token("echo", BUILTIN),
+                                       {new_argument("welt", LITERAL)}, {}),
+                     {}, {})})},
+        ParserTestParams{
         0,
         PIPE_TEST,
         {
             new_token("(", LPAREN),
             new_token("echo", BUILTIN),
-            new_token("hello", WORD),
+            new_token("&&", AND),
+            new_token("echo", BUILTIN),
             new_token(")", RPAREN),
-            new_token("|", PIPE),
+            new_token("||", OR),
             new_token("(", LPAREN),
             new_token("echo", BUILTIN),
-            new_token("world", WORD),
-            new_token(")", RPAREN),
-            new_token("|", PIPE),
-            new_token("(", LPAREN),
+            new_token("&&", AND),
             new_token("echo", BUILTIN),
-            new_token("welt", WORD),
             new_token(")", RPAREN),
             new_token(NULL, END_OF_FILE),
         },
-        new_test_script_node(PIPE_NODE, {}, {}, {
+        new_test_script_node(OR_NODE, {}, {}, {
          new_test_script_node(
-            PIPE_NODE, {}, {},
+            AND_NODE, {}, {},
             {
-                new_test_script_node(
-                    CMD_NODE,
-                    new_test_cmd_node(new_token("echo", BUILTIN),
-                                      {new_argument("hello", LITERAL)}, {}),
-                    {}, {}),
-                new_test_script_node(
-                    CMD_NODE,
-                    new_test_cmd_node(new_token("echo", BUILTIN),
-                                      {new_argument("world", LITERAL)}, {}),
-                    {}, {})
+                new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {}, {}),
+                new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {}, {})
             }),
+
          new_test_script_node(
-                    CMD_NODE,
-                    new_test_cmd_node(new_token("echo", BUILTIN),
-                                      {new_argument("welt", LITERAL)}, {}),
-                    {}, {})})}
+            AND_NODE, {}, {},
+            {
+                new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {}, {}),
+                new_test_script_node(CMD_NODE, new_test_cmd_node(new_token("echo", BUILTIN), {}, {}), {}, {})
+            })})}
         ));
 
 INSTANTIATE_TEST_SUITE_P(

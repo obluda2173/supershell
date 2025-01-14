@@ -152,7 +152,7 @@ t_script_node	*parse_logical(t_dllist *tokens)
 		return (teardown(sn, "error parsing pipeline before logical operator"));
 	ft_dllstclear(&tokens->next, free_token);
 	ft_dllstadd_back(&tokens, ft_dllstnew(create_token(NULL, END_OF_FILE)));
-	while (tokens->prev && ((t_token *)tokens->content)->type != AND)
+	while (tokens->prev)
 		tokens = tokens->prev;
 	sn->upstream = parse(tokens);
 	if (sn->upstream->node_type == ERROR_NODE)
