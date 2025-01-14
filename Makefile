@@ -69,7 +69,9 @@ unittest:
 
 pytest: $(NAME)
 	@make FSANITIZE=-fsanitize=address && \
-	python3 -m pytest 
+	touch tests/end_to_end_tests/test_files/no_perm.txt && \
+	chmod 000 tests/end_to_end_tests/test_files/no_perm.txt && \
+	python3 -m pytest
 
 # **************************************************************************** #
 # PHONY                                                                        #
