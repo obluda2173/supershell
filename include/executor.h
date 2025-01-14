@@ -39,5 +39,7 @@ void free_matrix(char **matrix);
 // execute_cmd.c
 int execute_command(t_cmd_node cmd_node, char **envp, t_data *data);
 
+/* executor_pattern_matcher.c */
+bool matches_pattern_2(const char *pattern, const char *str);
 
 #endif // EXECUTOR_
