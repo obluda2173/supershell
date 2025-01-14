@@ -52,20 +52,44 @@ t_script_node	*parse(t_dllist *tokens)
 	if (((t_token *)ft_dllstlast(tokens)->content)->type != END_OF_FILE)
 		return (get_error_node("no end of file token"));
 
-	/* remove surrounding parens */
-	if (((t_token *)tokens->content)->type == LPAREN) {
-		t_dllist *head = tokens;
-		head->next->prev = NULL;
-		tokens = head->next;
-		head->next = NULL;
-		ft_dllstclear(&head, free_token);
-		head = tokens;
-		int nbr_open_lparens = 0;
-		while (((t_token *)head->content)->type != RPAREN) {
-			if (((t_token *)tokens->content)->type == LPAREN) {
+	/* /\* remove surrounding parens *\/ */
+	t_dllist* scnd_to_last = ft_dllstlast(tokens)->prev;
+	bool remove = false;
 
+	/* printf("type first: %d\n", ((t_token *)tokens->content)->type); */
+	/* printf("type scnd_to_last: %d\n", ((t_token*)scnd_to_last->content)->type); */
+	if (((t_token *)tokens->content)->type == LPAREN && ((t_token*)scnd_to_last->content)->type == RPAREN) {
+		if (tokens->next == scnd_to_last) {
+			return get_error_node("parsing error near (");
 		}
+		t_dllist *head = tokens->next;
+		head = head->next;
+		int nbr_open_parens = 1;
+		while (head != scnd_to_last) {
+			if (((t_token *)head->content)->type == LPAREN)
+				nbr_open_parens++;
+			if (((t_token *)head->content)->type == RPAREN)
+				nbr_open_parens--;
+			if (nbr_open_parens == 0)
+				break;
+			head = head->next;
+		}
+		if (head == scnd_to_last)
+			remove = true;
 	}
+	if (remove) {
+		t_dllist *head = tokens;
+		tokens = head->next;
+		tokens->prev = NULL;
+
+		scnd_to_last->prev->next = scnd_to_last->next;
+		scnd_to_last->next->prev = scnd_to_last->prev;
+		scnd_to_last->next = NULL;
+		scnd_to_last->prev = NULL;
+		ft_dllstclear(&scnd_to_last, free_token);
+		return parse(tokens);
+	}
+
 	tokens = find_last_logical(tokens);
 	if (((t_token *)tokens->content)->type == AND
 		|| ((t_token *)tokens->content)->type == OR)

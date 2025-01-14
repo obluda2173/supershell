@@ -5,9 +5,6 @@ void compare_logical_or_pipe_node(t_test_script_node want, t_script_node *sn) {
     ASSERT_EQ(want.type, sn->node_type);
     ASSERT_EQ(sn->num_children, 2);
     ASSERT_NE(nullptr,sn->upstream);
-    std::cout << sn->node_type << "\n";
-    std::cout << sn->upstream->node_type << "\n";
-    std::cout << sn->downstream->node_type << "\n";
     ASSERT_EQ(want.childs[0].type, sn->upstream->node_type);
     ASSERT_NE(nullptr,sn->downstream);
     ASSERT_EQ(want.childs[1].type, sn->downstream->node_type);
