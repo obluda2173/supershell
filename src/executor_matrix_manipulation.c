@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 15:33:59 by erian             #+#    #+#             */
-/*   Updated: 2025/01/14 17:44:59 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/15 11:50:24 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ char **ft_matrix_join(char **m1, char **m2)
     size_t len1 = ft_matrix_size(m1);
     size_t len2 = ft_matrix_size(m2);
 
-    printf("%zu\n", len1);
-    printf("%zu\n", len2);
+    // printf("%zu\n", len1);
+    // printf("%zu\n", len2);
     
     char **result = malloc(sizeof(char *) * (len1 + len2 + 1));
     size_t i = 0;

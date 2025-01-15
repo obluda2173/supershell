@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc.c                                          :+:      :+:    :+:   */
+/*   lexer_heredoc.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 11:00:40 by erian             #+#    #+#             */
-/*   Updated: 2025/01/08 16:54:57 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/15 13:24:56 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,7 @@ char	*extract_delimiter(t_dllist **heredoc_token)
 		return (NULL);
 	delimiter = NULL;
 	token = (t_token *)(*heredoc_token)->content;
-	if (ft_strlen(token->content) > 2)
-		delimiter = ft_strdup(token->content + 2);
-	else if ((*heredoc_token)->next)
+	if ((*heredoc_token)->next)
 	{
 		next_token = (t_token *)(*heredoc_token)->next->content;
 		if (next_token->type == WORD || next_token->type == SINGLE_QUOTE)
@@ -124,8 +122,15 @@ int	heredoc_loop(t_dllist **tokens)
 	new_token_node = create_heredoc_token(heredoc_token, heredoc_input);
 	if (!new_token_node)
 		return (0);
-	new_token_node->next = heredoc_token->next;
-	new_token_node->prev = heredoc_token;
-	heredoc_token->next = new_token_node;
+	if (heredoc_token->next)
+	{
+		new_token_node->next = heredoc_token->next;
+		new_token_node->next->prev = new_token_node;
+	}
+	else
+		new_token_node->next = NULL;
+	new_token_node->prev = heredoc_token->prev;
+	heredoc_token->prev->next = new_token_node;
+	ft_dllstdelone(heredoc_token, free_token);
 	return (1);
 }
