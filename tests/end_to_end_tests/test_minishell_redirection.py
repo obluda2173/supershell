@@ -155,6 +155,7 @@ def test_in_redirections(cmd):
     ],
 )
 def test_heredoc_redirections(cmd):
+    #  need to write test for remaining open filedescriptors
     minishell = start_process("./minishell")
     prompt, _ = minishell.communicate()
     prompt = prompt.decode()
