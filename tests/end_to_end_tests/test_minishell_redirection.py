@@ -151,6 +151,7 @@ def test_in_redirections(cmd):
     "cmd",
     [
         (["wc -c <<EOF\nline1\nline2\nEOF"]),
+        (["cat <<EOF tests/end_to_end_tests/test_files/input1.txt\nline1\nline2\nEOF"]),
     ],
 )
 def test_heredoc_redirections(cmd):

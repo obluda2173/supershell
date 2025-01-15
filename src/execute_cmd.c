@@ -110,6 +110,9 @@ int set_redirections(t_list* redirections, int fds[2]) {
 	while (head) {
 		t_redirection r = *((t_redirection*)head->content);
 		if (r.type == IN) {
+			/* if (fds[0] != STDIN_FILENO) { */
+			/* 	close(fds[0]); */
+			/* } */
 			fds[0] = open(r.word, O_RDONLY);
 			if (fds[0]< 0) {
 				perror("open");
@@ -133,14 +136,12 @@ int set_redirections(t_list* redirections, int fds[2]) {
 				return 1;
 			}
 		}
-
 		if (r.type == HERED) {
-			fds[0]  = open("/tmp/minishell/here_doc", O_CREAT|O_RDWR|O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-			if (fds[0] < 0) {
-				perror("open");
-				close_fds(fds);
-				return 1;
-			}
+			int hered_pipe[2];
+			pipe(hered_pipe);
+			write(hered_pipe[1], r.word, ft_strlen(r.word));
+			close(hered_pipe[1]);
+			fds[0] = hered_pipe[0];
 		}
 		head = head->next;
 	}

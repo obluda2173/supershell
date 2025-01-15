@@ -9,7 +9,7 @@ CFLAGS		=	-Wall -Wextra -Werror
 LIBS 		= 	-lreadline -Llibft -lft
 
 # Debugging
-FSANITIZE = -fsanitize=address
+FSANITIZE =
 
 # Directories and source files
 SRC_DIR		=	src
@@ -71,8 +71,7 @@ pytest: $(NAME)
 	@make FSANITIZE=-fsanitize=address && \
 	touch tests/end_to_end_tests/test_files/no_perm.txt && \
 	chmod 000 tests/end_to_end_tests/test_files/no_perm.txt && \
-	python3 -m pytest && \
-	rm tests/end_to_end_tests/test_files/no_perm.txt
+	python3 -m pytest
 
 
 # **************************************************************************** #
