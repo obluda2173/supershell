@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 14:55:43 by erian             #+#    #+#             */
-/*   Updated: 2025/01/13 14:04:41 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/15 11:59:53 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ char	*handle_heredoc(char *input, size_t *i, char *result, size_t *j)
 {
 	while (input[*i] == '<')
 		result[(*j)++] = input[(*i)++];
+	if (input[*i] && !isspace(input[*i]))
+        result[(*j)++] = ' ';
 	while (input[*i] && !isspace(input[*i]))
 		result[(*j)++] = input[(*i)++];
 	if (input[*i] && input[*i] != ' ')

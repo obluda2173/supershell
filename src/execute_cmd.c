@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:36:06 by erian             #+#    #+#             */
-/*   Updated: 2025/01/12 12:57:32 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/16 16:33:28 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,13 @@ static char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
 			processed_word = handle_dollar(argument->word, data);
 		else if (argument->type == WILDCARD_EXP)
 		{
-			processed_word = handle_wildcard(argument->word);
-			printf("line: %s\n", processed_word);
+			argv[i] = NULL;
+			char **temp_matrix = handle_wildcard(argument->word, argv);
+			i = ft_matrix_size(temp_matrix) + 1;
+			free_matrix(argv);
+			argv = temp_matrix;
+			tmp = tmp->next;
+            continue;
 		}
 		if (!processed_word)
 		{
@@ -60,6 +65,7 @@ static char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
 		tmp = tmp->next;
 	}
 	argv[i] = NULL;
+
 	return (argv);
 }
 
@@ -86,6 +92,7 @@ static int custom_exec(char *cmd_path, char **args, char **ep, int fds[2]) {
 	{
 		dup2(fds[0], STDIN_FILENO);
 		dup2(fds[1], STDOUT_FILENO);
+		
 		if (execve(cmd_path, args, ep) == -1)
 		{
 			perror("execve");

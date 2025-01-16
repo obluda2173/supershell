@@ -428,6 +428,42 @@ INSTANTIATE_TEST_SUITE_P(
 							new_token("echo", BUILTIN),
 							new_token(")", RPAREN),
 							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"echo <<EOF > file.txt", {
+							new_token("echo", BUILTIN),
+							new_token("<<", HERE_DOC),
+							new_token("EOF", WORD),
+							new_token(">", REDIRECT_OUT),
+							new_token("file.txt", WORD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"echo << EOF > file.txt", {
+							new_token("echo", BUILTIN),
+							new_token("<<", HERE_DOC),
+							new_token("EOF", WORD),
+							new_token(">", REDIRECT_OUT),
+							new_token("file.txt", WORD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"echo << 'EOF' > file.txt", {
+							new_token("echo", BUILTIN),
+							new_token("<<", HERE_DOC),
+							new_token("EOF", SINGLE_QUOTE),
+							new_token(">", REDIRECT_OUT),
+							new_token("file.txt", WORD),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
+						"echo <<'EOF' > file.txt", {
+							new_token("echo", BUILTIN),
+							new_token("<<", HERE_DOC),
+							new_token("EOF", SINGLE_QUOTE),
+							new_token(">", REDIRECT_OUT),
+							new_token("file.txt", WORD),
+							new_token(NULL, END_OF_FILE),
 						}}
 		)
 	);

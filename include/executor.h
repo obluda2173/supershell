@@ -31,7 +31,7 @@ char *expand_variable(const char *str, size_t *i);
 char *append_to_result(char *result, size_t *result_len, const char *addition, size_t addition_len);
 
 // executor_handle_wildcard.c
-char *handle_wildcard(const char *word);
+char **handle_wildcard(const char *word, char **argv);
 
 // executer_free.c
 void free_matrix(char **matrix);
@@ -39,7 +39,9 @@ void free_matrix(char **matrix);
 // execute_cmd.c
 int execute_command(t_cmd_node cmd_node, char **envp, t_data *data);
 
-/* executor_pattern_matcher.c */
-bool matches_pattern_2(const char *pattern, const char *str);
+// executor_matrix_manipulation.c
+size_t ft_matrix_size(char **matrix);
+char **ft_matrix_join(char **matrix1, char **matrix2);
+
 
 #endif // EXECUTOR_
