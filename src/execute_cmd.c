@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:36:06 by erian             #+#    #+#             */
-/*   Updated: 2025/01/14 18:17:28 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/16 16:33:28 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,6 @@ static char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
 	}
 	argv[i] = NULL;
 
-	int p = 0;
-
-	while (argv[p])
-	{
-		printf("here: %s\n", argv[p]);
-		p++;
-	}
 	return (argv);
 }
 
