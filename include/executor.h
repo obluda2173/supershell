@@ -43,5 +43,5 @@ int execute_command(t_cmd_node cmd_node, char **envp, t_data *data);
 size_t ft_matrix_size(char **matrix);
 char **ft_matrix_join(char **matrix1, char **matrix2);
 
-
+int matches_pattern(const char *pattern, const char *str);
 #endif // EXECUTOR_

@@ -12,7 +12,7 @@
 
 #include "executor.h"
 
-static int matches_pattern(const char *pattern, const char *str)
+int matches_pattern(const char *pattern, const char *str)
 {
     while (*pattern && *str)
     {
