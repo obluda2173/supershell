@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
+# include <stdbool.h>
 
 typedef struct s_list
 {
@@ -85,6 +86,7 @@ void				ft_putendl_fd(char *s, int fd);
 /* other                                                                    * */
 /* ************************************************************************** */
 char				**ft_split(char const *s, char c);
+bool				ft_isspace(char c);
 /* ************************************************************************** */
 /* bonus                                                                    * */
 /* ************************************************************************** */
@@ -100,7 +102,7 @@ void				ft_lstdelone(t_list *lst, void (*del)(void *));
 void				ft_lstclear(t_list **lst, void (*del)(void *));
 /* ************************************************************************** */
 /* double linked list
-	* */
+ * */
 /* ************************************************************************** */
 t_dllist			*ft_dllstfirst(t_dllist *lst);
 t_dllist			*ft_dllstlast(t_dllist *lst);

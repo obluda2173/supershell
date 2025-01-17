@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+
+
 char	*handle_redirection(char *input, size_t *i, char *result, size_t *j)
 {
 	while (ft_isdigit(input[*i]))
@@ -31,9 +33,9 @@ char	*handle_heredoc(char *input, size_t *i, char *result, size_t *j)
 {
 	while (input[*i] == '<')
 		result[(*j)++] = input[(*i)++];
-	if (input[*i] && !isspace(input[*i]))
+	if (input[*i] && !ft_isspace(input[*i]))
         result[(*j)++] = ' ';
-	while (input[*i] && !isspace(input[*i]))
+	while (input[*i] && !ft_isspace(input[*i]))
 		result[(*j)++] = input[(*i)++];
 	if (input[*i] && input[*i] != ' ')
 		result[(*j)++] = ' ';

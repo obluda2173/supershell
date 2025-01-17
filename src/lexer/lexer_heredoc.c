@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+# include <readline/readline.h>
+# include <readline/history.h>
 
 static t_dllist	*search_heredoc(t_dllist *tokens)
 {

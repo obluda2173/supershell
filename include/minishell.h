@@ -6,7 +6,6 @@
 # include <stdlib.h>
 # include <string.h>
 # include <stdbool.h>
-# include <readline/readline.h>
 
 # include "libft.h"
 # include "lexer.h"
@@ -30,5 +29,9 @@ typedef struct	s_data
 
 // free.c
 void	free_all(t_data **data);
+
+void	init(t_data **data, char **ep);
+char	*meeting_line(t_data **data);
+char * rl_gets(const char* prompt);
 
 #endif
