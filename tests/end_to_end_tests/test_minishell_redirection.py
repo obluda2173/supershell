@@ -21,6 +21,11 @@ def recreate_append_file():
     ],
 )
 def test_redirect_append(cmd):
+    minishell = start_process("./minishell")
+    open_fds_beginning = get_open_fds()
+    prompt, _ = minishell.communicate()
+    prompt = prompt.decode()
+
     bash = start_process("bash")
     assert bash.stdin is not None
 
@@ -37,12 +42,13 @@ def test_redirect_append(cmd):
     assert minishell.stdin is not None
     minishell.stdin.write(cmd.encode())
     minishell.stdin.flush()
+    time.sleep(0.01)  # give the OS time to close the file descriptor
+    open_fds_end = get_open_fds()
     stdout_minishell, stderr_minishell = minishell.communicate()
 
     file_minishell = get_file_content(append_path)
     recreate_append_file()
 
-    prompt = get_prompt_minishell()
     stdout_minishell = [
         line
         for line in stdout_minishell.decode().split("\n")
@@ -60,6 +66,18 @@ def test_redirect_append(cmd):
     assert len(file_bash) == len(file_minishell)
     for out1, out2 in zip(file_bash, file_minishell):
         assert out1 == out2, f"{out1} != {out2}"
+    open_fds_beginning = [
+        line for line in open_fds_beginning if (len(line) and "/usr/" not in line)
+    ]
+    open_fds_end = [
+        line for line in open_fds_end if (len(line) and "/usr/" not in line)
+    ]
+    for line in open_fds_beginning:
+        print(line)
+    for line in open_fds_end:
+        print(line)
+
+    assert len(open_fds_beginning) == len(open_fds_end)
 
 
 @pytest.mark.parametrize(
@@ -203,7 +221,7 @@ def test_heredoc_redirections(cmd):
     stdout_bash, _ = bash.communicate(cmd.encode())
     minishell.stdin.write(cmd.encode())
     minishell.stdin.flush()
-    time.sleep(0.1)
+    time.sleep(0.01)  # give the OS time to close the file descriptor
     open_fds_end = get_open_fds()
     stdout_minishell, stderr_minishell = minishell.communicate()
 
