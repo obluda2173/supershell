@@ -38,6 +38,26 @@ from tests.end_to_end_tests.assertions import (
             "Permission denied",
             1,
         ),
+        (
+            ["cat <<EOF > tests/end_to_end_tests/test_files/no_perm.txt\nline1\nEOF\n"],
+            "Permission denied",
+            1,
+        ),
+        (
+            ["wc <<EOF > error/error\nline1\nEOF\n"],
+            "No such file or directory",
+            1,
+        ),
+        (
+            ["wc <<EOF >> error/error\nline1\nEOF\n"],
+            "No such file or directory",
+            1,
+        ),
+        (
+            ["wc > error/error2 <<EOF >> error/error\nline1\nEOF\n"],
+            "No such file or directory",
+            1,
+        ),
     ],
 )
 def test_redirection_errors(cmd, err_msg, want_exit_status):
