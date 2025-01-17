@@ -177,6 +177,11 @@ def get_open_fds():
                 "cat < tests/end_to_end_tests/test_files/input1.txt <<EOF\nline1\nline2\nEOF"
             ]
         ),
+        (
+            [
+                "cat <<EOF < tests/end_to_end_tests/test_files/input1.txt\nline1\nline2\nEOF"
+            ]
+        ),
     ],
 )
 def test_heredoc_redirections(cmd):

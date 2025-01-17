@@ -117,9 +117,8 @@ int set_redirections(t_list* redirections, int fds[2]) {
 	while (head) {
 		t_redirection r = *((t_redirection*)head->content);
 		if (r.type == IN) {
-			/* if (fds[0] != STDIN_FILENO) { */
-			/* 	close(fds[0]); */
-			/* } */
+			if (fds[0] != STDIN_FILENO)
+				close(fds[0]);
 			fds[0] = open(r.word, O_RDONLY);
 			if (fds[0]< 0) {
 				perror("open");
@@ -148,6 +147,9 @@ int set_redirections(t_list* redirections, int fds[2]) {
 			pipe(hered_pipe);
 			write(hered_pipe[1], r.word, ft_strlen(r.word));
 			close(hered_pipe[1]);
+
+			if (fds[0] != STDIN_FILENO)
+				close(fds[0]);
 			fds[0] = hered_pipe[0];
 		}
 		head = head->next;
