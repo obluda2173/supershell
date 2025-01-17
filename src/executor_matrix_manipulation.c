@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 15:33:59 by erian             #+#    #+#             */
-/*   Updated: 2025/01/17 11:04:11 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/17 14:11:03 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ char **ft_matrix_dup(char **matrix)
     return new_matrix;
 }
 
-// Function to join two matrices
 char **ft_matrix_join(char **m1, char **m2)
 {
     size_t len1 = ft_matrix_size(m1);
@@ -58,21 +57,17 @@ char **ft_matrix_join(char **m1, char **m2)
     size_t j = -1;
 
     if (!result)
-        return NULL;
-
-    // Join first matrix m1
+        return (NULL);
     while (i < len1)
     {
         result[i] = ft_strdup(m1[i]);
         i++;
     }
-
     while (++j < len2)
     {
         result[i] = ft_strdup(m2[j]);
         i++;
     }
-
     result[i] = NULL;
-    return result;
+    return (result);
 }

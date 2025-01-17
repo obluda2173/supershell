@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 12:50:09 by erian             #+#    #+#             */
-/*   Updated: 2025/01/17 12:59:20 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/17 14:26:28 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,13 +113,11 @@ char *process_entry(char *result, size_t *result_len, const char *dir_path, cons
     char *full_path = build_full_path(dir_path, entry_name);
     if (!full_path)
     {
-        free(result); // Clean up before returning NULL
+        free(result);
         return NULL;
     }
-    // printf("1: %s\n", result);
     result = append_entry_to_result(result, result_len, full_path);
-    // printf("2: %s\n", result);
-    free(full_path); // Free the temporary full_path
+    free(full_path);
 
     return result;
 }
@@ -140,7 +138,10 @@ char **process_directory(const char *dir_path, const char *pattern, char **argv)
 {
     DIR *dir = opendir(dir_path);
     if (!dir)
-        return argv; 
+    {
+        perror("Error opening directory");
+        return NULL;
+    }
 
     char *result = create_result_buffer();
     if (!result)
@@ -148,12 +149,16 @@ char **process_directory(const char *dir_path, const char *pattern, char **argv)
         closedir(dir);
         return NULL;
     }
+
     struct dirent *entry;
     size_t result_len = 0;
+    int match_found = 0; 
+
     while ((entry = readdir(dir)) != NULL)
     {
         if (matches_pattern(pattern, entry->d_name))
         {
+            match_found = 1; 
             result = process_entry(result, &result_len, dir_path, entry->d_name);
             if (!result)
             {
@@ -162,7 +167,16 @@ char **process_directory(const char *dir_path, const char *pattern, char **argv)
             }
         }
     }
+
     closedir(dir);
+
+    if (!match_found)
+    {
+        perror("No pattern found");
+        free(result);
+        return NULL; 
+    }
+
     return finalize_result(result, argv);
 }
 

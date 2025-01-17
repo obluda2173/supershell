@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:36:06 by erian             #+#    #+#             */
-/*   Updated: 2025/01/17 13:04:34 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/17 14:29:33 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,29 +170,34 @@ int set_redirections(t_list* redirections, int fds[2]) {
 
 int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 {
-	char *cmd_path;
-	char **argv = NULL;
+    char *cmd_path;
+    char **argv = NULL;
 
-	int fds[2] = {STDIN_FILENO, STDOUT_FILENO};
-	if (set_redirections(cmd_node.redirections, fds))
-		return 1;
+    int fds[2] = {STDIN_FILENO, STDOUT_FILENO};
+	
+    if (set_redirections(cmd_node.redirections, fds))
+        return 1;
 
-	int res = 0;
-	if (cmd_node.cmd_token.type != NONE) {
-		cmd_path = find_path(cmd_node.cmd_token.content, ep);
-		if (!cmd_path)
+    int res = 0;
+
+    if (cmd_node.cmd_token.type != NONE)
+	{
+        cmd_path = find_path(cmd_node.cmd_token.content, ep);
+        if (!cmd_path)
+        {
+            fprintf(stderr, "Command not found: %s\n", cmd_node.cmd_token.content);
+            return 127;
+        }
+        argv = list_to_argv(cmd_node.arguments, cmd_path, data);
+        if (!argv)
 		{
-			fprintf(stderr, "Command not found: %s\n", cmd_node.cmd_token.content);
-			return 127;
-		}
-		// printf("my: %s\n", cmd_path)
-		argv = list_to_argv(cmd_node.arguments, cmd_path, data);
-
-		res = custom_exec(cmd_path, argv, ep, fds);
-		free_matrix(argv);
-		free(cmd_path);
-	}
-	close_fds(fds);
-
-	return res;
+            free(cmd_path);
+            return 1;
+        }
+        res = custom_exec(cmd_path, argv, ep, fds);
+        free_matrix(argv);
+        free(cmd_path);
+    }
+    close_fds(fds);
+    return res;
 }
