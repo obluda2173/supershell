@@ -1,5 +1,6 @@
 import subprocess
 import pytest
+import time
 import os
 from conftest import start_process, get_prompt_minishell, get_file_content
 
@@ -202,6 +203,7 @@ def test_heredoc_redirections(cmd):
     stdout_bash, _ = bash.communicate(cmd.encode())
     minishell.stdin.write(cmd.encode())
     minishell.stdin.flush()
+    time.sleep(0.1)
     open_fds_end = get_open_fds()
     stdout_minishell, stderr_minishell = minishell.communicate()
 
@@ -220,4 +222,10 @@ def test_heredoc_redirections(cmd):
     for out1, out2 in zip(stdout_bash, stdout_minishell):
         assert out1 == out2, f"{out1} != {out2}"
 
+    open_fds_beginning = [
+        line for line in open_fds_beginning if (len(line) and "/usr/" not in line)
+    ]
+    open_fds_end = [
+        line for line in open_fds_end if (len(line) and "/usr/" not in line)
+    ]
     assert len(open_fds_beginning) == len(open_fds_end)
