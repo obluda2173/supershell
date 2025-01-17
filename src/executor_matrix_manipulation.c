@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 15:33:59 by erian             #+#    #+#             */
-/*   Updated: 2025/01/15 11:50:24 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/17 11:04:11 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ size_t ft_matrix_size(char **matrix)
 
     while (matrix && matrix[size])
         size++;
-
     return size;
 }
 

@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 12:47:50 by erian             #+#    #+#             */
-/*   Updated: 2025/01/12 13:06:13 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/17 12:22:32 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ char	*append_to_result(char *result, size_t *result_len, const char *addition, s
 	new_result = malloc(*result_len + addition_len + 1);
 	if (!new_result)
 	{
-		free(result);
+		if (result)
+			free(result);
 		return NULL;
 	}
 	if (result)
