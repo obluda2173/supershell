@@ -31,8 +31,10 @@ def test_errors(cmd, err_msg, want_exit_status):
     minishell = start_process("./minishell")
     assert minishell.stdin is not None
 
-    cmds = "\n".join(cmd + ["echo $?\n"])
-    stdout_minishell, stderr_minishell = minishell.communicate(cmds.encode())
+    cmd = "\n".join(cmd + ["echo $?\n"])
+    minishell.stdin.write(cmd.encode())
+    minishell.stdin.flush()
+    stdout_minishell, stderr_minishell = minishell.communicate()
     stdout_minishell = [
         line
         for line in stdout_minishell.decode().split("\n")

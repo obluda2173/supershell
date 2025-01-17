@@ -3,6 +3,19 @@ import stat
 import os
 
 
+def get_open_fds():
+    lsof_process = subprocess.Popen(
+        ["lsof", "-c", "minishell"],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    assert lsof_process.stdin is not None
+    open_fds, _ = lsof_process.communicate()
+    open_fds = open_fds.decode().split("\n")
+    return open_fds
+
+
 def start_process(shell):
     return subprocess.Popen(
         [shell],

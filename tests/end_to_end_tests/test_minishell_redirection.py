@@ -1,3 +1,4 @@
+import subprocess
 import pytest
 import os
 from conftest import start_process, get_prompt_minishell, get_file_content
@@ -22,9 +23,9 @@ def test_redirect_append(cmd):
     bash = start_process("bash")
     assert bash.stdin is not None
 
-    cmds = "\n".join(cmd + ["echo $?\n"])
+    cmd = "\n".join(cmd + ["echo $?\n"])
 
-    stdout_bash, _ = bash.communicate(cmds.encode())
+    stdout_bash, _ = bash.communicate(cmd.encode())
     stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
 
     append_path = "tests/end_to_end_tests/test_files/append.txt"
@@ -32,7 +33,10 @@ def test_redirect_append(cmd):
     recreate_append_file()
 
     minishell = start_process("./minishell")
-    stdout_minishell, stderr_minishell = minishell.communicate(cmds.encode())
+    assert minishell.stdin is not None
+    minishell.stdin.write(cmd.encode())
+    minishell.stdin.flush()
+    stdout_minishell, stderr_minishell = minishell.communicate()
 
     file_minishell = get_file_content(append_path)
     recreate_append_file()
@@ -73,8 +77,8 @@ def test_redirect_out(cmd):
     bash = start_process("bash")
     assert bash.stdin is not None
 
-    cmds = "\n".join(cmd + ["echo $?\n"])
-    stdout_bash, _ = bash.communicate(cmds.encode())
+    cmd = "\n".join(cmd + ["echo $?\n"])
+    stdout_bash, _ = bash.communicate(cmd.encode())
     stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
 
     tmp_path = "tests/end_to_end_tests/test_files/tmp.txt"
@@ -82,7 +86,9 @@ def test_redirect_out(cmd):
 
     minishell = start_process("./minishell")
     assert minishell.stdin is not None
-    stdout_minishell, stderr_minishell = minishell.communicate(cmds.encode())
+    minishell.stdin.write(cmd.encode())
+    minishell.stdin.flush()
+    stdout_minishell, stderr_minishell = minishell.communicate()
 
     file_minishell = get_file_content(tmp_path)
 
@@ -120,16 +126,17 @@ def test_in_redirections(cmd):
     prompt, _ = minishell.communicate()
     prompt = prompt.decode()
 
+    cmd = "\n".join(cmd + ["echo $?\n"])
+
     bash = start_process("bash")
-    minishell = start_process("./minishell")
-
     assert bash.stdin is not None
+    stdout_bash, _ = bash.communicate(cmd.encode())
+
+    minishell = start_process("./minishell")
     assert minishell.stdin is not None
-
-    cmds = "\n".join(cmd + ["echo $?\n"])
-
-    stdout_bash, _ = bash.communicate(cmds.encode())
-    stdout_minishell, stderr_minishell = minishell.communicate(cmds.encode())
+    minishell.stdin.write(cmd.encode())
+    minishell.stdin.flush()
+    stdout_minishell, stderr_minishell = minishell.communicate()
 
     stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
     stdout_minishell = [
@@ -147,16 +154,35 @@ def test_in_redirections(cmd):
         assert out1 == out2, f"{out1} != {out2}"
 
 
+def get_open_fds():
+    lsof_process = subprocess.Popen(
+        ["lsof", "-c", "minishell"],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    assert lsof_process.stdin is not None
+    open_fds, _ = lsof_process.communicate()
+    open_fds = open_fds.decode().split("\n")
+    return open_fds
+
+
 @pytest.mark.parametrize(
     "cmd",
     [
         (["wc -c <<EOF\nline1\nline2\nEOF"]),
         (["cat <<EOF tests/end_to_end_tests/test_files/input1.txt\nline1\nline2\nEOF"]),
+        (
+            [
+                "cat < tests/end_to_end_tests/test_files/input1.txt <<EOF\nline1\nline2\nEOF"
+            ]
+        ),
     ],
 )
 def test_heredoc_redirections(cmd):
     #  need to write test for remaining open filedescriptors
     minishell = start_process("./minishell")
+    open_fds_beginning = get_open_fds()
     prompt, _ = minishell.communicate()
     prompt = prompt.decode()
 
@@ -166,10 +192,13 @@ def test_heredoc_redirections(cmd):
     assert bash.stdin is not None
     assert minishell.stdin is not None
 
-    cmds = "\n".join(cmd + ["echo $?\n"])
+    cmd = "\n".join(cmd + ["echo $?\n"])
 
-    stdout_bash, _ = bash.communicate(cmds.encode())
-    stdout_minishell, stderr_minishell = minishell.communicate(cmds.encode())
+    stdout_bash, _ = bash.communicate(cmd.encode())
+    minishell.stdin.write(cmd.encode())
+    minishell.stdin.flush()
+    open_fds_end = get_open_fds()
+    stdout_minishell, stderr_minishell = minishell.communicate()
 
     stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
     stdout_minishell = [
@@ -185,3 +214,5 @@ def test_heredoc_redirections(cmd):
     assert len(stderr_minishell) == 0
     for out1, out2 in zip(stdout_bash, stdout_minishell):
         assert out1 == out2, f"{out1} != {out2}"
+
+    assert len(open_fds_beginning) == len(open_fds_end)

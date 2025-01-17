@@ -23,10 +23,12 @@ def test_minishell(cmd):
     assert bash.stdin is not None
     assert minishell.stdin is not None
 
-    cmds = "\n".join(cmd + ["echo $?\n"])
+    cmd = "\n".join(cmd + ["echo $?\n"])
 
-    stdout_bash, _ = bash.communicate(cmds.encode())
-    stdout_minishell, stderr_minishell = minishell.communicate(cmds.encode())
+    stdout_bash, _ = bash.communicate(cmd.encode())
+    minishell.stdin.write(cmd.encode())
+    minishell.stdin.flush()
+    stdout_minishell, stderr_minishell = minishell.communicate()
 
     stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
     stdout_minishell = [
