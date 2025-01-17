@@ -51,11 +51,7 @@ int	main(int ac, char **av, char **ep)
 
 		//empty line handler
 		if (ft_strlen(data->line) == 0)
-		{
-			free(data->line);
-			data->line = NULL;
 			continue ;
-		}
 
 		//exit the process
 		if (ft_strncmp(data->line, "exit", 4) == 0)
@@ -66,8 +62,6 @@ int	main(int ac, char **av, char **ep)
 
 		if (!check_syntax(data->line))
 		{
-			free(data->line);
-			data->line = NULL;
 			data->exit_status = 2;
 			continue ;
 		}

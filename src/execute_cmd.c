@@ -115,34 +115,34 @@ static int custom_exec(char *cmd_path, char **args, char **ep, int fds[2]) {
 
 int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 {
-    char *cmd_path;
-    char **argv = NULL;
+	char *cmd_path;
+	char **argv = NULL;
 
-    int fds[2] = {STDIN_FILENO, STDOUT_FILENO};
+	int fds[2] = {STDIN_FILENO, STDOUT_FILENO};
 
-    if (set_redirections(cmd_node.redirections, fds))
-        return 1;
+	if (set_redirections(cmd_node.redirections, fds))
+		return 1;
 
-    int res = 0;
+	int res = 0;
 
-    if (cmd_node.cmd_token.type != NONE)
+	if (cmd_node.cmd_token.type != NONE)
 	{
-        cmd_path = find_path(cmd_node.cmd_token.content, ep);
-        if (!cmd_path)
-        {
-            fprintf(stderr, "Command not found: %s\n", cmd_node.cmd_token.content);
-            return 127;
-        }
-        argv = list_to_argv(cmd_node.arguments, cmd_path, data);
-        if (!argv)
+		cmd_path = find_path(cmd_node.cmd_token.content, ep);
+		if (!cmd_path)
 		{
-            free(cmd_path);
-            return 1;
-        }
-        res = custom_exec(cmd_path, argv, ep, fds);
-        free_matrix(argv);
-        free(cmd_path);
-    }
-    close_fds(fds);
-    return res;
+			fprintf(stderr, "Command not found: %s\n", cmd_node.cmd_token.content);
+			return 127;
+		}
+		argv = list_to_argv(cmd_node.arguments, cmd_path, data);
+		if (!argv)
+		{
+			free(cmd_path);
+			return 1;
+		}
+		res = custom_exec(cmd_path, argv, ep, fds);
+		free_matrix(argv);
+		free(cmd_path);
+	}
+	close_fds(fds);
+	return res;
 }
