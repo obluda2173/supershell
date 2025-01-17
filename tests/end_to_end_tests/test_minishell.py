@@ -18,6 +18,7 @@ from tests.end_to_end_tests.conftest import (
 @pytest.mark.parametrize(
     "cmd",
     [
+        (["echo hello"]),
         (["ls -a", "ls -l"]),
         (["cat CMakeLists.txt"]),
         (["echo $PATH"]),
@@ -48,6 +49,36 @@ def test_minishell(cmd):
     stdout_minishell, stderr_minishell = parse_out_and_err_minishell(
         stdout_minishell, stderr_minishell
     )
+
+    assert_no_memory_error(stdout_minishell, stderr_minishell)
+    assert_same_lines(stdout_bash, stdout_minishell)
+    assert len(stderr_minishell) == 0
+
+    assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)
+
+
+def test_minishell_echo_wo_newline():
+    minishell = start_process("./minishell")
+    open_fds_beginning = get_open_fds()
+    minishell.communicate()
+
+    cmd = "echo -n $PATH\n"
+
+    bash = start_process("bash")
+    assert bash.stdin is not None
+    stdout_bash, _ = bash.communicate(cmd.encode())
+
+    minishell = start_process("./minishell")
+    stdout_minishell, stderr_minishell, open_fds_end = send_cmds_minishell(
+        minishell, cmd
+    )
+
+    stdout_bash = stdout_bash.decode()
+    prompt = get_prompt_minishell()
+    stdout_minishell = stdout_minishell.decode().split("\n")[1][: -len(prompt)]
+    print(stdout_minishell)
+    print(stdout_bash)
+    stderr_minishell = stderr_minishell.decode()
 
     assert_no_memory_error(stdout_minishell, stderr_minishell)
     assert_same_lines(stdout_bash, stdout_minishell)

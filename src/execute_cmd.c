@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "lexer.h"
 #include "libft.h"
 #include "parser.h"
 
@@ -125,7 +126,33 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 
 	int res = 0;
 
-	if (cmd_node.cmd_token.type != NONE)
+	if (cmd_node.cmd_token.type == BUILTIN) {
+		if (!ft_strcmp("echo", cmd_node.cmd_token.content)) {
+			argv = list_to_argv(cmd_node.arguments, "", data);
+			if (!argv)
+				return 1;
+			char** head = argv;
+			head++;
+			bool print_newline = true;
+			if (!ft_strcmp(*head, "-n")) {
+				print_newline = false;
+				head++;
+			}
+
+			while (*head) {
+				ft_putstr_fd(*head, fds[1]);
+				head++;
+				if (*head)
+					ft_putstr_fd(" ", fds[1]);
+			}
+			if (print_newline)
+				ft_putendl_fd("", fds[1]);
+			close_fds(fds);
+			free_matrix(argv);
+		}
+		return res;
+	}
+	if (cmd_node.cmd_token.type == WORD || cmd_node.cmd_token.type == BUILTIN)
 	{
 		cmd_path = find_path(cmd_node.cmd_token.content, ep);
 		if (!cmd_path)
