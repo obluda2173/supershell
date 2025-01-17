@@ -31,6 +31,13 @@ from tests.end_to_end_tests.assertions import (
             "Permission denied",
             1,
         ),
+        (
+            [
+                "cat tests/end_to_end_tests/test_files/input1.txt > tests/end_to_end_tests/test_files/no_perm.txt"
+            ],
+            "Permission denied",
+            1,
+        ),
     ],
 )
 def test_redirection_errors(cmd, err_msg, want_exit_status):

@@ -13,8 +13,6 @@
 #include "executor.h"
 #include "libft.h"
 #include "parser.h"
-#include <fcntl.h>
-#include <unistd.h>
 
 static char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
 {
@@ -53,7 +51,7 @@ static char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
 			free_matrix(argv);
 			argv = temp_matrix;
 			tmp = tmp->next;
-            continue;
+			continue;
 		}
 		if (!processed_word)
 		{
@@ -72,14 +70,6 @@ static char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
 int error_fork() {
 	perror("fork");
 	return EXIT_FAILURE;
-}
-
-void close_fds(int fds[2]) {
-	if (fds[0] != STDIN_FILENO)
-		close(fds[0]);
-	if (fds[1] != STDOUT_FILENO)
-		close(fds[1]);
-	return;
 }
 
 static int custom_exec(char *cmd_path, char **args, char **ep, int fds[2]) {
@@ -110,51 +100,6 @@ static int custom_exec(char *cmd_path, char **args, char **ep, int fds[2]) {
 		return  WEXITSTATUS(status);
 	fprintf(stderr, "Child process did not terminate normally\n");
 	return EXIT_FAILURE;
-}
-
-int set_redirections(t_list* redirections, int fds[2]) {
-	t_list *head = redirections;
-	while (head) {
-		t_redirection r = *((t_redirection*)head->content);
-		if (r.type == IN) {
-			if (fds[0] != STDIN_FILENO)
-				close(fds[0]);
-			fds[0] = open(r.word, O_RDONLY);
-			if (fds[0]< 0) {
-				perror("open");
-				close_fds(fds);
-				return 1;
-			}
-		}
-		if (r.type == OUT) {
-			fds[1]  = open(r.word, O_CREAT|O_WRONLY|O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-			if (fds[1] < 0) {
-				perror("open");
-				close_fds(fds);
-				return 1;
-			}
-		}
-		if (r.type == APPEND) {
-			fds[1]  = open(r.word, O_APPEND|O_WRONLY|O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-			if (fds[1] < 0) {
-				perror("open");
-				close_fds(fds);
-				return 1;
-			}
-		}
-		if (r.type == HERED) {
-			int hered_pipe[2];
-			pipe(hered_pipe);
-			write(hered_pipe[1], r.word, ft_strlen(r.word));
-			close(hered_pipe[1]);
-
-			if (fds[0] != STDIN_FILENO)
-				close(fds[0]);
-			fds[0] = hered_pipe[0];
-		}
-		head = head->next;
-	}
-	return 0;
 }
 
 int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)

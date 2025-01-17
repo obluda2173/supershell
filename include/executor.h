@@ -44,4 +44,9 @@ size_t ft_matrix_size(char **matrix);
 char **ft_matrix_join(char **matrix1, char **matrix2);
 
 int matches_pattern(const char *pattern, const char *str);
+
+/* executor_redirections.c */
+int set_redirections(t_list* redirections, int fds[2]);
+void	close_fds(int fds[2]);
+
 #endif // EXECUTOR_
