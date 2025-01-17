@@ -1,17 +1,18 @@
-import subprocess
 import pytest
-import time
-import os
-from conftest import start_process, get_prompt_minishell, get_file_content
-
-
-def recreate_append_file():
-    try:
-        os.remove("tests/end_to_end_tests/test_files/append.txt")
-    except:
-        pass
-    with open("tests/end_to_end_tests/test_files/append.txt", "w") as file:
-        file.write("append")
+from conftest import (
+    get_prompt_minishell,
+    start_process,
+    get_file_content,
+    recreate_append_file,
+    get_open_fds,
+    send_cmds_minishell,
+    parse_out_and_err_minishell,
+)
+from assertions import (
+    assert_no_memory_error,
+    assert_same_lines,
+    assert_no_new_file_descriptors,
+)
 
 
 @pytest.mark.parametrize(
@@ -23,14 +24,13 @@ def recreate_append_file():
 def test_redirect_append(cmd):
     minishell = start_process("./minishell")
     open_fds_beginning = get_open_fds()
-    prompt, _ = minishell.communicate()
-    prompt = prompt.decode()
+    minishell.communicate()
 
     bash = start_process("bash")
     assert bash.stdin is not None
 
+    recreate_append_file()
     cmd = "\n".join(cmd + ["echo $?\n"])
-
     stdout_bash, _ = bash.communicate(cmd.encode())
     stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
 
@@ -39,45 +39,21 @@ def test_redirect_append(cmd):
     recreate_append_file()
 
     minishell = start_process("./minishell")
-    assert minishell.stdin is not None
-    minishell.stdin.write(cmd.encode())
-    minishell.stdin.flush()
-    time.sleep(0.01)  # give the OS time to close the file descriptor
-    open_fds_end = get_open_fds()
-    stdout_minishell, stderr_minishell = minishell.communicate()
-
+    stdout_minishell, stderr_minishell, open_fds_end = send_cmds_minishell(
+        minishell, cmd
+    )
     file_minishell = get_file_content(append_path)
+    stdout_minishell, stderr_minishell = parse_out_and_err_minishell(
+        stdout_minishell, stderr_minishell
+    )
     recreate_append_file()
 
-    stdout_minishell = [
-        line
-        for line in stdout_minishell.decode().split("\n")
-        if not (line.startswith(prompt) or line.startswith("heredoc>"))
-    ]
-    stderr_minishell = stderr_minishell.decode()
-
-    assert "ERROR" not in stdout_minishell
-    assert "ERROR" not in stderr_minishell
-    assert len(stdout_bash) == len(stdout_minishell)
+    assert_no_memory_error(stdout_minishell, stderr_minishell)
     assert len(stderr_minishell) == 0
-    for out1, out2 in zip(stdout_bash, stdout_minishell):
-        assert out1 == out2, f"{out1} != {out2}"
+    assert_same_lines(stdout_minishell, stdout_bash)
+    assert_same_lines(file_minishell, file_bash)
 
-    assert len(file_bash) == len(file_minishell)
-    for out1, out2 in zip(file_bash, file_minishell):
-        assert out1 == out2, f"{out1} != {out2}"
-    open_fds_beginning = [
-        line for line in open_fds_beginning if (len(line) and "/usr/" not in line)
-    ]
-    open_fds_end = [
-        line for line in open_fds_end if (len(line) and "/usr/" not in line)
-    ]
-    for line in open_fds_beginning:
-        print(line)
-    for line in open_fds_end:
-        print(line)
-
-    assert len(open_fds_beginning) == len(open_fds_end)
+    assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)
 
 
 @pytest.mark.parametrize(
@@ -95,8 +71,7 @@ def test_redirect_append(cmd):
 def test_redirect_out(cmd):
     minishell = start_process("./minishell")
     open_fds_beginning = get_open_fds()
-    prompt, _ = minishell.communicate()
-    prompt = prompt.decode()
+    minishell.communicate()
 
     bash = start_process("bash")
     assert bash.stdin is not None
@@ -109,33 +84,22 @@ def test_redirect_out(cmd):
     file_bash = get_file_content(tmp_path)
 
     minishell = start_process("./minishell")
-    assert minishell.stdin is not None
-    minishell.stdin.write(cmd.encode())
-    minishell.stdin.flush()
-    time.sleep(0.01)  # give the OS time to close the file descriptor
-    open_fds_end = get_open_fds()
-    stdout_minishell, stderr_minishell = minishell.communicate()
-
+    stdout_minishell, stderr_minishell, open_fds_end = send_cmds_minishell(
+        minishell, cmd
+    )
+    stdout_minishell, stderr_minishell = parse_out_and_err_minishell(
+        stdout_minishell, stderr_minishell
+    )
     file_minishell = get_file_content(tmp_path)
 
-    stdout_minishell = [
-        line
-        for line in stdout_minishell.decode().split("\n")
-        if not (line.startswith(prompt) or line.startswith("heredoc>"))
-    ]
-    stderr_minishell = stderr_minishell.decode()
-
-    assert "ERROR" not in stdout_minishell
-    assert "ERROR" not in stderr_minishell
-    assert len(stdout_bash) == len(stdout_minishell)
+    assert_no_memory_error(stdout_minishell, stderr_minishell)
     assert len(stderr_minishell) == 0
-    for out1, out2 in zip(stdout_bash, stdout_minishell):
-        assert out1 == out2, f"{out1} != {out2}"
+    assert_same_lines(stdout_minishell, stdout_bash)
 
     assert len(file_bash) == len(file_minishell)
     for out1, out2 in zip(file_bash, file_minishell):
         assert out1 == out2, f"{out1} != {out2}"
-    assert len(open_fds_beginning) == len(open_fds_end)
+    assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)
 
 
 @pytest.mark.parametrize(
@@ -145,68 +109,6 @@ def test_redirect_out(cmd):
         (["wc -c < tests/end_to_end_tests/test_files/input2.txt"]),
         (["< tests/end_to_end_tests/test_files/input2.txt"]),
         (["< tests/end_to_end_tests/test_files/input2.txt wc -c"]),
-    ],
-)
-def test_in_redirections(cmd):
-    minishell = start_process("./minishell")
-    open_fds_beginning = get_open_fds()
-    prompt, _ = minishell.communicate()
-    prompt = prompt.decode()
-
-    cmd = "\n".join(cmd + ["echo $?\n"])
-
-    bash = start_process("bash")
-    assert bash.stdin is not None
-    stdout_bash, _ = bash.communicate(cmd.encode())
-
-    minishell = start_process("./minishell")
-    assert minishell.stdin is not None
-    minishell.stdin.write(cmd.encode())
-    minishell.stdin.flush()
-    time.sleep(0.01)  # give the OS time to close the file descriptor
-    open_fds_end = get_open_fds()
-    stdout_minishell, stderr_minishell = minishell.communicate()
-
-    stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
-    stdout_minishell = [
-        line
-        for line in stdout_minishell.decode().split("\n")
-        if not (line.startswith(prompt) or line.startswith("heredoc>"))
-    ]
-    stderr_minishell = stderr_minishell.decode()
-
-    assert "ERROR" not in stdout_minishell
-    assert "ERROR" not in stderr_minishell
-    assert len(stdout_bash) == len(stdout_minishell)
-    assert len(stderr_minishell) == 0
-    for out1, out2 in zip(stdout_bash, stdout_minishell):
-        assert out1 == out2, f"{out1} != {out2}"
-
-    open_fds_beginning = [
-        line for line in open_fds_beginning if (len(line) and "/usr/" not in line)
-    ]
-    open_fds_end = [
-        line for line in open_fds_end if (len(line) and "/usr/" not in line)
-    ]
-    assert len(open_fds_beginning) == len(open_fds_end)
-
-
-def get_open_fds():
-    lsof_process = subprocess.Popen(
-        ["lsof", "-c", "minishell"],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    assert lsof_process.stdin is not None
-    open_fds, _ = lsof_process.communicate()
-    open_fds = open_fds.decode().split("\n")
-    return open_fds
-
-
-@pytest.mark.parametrize(
-    "cmd",
-    [
         (["wc -c <<EOF\nline1\nline2\nEOF"]),
         (["cat <<EOF tests/end_to_end_tests/test_files/input1.txt\nline1\nline2\nEOF"]),
         (
@@ -221,47 +123,29 @@ def get_open_fds():
         ),
     ],
 )
-def test_heredoc_redirections(cmd):
-    #  need to write test for remaining open filedescriptors
+def test_in_and_heredoc_redirections(cmd):
     minishell = start_process("./minishell")
     open_fds_beginning = get_open_fds()
-    prompt, _ = minishell.communicate()
-    prompt = prompt.decode()
-
-    bash = start_process("bash")
-    minishell = start_process("./minishell")
-
-    assert bash.stdin is not None
-    assert minishell.stdin is not None
+    minishell.communicate()
 
     cmd = "\n".join(cmd + ["echo $?\n"])
 
+    bash = start_process("bash")
+    assert bash.stdin is not None
     stdout_bash, _ = bash.communicate(cmd.encode())
-    minishell.stdin.write(cmd.encode())
-    minishell.stdin.flush()
-    time.sleep(0.01)  # give the OS time to close the file descriptor
-    open_fds_end = get_open_fds()
-    stdout_minishell, stderr_minishell = minishell.communicate()
+
+    minishell = start_process("./minishell")
+    stdout_minishell, stderr_minishell, open_fds_end = send_cmds_minishell(
+        minishell, cmd
+    )
 
     stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
-    stdout_minishell = [
-        line
-        for line in stdout_minishell.decode().split("\n")
-        if not (line.startswith(prompt) or line.startswith("heredoc>"))
-    ]
-    stderr_minishell = stderr_minishell.decode()
+    stdout_minishell, stderr_minishell = parse_out_and_err_minishell(
+        stdout_minishell, stderr_minishell
+    )
 
-    assert "ERROR" not in stdout_minishell
-    assert "ERROR" not in stderr_minishell
-    assert len(stdout_bash) == len(stdout_minishell)
+    assert_no_memory_error(stdout_minishell, stderr_minishell)
     assert len(stderr_minishell) == 0
-    for out1, out2 in zip(stdout_bash, stdout_minishell):
-        assert out1 == out2, f"{out1} != {out2}"
+    assert_same_lines(stdout_minishell, stdout_bash)
 
-    open_fds_beginning = [
-        line for line in open_fds_beginning if (len(line) and "/usr/" not in line)
-    ]
-    open_fds_end = [
-        line for line in open_fds_end if (len(line) and "/usr/" not in line)
-    ]
-    assert len(open_fds_beginning) == len(open_fds_end)
+    assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)

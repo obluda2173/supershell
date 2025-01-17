@@ -1,19 +1,7 @@
 import subprocess
 import stat
 import os
-
-
-def get_open_fds():
-    lsof_process = subprocess.Popen(
-        ["lsof", "-c", "minishell"],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    assert lsof_process.stdin is not None
-    open_fds, _ = lsof_process.communicate()
-    open_fds = open_fds.decode().split("\n")
-    return open_fds
+import time
 
 
 def start_process(shell):
@@ -61,3 +49,46 @@ def get_file_content(path):
     os.remove(path)
     assert not os.path.isfile(path), f"file does still exist {path}"
     return file_content
+
+
+def recreate_append_file():
+    try:
+        os.remove("tests/end_to_end_tests/test_files/append.txt")
+    except:
+        pass
+    with open("tests/end_to_end_tests/test_files/append.txt", "w") as file:
+        file.write("append")
+
+
+def get_open_fds():
+    lsof_process = subprocess.Popen(
+        ["lsof", "-c", "minishell"],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    assert lsof_process.stdin is not None
+    open_fds, _ = lsof_process.communicate()
+    open_fds = open_fds.decode().split("\n")
+    return open_fds
+
+
+def send_cmds_minishell(minishell, cmd):
+    assert minishell.stdin is not None
+    minishell.stdin.write(cmd.encode())
+    minishell.stdin.flush()
+    time.sleep(0.01)  # give the OS time to close the file descriptor
+    open_fds_end = get_open_fds()
+    stdout_minishell, stderr_minishell = minishell.communicate()
+    return stdout_minishell, stderr_minishell, open_fds_end
+
+
+def parse_out_and_err_minishell(stdout_minishell, stderr_minishell):
+    prompt = get_prompt_minishell()
+    stdout_minishell = [
+        line
+        for line in stdout_minishell.decode().split("\n")
+        if not (line.startswith(prompt) or line.startswith("heredoc>"))
+    ]
+    stderr_minishell = stderr_minishell.decode()
+    return stdout_minishell, stderr_minishell

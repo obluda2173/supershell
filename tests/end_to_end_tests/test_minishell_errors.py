@@ -1,6 +1,17 @@
 #!/usr/bin/env python3
 
-from conftest import start_process, get_prompt_minishell
+from conftest import (
+    start_process,
+    parse_out_and_err_minishell,
+    send_cmds_minishell,
+    get_open_fds,
+)
+from tests.end_to_end_tests.assertions import (
+    assert_no_memory_error,
+    assert_no_memory_error,
+    assert_no_new_file_descriptors,
+)
+
 import pytest
 
 
@@ -26,25 +37,20 @@ import pytest
     ],
 )
 def test_errors(cmd, err_msg, want_exit_status):
-    prompt = get_prompt_minishell()
-
     minishell = start_process("./minishell")
-    assert minishell.stdin is not None
+    open_fds_beginning = get_open_fds()
 
     cmd = "\n".join(cmd + ["echo $?\n"])
-    minishell.stdin.write(cmd.encode())
-    minishell.stdin.flush()
-    stdout_minishell, stderr_minishell = minishell.communicate()
-    stdout_minishell = [
-        line
-        for line in stdout_minishell.decode().split("\n")
-        if not (line.startswith(prompt) or line.startswith("heredoc>"))
-    ]
-    stderr_minishell = stderr_minishell.decode()
+    stdout_minishell, stderr_minishell, open_fds_end = send_cmds_minishell(
+        minishell, cmd
+    )
+    stdout_minishell, stderr_minishell = parse_out_and_err_minishell(
+        stdout_minishell, stderr_minishell
+    )
 
-    assert "ERROR" not in stdout_minishell
-    assert "ERROR" not in stderr_minishell
+    assert_no_memory_error(stdout_minishell, stderr_minishell)
     assert len(stderr_minishell) != 0
     assert len(stdout_minishell) == 1
     assert err_msg in stderr_minishell
     assert want_exit_status == int(stdout_minishell[0])
+    assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)

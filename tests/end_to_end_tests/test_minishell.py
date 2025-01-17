@@ -1,7 +1,18 @@
 #!/usr/bin/env python3
 import pytest
 
-from tests.end_to_end_tests.conftest import get_prompt_minishell, start_process
+from tests.end_to_end_tests.assertions import (
+    assert_no_memory_error,
+    assert_no_new_file_descriptors,
+    assert_same_lines,
+)
+from tests.end_to_end_tests.conftest import (
+    get_open_fds,
+    get_prompt_minishell,
+    parse_out_and_err_minishell,
+    send_cmds_minishell,
+    start_process,
+)
 
 
 @pytest.mark.parametrize(
@@ -16,31 +27,28 @@ from tests.end_to_end_tests.conftest import get_prompt_minishell, start_process
     ],
 )
 def test_minishell(cmd):
-    prompt = get_prompt_minishell()
-    bash = start_process("bash")
     minishell = start_process("./minishell")
-
-    assert bash.stdin is not None
-    assert minishell.stdin is not None
+    open_fds_beginning = get_open_fds()
+    minishell.communicate()
 
     cmd = "\n".join(cmd + ["echo $?\n"])
 
+    bash = start_process("bash")
+    assert bash.stdin is not None
     stdout_bash, _ = bash.communicate(cmd.encode())
-    minishell.stdin.write(cmd.encode())
-    minishell.stdin.flush()
-    stdout_minishell, stderr_minishell = minishell.communicate()
+
+    minishell = start_process("./minishell")
+    stdout_minishell, stderr_minishell, open_fds_end = send_cmds_minishell(
+        minishell, cmd
+    )
 
     stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
-    stdout_minishell = [
-        line
-        for line in stdout_minishell.decode().split("\n")
-        if not (line.startswith(prompt) or line.startswith("heredoc>"))
-    ]
-    stderr_minishell = stderr_minishell.decode()
+    stdout_minishell, stderr_minishell = parse_out_and_err_minishell(
+        stdout_minishell, stderr_minishell
+    )
 
-    assert "ERROR" not in stdout_minishell
-    assert "ERROR" not in stderr_minishell
-    assert len(stdout_bash) == len(stdout_minishell)
+    assert_no_memory_error(stdout_minishell, stderr_minishell)
+    assert_same_lines(stdout_bash, stdout_minishell)
     assert len(stderr_minishell) == 0
-    for out1, out2 in zip(stdout_bash, stdout_minishell):
-        assert out1 == out2, f"{out1} != {out2}"
+
+    assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)
