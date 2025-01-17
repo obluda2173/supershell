@@ -24,6 +24,7 @@ from tests.end_to_end_tests.conftest import (
         (["echo asdf $PATH asdf"]),
         (["echo  asdf    $PATH   asdf  "]),
         (['echo "$PATH"']),
+        (["echo *", "echo *"]),
     ],
 )
 def test_minishell(cmd):
