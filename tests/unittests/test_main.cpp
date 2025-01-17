@@ -10,5 +10,6 @@ auto main(int argc, char *argv[]) -> int {
     // ::testing::GTEST_FLAG(filter) = "Lexer*:*Parser*";
     // ::testing::GTEST_FLAG(filter) = "ExecutorTest*";
     // ::testing::GTEST_FLAG(filter) = "*TestPatternMatcherSuite*";
+    ::testing::GTEST_FLAG(filter) = "*wildcardTestSuite*";
     return RUN_ALL_TESTS();
 }

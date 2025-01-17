@@ -4,12 +4,12 @@
 NAME		=	minishell
 
 # Compiler and flags
-CC 			=	@cc
+CC 			=	cc
 CFLAGS		=	-Wall -Wextra -Werror
 LIBS 		= 	-lreadline -Llibft -lft
 
 # Debugging
-FSANITIZE =
+FSANITIZE = -fsanitize=address
 
 # Directories and source files
 SRC_DIR		=	src
