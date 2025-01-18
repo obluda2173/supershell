@@ -22,10 +22,10 @@ char	*get_path_env(t_list *envp);
 char	*find_path(char *cmd, char *path_env);
 
 // executor_handle_double_quotes.c
-char *handle_double_quotes(const char *word, t_data *data);
+char    *handle_double_quotes(const char *word, int last_exit_status);
 
 // executor_handle_dollar.c
-char *handle_dollar(const char *word, t_data *data);
+char	*handle_dollar(const char *word, int last_exit_status);
 
 // executor_handle_utils.c
 char *handle_env_expansion(const char *var_name);
@@ -56,6 +56,6 @@ int matches_pattern(const char *pattern, const char *str);
 int set_redirections(t_list* redirections, int fds[2]);
 void	close_fds(int fds[2]);
 // executor_prepare_argv.c
-char **list_to_argv(t_list *list, char *cmd_path, t_data *data);
+char **list_to_argv(t_list *list, char *cmd_path, int last_exit_status);
 
 #endif // EXECUTOR_

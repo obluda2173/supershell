@@ -69,7 +69,7 @@ static int custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2]) {
 
 int echo(t_cmd_node cmd_node, int fds[2], t_data *data) {
 	char **argv = NULL;
-	argv = list_to_argv(cmd_node.arguments, "", data);
+	argv = list_to_argv(cmd_node.arguments, "", data->exit_status);
 	int res = 0;
 	if (!argv)
 		return 1;
@@ -147,7 +147,7 @@ int execute_command(t_cmd_node cmd_node, t_data *data)
 			fprintf(stderr, "Command not found: %s\n", cmd_node.cmd_token.content);
 			return 127;
 		}
-		argv = list_to_argv(cmd_node.arguments, cmd_path, data);
+		argv = list_to_argv(cmd_node.arguments, cmd_path, data->exit_status);
 		if (!argv)
 		{
 			close_fds(fds);

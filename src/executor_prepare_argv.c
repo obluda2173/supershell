@@ -26,14 +26,14 @@ static char **initialize_argv(char *cmd_path, size_t count)
     return argv;
 }
 
-static char *process_argument(t_argument *argument, t_data *data)
+static char *process_argument(t_argument *argument, int last_exit_status)
 {
     if (argument->type == LITERAL)
         return ft_strdup(argument->word);
     if (argument->type == DOUBLE_QUOTE_STR)
-        return handle_double_quotes(argument->word, data);
+        return handle_double_quotes(argument->word, last_exit_status);
     if (argument->type == EXIT_STATUS_EXP || argument->type == ENV_EXP)
-        return handle_dollar(argument->word, data);
+        return handle_dollar(argument->word, last_exit_status);
     return NULL;
 }
 
@@ -47,7 +47,7 @@ static char **expand_wildcard(t_argument *argument, char **argv, size_t *i)
     return temp_matrix;
 }
 
-static char **fill_argv(t_list *list, char **argv, size_t i, t_data *data)
+static char **fill_argv(t_list *list, char **argv, size_t i, int last_exit_status)
 {
     t_list *tmp = list;
 
@@ -67,7 +67,7 @@ static char **fill_argv(t_list *list, char **argv, size_t i, t_data *data)
             tmp = tmp->next;
             continue ;
         }
-        processed_word = process_argument(argument, data);
+        processed_word = process_argument(argument, last_exit_status);
         if (!processed_word)
         {
             // free_matrix(argv);
@@ -80,7 +80,7 @@ static char **fill_argv(t_list *list, char **argv, size_t i, t_data *data)
     return argv;
 }
 
-char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
+char **list_to_argv(t_list *list, char *cmd_path, int last_exit_status)
 {
     size_t count = ft_lstsize(list);
     char **argv = initialize_argv(cmd_path, count);
@@ -88,6 +88,7 @@ char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
     if (!argv)
         return NULL;
 
-    return fill_argv(list, argv, 1, data);
+    return fill_argv(list, argv, 1, last_exit_status);
 }
+
 
