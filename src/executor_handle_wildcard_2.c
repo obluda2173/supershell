@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 14:27:01 by erian             #+#    #+#             */
-/*   Updated: 2025/01/18 14:54:01 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/18 14:56:43 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int matches_pattern(const char *pattern, const char *str)
         pattern++;
         str++;
     }
-    return (!*pattern || (*pattern == '*' && !*(pattern + 1))) && !*str;
+    return ((!*pattern || (*pattern == '*' && !*(pattern + 1))) && !*str);
 }
 
 char *get_dir_path(const char *word, char **pattern)

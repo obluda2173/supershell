@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 12:50:09 by erian             #+#    #+#             */
-/*   Updated: 2025/01/18 14:53:53 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/18 15:05:19 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,37 +14,52 @@
 
 char **finalize_result(char *result, char **argv)
 {
-    if (!result || ft_strlen(result) == 0)
-    {
-        free(result);
-        return argv;
-    }
+	char	**split_result;
+	char	**expanded_argv;
 
-    char **split_result = ft_split(result, ' ');
-    char **expanded_argv = ft_matrix_join(argv, split_result);
-
-    free_matrix(split_result);
-    free(result);
-
-    return expanded_argv;
+	if (!result || ft_strlen(result) == 0)
+	{
+		free(result);
+		return (argv);
+	}
+	split_result = ft_split(result, ' ');
+	expanded_argv = ft_matrix_join(argv, split_result);
+	free_matrix(split_result);
+	free(result);
+	return (expanded_argv);
 }
 
-char *process_entry(char *result, size_t *result_len, const char *dir_path, const char *entry_name)
+/*
+r - result
+rl - result length
+dp - directory path
+en - entry name
+*/
+char	*process_entry(char *r, size_t *rl, const char *dp, const char *en)
 {
-    char *full_path = build_full_path(dir_path, entry_name);
-    if (!full_path)
-        return NULL;
-    result = append_entry_to_result(result, result_len, full_path);
-    free(full_path);
-    return result;
+	char	*full_path;
+
+	full_path = build_full_path(dp, en);
+	if (!full_path)
+	{
+		free(r);
+		return (NULL);
+	}
+	r = append_entry_to_result(r, rl, full_path);
+	free(full_path);
+	return (r);
 }
 
 void free_resources(DIR *dir, char *dir_path, char *pattern, char *result)
 {
-    if (dir) closedir(dir);
-    if (dir_path) free(dir_path);
-    if (pattern) free(pattern);
-    if (result) free(result);
+    if (dir)
+		closedir(dir);
+    if (dir_path)
+		free(dir_path);
+    if (pattern)
+		free(pattern);
+    if (result)
+		free(result);
 }
 
 char **process_directory(const char *dir_path, const char *pattern, char **argv)
@@ -79,18 +94,19 @@ char **process_directory(const char *dir_path, const char *pattern, char **argv)
 
 char **handle_wildcard(const char *word, char **argv)
 {
-    char *dir_path, *pattern;
+    char	*dir_path;
+	char	*pattern;
+	char	**expanded_argv;
 
-    dir_path = get_dir_path(word, &pattern);
-    if (!dir_path || !pattern)
-    {
-        free(dir_path);
-        free(pattern);
-        return NULL;
-    }
-
-    char **expanded_argv = process_directory(dir_path, pattern, argv);
-    free(dir_path);
-    free(pattern);
-    return expanded_argv;
+	dir_path = get_dir_path(word, &pattern);
+	if (!dir_path || !pattern)
+	{
+		free(dir_path);
+		free(pattern);
+		return (NULL);
+	}
+	expanded_argv = process_directory(dir_path, pattern, argv);
+	free(dir_path);
+	free(pattern);
+	return (expanded_argv);
 }
