@@ -52,49 +52,49 @@ char	*process_entry(char *r, size_t *rl, const char *dp, const char *en)
 
 void free_resources(DIR *dir, char *dir_path, char *pattern, char *result)
 {
-    if (dir)
+	if (dir)
 		closedir(dir);
-    if (dir_path)
+	if (dir_path)
 		free(dir_path);
-    if (pattern)
+	if (pattern)
 		free(pattern);
-    if (result)
+	if (result)
 		free(result);
 }
 
 char **process_directory(const char *dir_path, const char *pattern, char **argv)
 {
-    DIR *dir = opendir(dir_path);
-    if (!dir)
-        return argv; 
+	DIR *dir = opendir(dir_path);
+	if (!dir)
+		return argv;
 
-    char *result = create_result_buffer();
-    if (!result)
-    {
-        closedir(dir);
-        return NULL;
-    }
-    struct dirent *entry;
-    size_t result_len = 0;
-    while ((entry = readdir(dir)) != NULL)
-    {
-        if (matches_pattern(pattern, entry->d_name))
-        {
-            result = process_entry(result, &result_len, dir_path, entry->d_name);
-            if (!result)
-            {
-                free_resources(dir, NULL, NULL, result);
-                return NULL;
-            }
-        }
-    }
-    closedir(dir);
-    return finalize_result(result, argv);
+	char *result = create_result_buffer();
+	if (!result)
+	{
+		closedir(dir);
+		return NULL;
+	}
+	struct dirent *entry;
+	size_t result_len = 0;
+	while ((entry = readdir(dir)) != NULL)
+	{
+		if (matches_pattern(pattern, entry->d_name))
+		{
+			result = process_entry(result, &result_len, dir_path, entry->d_name);
+			if (!result)
+			{
+				free_resources(dir, NULL, NULL, result);
+				return NULL;
+			}
+		}
+	}
+	closedir(dir);
+	return finalize_result(result, argv);
 }
 
 char **handle_wildcard(const char *word, char **argv)
 {
-    char	*dir_path;
+	char	*dir_path;
 	char	*pattern;
 	char	**split;
 	char	**expanded_argv;
