@@ -15,7 +15,7 @@
 /* c files                                                                    */
 /* ************************************************************************** */
 // executor.c
-int execute_script(t_script_node *script_node, char **envp, t_data *data);
+int execute_script(t_script_node *script_node,  t_data *data);
 
 // executor_cmd_path.c
 char	*get_path_env(t_list *envp);
@@ -43,7 +43,7 @@ char *build_full_path(const char *dir_path, const char *entry_name);
 char *append_entry_to_result(char *result, size_t *result_len, const char *full_path);
 
 // execute_cmd.c
-int execute_command(t_cmd_node cmd_node, char **envp, t_data *data);
+int execute_command(t_cmd_node cmd_node, t_data *data);
 
 // executor_matrix_manipulation.c
 void free_matrix(char **matrix);

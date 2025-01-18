@@ -64,7 +64,7 @@ void repl(t_data *data, char** ep) {
 		t_script_node *script = parse(tokens);
 		ft_dllstclear(&tokens, free_token);
 		if (script->node_type != ERROR_NODE)
-			execute_script(script, ep, data);
+			execute_script(script,  data);
 		else {
 			ft_putendl_fd((char*)script->node_data.error_node.error, STDERR_FILENO);
 			data->exit_status = 2;

@@ -29,14 +29,14 @@
 // 	return 0;
 // }
 
-int execute_script(t_script_node *script_node, char **envp, t_data *data)
+int execute_script(t_script_node *script_node,  t_data *data)
 {
 	if (!script_node)
 		return (0);
 
 	if (script_node->node_type == CMD_NODE)
 	{
-		data->exit_status = execute_command(script_node->node_data.cmd_node, envp, data);
+		data->exit_status = execute_command(script_node->node_data.cmd_node, data);
 		return data->exit_status;
 	}
 	// else if (script_node->node_type == PIPE_NODE)
@@ -50,7 +50,7 @@ int execute_script(t_script_node *script_node, char **envp, t_data *data)
 	// }
 
 	if (script_node->downstream)
-		return execute_script(script_node->downstream, envp, data);
+		return execute_script(script_node->downstream, data);
 
 	return (0);
 }

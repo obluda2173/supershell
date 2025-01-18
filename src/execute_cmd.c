@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "libft.h"
+#include <unistd.h>
 
 int error_fork()
 {
@@ -19,23 +21,39 @@ int error_fork()
 }
 
 
-static int custom_exec(char *cmd_path, char **args, char **ep, int fds[2]) {
+static int custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2]) {
 	pid_t pid = fork();
+	char** env_matrix;
 	int status;
 
 	if (pid < 0)
 		return error_fork();
 	if (pid == 0)
 	{
+		env_matrix = (char**)malloc(sizeof(char*) * (ft_lstsize(ep) + 1));
+		if (!env_matrix) {
+			close_fds(fds);
+			ft_putendl_fd("Allocation error", STDERR_FILENO);
+			exit(EXIT_FAILURE);
+		}
+		int count = 0;
+		while (ep) {
+			env_matrix[count] = ft_strdup((char*)ep->content);
+			ep = ep->next;
+			count++;
+		}
+		env_matrix[count] = NULL;
 		dup2(fds[0], STDIN_FILENO);
 		dup2(fds[1], STDOUT_FILENO);
 
-		if (execve(cmd_path, args, ep) == -1)
+		if (execve(cmd_path, args, env_matrix) == -1)
 		{
+			free_matrix(env_matrix);
 			perror("execve");
 			exit(EXIT_FAILURE);
 		}
 		close_fds(fds);
+		free_matrix(env_matrix);
 		return EXIT_SUCCESS;
 	}
 	if (waitpid(pid, &status, 0) == -1)
@@ -76,22 +94,21 @@ int echo(t_cmd_node cmd_node, int fds[2], t_data *data) {
 	return res;
 }
 
-int export(char** ep) {
-	char** head = ep;
-	while (*head) {
-		char** var = ft_split(*head, '=');
+int export(t_list *ep) {
+	while (ep) {
+		char** var = ft_split((char*)ep->content, '=');
 		if (var[1]) {
 			printf("declare -x %s=\"%s\"\n", var[0], var[1]);
 		} else {
 			printf("declare -x %s=\"(null)\"\n", var[0]);
 		}
 		free_matrix(var);
-		head++;
+		ep = ep->next;
 	}
 	return 0;
 }
 
-int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
+int execute_command(t_cmd_node cmd_node, t_data *data)
 {
 	char *cmd_path;
 	char **argv = NULL;
@@ -107,7 +124,7 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 			res = echo(cmd_node, fds, data);
 		if (!ft_strcmp("export", cmd_node.cmd_token.content)) {
 			close_fds(fds);
-			return export(ep);
+			return export(data->ep);
 		}
 	}
 
@@ -137,7 +154,7 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 			free(cmd_path);
 			return 1;
 		}
-		res = custom_exec(cmd_path, argv, ep, fds);
+		res = custom_exec(cmd_path, argv, data->ep, fds);
 		free_matrix(argv);
 		free(cmd_path);
 	}
