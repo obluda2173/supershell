@@ -76,8 +76,6 @@ def test_minishell_echo_wo_newline():
     stdout_bash = stdout_bash.decode()
     prompt = get_prompt_minishell()
     stdout_minishell = stdout_minishell.decode().split("\n")[1][: -len(prompt)]
-    print(stdout_minishell)
-    print(stdout_bash)
     stderr_minishell = stderr_minishell.decode()
 
     assert_no_memory_error(stdout_minishell, stderr_minishell)

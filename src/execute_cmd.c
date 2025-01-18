@@ -114,6 +114,33 @@ static int custom_exec(char *cmd_path, char **args, char **ep, int fds[2]) {
 	return EXIT_FAILURE;
 }
 
+int echo(t_cmd_node cmd_node, int fds[2], t_data *data) {
+	char **argv = NULL;
+	argv = list_to_argv(cmd_node.arguments, "", data);
+	int res = 0;
+	if (!argv)
+		return 1;
+	char** head = argv;
+	head++;
+	bool print_newline = true;
+	if (!ft_strcmp(*head, "-n")) {
+		print_newline = false;
+		head++;
+	}
+
+	while (*head) {
+		ft_putstr_fd(*head, fds[1]);
+		head++;
+		if (*head)
+			ft_putstr_fd(" ", fds[1]);
+	}
+	if (print_newline)
+		ft_putendl_fd("", fds[1]);
+
+	free_matrix(argv);
+	return res;
+}
+
 int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 {
 	char *cmd_path;
@@ -126,33 +153,11 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 
 	int res = 0;
 	if (cmd_node.cmd_token.type == BUILTIN) {
-		if (!ft_strcmp("echo", cmd_node.cmd_token.content)) {
-			argv = list_to_argv(cmd_node.arguments, "", data);
-			if (!argv)
-				return 1;
-			char** head = argv;
-			head++;
-			bool print_newline = true;
-			if (!ft_strcmp(*head, "-n")) {
-				print_newline = false;
-				head++;
-			}
-
-			while (*head) {
-				ft_putstr_fd(*head, fds[1]);
-				head++;
-				if (*head)
-					ft_putstr_fd(" ", fds[1]);
-			}
-			if (print_newline)
-				ft_putendl_fd("", fds[1]);
-			close_fds(fds);
-			free_matrix(argv);
-		}
-		return res;
+		if (!ft_strcmp("echo", cmd_node.cmd_token.content))
+			res = echo(cmd_node, fds, data);
 	}
 
-	if (cmd_node.cmd_token.type == WORD || cmd_node.cmd_token.type == BUILTIN)
+	if (cmd_node.cmd_token.type == WORD)
 	{
 		cmd_path = find_path(cmd_node.cmd_token.content, ep);
 		if (!cmd_path)
