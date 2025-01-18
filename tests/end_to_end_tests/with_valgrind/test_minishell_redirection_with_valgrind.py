@@ -12,7 +12,7 @@ from conftest import (
 from assertions import (
     assert_no_memory_error_valgrind,
     assert_no_open_fds_valgrind,
-    assert_same_lines,
+    assert_same_lines_ordered,
 )
 
 
@@ -47,8 +47,8 @@ def test_redirect_append(cmd):
 
     assert_no_memory_error_valgrind(stdout_minishell, stderr_minishell)
     assert_no_open_fds_valgrind(stdout_minishell, stderr_minishell)
-    assert_same_lines(stdout_minishell, stdout_bash)
-    assert_same_lines(file_minishell, file_bash)
+    assert_same_lines_ordered(stdout_minishell, stdout_bash)
+    assert_same_lines_ordered(file_minishell, file_bash)
 
 
 @pytest.mark.parametrize(
@@ -85,7 +85,7 @@ def test_redirect_out(cmd):
 
     assert_no_memory_error_valgrind(stdout_minishell, stderr_minishell)
     assert_no_open_fds_valgrind(stdout_minishell, stderr_minishell)
-    assert_same_lines(stdout_minishell, stdout_bash)
+    assert_same_lines_ordered(stdout_minishell, stdout_bash)
 
     assert len(file_bash) == len(file_minishell)
     for out1, out2 in zip(file_bash, file_minishell):
@@ -132,4 +132,4 @@ def test_in_and_heredoc_redirections(cmd):
 
     assert_no_memory_error_valgrind(stdout_minishell, stderr_minishell)
     assert_no_open_fds_valgrind(stdout_minishell, stderr_minishell)
-    assert_same_lines(stdout_minishell, stdout_bash)
+    assert_same_lines_ordered(stdout_minishell, stdout_bash)

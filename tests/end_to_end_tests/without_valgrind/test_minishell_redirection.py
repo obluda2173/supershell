@@ -10,7 +10,7 @@ from conftest import (
 )
 from assertions import (
     assert_no_memory_error_fsanitize,
-    assert_same_lines,
+    assert_same_lines_ordered,
     assert_no_new_file_descriptors,
 )
 
@@ -50,8 +50,8 @@ def test_redirect_append(cmd):
 
     assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell)
     assert len(stderr_minishell) == 0
-    assert_same_lines(stdout_minishell, stdout_bash)
-    assert_same_lines(file_minishell, file_bash)
+    assert_same_lines_ordered(stdout_minishell, stdout_bash)
+    assert_same_lines_ordered(file_minishell, file_bash)
 
     assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)
 
@@ -94,7 +94,7 @@ def test_redirect_out(cmd):
 
     assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell)
     assert len(stderr_minishell) == 0
-    assert_same_lines(stdout_minishell, stdout_bash)
+    assert_same_lines_ordered(stdout_minishell, stdout_bash)
 
     assert len(file_bash) == len(file_minishell)
     for out1, out2 in zip(file_bash, file_minishell):
@@ -146,6 +146,6 @@ def test_in_and_heredoc_redirections(cmd):
 
     assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell)
     assert len(stderr_minishell) == 0
-    assert_same_lines(stdout_minishell, stdout_bash)
+    assert_same_lines_ordered(stdout_minishell, stdout_bash)
 
     assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)

@@ -4,7 +4,7 @@ import pytest
 from assertions import (
     assert_no_memory_error_fsanitize,
     assert_no_new_file_descriptors,
-    assert_same_lines,
+    assert_same_lines_ordered,
 )
 from conftest import (
     get_open_fds,
@@ -51,7 +51,7 @@ def test_minishell(cmd):
     )
 
     assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell)
-    assert_same_lines(stdout_bash, stdout_minishell)
+    assert_same_lines_ordered(stdout_bash, stdout_minishell)
     assert len(stderr_minishell) == 0
 
     assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)
@@ -79,7 +79,7 @@ def test_minishell_echo_wo_newline():
     stderr_minishell = stderr_minishell.decode()
 
     assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell)
-    assert_same_lines(stdout_bash, stdout_minishell)
+    assert_same_lines_ordered(stdout_bash, stdout_minishell)
     assert len(stderr_minishell) == 0
 
     assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)

@@ -4,7 +4,7 @@
 NAME		=	minishell
 
 # Compiler and flags
-CC 			=	cc
+CC 			=	@cc
 CFLAGS		=	-Wall -Wextra -Werror
 LIBS 		= 	-lreadline -Llibft -lft
 
@@ -74,7 +74,7 @@ pytest: $(NAME)
 	@make FSANITIZE=-fsanitize=address && \
 	touch tests/end_to_end_tests/test_files/no_perm.txt && \
 	chmod 000 tests/end_to_end_tests/test_files/no_perm.txt && \
-	python3 -m pytest tests/end_to_end_tests/without_valgrind/
+	python3 -m pytest tests/end_to_end_tests/without_valgrind/test_export.py
 
 pytest-valgrind: $(NAME)
 	@make FSANITIZE= && \

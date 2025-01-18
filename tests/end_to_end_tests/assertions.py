@@ -11,7 +11,7 @@ def assert_no_open_fds_valgrind(stdout_minishell, stderr_minishell):
     assert "FILE DESCRIPTORS: 3 open (3 std) at exit." in stderr_minishell
 
 
-def assert_same_lines(stdout_minishell, stdout_bash):
+def assert_same_lines_ordered(stdout_minishell, stdout_bash):
     assert len(stdout_bash) == len(stdout_minishell)
     for out1, out2 in zip(stdout_bash, stdout_minishell):
         assert out1 == out2, f"{out1} != {out2}"

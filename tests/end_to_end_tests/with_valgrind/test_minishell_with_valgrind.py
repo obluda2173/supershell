@@ -4,7 +4,7 @@ import pytest
 from assertions import (
     assert_no_memory_error_valgrind,
     assert_no_open_fds_valgrind,
-    assert_same_lines,
+    assert_same_lines_ordered,
 )
 from conftest import (
     get_prompt_minishell,
@@ -45,7 +45,7 @@ def test_minishell(cmd):
 
     assert_no_memory_error_valgrind(stdout_minishell, stderr_minishell)
     assert_no_open_fds_valgrind(stdout_minishell, stderr_minishell)
-    assert_same_lines(stdout_bash, stdout_minishell)
+    assert_same_lines_ordered(stdout_bash, stdout_minishell)
 
 
 def test_minishell_echo_wo_newline():
@@ -65,7 +65,7 @@ def test_minishell_echo_wo_newline():
 
     assert_no_memory_error_valgrind(stdout_minishell, stderr_minishell)
     assert_no_open_fds_valgrind(stdout_minishell, stderr_minishell)
-    assert_same_lines(stdout_bash, stdout_minishell)
+    assert_same_lines_ordered(stdout_bash, stdout_minishell)
 
 
 @pytest.mark.parametrize(

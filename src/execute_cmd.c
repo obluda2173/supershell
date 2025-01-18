@@ -156,6 +156,20 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 	if (cmd_node.cmd_token.type == BUILTIN) {
 		if (!ft_strcmp("echo", cmd_node.cmd_token.content))
 			res = echo(cmd_node, fds, data);
+		if (!ft_strcmp("export", cmd_node.cmd_token.content)) {
+			char** head = ep;
+			while (*head) {
+				char** var = ft_split(*head, '=');
+				if (var[1]) {
+					printf("declare -x %s=\"%s\"\n", var[0], var[1]);
+				} else {
+					printf("declare -x %s=\"(null)\"\n", var[0]);
+                }
+				free_matrix(var);
+				head++;
+			}
+			return 0;
+		}
 	}
 
 	if (cmd_node.cmd_token.type == WORD)
