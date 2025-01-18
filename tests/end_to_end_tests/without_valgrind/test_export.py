@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import pytest
 
 from conftest import (
     start_process,
@@ -22,11 +23,18 @@ def assert_export_variables_same(stdout_minishell, stdout_bash):
         ), f"{out1} not in {stdout_bash}"
 
 
-def test_export():
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        (["export"]),
+        (["export < tests/end_to_end_tests/test_files/input1.txt"]),
+        (["export new", "export"]),
+    ],
+)
+def test_export(cmd):
     minishell = start_process("./minishell")
     open_fds_beginning = get_open_fds()
 
-    cmd = ["export"]
     cmd = "\n".join(cmd + ["echo $?\n"])
 
     bash = start_process("bash")
@@ -41,6 +49,7 @@ def test_export():
     stdout_minishell, stderr_minishell = parse_out_and_err_minishell(
         stdout_minishell, stderr_minishell
     )
+    print(stdout_bash)
 
     assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell)
     assert_export_variables_same(stdout_minishell, stdout_bash)

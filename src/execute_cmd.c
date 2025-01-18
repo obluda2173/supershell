@@ -142,6 +142,21 @@ int echo(t_cmd_node cmd_node, int fds[2], t_data *data) {
 	return res;
 }
 
+int export(char** ep) {
+	char** head = ep;
+	while (*head) {
+		char** var = ft_split(*head, '=');
+		if (var[1]) {
+			printf("declare -x %s=\"%s\"\n", var[0], var[1]);
+		} else {
+			printf("declare -x %s=\"(null)\"\n", var[0]);
+		}
+		free_matrix(var);
+		head++;
+	}
+	return 0;
+}
+
 int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 {
 	char *cmd_path;
@@ -157,18 +172,8 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 		if (!ft_strcmp("echo", cmd_node.cmd_token.content))
 			res = echo(cmd_node, fds, data);
 		if (!ft_strcmp("export", cmd_node.cmd_token.content)) {
-			char** head = ep;
-			while (*head) {
-				char** var = ft_split(*head, '=');
-				if (var[1]) {
-					printf("declare -x %s=\"%s\"\n", var[0], var[1]);
-				} else {
-					printf("declare -x %s=\"(null)\"\n", var[0]);
-                }
-				free_matrix(var);
-				head++;
-			}
-			return 0;
+			close_fds(fds);
+			return export(ep);
 		}
 	}
 
