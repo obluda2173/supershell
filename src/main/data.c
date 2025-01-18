@@ -25,7 +25,7 @@ t_data	*init(char **ep)
 		return (NULL);
 	data->ep = NULL;
 	data->exit_status = 0;
-	data->not_exit = true;
+	data->exit = false;
 	data->line = NULL;
 	while (*ep != NULL)
 	{

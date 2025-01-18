@@ -12,7 +12,7 @@ TEST_P(ExecutorTestSuite, ErrorTests) {
 	// run
 	testing::internal::CaptureStderr();
 	testing::internal::CaptureStdout();
-	int got_return = execute_script(script, envp, data);
+	int got_return = execute_script(script,  data);
 
 	// compare
 	EXPECT_EQ(params.want_return, got_return);

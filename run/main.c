@@ -16,15 +16,18 @@
 #include "executor.h"
 #include <unistd.h>
 
-void repl(t_data *data, char** ep) {
-	char	*prompt;
-	while (data->not_exit)
-	{
+void get_input(t_data *data) {
+	char* prompt;
+	prompt = meeting_line(&data);
+	data->line = rl_gets(prompt);
+	free(prompt);
+	prompt = NULL;
+}
 
-		prompt = meeting_line(&data);
-		data->line = rl_gets(prompt);
-		free(prompt);
-		prompt = NULL;
+void repl(t_data *data) {
+	while (!data->exit)
+	{
+		get_input(data);
 
 		if (!data->line)
 			break ;
@@ -36,7 +39,7 @@ void repl(t_data *data, char** ep) {
 		//exit the process
 		if (ft_strncmp(data->line, "exit", 4) == 0)
 		{
-			data->not_exit = false;
+			data->exit = true;
 			continue ;
 		}
 
@@ -88,7 +91,7 @@ int	main(int ac, char **av, char **ep)
 	if (!data)
 		return (printf("Error: Initialization failed. Exiting...\n"), 0);
 
-	repl(data, ep);
+	repl(data);
 	free_data(data);
 	return (0);
 
