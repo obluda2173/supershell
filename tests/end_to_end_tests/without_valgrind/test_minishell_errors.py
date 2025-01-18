@@ -3,7 +3,7 @@
 from conftest import (
     start_process,
     parse_out_and_err_minishell,
-    send_cmds_minishell,
+    send_cmds_minishell_with_open_fds,
     get_open_fds,
 )
 from assertions import (
@@ -45,8 +45,8 @@ def test_errors(cmd, err_msg, want_exit_status):
     open_fds_beginning = get_open_fds()
 
     cmd = "\n".join(cmd + ["echo $?\n"])
-    stdout_minishell, stderr_minishell, open_fds_end = send_cmds_minishell(
-        minishell, cmd
+    stdout_minishell, stderr_minishell, open_fds_end = (
+        send_cmds_minishell_with_open_fds(minishell, cmd)
     )
     stdout_minishell, stderr_minishell = parse_out_and_err_minishell(
         stdout_minishell, stderr_minishell

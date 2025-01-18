@@ -14,6 +14,7 @@
 #include "lexer.h"
 #include "libft.h"
 #include "parser.h"
+#include <unistd.h>
 
 static char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
 {
@@ -159,6 +160,13 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 
 	if (cmd_node.cmd_token.type == WORD)
 	{
+		if (!ft_strcmp(cmd_node.cmd_token.content, "which")) {
+			if (!ft_strcmp(((t_argument*)cmd_node.arguments->content)->word, "echo")) {
+				ft_putendl_fd("minishell built-in command", STDOUT_FILENO);
+				close_fds(fds);
+				return 0;
+			}
+		}
 		cmd_path = find_path(cmd_node.cmd_token.content, ep);
 		if (!cmd_path)
 		{

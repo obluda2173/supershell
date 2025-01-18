@@ -82,7 +82,7 @@ def get_open_fds():
     return open_fds
 
 
-def send_cmds_minishell(minishell, cmd):
+def send_cmds_minishell_with_open_fds(minishell, cmd):
     assert minishell.stdin is not None
     minishell.stdin.write(cmd.encode())
     minishell.stdin.flush()
@@ -90,6 +90,14 @@ def send_cmds_minishell(minishell, cmd):
     open_fds_end = get_open_fds()
     stdout_minishell, stderr_minishell = minishell.communicate()
     return stdout_minishell, stderr_minishell, open_fds_end
+
+
+def send_cmds_minishell(minishell, cmd):
+    assert minishell.stdin is not None
+    minishell.stdin.write(cmd.encode())
+    minishell.stdin.flush()
+    stdout_minishell, stderr_minishell = minishell.communicate()
+    return stdout_minishell, stderr_minishell
 
 
 def parse_out_and_err_minishell(stdout_minishell, stderr_minishell):

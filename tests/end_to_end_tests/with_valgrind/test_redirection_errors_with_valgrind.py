@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
 
 from conftest import (
-    get_open_fds,
     parse_out_and_err_minishell,
     send_cmds_minishell,
     start_process_with_valgrind,
 )
 import pytest
 
-from assertions import (
-    assert_no_memory_error_valgrind,
-)
+from assertions import assert_no_memory_error_valgrind, assert_no_open_fds_valgrind
 
 
 @pytest.mark.parametrize(
@@ -63,14 +60,13 @@ def test_redirection_errors(cmd, err_msg, want_exit_status):
     minishell = start_process_with_valgrind("./minishell")
 
     cmd = "\n".join(cmd + ["echo $?\n"])
-    stdout_minishell, stderr_minishell, open_fds_end = send_cmds_minishell(
-        minishell, cmd
-    )
+    stdout_minishell, stderr_minishell = send_cmds_minishell(minishell, cmd)
     stdout_minishell, stderr_minishell = parse_out_and_err_minishell(
         stdout_minishell, stderr_minishell
     )
 
     assert_no_memory_error_valgrind(stderr_minishell, stderr_minishell)
+    assert_no_open_fds_valgrind(stdout_minishell, stderr_minishell)
     assert len(stdout_minishell) == 1
     assert err_msg in stderr_minishell
     assert want_exit_status == int(stdout_minishell[0])

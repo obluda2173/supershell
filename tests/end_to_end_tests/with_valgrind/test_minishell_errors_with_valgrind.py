@@ -4,10 +4,10 @@ from conftest import (
     start_process_with_valgrind,
     parse_out_and_err_minishell,
     send_cmds_minishell,
-    get_open_fds,
 )
 from assertions import (
     assert_no_memory_error_valgrind,
+    assert_no_open_fds_valgrind,
     assert_no_new_file_descriptors,
 )
 
@@ -44,14 +44,13 @@ def test_errors(cmd, err_msg, want_exit_status):
     minishell = start_process_with_valgrind("./minishell")
 
     cmd = "\n".join(cmd + ["echo $?\n"])
-    stdout_minishell, stderr_minishell, open_fds_end = send_cmds_minishell(
-        minishell, cmd
-    )
+    stdout_minishell, stderr_minishell = send_cmds_minishell(minishell, cmd)
     stdout_minishell, stderr_minishell = parse_out_and_err_minishell(
         stdout_minishell, stderr_minishell
     )
 
     assert_no_memory_error_valgrind(stdout_minishell, stderr_minishell)
+    assert_no_open_fds_valgrind(stdout_minishell, stderr_minishell)
     assert len(stderr_minishell) != 0
     assert len(stdout_minishell) == 1
     assert err_msg in stderr_minishell

@@ -10,7 +10,7 @@ from conftest import (
     get_open_fds,
     get_prompt_minishell,
     parse_out_and_err_minishell,
-    send_cmds_minishell,
+    send_cmds_minishell_with_open_fds,
     start_process,
 )
 
@@ -25,7 +25,7 @@ from conftest import (
         (["echo asdf $PATH asdf"]),
         (["echo  asdf    $PATH   asdf  "]),
         (['echo "$PATH"']),
-        (["which echo"]),
+        (["which ls"]),
         # (["echo *", "echo *"]),
     ],
 )
@@ -41,8 +41,8 @@ def test_minishell(cmd):
     stdout_bash, _ = bash.communicate(cmd.encode())
 
     minishell = start_process("./minishell")
-    stdout_minishell, stderr_minishell, open_fds_end = send_cmds_minishell(
-        minishell, cmd
+    stdout_minishell, stderr_minishell, open_fds_end = (
+        send_cmds_minishell_with_open_fds(minishell, cmd)
     )
 
     stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
@@ -69,8 +69,8 @@ def test_minishell_echo_wo_newline():
     stdout_bash, _ = bash.communicate(cmd.encode())
 
     minishell = start_process("./minishell")
-    stdout_minishell, stderr_minishell, open_fds_end = send_cmds_minishell(
-        minishell, cmd
+    stdout_minishell, stderr_minishell, open_fds_end = (
+        send_cmds_minishell_with_open_fds(minishell, cmd)
     )
 
     stdout_bash = stdout_bash.decode()
@@ -82,4 +82,34 @@ def test_minishell_echo_wo_newline():
     assert_same_lines(stdout_bash, stdout_minishell)
     assert len(stderr_minishell) == 0
 
+    assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        (["which echo"]),
+        (["which echo < tests/end_to_end_tests/test_files/input1.txt"]),
+        # (["echo *", "echo *"]),
+    ],
+)
+def test_which_builtin(cmd):
+    minishell = start_process("./minishell")
+    open_fds_beginning = get_open_fds()
+
+    cmd = "\n".join(cmd + ["echo $?\n"])
+
+    stdout_minishell, stderr_minishell, open_fds_end = (
+        send_cmds_minishell_with_open_fds(minishell, cmd)
+    )
+
+    stdout_minishell, stderr_minishell = parse_out_and_err_minishell(
+        stdout_minishell, stderr_minishell
+    )
+
+    assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell)
+    assert "minishell built-in command" in stdout_minishell[0]
+    assert "0" == stdout_minishell[1]
+
+    assert len(stderr_minishell) == 0
     assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)

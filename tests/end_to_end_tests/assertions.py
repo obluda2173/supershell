@@ -7,6 +7,10 @@ def assert_no_memory_error_valgrind(stdout_minishell, stderr_minishell):
     assert "0 errors from 0 contexts" in stderr_minishell
 
 
+def assert_no_open_fds_valgrind(stdout_minishell, stderr_minishell):
+    assert "FILE DESCRIPTORS: 3 open (3 std) at exit." in stderr_minishell
+
+
 def assert_same_lines(stdout_minishell, stdout_bash):
     assert len(stdout_bash) == len(stdout_minishell)
     for out1, out2 in zip(stdout_bash, stdout_minishell):
