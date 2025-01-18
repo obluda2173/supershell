@@ -18,7 +18,8 @@
 int execute_script(t_script_node *script_node, char **envp, t_data *data);
 
 // executor_cmd_path.c
-char	*find_path(char *cmd, char **ep);
+char	*get_path_env(t_list *envp);
+char	*find_path(char *cmd, char *path_env);
 
 // executor_handle_double_quotes.c
 char *handle_double_quotes(const char *word, t_data *data);

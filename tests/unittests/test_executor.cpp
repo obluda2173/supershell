@@ -1,71 +1,18 @@
 #include "test_main.hpp"
 #include "test_mocks.hpp"
 
-// using ::testing::_;
-
-// TEST(ExecutorTestSuite, ErrorTestsExecve) {
-// 	////////////////////////////////////////////
-// 	// mock stuff
-// 	SystemWrapper sysMock;
-// 	g_systemWrapper = &sysMock;
-// 	EXPECT_CALL(sysMock, mockExecve(_, _, _))
-// 		.WillOnce(
-// 			Invoke([](const char* pathname, char* const argv[], char* const envp[]) {
-// 				return ExecveFailure(pathname, argv, envp); // Provide the desired argument
-// 	}));
-
-// 	// Example usage
-// 	const char* path = "/bin/nonexistent";
-// 	char* args[] = {nullptr};
-// 	char* env[] = {nullptr};
-// 	int result = sysMock.mockExecve(path, args, env);
-// 	ASSERT_EQ(result, -1); // Ensure ExecveFailure is enforced
-
-// 	t_system_calls sc = {mock_fork, mock_execve};
-// 	(void)sc;
-
-// }
-
-
-// TEST(ExecutorTestSuite, ErrorTestsFork) {
-// 	////////////////////////////////////////////
-// 	// mock stuff
-// 	SystemWrapper sysMock;
-// 	g_systemWrapper = &sysMock;
-// 	EXPECT_CALL(sysMock, mockFork()).WillOnce(Invoke([]() {
-// 		return ForkFailure(EAGAIN); // Provide the desired argument
-// 	}));
-
-// 	t_system_calls sc = {mock_fork, mock_execve};
-// 	char** envp = get_envp();
-
-// 	t_script_node *script = new_script_node((char*)"ls");
-// 	testing::internal::CaptureStderr();
-// 	int got_return = execute_command(script->node_data.cmd_node, envp, sc);
-// 	EXPECT_EQ(1, got_return);
-// 	std::string got = testing::internal::GetCapturedStderr();
-// 	EXPECT_STREQ("fork: Resource temporarily unavailable\n", got.c_str());
-
-// 	free_matrix(envp);
-// 	free_script_node(script);
-// }
-
-// TEST(ExecutorTestSuite, MeetingLine) {
-// 	char** envp = get_envp();
-// 	char* res = meeting_line(envp);
-// }
 
 TEST_P(ExecutorTestSuite, ErrorTests) {
 	// setup
 	ExecutorTestsParams params = GetParam();
 	char** envp = get_envp();
-	t_data data = {NULL, NULL, 0, false};
+	t_data *data = init(envp);
 	t_script_node *script = new_script_node((char*)params.cmd, params.type);
 
 	// run
 	testing::internal::CaptureStderr();
 	testing::internal::CaptureStdout();
-	int got_return = execute_script(script, envp, &data);
+	int got_return = execute_script(script, envp, data);
 
 	// compare
 	EXPECT_EQ(params.want_return, got_return);
@@ -73,6 +20,7 @@ TEST_P(ExecutorTestSuite, ErrorTests) {
 	std::string got_stdout = testing::internal::GetCapturedStdout();
 	EXPECT_STREQ(params.want_stderr, got_stderr.c_str());
 
+	free_data(data);
 	free_matrix(envp);
 	free_script_node(script);
 }

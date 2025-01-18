@@ -12,21 +12,17 @@
 
 #include "executor.h"
 
-static char	*get_paths(char **ep)
+char	*get_path_env(t_list *envp)
 {
-	int	i;
-
-	i = 0;
-	if (!ep)
-		return (NULL);
-	while (ep[i] != NULL)
-	{
-		if (ft_strncmp(ep[i], "PATH=", 5) == 0)
-			return (ep[i] + 5);
-		i++;
+	while (envp) {
+		if (ft_strncmp((char*)envp->content, "PATH=", 5) == 0)
+			return ((char*)envp->content + 5);
+		envp = envp->next;
 	}
-	return (NULL);
+	return NULL;
 }
+
+
 
 static char	*search_in_paths(char *cmd, char **paths)
 {
@@ -53,13 +49,11 @@ static char	*search_in_paths(char *cmd, char **paths)
 	return (NULL);
 }
 
-char	*find_path(char *cmd, char **ep)
+char	*find_path(char *cmd, char *path_env)
 {
-	char	*path_env;
 	char	**paths;
 	char	*final_path;
 
-	path_env = get_paths(ep);
 	if (!cmd || !path_env)
 		return (NULL);
 	paths = ft_split(path_env, ':');

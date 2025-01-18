@@ -10,7 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "minishell.h"
+#include <unistd.h>
 
 // initialise data structure and extract environment
 t_data	*init(char **ep)
@@ -24,6 +26,7 @@ t_data	*init(char **ep)
 	data->ep = NULL;
 	data->exit_status = 0;
 	data->not_exit = true;
+	data->line = NULL;
 	while (*ep != NULL)
 	{
 		new_node = ft_lstnew(ft_strdup(*ep));

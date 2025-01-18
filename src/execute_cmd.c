@@ -120,7 +120,10 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 				return 0;
 			}
 		}
-		cmd_path = find_path(cmd_node.cmd_token.content, ep);
+
+
+		char* path_env = get_path_env(data->ep);
+		cmd_path = find_path(cmd_node.cmd_token.content, path_env);
 		if (!cmd_path)
 		{
 			close_fds(fds);
