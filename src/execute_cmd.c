@@ -6,75 +6,20 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:36:06 by erian             #+#    #+#             */
-/*   Updated: 2025/01/16 16:33:28 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/18 14:49:59 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "libft.h"
-#include "parser.h"
-#include <fcntl.h>
-#include <unistd.h>
 
-static char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
+int error_fork()
 {
-	char **argv;
-	size_t count = 0;
-	size_t i = 1;
-	t_list *tmp = list;
-
-	while (tmp)
-	{
-		count++;
-		tmp = tmp->next;
-	}
-	argv = malloc(sizeof(char *) * (count + 2));
-	if (!argv)
-		return (NULL);
-
-	argv[0] = ft_strdup(cmd_path);
-
-	tmp = list;
-	while (tmp)
-	{
-		t_argument *argument = (t_argument *)tmp->content;
-		char *processed_word = NULL;
-		if (argument->type == LITERAL)
-			processed_word = ft_strdup(argument->word);
-		else if (argument->type == DOUBLE_QUOTE_STR)
-			processed_word = handle_double_quotes(argument->word, data);
-		else if (argument->type == EXIT_STATUS_EXP || argument->type == ENV_EXP)
-			processed_word = handle_dollar(argument->word, data);
-		else if (argument->type == WILDCARD_EXP)
-		{
-			argv[i] = NULL;
-			char **temp_matrix = handle_wildcard(argument->word, argv);
-			i = ft_matrix_size(temp_matrix) + 1;
-			free_matrix(argv);
-			argv = temp_matrix;
-			tmp = tmp->next;
-            continue;
-		}
-		if (!processed_word)
-		{
-			free_matrix(argv);
-			return (NULL);
-		}
-
-		argv[i++] = processed_word;
-		tmp = tmp->next;
-	}
-	argv[i] = NULL;
-
-	return (argv);
-}
-
-int error_fork() {
 	perror("fork");
 	return EXIT_FAILURE;
 }
 
-void close_fds(int fds[2]) {
+void close_fds(int fds[2])
+{
 	if (fds[0] != STDIN_FILENO)
 		close(fds[0]);
 	if (fds[1] != STDOUT_FILENO)
