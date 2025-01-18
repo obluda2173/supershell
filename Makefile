@@ -68,6 +68,8 @@ unittest:
 	cmake --build build && \
 	./build/run_unittests
 
+pytest-all: pytest pytest-valgrind
+
 pytest: $(NAME)
 	@make FSANITIZE=-fsanitize=address && \
 	touch tests/end_to_end_tests/test_files/no_perm.txt && \
