@@ -74,7 +74,7 @@ pytest: $(NAME)
 	@make FSANITIZE=-fsanitize=address && \
 	touch tests/end_to_end_tests/test_files/no_perm.txt && \
 	chmod 000 tests/end_to_end_tests/test_files/no_perm.txt && \
-	python3 -m pytest tests/end_to_end_tests/without_valgrind/test_export.py
+	python3 -m pytest tests/end_to_end_tests/without_valgrind/
 
 pytest-valgrind: $(NAME)
 	@make FSANITIZE= && \
