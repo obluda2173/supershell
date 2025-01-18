@@ -33,7 +33,7 @@ t_argument	*extract_argument(t_token *t)
 	if (!arg)
 		return (NULL);
 	arg->word = ft_strdup(t->content);
-	if (t->type == WORD || t->type == DOUBLE_QUOTE || t->type == SINGLE_QUOTE)
+	if (t->type == WORD || t->type == DOUBLE_QUOTE || t->type == SINGLE_QUOTE || t->type == BUILTIN)
 		arg->type = LITERAL;
 	if (t->type == DOUBLE_QUOTE)
 		arg->type = DOUBLE_QUOTE_STR;

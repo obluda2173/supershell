@@ -17,66 +17,66 @@
 
 static char **list_to_argv(t_list *list, char *cmd_path, t_data *data)
 {
-    char **argv;
-    size_t count = 0;
-    size_t i = 1;
-    t_list *tmp = list;
+	char **argv;
+	size_t count = 0;
+	size_t i = 1;
+	t_list *tmp = list;
 
-    while (tmp)
-    {
-        count++;
-        tmp = tmp->next;
-    }
-    argv = malloc(sizeof(char *) * (count + 2));
-    if (!argv)
-        return (NULL);
-    argv[0] = ft_strdup(cmd_path);
-    if (!argv[0])
-    {
-        free(argv);
-        return (NULL);
-    }
+	while (tmp)
+	{
+		count++;
+		tmp = tmp->next;
+	}
+	argv = malloc(sizeof(char *) * (count + 2));
+	if (!argv)
+		return (NULL);
+	argv[0] = ft_strdup(cmd_path);
+	if (!argv[0])
+	{
+		free(argv);
+		return (NULL);
+	}
 
-    tmp = list;
-    while (tmp)
-    {
-        t_argument *argument = (t_argument *)tmp->content;
-        char *processed_word = NULL;
+	tmp = list;
+	while (tmp)
+	{
+		t_argument *argument = (t_argument *)tmp->content;
+		char *processed_word = NULL;
 
-        if (argument->type == LITERAL)
-            processed_word = ft_strdup(argument->word);
-        else if (argument->type == DOUBLE_QUOTE_STR)
-            processed_word = handle_double_quotes(argument->word, data);
-        else if (argument->type == EXIT_STATUS_EXP || argument->type == ENV_EXP)
-            processed_word = handle_dollar(argument->word, data);
-        else if (argument->type == WILDCARD_EXP)
-        {
-            char **temp_matrix = handle_wildcard(argument->word, argv);
+		if (argument->type == LITERAL)
+			processed_word = ft_strdup(argument->word);
+		else if (argument->type == DOUBLE_QUOTE_STR)
+			processed_word = handle_double_quotes(argument->word, data);
+		else if (argument->type == EXIT_STATUS_EXP || argument->type == ENV_EXP)
+			processed_word = handle_dollar(argument->word, data);
+		else if (argument->type == WILDCARD_EXP)
+		{
+			char **temp_matrix = handle_wildcard(argument->word, argv);
 
-            if (!temp_matrix)
-            {
-                free_matrix(argv);
-                return (NULL);
-            }
-            free_matrix(argv);
-            argv = temp_matrix;
-            i = ft_matrix_size(argv);
-            tmp = tmp->next;
-            continue;
-        }
+			if (!temp_matrix)
+			{
+				free_matrix(argv);
+				return (NULL);
+			}
+			free_matrix(argv);
+			argv = temp_matrix;
+			i = ft_matrix_size(argv);
+			tmp = tmp->next;
+			continue;
+		}
 
-        if (!processed_word)
-        {
-            free_matrix(argv);
-            return (NULL);
-        }
+		if (!processed_word)
+		{
+			free_matrix(argv);
+			return (NULL);
+		}
 
-        argv[i++] = processed_word;
-        tmp = tmp->next;
-    }
+		argv[i++] = processed_word;
+		tmp = tmp->next;
+	}
 
-    argv[i] = NULL;
-    return (argv);
+	argv[i] = NULL;
+	return (argv);
 }
 
 int error_fork() {
@@ -125,7 +125,6 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 		return 1;
 
 	int res = 0;
-
 	if (cmd_node.cmd_token.type == BUILTIN) {
 		if (!ft_strcmp("echo", cmd_node.cmd_token.content)) {
 			argv = list_to_argv(cmd_node.arguments, "", data);
@@ -152,6 +151,7 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 		}
 		return res;
 	}
+
 	if (cmd_node.cmd_token.type == WORD || cmd_node.cmd_token.type == BUILTIN)
 	{
 		cmd_path = find_path(cmd_node.cmd_token.content, ep);

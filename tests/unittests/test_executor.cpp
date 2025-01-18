@@ -60,7 +60,7 @@ TEST_P(ExecutorTestSuite, ErrorTests) {
 	ExecutorTestsParams params = GetParam();
 	char** envp = get_envp();
 	t_data data = {NULL, NULL, 0, false};
-	t_script_node *script = new_script_node((char*)params.cmd);
+	t_script_node *script = new_script_node((char*)params.cmd, params.type);
 
 	// run
 	testing::internal::CaptureStderr();
@@ -81,7 +81,7 @@ INSTANTIATE_TEST_SUITE_P(
 	ExecutorTests,
 	ExecutorTestSuite,
 	testing::Values(
-		ExecutorTestsParams{"random_cmd", 127, "", "Command not found: random_cmd\n"},
-		ExecutorTestsParams{"ls", 0, "",""}
+		ExecutorTestsParams{"random_cmd", WORD, 127, "", "Command not found: random_cmd\n"},
+		ExecutorTestsParams{"ls", WORD, 0, "",""}
 		)
 	);

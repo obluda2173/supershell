@@ -60,6 +60,7 @@ void compare_cmd_node(t_test_script_node want, t_cmd_node got);
 // executor
 struct ExecutorTestsParams {
   const char* cmd;
+  t_token_type type;
   int want_return;
   const char* want_stdout;
   const char* want_stderr;
@@ -68,7 +69,7 @@ struct ExecutorTestsParams {
 class ExecutorTestSuite : public::testing::TestWithParam<ExecutorTestsParams>{};
 
 
-t_script_node *new_script_node(char *cmd);
+t_script_node *new_script_node(char *cmd, t_token_type type);
 char **get_envp();
 
 #endif // TESTS_MAIN_H

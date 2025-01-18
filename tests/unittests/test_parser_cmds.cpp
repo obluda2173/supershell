@@ -495,7 +495,16 @@ INSTANTIATE_TEST_SUITE_P(
                 new_token("*.txt", WILDCARD),
                 new_token(NULL, END_OF_FILE),
             },
-            new_test_script_node(CMD_NODE, {new_test_cmd_node(new_token("cat", WORD), {}, {new_redirection(0, IN, "*.txt", WILDCARD_EXP)})}, {}, {})}
+            new_test_script_node(CMD_NODE, {new_test_cmd_node(new_token("cat", WORD), {}, {new_redirection(0, IN, "*.txt", WILDCARD_EXP)})}, {}, {})},
+        ParserTestParams{
+            13,
+            CMD_TEST,
+            {
+                new_token("which", WORD),
+                new_token("echo", BUILTIN),
+                new_token(NULL, END_OF_FILE),
+            },
+            new_test_script_node(CMD_NODE, {new_test_cmd_node(new_token("which", WORD), {new_argument("echo", LITERAL)}, {})}, {}, {})}
     ));
 
 INSTANTIATE_TEST_SUITE_P(
