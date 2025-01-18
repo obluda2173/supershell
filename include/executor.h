@@ -33,7 +33,13 @@ char *append_to_result(char *result, size_t *result_len, const char *addition, s
 
 // executor_handle_wildcard_1.c
 char **handle_wildcard(const char *word, char **argv);
+
+// executor_handle_wildcard_2.c
 int matches_pattern(const char *pattern, const char *str);
+char *get_dir_path(const char *word, char **pattern);
+char *create_result_buffer();
+char *build_full_path(const char *dir_path, const char *entry_name);
+char *append_entry_to_result(char *result, size_t *result_len, const char *full_path);
 
 // execute_cmd.c
 int execute_command(t_cmd_node cmd_node, char **envp, t_data *data);
