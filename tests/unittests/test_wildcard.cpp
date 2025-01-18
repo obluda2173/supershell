@@ -4,5 +4,5 @@ TEST(wildcardTestSuite, firstTest) {
 	char **argv = NULL;
 	const char *word = "*";
 	char**temp = handle_wildcard(word, argv);
-	free(temp);
+	free_matrix(temp);
 };

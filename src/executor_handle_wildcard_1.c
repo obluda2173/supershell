@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 12:50:09 by erian             #+#    #+#             */
-/*   Updated: 2025/01/18 15:05:19 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/18 16:09:52 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ char **handle_wildcard(const char *word, char **argv)
 {
     char	*dir_path;
 	char	*pattern;
+	char	**split;
 	char	**expanded_argv;
 
 	dir_path = get_dir_path(word, &pattern);
@@ -106,6 +107,13 @@ char **handle_wildcard(const char *word, char **argv)
 		return (NULL);
 	}
 	expanded_argv = process_directory(dir_path, pattern, argv);
+	split = ft_split(word, ' ');
+	if (expanded_argv == argv)
+	{
+		free_matrix(expanded_argv);
+        expanded_argv = ft_matrix_join(argv, split);
+	}
+	free_matrix(split);
 	free(dir_path);
 	free(pattern);
 	return (expanded_argv);
