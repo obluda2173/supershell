@@ -28,9 +28,9 @@ typedef struct	s_data
 /* ************************************************************************** */
 
 // free.c
-void	free_all(t_data **data);
+void	free_data(t_data *data);
 
-void	init(t_data **data, char **ep);
+t_data	*init(char **ep);
 char	*meeting_line(t_data **data);
 char * rl_gets(const char* prompt);
 

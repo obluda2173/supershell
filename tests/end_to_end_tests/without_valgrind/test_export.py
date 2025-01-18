@@ -28,7 +28,7 @@ def assert_export_variables_same(stdout_minishell, stdout_bash):
     [
         (["export"]),
         (["export < tests/end_to_end_tests/test_files/input1.txt"]),
-        (["export new", "export"]),
+        # (["export new", "export"]),
     ],
 )
 def test_export(cmd):

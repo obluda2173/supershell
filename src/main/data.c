@@ -1,33 +1,50 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   data.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kfreyer <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/18 18:23/59 by kfreyer           #+#    #+#             */
+/*   Updated: 2025/01/18 18:23:59 by kfreyer          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-//initialise data structure and extract environment
-void	init(t_data **data, char **ep)
+// initialise data structure and extract environment
+t_data	*init(char **ep)
 {
 	t_list	*new_node;
-	t_list	*last_node;
+	t_data	*data;
 
-	//initialise all data needed
-	*data = malloc(sizeof(t_data));
-	if (!*data)
-		return ;
-	(*data)->ep = NULL;
-	(*data)->exit_status = 0;
-	(*data)->not_exit = true;
-
-	//extract environment
+	data = malloc(sizeof(t_data));
+	if (!data)
+		return (NULL);
+	data->ep = NULL;
+	data->exit_status = 0;
+	data->not_exit = true;
 	while (*ep != NULL)
 	{
-		new_node = ft_lstnew(*ep);
+		new_node = ft_lstnew(ft_strdup(*ep));
 		if (!new_node)
 		{
-			free_all(data);
-			return ;
+			free_data(data);
+			return (NULL);
 		}
-		last_node = ft_lstlast((*data)->ep);
-		if (!last_node)
-			(*data)->ep = new_node;
-		else
-			ft_lstadd_back(&((*data)->ep), new_node);
+		ft_lstadd_back(&(data->ep), new_node);
 		ep++;
 	}
+	return (data);
+}
+
+void	free_data(t_data *data)
+{
+	if (!data)
+		return ;
+	if (data->ep)
+		ft_lstclear(&(data->ep), free);
+	if (data->line)
+		free(data->line);
+	free(data);
 }
