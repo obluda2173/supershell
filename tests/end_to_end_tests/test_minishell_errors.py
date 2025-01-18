@@ -34,6 +34,11 @@ import pytest
         ([")ls && (echo hi)("], "Unclosed parenthesis", 2),
         (['(ls -l && echo "((expression)))"'], "Unclosed parenthesis", 2),
         (['(ls -l && echo "((expression)))"'], "Unclosed parenthesis", 2),
+        (
+            ["random_command < tests/end_to_end_tests/test_files/input1.txt"],
+            "Command not found",
+            127,
+        ),
     ],
 )
 def test_errors(cmd, err_msg, want_exit_status):

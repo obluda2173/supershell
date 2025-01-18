@@ -162,12 +162,14 @@ int execute_command(t_cmd_node cmd_node, char **ep, t_data *data)
 		cmd_path = find_path(cmd_node.cmd_token.content, ep);
 		if (!cmd_path)
 		{
+			close_fds(fds);
 			fprintf(stderr, "Command not found: %s\n", cmd_node.cmd_token.content);
 			return 127;
 		}
 		argv = list_to_argv(cmd_node.arguments, cmd_path, data);
 		if (!argv)
 		{
+			close_fds(fds);
 			free(cmd_path);
 			return 1;
 		}
