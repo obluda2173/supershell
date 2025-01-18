@@ -8,7 +8,7 @@ from conftest import (
 )
 import pytest
 
-from tests.end_to_end_tests.assertions import (
+from assertions import (
     assert_no_memory_error,
     assert_no_new_file_descriptors,
 )

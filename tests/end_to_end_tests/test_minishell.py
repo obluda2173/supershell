@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 import pytest
 
-from tests.end_to_end_tests.assertions import (
+from assertions import (
     assert_no_memory_error,
     assert_no_new_file_descriptors,
     assert_same_lines,
 )
-from tests.end_to_end_tests.conftest import (
+from conftest import (
     get_open_fds,
     get_prompt_minishell,
     parse_out_and_err_minishell,
