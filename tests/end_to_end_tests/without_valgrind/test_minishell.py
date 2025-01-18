@@ -2,7 +2,7 @@
 import pytest
 
 from assertions import (
-    assert_no_memory_error,
+    assert_no_memory_error_fsanitize,
     assert_no_new_file_descriptors,
     assert_same_lines,
 )
@@ -50,7 +50,7 @@ def test_minishell(cmd):
         stdout_minishell, stderr_minishell
     )
 
-    assert_no_memory_error(stdout_minishell, stderr_minishell)
+    assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell)
     assert_same_lines(stdout_bash, stdout_minishell)
     assert len(stderr_minishell) == 0
 
@@ -78,7 +78,7 @@ def test_minishell_echo_wo_newline():
     stdout_minishell = stdout_minishell.decode().split("\n")[1][: -len(prompt)]
     stderr_minishell = stderr_minishell.decode()
 
-    assert_no_memory_error(stdout_minishell, stderr_minishell)
+    assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell)
     assert_same_lines(stdout_bash, stdout_minishell)
     assert len(stderr_minishell) == 0
 

@@ -7,3 +7,5 @@
 /minishell
 /tests/end_to_end_tests/__pycache__/
 /tests/end_to_end_tests/test_files/no_perm.txt
+/tests/end_to_end_tests/with_valgrind/__pycache__/
+/tests/end_to_end_tests/without_valgrind/__pycache__/

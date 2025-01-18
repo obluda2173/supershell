@@ -1,6 +1,10 @@
-def assert_no_memory_error(stdout_minishell, stderr_minishell):
+def assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell):
     assert "ERROR" not in stdout_minishell
     assert "ERROR" not in stderr_minishell
+
+
+def assert_no_memory_error_valgrind(stdout_minishell, stderr_minishell):
+    assert "0 errors from 0 contexts" in stderr_minishell
 
 
 def assert_same_lines(stdout_minishell, stdout_bash):

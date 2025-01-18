@@ -7,8 +7,7 @@ from conftest import (
     get_open_fds,
 )
 from assertions import (
-    assert_no_memory_error,
-    assert_no_memory_error,
+    assert_no_memory_error_fsanitize,
     assert_no_new_file_descriptors,
 )
 
@@ -53,7 +52,7 @@ def test_errors(cmd, err_msg, want_exit_status):
         stdout_minishell, stderr_minishell
     )
 
-    assert_no_memory_error(stdout_minishell, stderr_minishell)
+    assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell)
     assert len(stderr_minishell) != 0
     assert len(stdout_minishell) == 1
     assert err_msg in stderr_minishell

@@ -4,13 +4,12 @@ from conftest import (
     get_open_fds,
     parse_out_and_err_minishell,
     send_cmds_minishell,
-    start_process,
+    start_process_with_valgrind,
 )
 import pytest
 
 from assertions import (
-    assert_no_memory_error,
-    assert_no_new_file_descriptors,
+    assert_no_memory_error_valgrind,
 )
 
 
@@ -61,8 +60,7 @@ from assertions import (
     ],
 )
 def test_redirection_errors(cmd, err_msg, want_exit_status):
-    minishell = start_process("./minishell")
-    open_fds_beginning = get_open_fds()
+    minishell = start_process_with_valgrind("./minishell")
 
     cmd = "\n".join(cmd + ["echo $?\n"])
     stdout_minishell, stderr_minishell, open_fds_end = send_cmds_minishell(
@@ -72,9 +70,7 @@ def test_redirection_errors(cmd, err_msg, want_exit_status):
         stdout_minishell, stderr_minishell
     )
 
-    assert_no_memory_error(stderr_minishell, stderr_minishell)
-    assert len(stderr_minishell) != 0
+    assert_no_memory_error_valgrind(stderr_minishell, stderr_minishell)
     assert len(stdout_minishell) == 1
     assert err_msg in stderr_minishell
     assert want_exit_status == int(stdout_minishell[0])
-    assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)

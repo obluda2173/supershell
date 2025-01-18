@@ -13,6 +13,15 @@ def start_process(shell):
     )
 
 
+def start_process_with_valgrind(shell):
+    return subprocess.Popen(
+        ["valgrind", "--track-fds=yes", shell],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+
+
 def get_prompt_minishell():
     minishell = start_process("./minishell")
     prompt, _ = minishell.communicate()

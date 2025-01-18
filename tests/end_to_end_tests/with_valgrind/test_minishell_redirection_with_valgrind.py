@@ -1,6 +1,7 @@
 import pytest
 from conftest import (
     get_prompt_minishell,
+    start_process_with_valgrind,
     start_process,
     get_file_content,
     recreate_append_file,
@@ -9,7 +10,7 @@ from conftest import (
     parse_out_and_err_minishell,
 )
 from assertions import (
-    assert_no_memory_error,
+    assert_no_memory_error_valgrind,
     assert_same_lines,
     assert_no_new_file_descriptors,
 )
@@ -22,10 +23,6 @@ from assertions import (
     ],
 )
 def test_redirect_append(cmd):
-    minishell = start_process("./minishell")
-    open_fds_beginning = get_open_fds()
-    minishell.communicate()
-
     bash = start_process("bash")
     assert bash.stdin is not None
 
@@ -38,7 +35,7 @@ def test_redirect_append(cmd):
     file_bash = get_file_content(append_path)
     recreate_append_file()
 
-    minishell = start_process("./minishell")
+    minishell = start_process_with_valgrind("./minishell")
     stdout_minishell, stderr_minishell, open_fds_end = send_cmds_minishell(
         minishell, cmd
     )
@@ -48,12 +45,9 @@ def test_redirect_append(cmd):
     )
     recreate_append_file()
 
-    assert_no_memory_error(stdout_minishell, stderr_minishell)
-    assert len(stderr_minishell) == 0
+    assert_no_memory_error_valgrind(stdout_minishell, stderr_minishell)
     assert_same_lines(stdout_minishell, stdout_bash)
     assert_same_lines(file_minishell, file_bash)
-
-    assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)
 
 
 @pytest.mark.parametrize(
@@ -69,10 +63,6 @@ def test_redirect_append(cmd):
     ],
 )
 def test_redirect_out(cmd):
-    minishell = start_process("./minishell")
-    open_fds_beginning = get_open_fds()
-    minishell.communicate()
-
     bash = start_process("bash")
     assert bash.stdin is not None
 
@@ -83,7 +73,7 @@ def test_redirect_out(cmd):
     tmp_path = "tests/end_to_end_tests/test_files/tmp.txt"
     file_bash = get_file_content(tmp_path)
 
-    minishell = start_process("./minishell")
+    minishell = start_process_with_valgrind("./minishell")
     stdout_minishell, stderr_minishell, open_fds_end = send_cmds_minishell(
         minishell, cmd
     )
@@ -92,14 +82,12 @@ def test_redirect_out(cmd):
     )
     file_minishell = get_file_content(tmp_path)
 
-    assert_no_memory_error(stdout_minishell, stderr_minishell)
-    assert len(stderr_minishell) == 0
+    assert_no_memory_error_valgrind(stdout_minishell, stderr_minishell)
     assert_same_lines(stdout_minishell, stdout_bash)
 
     assert len(file_bash) == len(file_minishell)
     for out1, out2 in zip(file_bash, file_minishell):
         assert out1 == out2, f"{out1} != {out2}"
-    assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)
 
 
 @pytest.mark.parametrize(
@@ -124,17 +112,13 @@ def test_redirect_out(cmd):
     ],
 )
 def test_in_and_heredoc_redirections(cmd):
-    minishell = start_process("./minishell")
-    open_fds_beginning = get_open_fds()
-    minishell.communicate()
-
     cmd = "\n".join(cmd + ["echo $?\n"])
 
     bash = start_process("bash")
     assert bash.stdin is not None
     stdout_bash, _ = bash.communicate(cmd.encode())
 
-    minishell = start_process("./minishell")
+    minishell = start_process_with_valgrind("./minishell")
     stdout_minishell, stderr_minishell, open_fds_end = send_cmds_minishell(
         minishell, cmd
     )
@@ -144,8 +128,5 @@ def test_in_and_heredoc_redirections(cmd):
         stdout_minishell, stderr_minishell
     )
 
-    assert_no_memory_error(stdout_minishell, stderr_minishell)
-    assert len(stderr_minishell) == 0
+    assert_no_memory_error_valgrind(stdout_minishell, stderr_minishell)
     assert_same_lines(stdout_minishell, stdout_bash)
-
-    assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)
