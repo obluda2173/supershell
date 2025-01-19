@@ -26,7 +26,7 @@ from conftest import (
         (["echo  asdf    $PATH   asdf  "]),
         (['echo "$PATH"']),
         (["which ls"]),
-        # (["echo *", "echo *"]),
+        (["echo *"]),
     ],
 )
 def test_minishell(cmd):

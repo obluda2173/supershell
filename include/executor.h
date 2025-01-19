@@ -43,7 +43,7 @@ char *build_full_path(const char *dir_path, const char *entry_name);
 char *append_entry_to_result(char *result, size_t *result_len, const char *full_path);
 
 // execute_cmd.c
-int execute_command(t_cmd_node cmd_node, t_data *data);
+int execute_command(t_cmd_node *cmd_node, t_data *data);
 
 // executor_matrix_manipulation.c
 void free_matrix(char **matrix);
@@ -57,5 +57,5 @@ int set_redirections(t_list* redirections, int fds[2]);
 void	close_fds(int fds[2]);
 // executor_prepare_argv.c
 char **list_to_argv(t_list *list, char *cmd_path, int last_exit_status);
-int expand_wildcards_in_arguments(t_list *list);
+int expand_wildcards_in_arguments(t_list **list);
 #endif // EXECUTOR_

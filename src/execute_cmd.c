@@ -12,6 +12,7 @@
 
 #include "executor.h"
 #include "libft.h"
+#include "parser.h"
 #include <unistd.h>
 
 int error_fork()
@@ -108,33 +109,39 @@ int export(t_list *ep) {
 	return 0;
 }
 
-int execute_command(t_cmd_node cmd_node, t_data *data)
+int execute_command(t_cmd_node *cmd_node, t_data *data)
 {
 	char *cmd_path;
 	char **argv = NULL;
 
 	int fds[2] = {STDIN_FILENO, STDOUT_FILENO};
 
-	if (set_redirections(cmd_node.redirections, fds))
+	if (set_redirections(cmd_node->redirections, fds))
 		return 1;
 
-	expand_wildcards_in_arguments(cmd_node.arguments);
+	expand_wildcards_in_arguments(&(cmd_node->arguments));
+	/* t_list* head = cmd_node.arguments; */
+	/* while (head) { */
+	/* 	printf("%s\n", ((t_argument*)head->content)->word); */
+	/* 	printf("%d\n", ((t_argument*)head->content)->type); */
+	/* 	head = head->next; */
+	/* } */
 
 
 	int res = 0;
-	if (cmd_node.cmd_token.type == BUILTIN) {
-		if (!ft_strcmp("echo", cmd_node.cmd_token.content))
-			res = echo(cmd_node, fds, data);
-		if (!ft_strcmp("export", cmd_node.cmd_token.content)) {
+	if (cmd_node->cmd_token.type == BUILTIN) {
+		if (!ft_strcmp("echo", cmd_node->cmd_token.content))
+			res = echo(*cmd_node, fds, data);
+		if (!ft_strcmp("export", cmd_node->cmd_token.content)) {
 			close_fds(fds);
 			return export(data->ep);
 		}
 	}
 
-	if (cmd_node.cmd_token.type == WORD)
+	if (cmd_node->cmd_token.type == WORD)
 	{
-		if (!ft_strcmp(cmd_node.cmd_token.content, "which")) {
-			if (!ft_strcmp(((t_argument*)cmd_node.arguments->content)->word, "echo")) {
+		if (!ft_strcmp(cmd_node->cmd_token.content, "which")) {
+			if (!ft_strcmp(((t_argument*)cmd_node->arguments->content)->word, "echo")) {
 				ft_putendl_fd("minishell built-in command", STDOUT_FILENO);
 				close_fds(fds);
 				return 0;
@@ -143,14 +150,14 @@ int execute_command(t_cmd_node cmd_node, t_data *data)
 
 
 		char* path_env = get_path_env(data->ep);
-		cmd_path = find_path(cmd_node.cmd_token.content, path_env);
+		cmd_path = find_path(cmd_node->cmd_token.content, path_env);
 		if (!cmd_path)
 		{
 			close_fds(fds);
-			fprintf(stderr, "Command not found: %s\n", cmd_node.cmd_token.content);
+			fprintf(stderr, "Command not found: %s\n", cmd_node->cmd_token.content);
 			return 127;
 		}
-		argv = list_to_argv(cmd_node.arguments, cmd_path, data->exit_status);
+		argv = list_to_argv(cmd_node->arguments, cmd_path, data->exit_status);
 		if (!argv)
 		{
 			close_fds(fds);

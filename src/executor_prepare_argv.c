@@ -37,15 +37,15 @@ static char *process_argument(t_argument *argument, int last_exit_status)
     return NULL;
 }
 
-static char **expand_wildcard(t_argument *argument, char **argv, size_t *i)
-{
-    char **temp_matrix = handle_wildcard(argument->word, argv);
-    if (!temp_matrix)
-        return NULL;
+/* static char **expand_wildcard(t_argument *argument, char **argv, size_t *i) */
+/* { */
+/*     char **temp_matrix = handle_wildcard(argument->word, argv); */
+/*     if (!temp_matrix) */
+/*         return NULL; */
 
-    *i = ft_matrix_size(temp_matrix) + 1;
-    return temp_matrix;
-}
+/*     *i = ft_matrix_size(temp_matrix) + 1; */
+/*     return temp_matrix; */
+/* } */
 
 static char **fill_argv(t_list *list, char **argv, size_t i, int last_exit_status)
 {
@@ -55,18 +55,18 @@ static char **fill_argv(t_list *list, char **argv, size_t i, int last_exit_statu
     {
         t_argument *argument = (t_argument *)tmp->content;
         char *processed_word = NULL;
-        if (argument->type == WILDCARD_EXP)
-        {
-            argv[i] = NULL;
-            argv = expand_wildcard(argument, argv, &i);
-            if (!argv)
-            {
-                argv[i++] = ft_strdup(argument->word);
-                
-            }
-            tmp = tmp->next;
-            continue ;
-        }
+        /* if (argument->type == WILDCARD_EXP) */
+        /* { */
+        /*     argv[i] = NULL; */
+        /*     argv = expand_wildcard(argument, argv, &i); */
+        /*     if (!argv) */
+        /*     { */
+        /*         argv[i++] = ft_strdup(argument->word); */
+
+        /*     } */
+        /*     tmp = tmp->next; */
+        /*     continue ; */
+        /* } */
         processed_word = process_argument(argument, last_exit_status);
         if (!processed_word)
         {

@@ -38,7 +38,7 @@ t_list	*get_dir_entries(char *dir_path)
 	dir = opendir(dir_path);
 	entries = NULL;
 	while ((entry = readdir(dir)) != NULL)
-		ft_lstadd_back(&entries, ft_lstnew(entry->d_name));
+		ft_lstadd_back(&entries, ft_lstnew(ft_strdup(entry->d_name)));
 	closedir(dir);
 	return (entries);
 }
@@ -67,10 +67,24 @@ t_list *handle_wildcard_argument(t_argument argument) {
 	return new_arguments;
 }
 
-int expand_wildcards_in_arguments(t_list *list) {
-	t_list *head = list;
+int expand_wildcards_in_arguments(t_list **list) {
+
+	t_list *head = *list;
 	if (!head)
 		return EXIT_FAILURE;
+
+	if (((t_argument*)head->content)->type == WILDCARD_EXP) {
+		t_list* new = handle_wildcard_argument(*(t_argument*)head->content);
+		if (!new)
+			return EXIT_FAILURE;
+		ft_lstlast(new)->next = head->next;
+		*list = new;
+		head->next = NULL;
+		ft_lstclear(&head, free_arguments);
+		head = *list;
+	}
+
+
 	while (head->next) {
 		if (((t_argument*)head->next->content)->type == WILDCARD_EXP) {
 			t_list* new = handle_wildcard_argument(*(t_argument*)head->next->content);
