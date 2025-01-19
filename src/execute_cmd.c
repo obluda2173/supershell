@@ -70,6 +70,8 @@ static int custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2]) {
 
 int echo(t_cmd_node cmd_node, int fds[2], t_data *data) {
 	char **argv = NULL;
+
+
 	argv = list_to_argv(cmd_node.arguments, "", data->exit_status);
 	int res = 0;
 	if (!argv)

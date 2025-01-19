@@ -18,18 +18,19 @@ from conftest import (
 @pytest.mark.parametrize(
     "cmd",
     [
-        (["echo hello"]),
-        (["ls -a", "ls -l"]),
-        (["cat CMakeLists.txt"]),
-        (["echo $PATH"]),
-        (["echo asdf $PATH asdf"]),
-        (["echo  asdf    $PATH   asdf  "]),
-        (['echo "$PATH"']),
-        (["which ls"]),
-        (["echo"]),
+        (["echo *"]),
+        (["echo .*"]),
+        (["echo *s"]),
+        (["echo c*"]),
+        (["echo *.c"]),
+        # the next ones should be handled extra, they should be printed out as is
+        # (["echo ./*"]),
+        # (["echo ../*"]),
+        # (["echo ../../*"]),
+        # (["echo src/*c"]),
     ],
 )
-def test_minishell(cmd):
+def test_wildcards_with_bash(cmd):
     minishell = start_process("./minishell")
     open_fds_beginning = get_open_fds()
     minishell.communicate()
@@ -57,48 +58,23 @@ def test_minishell(cmd):
     assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)
 
 
-def test_minishell_echo_wo_newline():
+@pytest.mark.parametrize(
+    "cmd, want",
+    [
+        (["echo ./*"], "./*"),
+        (["echo ../*"], "../*"),
+        (["echo ../../*", "../../*"]),
+        (["echo src/*c"], "src/*c"),
+    ],
+)
+def test_wildcards_divirgent_from_bash(cmd, want):
     minishell = start_process("./minishell")
     open_fds_beginning = get_open_fds()
     minishell.communicate()
 
-    cmd = "echo -n $PATH\n"
-
-    bash = start_process("bash")
-    assert bash.stdin is not None
-    stdout_bash, _ = bash.communicate(cmd.encode())
-
-    minishell = start_process("./minishell")
-    stdout_minishell, stderr_minishell, open_fds_end = (
-        send_cmds_minishell_with_open_fds(minishell, cmd)
-    )
-
-    stdout_bash = stdout_bash.decode()
-    prompt = get_prompt_minishell()
-    stdout_minishell = stdout_minishell.decode().split("\n")[1][: -len(prompt)]
-    stderr_minishell = stderr_minishell.decode()
-
-    assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell)
-    assert_same_lines_ordered(stdout_bash, stdout_minishell)
-    assert len(stderr_minishell) == 0
-
-    assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)
-
-
-@pytest.mark.parametrize(
-    "cmd",
-    [
-        (["which echo"]),
-        (["which echo < tests/end_to_end_tests/test_files/input1.txt"]),
-        # (["echo *", "echo *"]),
-    ],
-)
-def test_which_builtin(cmd):
-    minishell = start_process("./minishell")
-    open_fds_beginning = get_open_fds()
-
     cmd = "\n".join(cmd + ["echo $?\n"])
 
+    minishell = start_process("./minishell")
     stdout_minishell, stderr_minishell, open_fds_end = (
         send_cmds_minishell_with_open_fds(minishell, cmd)
     )
@@ -108,8 +84,7 @@ def test_which_builtin(cmd):
     )
 
     assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell)
-    assert "minishell built-in command" in stdout_minishell[0]
-    assert "0" == stdout_minishell[1]
-
+    assert stdout_minishell[0] == want
     assert len(stderr_minishell) == 0
+
     assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)

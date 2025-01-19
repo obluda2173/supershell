@@ -52,6 +52,13 @@ t_list	*create_wildcard_arguments(t_list *dir_entries, char *dir_path,
 	char		*full_path;
 	t_argument	*new;
 
+	if (ft_strcmp(dir_path, ".")) {
+		full_path = build_full_path(dir_path, pattern);
+		new = (t_argument *)malloc(sizeof(t_argument));
+		new->word = full_path;
+		new->type = LITERAL;
+		return ft_lstnew(new);
+	}
 	head = dir_entries;
 	new_arguments = NULL;
 	while (head)
@@ -66,21 +73,30 @@ t_list	*create_wildcard_arguments(t_list *dir_entries, char *dir_path,
 				continue ;
 			}
 			full_path = build_full_path(dir_path, entry);
-			if (!full_path) {
+			if (!full_path)
+			{
 				ft_lstclear(&new_arguments, free_arguments);
-				return NULL;
+				return (NULL);
 			}
 			new = (t_argument *)malloc(sizeof(t_argument));
-			if (!new) {
+			if (!new)
+			{
 				free(full_path);
 				ft_lstclear(&new_arguments, free_arguments);
-				return NULL;
+				return (NULL);
 			}
 			new->word = full_path;
 			new->type = LITERAL;
 			ft_lstadd_back(&new_arguments, ft_lstnew(new));
 		}
 		head = head->next;
+	}
+	if (!new_arguments) {
+		full_path = build_full_path(dir_path, pattern);
+		new = (t_argument *)malloc(sizeof(t_argument));
+		new->word = full_path;
+		new->type = LITERAL;
+		return ft_lstnew(new);
 	}
 	return (new_arguments);
 }
