@@ -43,20 +43,15 @@ t_list	*get_dir_entries(char *dir_path)
 	return (entries);
 }
 
-t_list	*handle_wildcard_argument(t_argument argument)
+t_list	*create_wildcard_arguments(t_list *dir_entries, char *dir_path,
+		char *pattern)
 {
-	char		*dir_path;
-	char		*pattern;
-	t_list		*dir_entries;
 	t_list		*head;
 	t_list		*new_arguments;
 	char		*entry;
 	char		*full_path;
 	t_argument	*new;
 
-	dir_path = get_dir_path_2(argument);
-	pattern = get_pattern(argument);
-	dir_entries = get_dir_entries(dir_path);
 	head = dir_entries;
 	new_arguments = NULL;
 	while (head)
@@ -71,19 +66,41 @@ t_list	*handle_wildcard_argument(t_argument argument)
 				continue ;
 			}
 			full_path = build_full_path(dir_path, entry);
+			if (!full_path) {
+				ft_lstclear(&new_arguments, free_arguments);
+				return NULL;
+			}
 			new = (t_argument *)malloc(sizeof(t_argument));
+			if (!new) {
+				free(full_path);
+				ft_lstclear(&new_arguments, free_arguments);
+				return NULL;
+			}
 			new->word = full_path;
 			new->type = LITERAL;
 			ft_lstadd_back(&new_arguments, ft_lstnew(new));
 		}
 		head = head->next;
 	}
+	return (new_arguments);
+}
+
+t_list	*handle_wildcard_argument(t_argument argument)
+{
+	char	*dir_path;
+	char	*pattern;
+	t_list	*dir_entries;
+	t_list	*new_arguments;
+
+	dir_path = get_dir_path_2(argument);
+	pattern = get_pattern(argument);
+	dir_entries = get_dir_entries(dir_path);
+	new_arguments = create_wildcard_arguments(dir_entries, dir_path, pattern);
 	free(dir_path);
 	free(pattern);
 	ft_lstclear(&dir_entries, free);
 	return (new_arguments);
 }
-
 
 void	replace_list_next_with_new(t_list *list, t_list *new)
 {
