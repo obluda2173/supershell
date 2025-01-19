@@ -118,6 +118,9 @@ int execute_command(t_cmd_node cmd_node, t_data *data)
 	if (set_redirections(cmd_node.redirections, fds))
 		return 1;
 
+	expand_wildcards_in_arguments(cmd_node.arguments);
+
+
 	int res = 0;
 	if (cmd_node.cmd_token.type == BUILTIN) {
 		if (!ft_strcmp("echo", cmd_node.cmd_token.content))

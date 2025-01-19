@@ -1,6 +1,7 @@
 #include "executor.h"
 #include "libft.h"
 #include "parser.h"
+#include <unistd.h>
 
 char	*get_dir_path_2(t_argument argument)
 {
@@ -66,7 +67,22 @@ t_list *handle_wildcard_argument(t_argument argument) {
 	return new_arguments;
 }
 
-void expand_wildcards_in_arguments(t_list *list) {
-
-
+int expand_wildcards_in_arguments(t_list *list) {
+	t_list *head = list;
+	if (!head)
+		return EXIT_FAILURE;
+	while (head->next) {
+		if (((t_argument*)head->next->content)->type == WILDCARD_EXP) {
+			t_list* new = handle_wildcard_argument(*(t_argument*)head->next->content);
+			if (!new)
+				return EXIT_FAILURE;
+			ft_lstlast(new)->next = head->next->next;
+			t_list *tmp = head->next;
+			head->next = new;
+			free_arguments(tmp);
+		}
+		head = head->next;
+	}
+	return EXIT_SUCCESS;
 }
+
