@@ -13,7 +13,7 @@ char	*get_dir_path_2(t_argument argument)
 		dir_path = ft_substr(argument.word, 0, slash - argument.word);
 	else
 		dir_path = ft_strdup(".");
-	return dir_path;
+	return (dir_path);
 }
 
 char	*get_pattern(t_argument argument)
@@ -26,7 +26,7 @@ char	*get_pattern(t_argument argument)
 		pattern = strdup(slash + 1);
 	else
 		pattern = ft_strdup(argument.word);
-	return pattern;
+	return (pattern);
 }
 
 t_list	*get_dir_entries(char *dir_path)
@@ -43,95 +43,81 @@ t_list	*get_dir_entries(char *dir_path)
 	return (entries);
 }
 
-t_list *handle_wildcard_argument(t_argument argument) {
-	char* dir_path = get_dir_path_2(argument);
-	char* pattern = get_pattern(argument);
-	t_list *dir_entries = get_dir_entries(dir_path);
-	t_list *head = dir_entries;
-	t_list *new_arguments = NULL;
-	while (head) {
-		char* entry = (char*)head->content;
-		if (matches_pattern(pattern, entry)) {
-			char *full_path = build_full_path(dir_path , entry);
-			t_argument *new = (t_argument*)malloc(sizeof(t_argument));
+t_list	*handle_wildcard_argument(t_argument argument)
+{
+	char		*dir_path;
+	char		*pattern;
+	t_list		*dir_entries;
+	t_list		*head;
+	t_list		*new_arguments;
+	char		*entry;
+	char		*full_path;
+	t_argument	*new;
+
+	dir_path = get_dir_path_2(argument);
+	pattern = get_pattern(argument);
+	dir_entries = get_dir_entries(dir_path);
+	head = dir_entries;
+	new_arguments = NULL;
+	while (head)
+	{
+		entry = (char *)head->content;
+		if (matches_pattern(pattern, entry))
+		{
+			if (!ft_strcmp(entry, ".") || !ft_strcmp(entry, "..")
+				|| (entry[0] == '.' && pattern[0] == '*'))
+			{
+				head = head->next;
+				continue ;
+			}
+			full_path = build_full_path(dir_path, entry);
+			new = (t_argument *)malloc(sizeof(t_argument));
 			new->word = full_path;
 			new->type = LITERAL;
 			ft_lstadd_back(&new_arguments, ft_lstnew(new));
 		}
 		head = head->next;
 	}
-
 	free(dir_path);
 	free(pattern);
 	ft_lstclear(&dir_entries, free);
-	return new_arguments;
+	return (new_arguments);
 }
 
 
-void sort_wildcard(t_list **list) {
-	t_list *head;
+void	replace_next_with_new(t_list *list, t_list *new)
+{
+	t_list	*tmp;
+
+	ft_lstlast(new)->next = list->next->next;
+	tmp = list->next;
+	list->next = new;
+	tmp->next = NULL;
+	ft_lstclear(&tmp, free_arguments);
+}
+
+int	expand_wildcards_in_arguments(t_list **list)
+{
+	t_list	*head;
+	t_list	*new;
+	t_list	dummy;
+
 	if (!list || !*list)
-		return;
-
-	int len = ft_lstsize(*list);
-
-	t_list dummy = {NULL, *list};
+		return (EXIT_FAILURE);
+	dummy = (t_list){NULL, *list};
 	head = &dummy;
-	while (len > 1) {
-		t_list *prev = head;
-		t_list *curr = prev->next;
-
-		int count = 0;
-		while (count < len-1) {
-			count++;
-			if (ft_strcmp(((t_argument*)curr->content)->word, ((t_argument*)curr->next->content)->word) < 0) {
-				prev = curr;
-				curr = curr->next;
-			} else {
-				prev->next = curr->next;
-				curr->next = curr->next->next;
-				prev->next->next = curr;
-				curr = prev->next->next;
-				prev = prev->next;
-			}
-		}
-		len--;
-
-	}
-
-	*list = dummy.next;
-}
-
-int expand_wildcards_in_arguments(t_list **list) {
-	t_list *head = *list;
-	if (!head)
-		return EXIT_FAILURE;
-
-	if (((t_argument*)head->content)->type == WILDCARD_EXP) {
-		t_list* new = handle_wildcard_argument(*(t_argument*)head->content);
-		if (!new)
-			return EXIT_FAILURE;
-		sort_wildcard(&new);
-		ft_lstlast(new)->next = head->next;
-		*list = new;
-		head->next = NULL;
-		ft_lstclear(&head, free_arguments);
-		head = *list;
-	}
-
-	while (head->next) {
-		if (((t_argument*)head->next->content)->type == WILDCARD_EXP) {
-			t_list* new = handle_wildcard_argument(*(t_argument*)head->next->content);
+	while (head->next)
+	{
+		if (((t_argument *)head->next->content)->type == WILDCARD_EXP)
+		{
+			new = handle_wildcard_argument(*(t_argument *)head->next->content);
 			if (!new)
-				return EXIT_FAILURE;
-			ft_lstlast(new)->next = head->next->next;
-			t_list *tmp = head->next;
-			head->next = new;
-			tmp->next = NULL;
-			ft_lstclear(&tmp, free_arguments);
+				return (EXIT_FAILURE);
+			sort_arguments(&new);
+			replace_next_with_new(head, new);
 		}
 		head = head->next;
 	}
-	return EXIT_SUCCESS;
+	*list = dummy.next;
+	return (EXIT_SUCCESS);
 }
-

@@ -74,22 +74,27 @@ int echo(t_cmd_node cmd_node, int fds[2], t_data *data) {
 	int res = 0;
 	if (!argv)
 		return 1;
+
 	char** head = argv;
 	head++;
-	bool print_newline = true;
-	if (!ft_strcmp(*head, "-n")) {
-		print_newline = false;
-		head++;
-	}
+	if (*head) {
+		bool print_newline = true;
+		if (!ft_strcmp(*head, "-n")) {
+			print_newline = false;
+			head++;
+		}
 
-	while (*head) {
-		ft_putstr_fd(*head, fds[1]);
-		head++;
-		if (*head)
-			ft_putstr_fd(" ", fds[1]);
-	}
-	if (print_newline)
+		while (*head) {
+			ft_putstr_fd(*head, fds[1]);
+			head++;
+			if (*head)
+				ft_putstr_fd(" ", fds[1]);
+		}
+		if (print_newline)
+			ft_putendl_fd("", fds[1]);
+	} else {
 		ft_putendl_fd("", fds[1]);
+	}
 
 	free_matrix(argv);
 	return res;
@@ -120,13 +125,6 @@ int execute_command(t_cmd_node *cmd_node, t_data *data)
 		return 1;
 
 	expand_wildcards_in_arguments(&(cmd_node->arguments));
-	/* t_list* head = cmd_node.arguments; */
-	/* while (head) { */
-	/* 	printf("%s\n", ((t_argument*)head->content)->word); */
-	/* 	printf("%d\n", ((t_argument*)head->content)->type); */
-	/* 	head = head->next; */
-	/* } */
-
 
 	int res = 0;
 	if (cmd_node->cmd_token.type == BUILTIN) {

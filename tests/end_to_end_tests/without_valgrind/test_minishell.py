@@ -26,7 +26,16 @@ from conftest import (
         (["echo  asdf    $PATH   asdf  "]),
         (['echo "$PATH"']),
         (["which ls"]),
+        (["echo"]),
         (["echo *"]),
+        (["echo .*"]),
+        (["echo *s"]),
+        (["echo c*"]),
+        # the next ones should be handled extra
+        # (["echo ./*"]),
+        # (["echo ../*"]),
+        # (["echo ../../*"]),
+        # (["echo src/*s"]),
     ],
 )
 def test_minishell(cmd):

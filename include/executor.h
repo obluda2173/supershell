@@ -58,4 +58,6 @@ void	close_fds(int fds[2]);
 // executor_prepare_argv.c
 char **list_to_argv(t_list *list, char *cmd_path, int last_exit_status);
 int expand_wildcards_in_arguments(t_list **list);
+
+void	sort_arguments(t_list **list);
 #endif // EXECUTOR_
