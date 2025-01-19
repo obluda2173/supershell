@@ -67,6 +67,41 @@ t_list *handle_wildcard_argument(t_argument argument) {
 	return new_arguments;
 }
 
+
+void sort_wildcard(t_list **list) {
+	t_list *head;
+	if (!list || !*list)
+		return;
+
+	int len = ft_lstsize(*list);
+
+	t_list dummy = {NULL, *list};
+	head = &dummy;
+	while (len > 1) {
+		t_list *prev = head;
+		t_list *curr = prev->next;
+
+		int count = 0;
+		while (count < len-1) {
+			count++;
+			if (ft_strcmp(((t_argument*)curr->content)->word, ((t_argument*)curr->next->content)->word) < 0) {
+				prev = curr;
+				curr = curr->next;
+			} else {
+				prev->next = curr->next;
+				curr->next = curr->next->next;
+				prev->next->next = curr;
+				curr = prev->next->next;
+				prev = prev->next;
+			}
+		}
+		len--;
+
+	}
+
+	*list = dummy.next;
+}
+
 int expand_wildcards_in_arguments(t_list **list) {
 	t_list *head = *list;
 	if (!head)
@@ -76,6 +111,7 @@ int expand_wildcards_in_arguments(t_list **list) {
 		t_list* new = handle_wildcard_argument(*(t_argument*)head->content);
 		if (!new)
 			return EXIT_FAILURE;
+		sort_wildcard(&new);
 		ft_lstlast(new)->next = head->next;
 		*list = new;
 		head->next = NULL;
