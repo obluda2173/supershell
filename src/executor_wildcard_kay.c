@@ -68,7 +68,6 @@ t_list *handle_wildcard_argument(t_argument argument) {
 }
 
 int expand_wildcards_in_arguments(t_list **list) {
-
 	t_list *head = *list;
 	if (!head)
 		return EXIT_FAILURE;
@@ -84,7 +83,6 @@ int expand_wildcards_in_arguments(t_list **list) {
 		head = *list;
 	}
 
-
 	while (head->next) {
 		if (((t_argument*)head->next->content)->type == WILDCARD_EXP) {
 			t_list* new = handle_wildcard_argument(*(t_argument*)head->next->content);
@@ -93,7 +91,8 @@ int expand_wildcards_in_arguments(t_list **list) {
 			ft_lstlast(new)->next = head->next->next;
 			t_list *tmp = head->next;
 			head->next = new;
-			free_arguments(tmp);
+			tmp->next = NULL;
+			ft_lstclear(&tmp, free_arguments);
 		}
 		head = head->next;
 	}

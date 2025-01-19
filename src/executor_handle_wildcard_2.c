@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "libft.h"
 
 int matches_pattern(const char *pattern, const char *str)
 {
@@ -60,6 +61,8 @@ char *create_result_buffer()
 
 char *build_full_path(const char *dir_path, const char *entry_name)
 {
+    if (!ft_strcmp(dir_path, "."))
+        return ft_strdup(entry_name);
     size_t dir_len = ft_strlen(dir_path);
     size_t entry_len = ft_strlen(entry_name);
     size_t full_len = dir_len + entry_len + 2;
