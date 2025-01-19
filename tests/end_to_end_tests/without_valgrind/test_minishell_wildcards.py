@@ -23,6 +23,7 @@ from conftest import (
         (["echo *s"]),
         (["echo c*"]),
         (["echo *.c"]),
+        (["echo ./*"]),
         # the next ones should be handled extra, they should be printed out as is
         # (["echo ./*"]),
         # (["echo ../*"]),
@@ -61,9 +62,8 @@ def test_wildcards_with_bash(cmd):
 @pytest.mark.parametrize(
     "cmd, want",
     [
-        (["echo ./*"], "./*"),
         (["echo ../*"], "../*"),
-        (["echo ../../*", "../../*"]),
+        (["echo ../../*"], "../../*"),
         (["echo src/*c"], "src/*c"),
     ],
 )

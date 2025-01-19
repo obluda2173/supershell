@@ -12,7 +12,7 @@ char	*get_dir_path_2(t_argument argument)
 	if (slash)
 		dir_path = ft_substr(argument.word, 0, slash - argument.word);
 	else
-		dir_path = ft_strdup(".");
+		dir_path = ft_strdup("");
 	return (dir_path);
 }
 
@@ -52,7 +52,7 @@ t_list	*create_wildcard_arguments(t_list *dir_entries, char *dir_path,
 	char		*full_path;
 	t_argument	*new;
 
-	if (ft_strcmp(dir_path, ".")) {
+	if (ft_strcmp(dir_path, "") && ft_strcmp(dir_path, ".")) {
 		full_path = build_full_path(dir_path, pattern);
 		new = (t_argument *)malloc(sizeof(t_argument));
 		new->word = full_path;
@@ -110,7 +110,12 @@ t_list	*handle_wildcard_argument(t_argument argument)
 
 	dir_path = get_dir_path_2(argument);
 	pattern = get_pattern(argument);
-	dir_entries = get_dir_entries(dir_path);
+
+	if (!ft_strcmp(dir_path, "")) {
+		dir_entries = get_dir_entries(".");
+	} else {
+		dir_entries = get_dir_entries(dir_path);
+	}
 	new_arguments = create_wildcard_arguments(dir_entries, dir_path, pattern);
 	free(dir_path);
 	free(pattern);
