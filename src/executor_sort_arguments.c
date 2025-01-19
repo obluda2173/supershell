@@ -1,6 +1,6 @@
 #include "executor.h"
 
-int	ft_strcmp2(const char *s1, const char *s2)
+int	ft_strcmp_lower(const char *s1, const char *s2)
 {
 	char	*s1_copy;
 	char	*s2_copy;
@@ -27,14 +27,44 @@ int	ft_strcmp2(const char *s1, const char *s2)
 	return (result);
 }
 
+void	swap_nodes(t_list *prev, t_list *curr)
+{
+	prev->next = curr->next;
+	curr->next = curr->next->next;
+	prev->next->next = curr;
+}
+
+void	bubble_sort_inner_loop(t_list *head, int len)
+{
+	t_list	*prev;
+	t_list	*curr;
+	int		count;
+
+	prev = head;
+	curr = prev->next;
+	count = 0;
+	while (count++ < len - 1)
+	{
+		if (ft_strcmp_lower(((t_argument *)curr->content)->word,
+				((t_argument *)curr->next->content)->word) < 0)
+		{
+			prev = curr;
+			curr = curr->next;
+		}
+		else
+		{
+			swap_nodes(prev, curr);
+			curr = prev->next->next;
+			prev = prev->next;
+		}
+	}
+}
+
 void	sort_arguments(t_list **list)
 {
 	t_list	*head;
 	int		len;
 	t_list	dummy;
-	t_list	*prev;
-	t_list	*curr;
-	int		count;
 
 	if (!list || !*list)
 		return ;
@@ -43,27 +73,7 @@ void	sort_arguments(t_list **list)
 	head = &dummy;
 	while (len > 1)
 	{
-		prev = head;
-		curr = prev->next;
-		count = 0;
-		while (count < len - 1)
-		{
-			count++;
-			if (ft_strcmp2(((t_argument *)curr->content)->word,
-					((t_argument *)curr->next->content)->word) < 0)
-			{
-				prev = curr;
-				curr = curr->next;
-			}
-			else
-			{
-				prev->next = curr->next;
-				curr->next = curr->next->next;
-				prev->next->next = curr;
-				curr = prev->next->next;
-				prev = prev->next;
-			}
-		}
+		bubble_sort_inner_loop(head, len);
 		len--;
 	}
 	*list = dummy.next;

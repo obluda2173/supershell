@@ -85,7 +85,7 @@ t_list	*handle_wildcard_argument(t_argument argument)
 }
 
 
-void	replace_next_with_new(t_list *list, t_list *new)
+void	replace_list_next_with_new(t_list *list, t_list *new)
 {
 	t_list	*tmp;
 
@@ -114,7 +114,7 @@ int	expand_wildcards_in_arguments(t_list **list)
 			if (!new)
 				return (EXIT_FAILURE);
 			sort_arguments(&new);
-			replace_next_with_new(head, new);
+			replace_list_next_with_new(head, new);
 		}
 		head = head->next;
 	}
