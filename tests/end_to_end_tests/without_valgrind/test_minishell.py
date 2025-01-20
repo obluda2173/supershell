@@ -90,7 +90,6 @@ def test_minishell_echo_wo_newline():
     [
         (["which echo"]),
         (["which echo < tests/end_to_end_tests/test_files/input1.txt"]),
-        # (["echo *", "echo *"]),
     ],
 )
 def test_which_builtin(cmd):

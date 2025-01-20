@@ -15,29 +15,29 @@
 #include "parser.h"
 #include <unistd.h>
 
-char	*get_dir_path_2(t_argument argument)
+char	*get_dir_path_2(char* path)
 {
 	char	*dir_path;
 	char	*slash;
 
-	slash = ft_strrchr(argument.word, '/');
+	slash = ft_strrchr(path, '/');
 	if (slash)
-		dir_path = ft_substr(argument.word, 0, slash - argument.word);
+		dir_path = ft_substr(path, 0, slash - path);
 	else
 		dir_path = ft_strdup("");
 	return (dir_path);
 }
 
-char	*get_pattern(t_argument argument)
+char	*get_pattern(char* word)
 {
 	char	*pattern;
 	char	*slash;
 
-	slash = ft_strrchr(argument.word, '/');
+	slash = ft_strrchr(word, '/');
 	if (slash)
 		pattern = strdup(slash + 1);
 	else
-		pattern = ft_strdup(argument.word);
+		pattern = ft_strdup(word);
 	return (pattern);
 }
 
@@ -148,8 +148,8 @@ t_list	*handle_wildcard_argument(t_argument argument)
 	t_list	*dir_entries;
 	t_list	*new_arguments;
 
-	dir_path = get_dir_path_2(argument);
-	pattern = get_pattern(argument);
+	dir_path = get_dir_path_2(argument.word);
+	pattern = get_pattern(argument.word);
 	if (ft_strcmp(dir_path, "") && ft_strcmp(dir_path, "."))
 		new_arguments = ignore_wildcard(dir_path, pattern);
 	else

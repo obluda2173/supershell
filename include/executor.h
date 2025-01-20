@@ -60,4 +60,6 @@ char **list_to_argv(t_list *arguments, char *cmd_path);
 int expand_wildcards_in_arguments(t_list **list);
 
 void	sort_arguments(t_list **list);
+
+void	replace_list_next_with_new(t_list *list, t_list *new);
 #endif // EXECUTOR_
