@@ -22,6 +22,11 @@ def assert_export_variables_same(stdout_minishell, stdout_bash):
             [out1.split("=")[0] in line for line in stdout_bash]
         ), f"{out1} not in {stdout_bash}"
 
+    for out1 in stdout_bash:
+        assert any(
+            [out1.split("=")[0] in line for line in stdout_minishell]
+        ), f"{out1} not in {stdout_minishell}"
+
 
 @pytest.mark.parametrize(
     "cmd",
@@ -50,6 +55,8 @@ def test_export(cmd):
         stdout_minishell, stderr_minishell
     )
     print(stdout_bash)
+    print("hello")
+    print(stdout_minishell)
 
     assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell)
     assert_export_variables_same(stdout_minishell, stdout_bash)

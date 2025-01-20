@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "libft.h"
 #include "parser.h"
 #include <fcntl.h>
 #include <unistd.h>
@@ -78,38 +79,68 @@ int	set_input(t_redirection r, int fds[2], int hered_pipe[2])
 	return (EXIT_SUCCESS);
 }
 
-t_list	*ignore_wildcard_in_redirection(char *dir_path, char *pattern)
+t_list	*ignore_wildcard_in_redirection(t_redirection redirection)
 {
-	char		*full_path;
-	t_argument	*new;
+	t_redirection	*new;
 
-	full_path = build_full_path(dir_path, pattern);
-	new = (t_argument *)malloc(sizeof(t_argument));
-	new->word = full_path;
-	new->type = LITERAL;
+	new = (t_redirection *)malloc(sizeof(t_redirection));
+	new->word = ft_strdup(redirection.word);
+	new->word_type = LITERAL;
+	new->type = redirection.type;
+	new->fd = redirection.fd;
 	return (ft_lstnew(new));
 }
+
 t_list	*handle_wildcard_redirection(t_redirection redirection)
 {
 	char	*dir_path;
 	char	*pattern;
 	t_list	*dir_entries;
-	t_list	*new_arguments;
+	t_list	*new_redirection;
 
 	dir_path = get_dir_path_2(redirection.word);
 	pattern = get_pattern(redirection.word);
 	if (ft_strcmp(dir_path, "") && ft_strcmp(dir_path, "."))
-		new_arguments = ignore_wildcard(dir_path, pattern);
+		new_redirection = ignore_wildcard_in_redirection(redirection);
 	else
 	{
 		dir_entries = get_dir_entries(dir_path);
-		new_arguments = create_wildcard_arguments(dir_entries, dir_path,
-				pattern);
+		t_list dummy = {NULL, dir_entries};
+		t_list *prev = &dummy;
+		t_list *curr = dummy.next;
+		while (curr) {
+			char* entry = (char *)curr->content;
+			if (!matches_pattern(pattern, entry) &&
+				no_hidden_file(entry, pattern)) {
+				prev->next = curr->next;
+				curr->next = NULL;
+				ft_lstclear(&curr, free);
+				curr = prev->next;
+			} else {
+				prev = prev->next;
+				curr = curr->next;
+			}
+		}
+		dir_entries = dummy.next;
+		if (ft_lstsize( dir_entries)>1) {
+			ft_putendl_fd("ambigious redirect", STDERR_FILENO);
+			ft_lstclear(&dir_entries, free);
+			free(dir_path);
+			free(pattern);
+			return NULL;
+		}
+
+		t_redirection *new = (t_redirection *)malloc(sizeof(t_redirection));
+		new->word = ft_strdup((char*)dir_entries->content);
+		new->word_type = LITERAL;
+		new->type = redirection.type;
+		new->fd = redirection.fd;
+		new_redirection = (ft_lstnew(new));
 		ft_lstclear(&dir_entries, free);
 	}
 	free(dir_path);
 	free(pattern);
-	return (new_arguments);
+	return (new_redirection);
 }
 
 int	expand_wildcards_in_redirections(t_list **list)
@@ -144,6 +175,10 @@ int	set_redirections(t_list *redirections, int fds[2])
 	t_redirection	r;
 	int				hered_pipe[2];
 
+	if (redirections) {
+		if (expand_wildcards_in_redirections(&redirections) == EXIT_FAILURE)
+			return EXIT_FAILURE;
+	}
 	head = redirections;
 	while (head)
 	{

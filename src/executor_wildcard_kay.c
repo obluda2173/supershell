@@ -99,7 +99,7 @@ t_argument	*get_new_argument(char *entry, char *dir_path)
 
 bool	no_hidden_file(char *entry, char *pattern)
 {
-	if (!ft_strcmp(entry, ".") || !ft_strcmp(entry, "..") || (entry[0] == '.'
+	if (/* !ft_strcmp(entry, ".") || !ft_strcmp(entry, "..") ||  */(entry[0] == '.'
 			&& pattern[0] == '*'))
 		return (false);
 	return (true);

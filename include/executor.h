@@ -65,4 +65,5 @@ void	replace_list_next_with_new(t_list *list, t_list *new);
 char	*get_dir_path_2(char* path);
 char	*get_pattern(char* word);
 t_list	*get_dir_entries(char *dir_path);
+bool	no_hidden_file(char *entry, char *pattern);
 #endif // EXECUTOR_
