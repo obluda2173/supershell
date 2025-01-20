@@ -184,7 +184,36 @@ int	expand_wildcards_in_redirections(t_list **list)
 }
 
 
-int	set_redirections(t_list **redirections, int fds[2])
+void	expand_env_redirection(t_list *redirections, t_data *data)
+{
+	t_list	*head;
+	char	*new_word;
+
+	head = redirections;
+	while (head)
+	{
+		if (((t_redirection *)head->content)->word_type == DOUBLE_QUOTE_STR)
+		{
+			new_word = handle_double_quotes(((t_redirection *)head->content)->word,
+					data->exit_status);
+			free(((t_redirection *)head->content)->word);
+			((t_redirection *)head->content)->word = new_word;
+			((t_redirection *)head->content)->word_type = LITERAL;
+		}
+		if (((t_redirection *)head->content)->word_type == ENV_EXP
+			|| ((t_redirection *)head->content)->word_type == EXIT_STATUS_EXP)
+		{
+			new_word = handle_dollar(((t_redirection *)head->content)->word,
+					data->exit_status);
+			free(((t_redirection *)head->content)->word);
+			((t_redirection *)head->content)->word = new_word;
+			((t_redirection *)head->content)->word_type = LITERAL;
+		}
+		head = head->next;
+	}
+}
+
+int	set_redirections(t_list **redirections, int fds[2], t_data *data)
 {
 	t_list			*head;
 	t_redirection	r;
@@ -193,6 +222,7 @@ int	set_redirections(t_list **redirections, int fds[2])
 	if (*redirections) {
 		if (expand_wildcards_in_redirections(redirections) == EXIT_FAILURE)
 			return EXIT_FAILURE;
+		expand_env_redirection(*redirections,  data);
 	}
 	head = *redirections;
 	while (head)

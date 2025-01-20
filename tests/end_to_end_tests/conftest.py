@@ -103,6 +103,7 @@ def send_cmds_minishell(minishell, cmd):
 def parse_out_and_err_minishell(
     stdout_minishell, stderr_minishell, minishell="./minishell"
 ):
+
     prompt = get_prompt_minishell(minishell)
     stdout_minishell = [
         line

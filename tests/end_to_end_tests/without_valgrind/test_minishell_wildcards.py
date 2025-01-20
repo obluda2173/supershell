@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import subprocess
 import pytest
 
 import os
@@ -9,7 +10,6 @@ from assertions import (
 )
 from conftest import (
     get_open_fds,
-    get_prompt_minishell,
     parse_out_and_err_minishell,
     send_cmds_minishell_with_open_fds,
     start_process,
@@ -25,11 +25,6 @@ from conftest import (
         (["echo c*"]),
         (["echo *.c"]),
         (["echo ./*"]),
-        # the next ones should be handled extra, they should be printed out as is
-        # (["echo ./*"]),
-        # (["echo ../*"]),
-        # (["echo ../../*"]),
-        # (["echo src/*c"]),
     ],
 )
 def test_wildcards_with_bash(cmd):
@@ -119,3 +114,64 @@ def test_redirection_wildcard_in_tmp():
 
     os.chdir("../")
     os.rmdir("./tmp")
+
+
+def test_wildcard_redirection_dollar_expansion():
+    cmd = "\n".join(["< $test_file cat"] + ["echo $?\n"])
+
+    bash = subprocess.Popen(
+        ["bash"],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        env={
+            "test_file": "tests/end_to_end_tests/test_files/input1.txt",
+        },
+    )
+    assert bash.stdin is not None
+    stdout_bash, _ = bash.communicate(cmd.encode())
+    stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
+
+    minishell = subprocess.Popen(
+        ["./minishell"],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        env={
+            "test_file": "tests/end_to_end_tests/test_files/input1.txt",
+            "PATH": "/usr/bin",
+            "LOGNAME": "username",
+        },
+    )
+    prompt, _ = minishell.communicate()
+    prompt = prompt.decode()
+
+    minishell = subprocess.Popen(
+        ["./minishell"],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        env={
+            "test_file": "tests/end_to_end_tests/test_files/input1.txt",
+            "PATH": "/usr/bin",
+            "LOGNAME": "username",
+        },
+    )
+    open_fds_beginning = get_open_fds()
+
+    stdout_minishell, stderr_minishell, open_fds_end = (
+        send_cmds_minishell_with_open_fds(minishell, cmd)
+    )
+
+    stdout_minishell = [
+        line
+        for line in stdout_minishell.decode().split("\n")
+        if not (line.startswith(prompt) or line.startswith("heredoc>"))
+    ]
+    stderr_minishell = stderr_minishell.decode()
+
+    assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell)
+    assert_same_lines_ordered(stdout_minishell, stdout_bash)
+    assert len(stderr_minishell) == 0
+
+    assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)

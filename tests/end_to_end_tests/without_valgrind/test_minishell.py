@@ -51,7 +51,7 @@ def test_minishell(cmd):
     )
 
     assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell)
-    assert_same_lines_ordered(stdout_bash, stdout_minishell)
+    assert_same_lines_ordered(stdout_minishell, stdout_bash)
     assert len(stderr_minishell) == 0
 
     assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)

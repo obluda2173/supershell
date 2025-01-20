@@ -170,7 +170,7 @@ int	execute_command(t_cmd_node *cmd_node, t_data *data)
 	char	*path_env;
 
 	argv = NULL;
-	if (set_redirections(&(cmd_node->redirections), fds))
+	if (set_redirections(&(cmd_node->redirections), fds, data))
 		return (1);
 	expand_wildcards_in_arguments(&(cmd_node->arguments));
 	expand_env(cmd_node->arguments, data);

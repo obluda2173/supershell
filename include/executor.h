@@ -53,7 +53,7 @@ char **ft_matrix_join(char **matrix1, char **matrix2);
 int matches_pattern(const char *pattern, const char *str);
 
 /* executor_redirections.c */
-int	set_redirections(t_list **redirections, int fds[2]);
+int	set_redirections(t_list **redirections, int fds[2], t_data *data);
 void	close_fds(int fds[2]);
 // executor_prepare_argv.c
 char **list_to_argv(t_list *arguments, char *cmd_path);
@@ -61,7 +61,7 @@ int expand_wildcards_in_arguments(t_list **list);
 
 void	sort_arguments(t_list **list);
 
-void	replace_list_next_with_new(t_list *list, t_list *new);
+void	replace_list_next_with_new(t_list *list, t_list *new_node);
 char	*get_dir_path_2(char* path);
 char	*get_pattern(char* word);
 t_list	*get_dir_entries(char *dir_path);
