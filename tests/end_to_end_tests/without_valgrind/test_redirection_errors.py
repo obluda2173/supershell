@@ -68,6 +68,11 @@ from assertions import (
             "ambigious redirect",
             1,
         ),
+        (
+            ["< $? cat"],
+            "No such file or directory",
+            1,
+        ),
     ],
 )
 def test_redirection_errors(cmd, err_msg, want_exit_status):
