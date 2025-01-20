@@ -56,7 +56,7 @@ int matches_pattern(const char *pattern, const char *str);
 int set_redirections(t_list* redirections, int fds[2]);
 void	close_fds(int fds[2]);
 // executor_prepare_argv.c
-char **list_to_argv(t_list *list, char *cmd_path, int last_exit_status);
+char **list_to_argv(t_list *arguments, char *cmd_path);
 int expand_wildcards_in_arguments(t_list **list);
 
 void	sort_arguments(t_list **list);

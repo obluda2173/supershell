@@ -68,11 +68,11 @@ static int custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2]) {
 	return EXIT_FAILURE;
 }
 
-int echo(t_cmd_node cmd_node, int fds[2], t_data *data) {
+int echo(t_cmd_node cmd_node, int fds[2]) {
 	char **argv = NULL;
 
 
-	argv = list_to_argv(cmd_node.arguments, "", data->exit_status);
+	argv = list_to_argv(cmd_node.arguments, "");
 	int res = 0;
 	if (!argv)
 		return 1;
@@ -116,6 +116,27 @@ int export(t_list *ep) {
 	return 0;
 }
 
+void expand_double_quotes(t_list *arguments, t_data *data) {
+	t_list* head = arguments;
+	while (head) {
+		if (((t_argument*)head->content)->type == DOUBLE_QUOTE_STR) {
+			char* new_word = handle_double_quotes(((t_argument*)head->content)->word, data->exit_status);
+			free(((t_argument*)head->content)->word);
+			((t_argument*)head->content)->word = new_word;
+			((t_argument*)head->content)->type = LITERAL;
+		}
+		if (((t_argument*)head->content)->type == ENV_EXP || ((t_argument*)head->content)->type == EXIT_STATUS_EXP) {
+			char* new_word = handle_dollar(((t_argument*)head->content)->word, data->exit_status);
+			free(((t_argument*)head->content)->word);
+			((t_argument*)head->content)->word = new_word;
+			((t_argument*)head->content)->type = LITERAL;
+		}
+		head = head->next;
+	}
+
+
+}
+
 int execute_command(t_cmd_node *cmd_node, t_data *data)
 {
 	char *cmd_path;
@@ -127,11 +148,12 @@ int execute_command(t_cmd_node *cmd_node, t_data *data)
 		return 1;
 
 	expand_wildcards_in_arguments(&(cmd_node->arguments));
+	expand_double_quotes(cmd_node->arguments, data);
 
 	int res = 0;
 	if (cmd_node->cmd_token.type == BUILTIN) {
 		if (!ft_strcmp("echo", cmd_node->cmd_token.content))
-			res = echo(*cmd_node, fds, data);
+			res = echo(*cmd_node, fds);
 		if (!ft_strcmp("export", cmd_node->cmd_token.content)) {
 			close_fds(fds);
 			return export(data->ep);
@@ -148,7 +170,6 @@ int execute_command(t_cmd_node *cmd_node, t_data *data)
 			}
 		}
 
-
 		char* path_env = get_path_env(data->ep);
 		cmd_path = find_path(cmd_node->cmd_token.content, path_env);
 		if (!cmd_path)
@@ -157,7 +178,7 @@ int execute_command(t_cmd_node *cmd_node, t_data *data)
 			fprintf(stderr, "Command not found: %s\n", cmd_node->cmd_token.content);
 			return 127;
 		}
-		argv = list_to_argv(cmd_node->arguments, cmd_path, data->exit_status);
+		argv = list_to_argv(cmd_node->arguments, cmd_path);
 		if (!argv)
 		{
 			close_fds(fds);
