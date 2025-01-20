@@ -66,7 +66,7 @@ t_list	*get_dir_entries(char *dir_path)
 	return (entries);
 }
 
-t_list	*ignore_wildcard(char *dir_path, char *pattern)
+t_list	*ignore_wildcard_in_argument(char *dir_path, char *pattern)
 {
 	char		*full_path;
 	t_argument	*new;
@@ -137,7 +137,7 @@ t_list	*create_wildcard_arguments(t_list *dir_entries, char *dir_path,
 
 	new_arguments = parse_dir_entries(dir_entries, dir_path, pattern);
 	if (!new_arguments)
-		return (ignore_wildcard(dir_path, pattern));
+		return (ignore_wildcard_in_argument(dir_path, pattern));
 	return (new_arguments);
 }
 
@@ -151,7 +151,7 @@ t_list	*handle_wildcard_argument(t_argument argument)
 	dir_path = get_dir_path_2(argument.word);
 	pattern = get_pattern(argument.word);
 	if (ft_strcmp(dir_path, "") && ft_strcmp(dir_path, "."))
-		new_arguments = ignore_wildcard(dir_path, pattern);
+		new_arguments = ignore_wildcard_in_argument(dir_path, pattern);
 	else
 	{
 		dir_entries = get_dir_entries(dir_path);

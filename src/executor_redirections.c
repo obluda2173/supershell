@@ -78,54 +78,64 @@ int	set_input(t_redirection r, int fds[2], int hered_pipe[2])
 	return (EXIT_SUCCESS);
 }
 
-/* t_list	*handle_wildcard_redirection(t_argument argument) */
-/* { */
-/* 	char	*dir_path; */
-/* 	char	*pattern; */
-/* 	t_list	*dir_entries; */
-/* 	t_list	*new_arguments; */
+t_list	*ignore_wildcard_in_redirection(char *dir_path, char *pattern)
+{
+	char		*full_path;
+	t_argument	*new;
 
-/* 	dir_path = get_dir_path_2(argument); */
-/* 	pattern = get_pattern(argument); */
-/* 	if (ft_strcmp(dir_path, "") && ft_strcmp(dir_path, ".")) */
-/* 		new_arguments = ignore_wildcard(dir_path, pattern); */
-/* 	else */
-/* 	{ */
-/* 		dir_entries = get_dir_entries(dir_path); */
-/* 		new_arguments = create_wildcard_arguments(dir_entries, dir_path, */
-/* 				pattern); */
-/* 		ft_lstclear(&dir_entries, free); */
-/* 	} */
-/* 	free(dir_path); */
-/* 	free(pattern); */
-/* 	return (new_arguments); */
-/* } */
+	full_path = build_full_path(dir_path, pattern);
+	new = (t_argument *)malloc(sizeof(t_argument));
+	new->word = full_path;
+	new->type = LITERAL;
+	return (ft_lstnew(new));
+}
+t_list	*handle_wildcard_redirection(t_redirection redirection)
+{
+	char	*dir_path;
+	char	*pattern;
+	t_list	*dir_entries;
+	t_list	*new_arguments;
 
-/* int	expand_wildcards_in_redirections(t_list **list) */
-/* { */
-/* 	t_list	*head; */
-/* 	t_list	*new; */
-/* 	t_list	dummy; */
+	dir_path = get_dir_path_2(redirection.word);
+	pattern = get_pattern(redirection.word);
+	if (ft_strcmp(dir_path, "") && ft_strcmp(dir_path, "."))
+		new_arguments = ignore_wildcard(dir_path, pattern);
+	else
+	{
+		dir_entries = get_dir_entries(dir_path);
+		new_arguments = create_wildcard_arguments(dir_entries, dir_path,
+				pattern);
+		ft_lstclear(&dir_entries, free);
+	}
+	free(dir_path);
+	free(pattern);
+	return (new_arguments);
+}
 
-/* 	if (!list || !*list) */
-/* 		return (EXIT_FAILURE); */
-/* 	dummy = (t_list){NULL, *list}; */
-/* 	head = &dummy; */
-/* 	while (head->next) */
-/* 	{ */
-/* 		if (((t_argument *)head->next->content)->type == WILDCARD_EXP) */
-/* 		{ */
-/* 			new = handle_wildcard_redirection(*(t_argument *)head->next->content); */
-/* 			if (!new) */
-/* 				return (EXIT_FAILURE); */
-/* 			sort_arguments(&new); */
-/* 			replace_list_next_with_new(head, new); */
-/* 		} */
-/* 		head = head->next; */
-/* 	} */
-/* 	*list = dummy.next; */
-/* 	return (EXIT_SUCCESS); */
-/* } */
+int	expand_wildcards_in_redirections(t_list **list)
+{
+	t_list	*head;
+	t_list	*new;
+	t_list	dummy;
+
+	if (!list || !*list)
+		return (EXIT_FAILURE);
+	dummy = (t_list){NULL, *list};
+	head = &dummy;
+	while (head->next)
+	{
+		if (((t_redirection *)head->next->content)->word_type == WILDCARD_EXP)
+		{
+			new = handle_wildcard_redirection(*(t_redirection *)head->next->content);
+			if (!new)
+				return (EXIT_FAILURE);
+			replace_list_next_with_new(head, new);
+		}
+		head = head->next;
+	}
+	*list = dummy.next;
+	return (EXIT_SUCCESS);
+}
 
 
 int	set_redirections(t_list *redirections, int fds[2])

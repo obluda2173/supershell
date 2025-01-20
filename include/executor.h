@@ -62,4 +62,7 @@ int expand_wildcards_in_arguments(t_list **list);
 void	sort_arguments(t_list **list);
 
 void	replace_list_next_with_new(t_list *list, t_list *new);
+char	*get_dir_path_2(char* path);
+char	*get_pattern(char* word);
+t_list	*get_dir_entries(char *dir_path);
 #endif // EXECUTOR_
