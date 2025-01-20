@@ -110,8 +110,7 @@ t_list	*handle_wildcard_redirection(t_redirection redirection)
 		t_list *curr = dummy.next;
 		while (curr) {
 			char* entry = (char *)curr->content;
-			if (!matches_pattern(pattern, entry) &&
-				no_hidden_file(entry, pattern)) {
+			if (!matches_pattern(pattern, entry) || !no_hidden_file(entry, pattern)) {
 				prev->next = curr->next;
 				curr->next = NULL;
 				ft_lstclear(&curr, free);
@@ -129,18 +128,34 @@ t_list	*handle_wildcard_redirection(t_redirection redirection)
 			free(pattern);
 			return NULL;
 		}
+		if (ft_lstsize(dir_entries) == 0) {
+			new_redirection = ignore_wildcard_in_redirection(redirection);
+		}
 
-		t_redirection *new = (t_redirection *)malloc(sizeof(t_redirection));
-		new->word = ft_strdup((char*)dir_entries->content);
-		new->word_type = LITERAL;
-		new->type = redirection.type;
-		new->fd = redirection.fd;
-		new_redirection = (ft_lstnew(new));
-		ft_lstclear(&dir_entries, free);
+		else {
+			t_redirection *new = (t_redirection *)malloc(sizeof(t_redirection));
+			new->word = ft_strdup((char*)dir_entries->content);
+			new->word_type = LITERAL;
+			new->type = redirection.type;
+			new->fd = redirection.fd;
+			new_redirection = (ft_lstnew(new));
+			ft_lstclear(&dir_entries, free);
+		}
 	}
 	free(dir_path);
 	free(pattern);
 	return (new_redirection);
+}
+
+void	replace_list_next_with_new_redirection(t_list *list, t_list *new)
+{
+	t_list	*tmp;
+
+	ft_lstlast(new)->next = list->next->next;
+	tmp = list->next;
+	list->next = new;
+	tmp->next = NULL;
+	ft_lstclear(&tmp, free_redirection);
 }
 
 int	expand_wildcards_in_redirections(t_list **list)
@@ -160,7 +175,7 @@ int	expand_wildcards_in_redirections(t_list **list)
 			new = handle_wildcard_redirection(*(t_redirection *)head->next->content);
 			if (!new)
 				return (EXIT_FAILURE);
-			replace_list_next_with_new(head, new);
+			replace_list_next_with_new_redirection(head, new);
 		}
 		head = head->next;
 	}
@@ -169,17 +184,17 @@ int	expand_wildcards_in_redirections(t_list **list)
 }
 
 
-int	set_redirections(t_list *redirections, int fds[2])
+int	set_redirections(t_list **redirections, int fds[2])
 {
 	t_list			*head;
 	t_redirection	r;
 	int				hered_pipe[2];
 
-	if (redirections) {
-		if (expand_wildcards_in_redirections(&redirections) == EXIT_FAILURE)
+	if (*redirections) {
+		if (expand_wildcards_in_redirections(redirections) == EXIT_FAILURE)
 			return EXIT_FAILURE;
 	}
-	head = redirections;
+	head = *redirections;
 	while (head)
 	{
 		r = *((t_redirection *)head->content);

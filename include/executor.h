@@ -53,7 +53,7 @@ char **ft_matrix_join(char **matrix1, char **matrix2);
 int matches_pattern(const char *pattern, const char *str);
 
 /* executor_redirections.c */
-int set_redirections(t_list* redirections, int fds[2]);
+int	set_redirections(t_list **redirections, int fds[2]);
 void	close_fds(int fds[2]);
 // executor_prepare_argv.c
 char **list_to_argv(t_list *arguments, char *cmd_path);

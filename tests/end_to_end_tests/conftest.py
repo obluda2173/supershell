@@ -22,8 +22,8 @@ def start_process_with_valgrind(shell):
     )
 
 
-def get_prompt_minishell():
-    minishell = start_process("./minishell")
+def get_prompt_minishell(minishell="./minishell"):
+    minishell = start_process(minishell)
     prompt, _ = minishell.communicate()
     return prompt.decode()
 
@@ -100,8 +100,10 @@ def send_cmds_minishell(minishell, cmd):
     return stdout_minishell, stderr_minishell
 
 
-def parse_out_and_err_minishell(stdout_minishell, stderr_minishell):
-    prompt = get_prompt_minishell()
+def parse_out_and_err_minishell(
+    stdout_minishell, stderr_minishell, minishell="./minishell"
+):
+    prompt = get_prompt_minishell(minishell)
     stdout_minishell = [
         line
         for line in stdout_minishell.decode().split("\n")

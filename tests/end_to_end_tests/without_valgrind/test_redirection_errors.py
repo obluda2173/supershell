@@ -63,6 +63,11 @@ from assertions import (
             "ambigious redirect",
             1,
         ),
+        (
+            ["< * cat"],
+            "ambigious redirect",
+            1,
+        ),
     ],
 )
 def test_redirection_errors(cmd, err_msg, want_exit_status):
