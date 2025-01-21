@@ -129,7 +129,25 @@ int	export(t_list *ep)
 		free_matrix(var);
 		ep = ep->next;
 	}
-	return (0);
+	return EXIT_SUCCESS;
+}
+
+int expand(t_cmd_node *cmd_node, t_data *data) {
+
+	if (expand_redirections(cmd_node, data) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	if (expand_arguments(cmd_node, data) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	return EXIT_SUCCESS;
+}
+
+int execute_builtin(t_cmd_node *cmd_node, t_data *data, int fds[2]) {
+
+	if (!ft_strcmp("echo", cmd_node->cmd_token.content))
+		return echo(*cmd_node, fds);
+	if (!ft_strcmp("export", cmd_node->cmd_token.content))
+		return (export(data->ep));
+	return EXIT_SUCCESS;
 }
 
 int	execute_command(t_cmd_node *cmd_node, t_data *data)
@@ -142,29 +160,13 @@ int	execute_command(t_cmd_node *cmd_node, t_data *data)
 
 	argv = NULL;
 
-
-	if (expand_redirections(cmd_node, data) == EXIT_FAILURE)
-	{
+	if (expand(cmd_node, data))
 		return (EXIT_FAILURE);
-	}
-	if (expand_arguments(cmd_node, data) == EXIT_FAILURE)
-	{
-		return (EXIT_FAILURE);
-	}
-
 	if (set_redirections(&(cmd_node->redirections), fds))
 		return (EXIT_FAILURE);
 	res = 0;
 	if (cmd_node->cmd_token.type == BUILTIN)
-	{
-		if (!ft_strcmp("echo", cmd_node->cmd_token.content))
-			res = echo(*cmd_node, fds);
-		if (!ft_strcmp("export", cmd_node->cmd_token.content))
-		{
-			close_fds(fds);
-			return (export(data->ep));
-		}
-	}
+		res = execute_builtin(cmd_node, data, fds);
 	if (cmd_node->cmd_token.type == WORD)
 	{
 		if (!ft_strcmp(cmd_node->cmd_token.content, "which"))
@@ -177,6 +179,7 @@ int	execute_command(t_cmd_node *cmd_node, t_data *data)
 				return (0);
 			}
 		}
+
 		path_env = get_path_env(data->ep);
 		cmd_path = find_path(cmd_node->cmd_token.content, path_env);
 		if (!cmd_path)
