@@ -241,18 +241,24 @@ void	expand_env_redirection(t_list *redirections, t_data *data)
 	}
 }
 
-int	set_redirections(t_list **redirections, int fds[2], t_data *data)
+
+int	expand_redirections(t_cmd_node *cmd_node, t_data *data)
+{
+	if (cmd_node->redirections)
+	{
+		if (expand_wildcards_in_redirections(&cmd_node->redirections) == EXIT_FAILURE)
+			return (EXIT_FAILURE);
+		expand_env_redirection(cmd_node->redirections, data);
+	}
+	return EXIT_SUCCESS;
+}
+
+int	set_redirections(t_list **redirections, int fds[2])
 {
 	t_list			*head;
 	t_redirection	r;
 	int				hered_pipe[2];
 
-	if (*redirections)
-	{
-		if (expand_wildcards_in_redirections(redirections) == EXIT_FAILURE)
-			return (EXIT_FAILURE);
-		expand_env_redirection(*redirections, data);
-	}
 	head = *redirections;
 	while (head)
 	{

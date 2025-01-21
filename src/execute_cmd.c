@@ -141,13 +141,19 @@ int	execute_command(t_cmd_node *cmd_node, t_data *data)
 	char	*path_env;
 
 	argv = NULL;
-	if (set_redirections(&(cmd_node->redirections), fds, data))
-		return (EXIT_FAILURE);
-	if (expand_arguments(cmd_node, data) == EXIT_FAILURE)
+
+
+	if (expand_redirections(cmd_node, data) == EXIT_FAILURE)
 	{
-		close_fds(fds);
 		return (EXIT_FAILURE);
 	}
+	if (expand_arguments(cmd_node, data) == EXIT_FAILURE)
+	{
+		return (EXIT_FAILURE);
+	}
+
+	if (set_redirections(&(cmd_node->redirections), fds))
+		return (EXIT_FAILURE);
 	res = 0;
 	if (cmd_node->cmd_token.type == BUILTIN)
 	{
