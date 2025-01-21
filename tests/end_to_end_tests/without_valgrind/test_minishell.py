@@ -86,13 +86,14 @@ def test_minishell_echo_wo_newline():
 
 
 @pytest.mark.parametrize(
-    "cmd",
+    "cmd, nbr_cmds",
     [
-        (["which echo"]),
-        (["which echo < tests/end_to_end_tests/test_files/input1.txt"]),
+        (["which echo"], 1),
+        (["which echo < tests/end_to_end_tests/test_files/input1.txt"], 1),
+        (["which echo echo"], 2),
     ],
 )
-def test_which_builtin(cmd):
+def test_which_builtin(cmd, nbr_cmds):
     minishell = start_process("./minishell")
     open_fds_beginning = get_open_fds()
 
@@ -107,8 +108,9 @@ def test_which_builtin(cmd):
     )
 
     assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell)
-    assert "minishell built-in command" in stdout_minishell[0]
-    assert "0" == stdout_minishell[1]
+    for i in range(nbr_cmds):
+        assert "minishell built-in command" in stdout_minishell[i]
+    assert "0" == stdout_minishell[-1]
 
     assert len(stderr_minishell) == 0
     assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)
