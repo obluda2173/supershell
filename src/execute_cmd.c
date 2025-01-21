@@ -170,26 +170,22 @@ int	execute_command(t_cmd_node *cmd_node, t_data *data)
 		res = execute_builtin(cmd_node, data, fds);
 	if (cmd_node->cmd_token.type == WORD)
 	{
-		if (!ft_strcmp(cmd_node->cmd_token.content, "which") && !ft_strcmp(((t_argument *)cmd_node->arguments->content)->word, "echo"))
-			ft_putendl_fd("minishell built-in command", STDOUT_FILENO);
-		else {
-			path_env = get_path_env(data->ep);
-			cmd_path = find_path(cmd_node->cmd_token.content, path_env);
-			if (!cmd_path)
-			{
-				fprintf(stderr, "Command not found: %s\n",
-						cmd_node->cmd_token.content);
-				res = 127;
-			} else {
-				argv = list_to_argv(cmd_node->arguments, cmd_path);
-				if (!argv)
-					res = EXIT_FAILURE;
-				else {
-					res = custom_exec(cmd_path, argv, data->ep, fds);
-					free_char_array(argv);
-				}
-				free(cmd_path);
+		path_env = get_path_env(data->ep);
+		cmd_path = find_path(cmd_node->cmd_token.content, path_env);
+		if (!cmd_path)
+		{
+			fprintf(stderr, "Command not found: %s\n",
+					cmd_node->cmd_token.content);
+			res = 127;
+		} else {
+			argv = list_to_argv(cmd_node->arguments, cmd_path);
+			if (!argv)
+				res = EXIT_FAILURE;
+			else {
+				res = custom_exec(cmd_path, argv, data->ep, fds);
+				free_char_array(argv);
 			}
+			free(cmd_path);
 		}
 	}
 	close_fds(fds);
