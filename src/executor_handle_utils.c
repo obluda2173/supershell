@@ -11,6 +11,18 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "libft.h"
+
+/* char *custom_getenv(char* key, t_data *data) { */
+/* 	char* value; */
+/* 	t_list* ep = data->ep; */
+/* 	while (ep) { */
+/* 		if (!ft_strcmp(key, (char*)ep->content)) { */
+
+/* 		} */
+/* 		data = data->next; */
+/* 	} */
+/* } */
 
 char	*handle_env_expansion(const char *var_name)
 {
