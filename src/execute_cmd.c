@@ -132,35 +132,6 @@ int	export(t_list *ep)
 	return (0);
 }
 
-void	expand_env(t_list *arguments, t_data *data)
-{
-	t_list	*head;
-	char	*new_word;
-
-	head = arguments;
-	while (head)
-	{
-		if (((t_argument *)head->content)->type == DOUBLE_QUOTE_STR)
-		{
-			new_word = handle_double_quotes(((t_argument *)head->content)->word,
-					data->exit_status);
-			free(((t_argument *)head->content)->word);
-			((t_argument *)head->content)->word = new_word;
-			((t_argument *)head->content)->type = LITERAL;
-		}
-		if (((t_argument *)head->content)->type == ENV_EXP
-			|| ((t_argument *)head->content)->type == EXIT_STATUS_EXP)
-		{
-			new_word = handle_dollar(((t_argument *)head->content)->word,
-					data->exit_status);
-			free(((t_argument *)head->content)->word);
-			((t_argument *)head->content)->word = new_word;
-			((t_argument *)head->content)->type = LITERAL;
-		}
-		head = head->next;
-	}
-}
-
 int	execute_command(t_cmd_node *cmd_node, t_data *data)
 {
 	char	*cmd_path;
@@ -171,9 +142,12 @@ int	execute_command(t_cmd_node *cmd_node, t_data *data)
 
 	argv = NULL;
 	if (set_redirections(&(cmd_node->redirections), fds, data))
-		return (1);
-	expand_wildcards_in_arguments(&(cmd_node->arguments));
-	expand_env(cmd_node->arguments, data);
+		return (EXIT_FAILURE);
+	if (expand_arguments(cmd_node, data) == EXIT_FAILURE)
+	{
+		close_fds(fds);
+		return (EXIT_FAILURE);
+	}
 	res = 0;
 	if (cmd_node->cmd_token.type == BUILTIN)
 	{

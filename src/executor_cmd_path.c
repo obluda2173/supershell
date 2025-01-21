@@ -14,15 +14,14 @@
 
 char	*get_path_env(t_list *envp)
 {
-	while (envp) {
-		if (ft_strncmp((char*)envp->content, "PATH=", 5) == 0)
-			return ((char*)envp->content + 5);
+	while (envp)
+	{
+		if (ft_strncmp((char *)envp->content, "PATH=", 5) == 0)
+			return ((char *)envp->content + 5);
 		envp = envp->next;
 	}
-	return NULL;
+	return (NULL);
 }
-
-
 
 static char	*search_in_paths(char *cmd, char **paths)
 {

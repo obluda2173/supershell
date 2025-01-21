@@ -14,8 +14,8 @@
 
 char	*handle_env_expansion(const char *var_name)
 {
-	char *value;
-	
+	char	*value;
+
 	value = getenv(var_name);
 	if (value)
 		return (ft_strdup(value));
@@ -27,7 +27,7 @@ char	*expand_variable(const char *str, size_t *i)
 	char	*var_name;
 	char	*var_value;
 	size_t	start;
-	
+
 	start = *i;
 	while (ft_isalnum(str[*i]) || str[*i] == '_')
 		(*i)++;
@@ -39,7 +39,8 @@ char	*expand_variable(const char *str, size_t *i)
 	return (ft_strdup(""));
 }
 
-char	*append_to_result(char *result, size_t *result_len, const char *addition, size_t addition_len)
+char	*append_to_result(char *result, size_t *result_len,
+		const char *addition, size_t addition_len)
 {
 	char	*new_result;
 
@@ -48,7 +49,7 @@ char	*append_to_result(char *result, size_t *result_len, const char *addition, s
 	{
 		if (result)
 			free(result);
-		return NULL;
+		return (NULL);
 	}
 	if (result)
 	{

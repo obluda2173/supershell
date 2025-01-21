@@ -12,13 +12,13 @@
 
 #include "executor.h"
 
-void free_matrix(char **matrix)
+void	free_matrix(char **matrix)
 {
-	size_t i = 0;
+	size_t	i;
 
+	i = 0;
 	if (!matrix)
-		return;
-
+		return ;
 	while (matrix[i])
 	{
 		free(matrix[i]);
@@ -26,9 +26,10 @@ void free_matrix(char **matrix)
 	}
 	free(matrix);
 }
-size_t ft_matrix_size(char **matrix)
+
+size_t	ft_matrix_size(char **matrix)
 {
-	size_t size;
+	size_t	size;
 
 	size = 0;
 	while (matrix && matrix[size])
@@ -36,15 +37,16 @@ size_t ft_matrix_size(char **matrix)
 	return (size);
 }
 
-char **ft_matrix_join(char **m1, char **m2)
+char	**ft_matrix_join(char **m1, char **m2)
 {
-	char **result;
-	size_t i;
-	size_t j;
+	char	**result;
+	size_t	i;
+	size_t	j;
 
 	i = -1;
 	j = -1;
-	result = malloc(sizeof(char *) * (ft_matrix_size(m1) + ft_matrix_size(m2) + 1));
+	result = malloc(sizeof(char *) * (ft_matrix_size(m1) + ft_matrix_size(m2)
+				+ 1));
 	if (!result)
 		return (NULL);
 	while (++i < ft_matrix_size(m1))

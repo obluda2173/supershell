@@ -15,7 +15,7 @@
 #include "parser.h"
 #include <unistd.h>
 
-char	*get_dir_path_2(char* path)
+char	*get_dir_path(char *path)
 {
 	char	*dir_path;
 	char	*slash;
@@ -28,7 +28,7 @@ char	*get_dir_path_2(char* path)
 	return (dir_path);
 }
 
-char	*get_pattern(char* word)
+char	*get_pattern(char *word)
 {
 	char	*pattern;
 	char	*slash;
@@ -97,10 +97,9 @@ t_argument	*get_new_argument(char *entry, char *dir_path)
 	return (new);
 }
 
-bool	no_hidden_file(char *entry, char *pattern)
+bool	hidden_n_star(char *entry, char *pattern)
 {
-	if (/* !ft_strcmp(entry, ".") || !ft_strcmp(entry, "..") ||  */(entry[0] == '.'
-			&& pattern[0] == '*'))
+	if (entry[0] == '.' && pattern[0] == '*')
 		return (false);
 	return (true);
 }
@@ -115,7 +114,7 @@ t_list	*parse_dir_entries(t_list *dir_entries, char *dir_path, char *pattern)
 	while (dir_entries)
 	{
 		entry = (char *)dir_entries->content;
-		if (matches_pattern(pattern, entry) && no_hidden_file(entry, pattern))
+		if (matches_pattern(pattern, entry) && hidden_n_star(entry, pattern))
 		{
 			new = get_new_argument(entry, dir_path);
 			if (!new)
@@ -148,7 +147,7 @@ t_list	*handle_wildcard_argument(t_argument argument)
 	t_list	*dir_entries;
 	t_list	*new_arguments;
 
-	dir_path = get_dir_path_2(argument.word);
+	dir_path = get_dir_path(argument.word);
 	pattern = get_pattern(argument.word);
 	if (ft_strcmp(dir_path, "") && ft_strcmp(dir_path, "."))
 		new_arguments = ignore_wildcard_in_argument(dir_path, pattern);

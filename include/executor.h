@@ -37,10 +37,7 @@ char **handle_wildcard(const char *word, char **argv);
 
 // executor_handle_wildcard_2.c
 int matches_pattern(const char *pattern, const char *str);
-char *get_dir_path(const char *word, char **pattern);
-char *create_result_buffer();
 char *build_full_path(const char *dir_path, const char *entry_name);
-char *append_entry_to_result(char *result, size_t *result_len, const char *full_path);
 
 // execute_cmd.c
 int execute_command(t_cmd_node *cmd_node, t_data *data);
@@ -62,8 +59,11 @@ int expand_wildcards_in_arguments(t_list **list);
 void	sort_arguments(t_list **list);
 
 void	replace_list_next_with_new(t_list *list, t_list *new_node);
-char	*get_dir_path_2(char* path);
+char	*get_dir_path(char* path);
 char	*get_pattern(char* word);
 t_list	*get_dir_entries(char *dir_path);
-bool	no_hidden_file(char *entry, char *pattern);
+bool	hidden_n_star(char *entry, char *pattern);
+
+void	expand_env(t_list *arguments, t_data *data);
+int	expand_arguments(t_cmd_node *cmd_node, t_data *data);
 #endif // EXECUTOR_
