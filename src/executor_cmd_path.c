@@ -59,6 +59,6 @@ char	*find_path(char *cmd, char *path_env)
 	if (!paths)
 		return (NULL);
 	final_path = search_in_paths(cmd, paths);
-	free_matrix(paths);
+	free_char_array(paths);
 	return (final_path);
 }

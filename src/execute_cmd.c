@@ -52,12 +52,12 @@ static int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2])
 		dup2(fds[1], STDOUT_FILENO);
 		if (execve(cmd_path, args, env_matrix) == -1)
 		{
-			free_matrix(env_matrix);
+			free_char_array(env_matrix);
 			perror("execve");
 			exit(EXIT_FAILURE);
 		}
 		close_fds(fds);
-		free_matrix(env_matrix);
+		free_char_array(env_matrix);
 		return (EXIT_SUCCESS);
 	}
 	if (waitpid(pid, &status, 0) == -1)
@@ -107,7 +107,7 @@ int	echo(t_cmd_node cmd_node, int fds[2])
 	{
 		ft_putendl_fd("", fds[1]);
 	}
-	free_matrix(argv);
+	free_char_array(argv);
 	return (res);
 }
 
@@ -126,7 +126,7 @@ int	export(t_list *ep)
 		{
 			printf("declare -x %s=\"(null)\"\n", var[0]);
 		}
-		free_matrix(var);
+		free_char_array(var);
 		ep = ep->next;
 	}
 	return EXIT_SUCCESS;
@@ -150,6 +150,7 @@ int execute_builtin(t_cmd_node *cmd_node, t_data *data, int fds[2]) {
 	return EXIT_SUCCESS;
 }
 
+
 int	execute_command(t_cmd_node *cmd_node, t_data *data)
 {
 	char	*cmd_path;
@@ -164,41 +165,32 @@ int	execute_command(t_cmd_node *cmd_node, t_data *data)
 		return (EXIT_FAILURE);
 	if (set_redirections(&(cmd_node->redirections), fds))
 		return (EXIT_FAILURE);
-	res = 0;
+	res = EXIT_SUCCESS;
 	if (cmd_node->cmd_token.type == BUILTIN)
 		res = execute_builtin(cmd_node, data, fds);
 	if (cmd_node->cmd_token.type == WORD)
 	{
-		if (!ft_strcmp(cmd_node->cmd_token.content, "which"))
-		{
-			if (!ft_strcmp(((t_argument *)cmd_node->arguments->content)->word,
-					"echo"))
+		if (!ft_strcmp(cmd_node->cmd_token.content, "which") && !ft_strcmp(((t_argument *)cmd_node->arguments->content)->word, "echo"))
+			ft_putendl_fd("minishell built-in command", STDOUT_FILENO);
+		else {
+			path_env = get_path_env(data->ep);
+			cmd_path = find_path(cmd_node->cmd_token.content, path_env);
+			if (!cmd_path)
 			{
-				ft_putendl_fd("minishell built-in command", STDOUT_FILENO);
-				close_fds(fds);
-				return (0);
+				fprintf(stderr, "Command not found: %s\n",
+						cmd_node->cmd_token.content);
+				res = 127;
+			} else {
+				argv = list_to_argv(cmd_node->arguments, cmd_path);
+				if (!argv)
+					res = EXIT_FAILURE;
+				else {
+					res = custom_exec(cmd_path, argv, data->ep, fds);
+					free_char_array(argv);
+				}
+				free(cmd_path);
 			}
 		}
-
-		path_env = get_path_env(data->ep);
-		cmd_path = find_path(cmd_node->cmd_token.content, path_env);
-		if (!cmd_path)
-		{
-			close_fds(fds);
-			fprintf(stderr, "Command not found: %s\n",
-				cmd_node->cmd_token.content);
-			return (127);
-		}
-		argv = list_to_argv(cmd_node->arguments, cmd_path);
-		if (!argv)
-		{
-			close_fds(fds);
-			free(cmd_path);
-			return (1);
-		}
-		res = custom_exec(cmd_path, argv, data->ep, fds);
-		free_matrix(argv);
-		free(cmd_path);
 	}
 	close_fds(fds);
 	return (res);

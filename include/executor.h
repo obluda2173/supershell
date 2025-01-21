@@ -43,8 +43,8 @@ char *build_full_path(const char *dir_path, const char *entry_name);
 int execute_command(t_cmd_node *cmd_node, t_data *data);
 
 // executor_matrix_manipulation.c
-void free_matrix(char **matrix);
-size_t ft_matrix_size(char **matrix);
+void free_char_array(char **matrix);
+size_t ft_size_char_array(char **matrix);
 char **ft_matrix_join(char **matrix1, char **matrix2);
 
 int matches_pattern(const char *pattern, const char *str);

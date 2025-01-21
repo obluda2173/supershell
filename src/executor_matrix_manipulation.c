@@ -12,7 +12,7 @@
 
 #include "executor.h"
 
-void	free_matrix(char **matrix)
+void	free_char_array(char **matrix)
 {
 	size_t	i;
 
@@ -27,7 +27,7 @@ void	free_matrix(char **matrix)
 	free(matrix);
 }
 
-size_t	ft_matrix_size(char **matrix)
+size_t	ft_size_char_array(char **matrix)
 {
 	size_t	size;
 
@@ -45,13 +45,13 @@ char	**ft_matrix_join(char **m1, char **m2)
 
 	i = -1;
 	j = -1;
-	result = malloc(sizeof(char *) * (ft_matrix_size(m1) + ft_matrix_size(m2)
+	result = malloc(sizeof(char *) * (ft_size_char_array(m1) + ft_size_char_array(m2)
 				+ 1));
 	if (!result)
 		return (NULL);
-	while (++i < ft_matrix_size(m1))
+	while (++i < ft_size_char_array(m1))
 		result[i] = ft_strdup(m1[i]);
-	while (++j < ft_matrix_size(m2))
+	while (++j < ft_size_char_array(m2))
 		result[i++] = ft_strdup(m2[j]);
 	result[i] = NULL;
 	return (result);

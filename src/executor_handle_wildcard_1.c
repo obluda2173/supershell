@@ -24,17 +24,11 @@ char **finalize_result(char *result, char **argv)
 	}
 	split_result = ft_split(result, ' ');
 	expanded_argv = ft_matrix_join(argv, split_result);
-	free_matrix(split_result);
+	free_char_array(split_result);
 	free(result);
 	return (expanded_argv);
 }
 
-/*
-r - result
-rl - result length
-dp - directory path
-en - entry name
-*/
 void free_resources(DIR *dir, char *dir_path, char *pattern, char *result)
 {
 	if (dir)

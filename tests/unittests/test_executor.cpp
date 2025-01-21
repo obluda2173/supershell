@@ -21,7 +21,7 @@ TEST_P(ExecutorTestSuite, ErrorTests) {
 	EXPECT_STREQ(params.want_stderr, got_stderr.c_str());
 
 	free_data(data);
-	free_matrix(envp);
+	free_char_array(envp);
 	free_script_node(script);
 }
 
