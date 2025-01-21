@@ -48,13 +48,9 @@ t_list	*get_dir_entries(char *dir_path)
 	struct dirent	*entry;
 
 	if (!ft_strcmp(dir_path, ""))
-	{
 		dir = opendir(".");
-	}
 	else
-	{
 		dir = opendir(dir_path);
-	}
 	entries = NULL;
 	entry = readdir(dir);
 	while (entry != NULL)
