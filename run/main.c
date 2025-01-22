@@ -20,11 +20,8 @@
 # include <readline/history.h>
 
 
-volatile sig_atomic_t sigint_received = 0;
-
 void handle_signals(int signum) {
 	(void)signum;
-	sigint_received = 1;
 	/* Replace the contents of rl_line_buffer with text. The point and mark are preserved, if possible.
 	 * If clear_undo is non-zero, the undo list associated with the current line is cleared.  */
 	rl_replace_line("", 0);
@@ -45,13 +42,47 @@ void get_input(t_data *data) {
 	prompt = NULL;
 }
 
-void repl(t_data *data) {
+int repl(t_data *data) {
 	while (!data->exit)
 	{
-        if (sigint_received) {
-            sigint_received = 0;
+
+		int pipefd[2];
+		if (pipe(pipefd) == -1) {
+			perror("pipe");
+			return EXIT_FAILURE;
+		}
+
+		pid_t cpid = fork();
+		if (cpid == -1) {
+			perror("fork");
+			return EXIT_FAILURE;
+		}
+
+		if (cpid == 0) {
+			close(pipefd[0]);
+			get_input(data);
+			write(pipefd[1], data->line, ft_strlen(data->line));
+			close(pipefd[1]);          /* Reader will see EOF */
+			/* free_data(data); */
+			exit(EXIT_SUCCESS);
+		}
+		close(pipefd[1]);
+		wait(NULL);
+		free(data->line);
+		data->line = malloc(sizeof(char) * 100);
+		*data->line = '\0';
+		char* buf = data->line;
+		int test = read(pipefd[0], buf, 1);
+		perror("reading error?");
+		printf("%d\n", test);
+		while (read(pipefd[0], buf, 1) > 0) {
+			ft_putchar_fd(*buf, STDOUT_FILENO);
+			buf++;
         }
-		get_input(data);
+		close(pipefd[0]);
+		printf("%s\n", data->line);
+		printf("%lu\n", ft_strlen(data->line));
+
 		if (!data->line)
 			break ;
 
@@ -90,6 +121,7 @@ void repl(t_data *data) {
 		free_script_node(script);
 		data->line = NULL;
 	}
+	return EXIT_SUCCESS;
 }
 
 
@@ -107,8 +139,11 @@ int	main(int ac, char **av, char **ep)
 	if (!data)
 		return (printf("Error: Initialization failed. Exiting...\n"), 0);
 
-	repl(data);
+	if (repl(data) == EXIT_FAILURE ) {
+		return EXIT_FAILURE;
+		free_data(data);
+	};
 	free_data(data);
-	return (0);
+	return EXIT_SUCCESS;
 
 }
