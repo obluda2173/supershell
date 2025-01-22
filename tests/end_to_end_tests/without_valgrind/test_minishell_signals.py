@@ -5,7 +5,36 @@
 # Ctrl+D = EOF
 
 import pexpect
+import re
 import time
+
+
+def remove_cariage(text):
+    ansi_escape = re.compile(
+        r"""\r""",
+        re.VERBOSE,
+    )
+
+    return ansi_escape.sub("", text)
+
+
+def remove_ansi_sequences(text):
+    ansi_escape = re.compile(
+        r"""
+        \x1B  # ESC
+        (?:   # 7-bit C1 Control Sequence
+            [@-Z\\-_]
+        |     # or [ for CSI
+            \[
+            [0-?]*  # Parameter bytes
+            [ -/]*  # Intermediate bytes
+            [@-~]   # Final byte
+        )
+    """,
+        re.VERBOSE,
+    )
+
+    return ansi_escape.sub("", text)
 
 
 def test_sigint_in_interactive_mode():
@@ -31,9 +60,17 @@ def test_sigint_in_interactive_mode():
     assert minishell.before[-len("\r\nkfreyer") :] == "\r\nkfreyer"
 
     minishell.sendline("echo $?")
-    minishell.expect(r"\$ ")
 
-    code = int(minishell.before.split("\n")[1])
+    try:
+        minishell.expect(r"\$ ", timeout=0.1)
+    except pexpect.TIMEOUT:
+        print("Timeout occurred")
+        assert False, "Timeout occured"
+
+    output = remove_ansi_sequences(minishell.before)
+    output = output.split("\n")
+    output = [remove_cariage(out) for out in output]
+    code = int(output[1])
     assert code == 130
 
     minishell.sendline("exit")
