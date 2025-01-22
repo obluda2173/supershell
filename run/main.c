@@ -19,6 +19,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+volatile sig_atomic_t signal_received = 0;
 
 void handle_signals(int signum) {
 	(void)signum;
@@ -32,6 +33,9 @@ void handle_signals(int signum) {
 	/*  Change what's displayed on the screen to reflect the current contents of rl_line_buffer.  */
 	rl_redisplay();
 
+	if (signum == SIGINT) {
+		signal_received = 1;
+	}
 }
 
 void get_input(t_data *data) {
@@ -45,7 +49,6 @@ void get_input(t_data *data) {
 int repl(t_data *data) {
 	while (!data->exit)
 	{
-
 		int pipefd[2];
 		if (pipe(pipefd) == -1) {
 			perror("pipe");
@@ -58,30 +61,63 @@ int repl(t_data *data) {
 			return EXIT_FAILURE;
 		}
 
+
+		close(STDOUT_FILENO);
+		close(STDIN_FILENO);
 		if (cpid == 0) {
+
+			int fd_in = open("/dev/tty", O_RDONLY);
+			if (fd_in != 0) {
+				// Handle error or adjustment if needed
+			}
+
+			// Reopen STDOUT to the terminal
+			int fd_out = open("/dev/tty", O_WRONLY);
+			if (fd_out != 1) {
+				// Handle error or adjustment if needed
+			}
 			close(pipefd[0]);
 			get_input(data);
+			if (data->line == NULL) {
+				signal_received = 2;
+				exit(EXIT_SUCCESS);
+			}
 			write(pipefd[1], data->line, ft_strlen(data->line));
 			close(pipefd[1]);          /* Reader will see EOF */
-			/* free_data(data); */
+			free_data(data);
 			exit(EXIT_SUCCESS);
 		}
 		close(pipefd[1]);
 		wait(NULL);
+		int fd_in = open("/dev/tty", O_RDONLY);
+		if (fd_in != 0) {
+			// Handle error or adjustment if needed
+		}
+
+		// Reopen STDOUT to the terminal
+		int fd_out = open("/dev/tty", O_WRONLY);
+		if (fd_out != 1) {
+			// Handle error or adjustment if needed
+		}
+		ft_putendl_fd("hello", STDOUT_FILENO);
+		if (signal_received == 2) {
+			data->exit = true;
+			continue;
+		}
+
 		free(data->line);
+		data->line = NULL;
 		data->line = malloc(sizeof(char) * 100);
 		*data->line = '\0';
 		char* buf = data->line;
-		int test = read(pipefd[0], buf, 1);
-		perror("reading error?");
-		printf("%d\n", test);
-		while (read(pipefd[0], buf, 1) > 0) {
-			ft_putchar_fd(*buf, STDOUT_FILENO);
-			buf++;
-        }
+		while (read(pipefd[0], buf++, 1) > 0) {}
+		*buf = '\0';
 		close(pipefd[0]);
-		printf("%s\n", data->line);
-		printf("%lu\n", ft_strlen(data->line));
+
+		if (signal_received == 1) {
+			signal_received = 0;
+			continue;
+		}
 
 		if (!data->line)
 			break ;
@@ -119,7 +155,6 @@ int repl(t_data *data) {
 			data->exit_status = 2;
 		}
 		free_script_node(script);
-		data->line = NULL;
 	}
 	return EXIT_SUCCESS;
 }
