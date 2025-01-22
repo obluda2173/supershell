@@ -16,6 +16,27 @@
 #include "executor.h"
 #include <unistd.h>
 
+# include <readline/readline.h>
+# include <readline/history.h>
+
+
+volatile sig_atomic_t sigint_received = 0;
+
+void handle_signals(int signum) {
+	(void)signum;
+	sigint_received = 1;
+	/* Replace the contents of rl_line_buffer with text. The point and mark are preserved, if possible.
+	 * If clear_undo is non-zero, the undo list associated with the current line is cleared.  */
+	rl_replace_line("", 0);
+
+	ft_putendl_fd("", STDOUT_FILENO);
+	/*  Tell the update routines that we have moved onto a new (empty) line, usually after ouputting a newline.  */
+	rl_on_new_line();
+	/*  Change what's displayed on the screen to reflect the current contents of rl_line_buffer.  */
+	rl_redisplay();
+
+}
+
 void get_input(t_data *data) {
 	char* prompt;
 	prompt = meeting_line(&data);
@@ -27,15 +48,16 @@ void get_input(t_data *data) {
 void repl(t_data *data) {
 	while (!data->exit)
 	{
+        if (sigint_received) {
+            sigint_received = 0;
+        }
 		get_input(data);
 		if (!data->line)
 			break ;
 
-		//empty line handler
 		if (ft_strlen(data->line) == 0)
 			continue ;
 
-		//exit the process
 		if (ft_strncmp(data->line, "exit", 4) == 0)
 		{
 			data->exit = true;
@@ -56,13 +78,6 @@ void repl(t_data *data) {
 			continue ;
 		}
 
-
-		/* t_dllist *head = tokens; */
-		/* while (head) { */
-		/* 	printf("content: %s; type: %d\n", ((t_token*)head->content)->content, ((t_token*)head->content)->type); */
-		/* 	head = head->next; */
-		/* } */
-
 		t_script_node *script = parse(tokens);
 		ft_dllstclear(&tokens, free_token);
 
@@ -80,6 +95,7 @@ void repl(t_data *data) {
 
 int	main(int ac, char **av, char **ep)
 {
+	signal(SIGINT, handle_signals);
 	t_data	*data;
 	(void)av;
 
