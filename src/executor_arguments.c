@@ -10,8 +10,7 @@ void	expand_env(t_list *arguments, t_data *data)
 	{
 		if (((t_argument *)head->content)->type == DOUBLE_QUOTE_STR)
 		{
-			new_word = handle_double_quotes(((t_argument *)head->content)->word,
-					data->exit_status, data);
+			new_word = handle_double_quotes(((t_argument *)head->content)->word, data);
 			free(((t_argument *)head->content)->word);
 			((t_argument *)head->content)->word = new_word;
 			((t_argument *)head->content)->type = LITERAL;
@@ -19,8 +18,7 @@ void	expand_env(t_list *arguments, t_data *data)
 		if (((t_argument *)head->content)->type == ENV_EXP
 			|| ((t_argument *)head->content)->type == EXIT_STATUS_EXP)
 		{
-			new_word = handle_dollar(((t_argument *)head->content)->word,
-					data->exit_status, data);
+			new_word = handle_dollar(((t_argument *)head->content)->word, data);
 			free(((t_argument *)head->content)->word);
 			((t_argument *)head->content)->word = new_word;
 			((t_argument *)head->content)->type = LITERAL;

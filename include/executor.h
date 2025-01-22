@@ -22,10 +22,10 @@ char	*get_path_env(t_list *envp);
 char	*find_path(char *cmd, char *path_env);
 
 // executor_handle_double_quotes.c
-char    *handle_double_quotes(const char *word, int last_exit_status, t_data *data);
+char    *handle_double_quotes(const char *word,  t_data *data);
 
 // executor_handle_dollar.c
-char	*handle_dollar(const char *word, int last_exit_status, t_data *data);
+char	*handle_dollar(const char *word, t_data *data);
 
 // executor_handle_utils.c
 char *handle_env_expansion(const char *var_name, t_data *data);

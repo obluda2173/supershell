@@ -12,7 +12,7 @@
 
 #include "executor.h"
 
-char	*handle_dollar(const char *word, int last_exit_status, t_data *data)
+char	*handle_dollar(const char *word, t_data *data)
 {
 	size_t len = ft_strlen(word);
 	char *result = malloc(1);
@@ -27,7 +27,7 @@ char	*handle_dollar(const char *word, int last_exit_status, t_data *data)
 	{
 		if (word[i] == '?')
 		{
-			char *exit_status_str = ft_itoa(last_exit_status);
+			char *exit_status_str = ft_itoa(data->exit_status);
 			size_t exit_status_len = ft_strlen(exit_status_str);
 			result = append_to_result(result, &result_len, exit_status_str, exit_status_len);
 			free(exit_status_str);
