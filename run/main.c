@@ -28,7 +28,6 @@ void repl(t_data *data) {
 	while (!data->exit)
 	{
 		get_input(data);
-
 		if (!data->line)
 			break ;
 
@@ -75,7 +74,6 @@ void repl(t_data *data) {
 		free_script_node(script);
 		data->line = NULL;
 	}
-
 }
 
 
@@ -88,6 +86,7 @@ int	main(int ac, char **av, char **ep)
 		return (printf("Error: No environment found. Exiting...\n"), 0);
 
 	data = init(ep);
+
 	if (!data)
 		return (printf("Error: Initialization failed. Exiting...\n"), 0);
 

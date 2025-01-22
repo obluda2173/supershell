@@ -1,3 +1,4 @@
+#include "libft.h"
 #include "minishell.h"
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -17,9 +18,14 @@ char	*meeting_line(t_data **data)
 	result = NULL;
 	while (start)
 	{
-		if (ft_strncmp(start->content, "LOGNAME=", 8) == 0)
+		t_env_var *env_var = (t_env_var*)start->content;
+		if (ft_strcmp(env_var->key, "LOGNAME") == 0)
 		{
-			line = ft_substr(start->content, 8, ft_strlen(start->content) - 8);
+			if (env_var->value) {
+				line = ft_strdup(env_var->value);
+			} else {
+				line = ft_strdup("");
+			}
 			if (line)
 			{
 				result = ft_strjoin(line, "$ ");

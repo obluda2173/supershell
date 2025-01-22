@@ -14,10 +14,15 @@
 /* structures                                                               * */
 /* ************************************************************************** */
 
+typedef struct s_env_var {
+	char* key;
+	char* value;
+} t_env_var;
+
 //structure for main data
 typedef struct	s_data
 {
-	t_list			*ep;
+	t_list			*ep;		/* list of t_env_var */
 	char			*line;
 	int				exit_status;
 	bool			exit;

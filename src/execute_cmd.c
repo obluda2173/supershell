@@ -12,6 +12,7 @@
 
 #include "executor.h"
 #include "libft.h"
+#include "minishell.h"
 #include "parser.h"
 #include <unistd.h>
 
@@ -113,20 +114,10 @@ int	echo(t_cmd_node cmd_node, int fds[2])
 
 int	export(t_list *ep)
 {
-	char	**var;
-
 	while (ep)
 	{
-		var = ft_split((char *)ep->content, '=');
-		if (var[1])
-		{
-			printf("declare -x %s=\"%s\"\n", var[0], var[1]);
-		}
-		else
-		{
-			printf("declare -x %s=\"(null)\"\n", var[0]);
-		}
-		free_char_array(var);
+		t_env_var *env_var = (t_env_var*)ep->content;
+		printf("declare -x %s=\"%s\"\n", env_var->key, env_var->value);
 		ep = ep->next;
 	}
 	return EXIT_SUCCESS;
