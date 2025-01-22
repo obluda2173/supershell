@@ -44,7 +44,17 @@ static int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2])
 		count = 0;
 		while (ep)
 		{
-			env_matrix[count] = ft_strdup((char *)ep->content);
+			char* first = ft_strjoin(((t_env_var*)ep->content)->key, "=");
+			char* second;
+			if (((t_env_var*)ep->content)->value) {
+				second = ft_strjoin(first, ((t_env_var*)ep->content)->value);
+			} else {
+				second = ft_strdup(first);
+			}
+
+			env_matrix[count] =  ft_strdup(second);
+			free(first);
+			free(second);
 			ep = ep->next;
 			count++;
 		}

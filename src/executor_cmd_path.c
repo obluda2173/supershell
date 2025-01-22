@@ -11,14 +11,17 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "minishell.h"
 
-char	*get_path_env(t_list *envp)
+char	*get_path_env(t_list *ep)
 {
-	while (envp)
+	t_env_var *env_var;
+	while (ep)
 	{
-		if (ft_strncmp((char *)envp->content, "PATH=", 5) == 0)
-			return ((char *)envp->content + 5);
-		envp = envp->next;
+		env_var = (t_env_var*)ep->content;
+		if (ft_strcmp(env_var->key, "PATH") == 0)
+			return (env_var->value);
+		ep = ep->next;
 	}
 	return (NULL);
 }
