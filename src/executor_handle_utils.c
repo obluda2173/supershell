@@ -12,29 +12,37 @@
 
 #include "executor.h"
 #include "libft.h"
+#include <unistd.h>
 
-/* char *custom_getenv(char* key, t_data *data) { */
-/* 	char* value; */
-/* 	t_list* ep = data->ep; */
-/* 	while (ep) { */
-/* 		if (!ft_strcmp(key, (char*)ep->content)) { */
+char *custom_getenv(const char* key, t_data *data) {
+	t_list* ep = data->ep;
+	while (ep) {
+		t_env_var* env_var = (t_env_var*)ep->content;
+		if (!ft_strcmp(key, env_var->key)) {
+			if (env_var->value) {
+				return ft_strdup(env_var->value);
+			} else {
+				return ft_strdup("");
+			}
+		}
+		ep = ep->next;
+	}
+	return NULL;
+}
 
-/* 		} */
-/* 		data = data->next; */
-/* 	} */
-/* } */
-
-char	*handle_env_expansion(const char *var_name)
+char	*handle_env_expansion(const char *var_name, t_data *data)
 {
 	char	*value;
 
-	value = getenv(var_name);
-	if (value)
-		return (ft_strdup(value));
+	value = custom_getenv(var_name, data);
+	if (value) {
+		return value;
+	}
+	free(value);
 	return (ft_strdup(""));
 }
 
-char	*expand_variable(const char *str, size_t *i)
+char	*expand_variable(const char *str, size_t *i, t_data *data)
 {
 	char	*var_name;
 	char	*var_value;
@@ -44,7 +52,7 @@ char	*expand_variable(const char *str, size_t *i)
 	while (ft_isalnum(str[*i]) || str[*i] == '_')
 		(*i)++;
 	var_name = ft_strndup(&str[start], *i - start);
-	var_value = handle_env_expansion(var_name);
+	var_value = handle_env_expansion(var_name, data);
 	free(var_name);
 	if (var_value)
 		return (var_value);

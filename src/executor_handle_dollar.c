@@ -12,7 +12,7 @@
 
 #include "executor.h"
 
-char	*handle_dollar(const char *word, int last_exit_status)
+char	*handle_dollar(const char *word, int last_exit_status, t_data *data)
 {
 	size_t len = ft_strlen(word);
 	char *result = malloc(1);
@@ -37,7 +37,7 @@ char	*handle_dollar(const char *word, int last_exit_status)
 		}
 		else if (ft_isalnum(word[i]) || word[i] == '_')
 		{
-			char *var_value = expand_variable(word, &i);
+			char *var_value = expand_variable(word, &i, data);
 			size_t var_value_len = ft_strlen(var_value);
 			result = append_to_result(result, &result_len, var_value, var_value_len);
 			free(var_value);

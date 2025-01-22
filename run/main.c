@@ -65,6 +65,7 @@ void repl(t_data *data) {
 
 		t_script_node *script = parse(tokens);
 		ft_dllstclear(&tokens, free_token);
+
 		if (script->node_type != ERROR_NODE)
 			execute_script(script,  data);
 		else {

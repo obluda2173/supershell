@@ -22,14 +22,14 @@ char	*get_path_env(t_list *envp);
 char	*find_path(char *cmd, char *path_env);
 
 // executor_handle_double_quotes.c
-char    *handle_double_quotes(const char *word, int last_exit_status);
+char    *handle_double_quotes(const char *word, int last_exit_status, t_data *data);
 
 // executor_handle_dollar.c
-char	*handle_dollar(const char *word, int last_exit_status);
+char	*handle_dollar(const char *word, int last_exit_status, t_data *data);
 
 // executor_handle_utils.c
-char *handle_env_expansion(const char *var_name);
-char *expand_variable(const char *str, size_t *i);
+char *handle_env_expansion(const char *var_name, t_data *data);
+char	*expand_variable(const char *str, size_t *i, t_data *data);
 char *append_to_result(char *result, size_t *result_len, const char *addition, size_t addition_len);
 
 // executor_handle_wildcard_1.c

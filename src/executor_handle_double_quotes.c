@@ -12,7 +12,7 @@
 
 #include "executor.h"
 
-char    *handle_double_quotes(const char *word, int last_exit_status)
+char    *handle_double_quotes(const char *word, int last_exit_status, t_data *data)
 {
 	size_t len = ft_strlen(word);
 	char *result = malloc(1);
@@ -41,7 +41,7 @@ char    *handle_double_quotes(const char *word, int last_exit_status)
 			}
 			else
 			{
-				char *dollar_expansion = handle_dollar(&word[i], last_exit_status);
+				char *dollar_expansion = handle_dollar(&word[i], last_exit_status, data);
 				size_t expansion_len = ft_strlen(dollar_expansion);
 				result = append_to_result(result, &result_len, dollar_expansion, expansion_len);
 				free(dollar_expansion);
