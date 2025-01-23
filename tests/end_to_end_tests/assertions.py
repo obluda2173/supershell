@@ -24,4 +24,7 @@ def assert_no_new_file_descriptors(open_fds_beginning, open_fds_end):
     open_fds_end = [
         line for line in open_fds_end if (len(line) and "/usr/" not in line)
     ]
-    assert len(open_fds_beginning) == len(open_fds_end)
+
+    assert len(open_fds_beginning) == len(
+        open_fds_end
+    ), f"{len(open_fds_beginning)} != {len(open_fds_end)}"

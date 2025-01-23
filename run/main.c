@@ -14,6 +14,7 @@
 #include "minishell.h"
 #include "parser.h"
 #include "executor.h"
+#include <stdio.h>
 #include <unistd.h>
 
 # include <readline/readline.h>
@@ -49,6 +50,7 @@ void get_input(t_data *data) {
 int repl(t_data *data) {
 	while (!data->exit)
 	{
+		signal(SIGINT, SIG_IGN); // Parent ignores SIGINT
 		int pipefd[2];
 		if (pipe(pipefd) == -1) {
 			perror("pipe");
@@ -61,57 +63,34 @@ int repl(t_data *data) {
 			return EXIT_FAILURE;
 		}
 
-
-		close(STDOUT_FILENO);
-		close(STDIN_FILENO);
 		if (cpid == 0) {
-
-			int fd_in = open("/dev/tty", O_RDONLY);
-			if (fd_in != 0) {
-				// Handle error or adjustment if needed
-			}
-
-			// Reopen STDOUT to the terminal
-			int fd_out = open("/dev/tty", O_WRONLY);
-			if (fd_out != 1) {
-				// Handle error or adjustment if needed
-			}
+			signal(SIGINT, handle_signals);
 			close(pipefd[0]);
 			get_input(data);
 			if (data->line == NULL) {
-				signal_received = 2;
+				close(pipefd[1]);          /* Reader will see EOF */
+				free_data(data);
 				exit(EXIT_SUCCESS);
 			}
-			write(pipefd[1], data->line, ft_strlen(data->line));
+			write(pipefd[1], data->line, ft_strlen(data->line) + 1);
 			close(pipefd[1]);          /* Reader will see EOF */
 			free_data(data);
 			exit(EXIT_SUCCESS);
 		}
 		close(pipefd[1]);
 		wait(NULL);
-		int fd_in = open("/dev/tty", O_RDONLY);
-		if (fd_in != 0) {
-			// Handle error or adjustment if needed
-		}
-
-		// Reopen STDOUT to the terminal
-		int fd_out = open("/dev/tty", O_WRONLY);
-		if (fd_out != 1) {
-			// Handle error or adjustment if needed
-		}
-		ft_putendl_fd("hello", STDOUT_FILENO);
-		if (signal_received == 2) {
-			data->exit = true;
-			continue;
-		}
 
 		free(data->line);
 		data->line = NULL;
 		data->line = malloc(sizeof(char) * 100);
 		*data->line = '\0';
-		char* buf = data->line;
+		char *buf = data->line;
+		int error = read(pipefd[0], buf++, 1);
+		if (error == 0) {
+			data->exit = true;
+			continue;
+		}
 		while (read(pipefd[0], buf++, 1) > 0) {}
-		*buf = '\0';
 		close(pipefd[0]);
 
 		if (signal_received == 1) {
@@ -122,8 +101,11 @@ int repl(t_data *data) {
 		if (!data->line)
 			break ;
 
-		if (ft_strlen(data->line) == 0)
+		if (ft_strlen(data->line) == 0) {
+			free(data->line);
+			data->line = NULL;
 			continue ;
+		}
 
 		if (ft_strncmp(data->line, "exit", 4) == 0)
 		{
@@ -155,6 +137,8 @@ int repl(t_data *data) {
 			data->exit_status = 2;
 		}
 		free_script_node(script);
+		free(data->line);
+		data->line = NULL;
 	}
 	return EXIT_SUCCESS;
 }
@@ -162,7 +146,6 @@ int repl(t_data *data) {
 
 int	main(int ac, char **av, char **ep)
 {
-	signal(SIGINT, handle_signals);
 	t_data	*data;
 	(void)av;
 

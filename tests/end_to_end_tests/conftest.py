@@ -104,7 +104,7 @@ def parse_out_and_err_minishell(
     stdout_minishell, stderr_minishell, minishell="./minishell"
 ):
 
-    prompt = get_prompt_minishell(minishell)
+    prompt = get_prompt_minishell()
     stdout_minishell = [
         line
         for line in stdout_minishell.decode().split("\n")
