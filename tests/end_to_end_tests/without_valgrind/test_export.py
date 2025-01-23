@@ -32,7 +32,7 @@ def assert_export_variables_same(stdout_minishell, stdout_bash):
     "cmd",
     [
         (["export"]),
-        # (["export < tests/end_to_end_tests/test_files/input1.txt"]),
+        (["export < tests/end_to_end_tests/test_files/input1.txt"]),
         # (["export new", "export"]),
     ],
 )
@@ -47,6 +47,7 @@ def test_export(cmd):
     stdout_bash, _ = bash.communicate(cmd.encode())
     stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
 
+    assert minishell.stdin is not None
     stdout_minishell, stderr_minishell, open_fds_end = (
         send_cmds_minishell_with_open_fds(minishell, cmd)
     )

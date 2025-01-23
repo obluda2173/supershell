@@ -128,6 +128,7 @@ int	export(t_list *ep)
 	{
 		t_env_var *env_var = (t_env_var*)ep->content;
 		printf("declare -x %s=\"%s\"\n", env_var->key, env_var->value);
+		fflush(stdout);
 		ep = ep->next;
 	}
 	return EXIT_SUCCESS;
