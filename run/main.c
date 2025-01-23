@@ -22,6 +22,10 @@
 
 volatile sig_atomic_t signal_received = 0;
 
+void handle_signals_2(int signum) {
+	(void)signum;
+	signal_received = 1;
+}
 void handle_signals(int signum) {
 	(void)signum;
 	/* Replace the contents of rl_line_buffer with text. The point and mark are preserved, if possible.
@@ -48,9 +52,9 @@ void get_input(t_data *data) {
 }
 
 int repl(t_data *data) {
+	signal(SIGINT, handle_signals_2); // Parent ignores SIGINT
 	while (!data->exit)
 	{
-		signal(SIGINT, SIG_IGN); // Parent ignores SIGINT
 		int pipefd[2];
 		if (pipe(pipefd) == -1) {
 			perror("pipe");
@@ -86,6 +90,7 @@ int repl(t_data *data) {
 		*data->line = '\0';
 		char *buf = data->line;
 		int error = read(pipefd[0], buf++, 1);
+
 		if (error == 0) {
 			data->exit = true;
 			continue;
@@ -94,9 +99,10 @@ int repl(t_data *data) {
 		close(pipefd[0]);
 
 		if (signal_received == 1) {
+			data->exit_status = 130;
 			signal_received = 0;
-			continue;
 		}
+
 
 		if (!data->line)
 			break ;
