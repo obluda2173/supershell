@@ -7,6 +7,11 @@ struct handleLiteralParams {
 
 class handleLiteralTestSuite : public::testing::TestWithParam<handleLiteralParams>{};
 
+t_list *get_ep() {
+	t_env_var *env_var = new_env_var((char*)"PATH", (char*)"path_value");
+	return ft_lstnew(env_var);
+}
+
 TEST_P(handleLiteralTestSuite, firstTest) {
 	handleLiteralParams params = GetParam();
 	t_list *ep = get_ep();
@@ -25,6 +30,6 @@ INSTANTIATE_TEST_SUITE_P(
 		handleLiteralParams{"hello", "hello"},
 		handleLiteralParams{"hello2", "hello2"},
 		handleLiteralParams{"$PATH", "path_value"},
-		handleLiteralParams{"VAR1=\"$PATH path $PATH $path\"", "VAR2=\"path_value path path_value $path\""}
+		handleLiteralParams{"\"$PATH path $PATH $path\"", "path_value path path_value "}
 		)
 	);
