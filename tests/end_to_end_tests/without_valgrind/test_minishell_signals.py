@@ -118,3 +118,55 @@ def test_eof_in_interactive_mode():
 
     minishell.sendline("exit")
     minishell.close()
+
+
+def test_sigint_in_hereloop_mode():
+    # Start an interactive shell
+    minishell = pexpect.spawn("./minishell", encoding="utf-8")
+
+    # Expect the prompt (this may need to be adjusted depending on your environment)
+    minishell.expect(r"\$ ")
+
+    minishell.sendline("<<EOF\n")
+
+    assert minishell.isalive()
+
+    try:
+        minishell.expect(r"heredoc> ", timeout=0.1)
+    except pexpect.TIMEOUT:
+        print("Timeout occurred")
+        assert False, "Timeout occured"
+
+    minishell.sendcontrol("c")
+    assert minishell.isalive()
+
+    try:
+        minishell.expect(r"\$ ", timeout=0.1)
+    except pexpect.TIMEOUT:
+        print("Timeout occurred")
+        assert False, "Timeout occured"
+
+    assert minishell.before is not None
+    assert minishell.before[: len("^C")] == "^C"
+    assert minishell.before[-len(f"\r\n{logname}") :] == f"\r\n{logname}"
+
+    assert minishell.before is not None
+    assert minishell.before[: len("^C")] == "^C"
+    assert minishell.before[-len(f"\r\n{logname}") :] == f"\r\n{logname}"
+
+    minishell.sendline("exit")
+    minishell.close()
+
+    # minishell.sendline("echo $?")
+
+    # try:
+    #     minishell.expect(r"\$ ", timeout=0.1)
+    # except pexpect.TIMEOUT:
+    #     print("Timeout occurred")
+    #     assert False, "Timeout occured"
+
+    # output = remove_ansi_sequences(minishell.before)
+    # output = output.split("\n")
+    # output = [remove_cariage(out) for out in output]
+    # code = int(output[1])
+    # assert code == 130
