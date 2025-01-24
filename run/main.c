@@ -178,7 +178,7 @@ int	repl(t_data *data)
 		if (!check_data(data))
 			continue ;
 		tokens = tokenize(data->line);
-		if (!heredoc_loop(&tokens, data))
+		if (heredoc_loop(&tokens, data))
 		{
 			/* printf("Error: Heredoc processing failed.\n"); */
 			ft_dllstclear(&tokens, free_token);

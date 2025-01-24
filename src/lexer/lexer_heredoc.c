@@ -165,17 +165,17 @@ int	heredoc_loop(t_dllist **tokens, t_data *data)
 
 	heredoc_token = search_heredoc(*tokens);
 	if (!heredoc_token)
-		return (1);
+		return EXIT_SUCCESS;
 	delimiter = extract_delimiter(&heredoc_token);
 	if (!delimiter)
-		return (0);
+		return EXIT_FAILURE;
 	heredoc_input = read_heredoc_input(delimiter, data);
 	free(delimiter);
 	if (!heredoc_input)
-		return (0);
+		return EXIT_FAILURE;
 	new_token_node = create_heredoc_token(heredoc_token, heredoc_input);
 	if (!new_token_node)
-		return (0);
+		return EXIT_FAILURE;
 	if (heredoc_token->next)
 	{
 		new_token_node->next = heredoc_token->next;
@@ -186,5 +186,5 @@ int	heredoc_loop(t_dllist **tokens, t_data *data)
 	new_token_node->prev = heredoc_token->prev;
 	heredoc_token->prev->next = new_token_node;
 	ft_dllstdelone(heredoc_token, free_token);
-	return (1);
+	return EXIT_SUCCESS;
 }
