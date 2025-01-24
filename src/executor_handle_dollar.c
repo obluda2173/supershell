@@ -43,6 +43,7 @@ char	*handle_dollar(const char *word, t_data *data)
 			free(var_value);
 			if (!result)
 				return NULL;
+			return result;
 		}
 		else
 		{
