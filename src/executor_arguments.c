@@ -2,26 +2,27 @@
 
 void	expand_env(t_list *arguments, t_data *data)
 {
-	t_list	*head;
-	char	*new_word;
+	t_list		*head;
+	char		*new_word;
+	t_argument	*a;
 
 	head = arguments;
 	while (head)
 	{
-		if (((t_argument *)head->content)->type == DOUBLE_QUOTE_STR)
+		a = (t_argument *)head->content;
+		if (a->type == DOUBLE_QUOTE_STR)
 		{
-			new_word = handle_double_quotes(((t_argument *)head->content)->word, data);
-			free(((t_argument *)head->content)->word);
-			((t_argument *)head->content)->word = new_word;
-			((t_argument *)head->content)->type = LITERAL;
+			new_word = handle_double_quotes(a->word, data);
+			free(a->word);
+			a->word = new_word;
+			a->type = LITERAL;
 		}
-		if (((t_argument *)head->content)->type == ENV_EXP
-			|| ((t_argument *)head->content)->type == EXIT_STATUS_EXP)
+		if (a->type == ENV_EXP || a->type == EXIT_STATUS_EXP)
 		{
-			new_word = handle_dollar(((t_argument *)head->content)->word, data);
-			free(((t_argument *)head->content)->word);
-			((t_argument *)head->content)->word = new_word;
-			((t_argument *)head->content)->type = LITERAL;
+			new_word = handle_dollar(a->word, data);
+			free(a->word);
+			a->word = new_word;
+			a->type = LITERAL;
 		}
 		head = head->next;
 	}

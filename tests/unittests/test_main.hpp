@@ -72,5 +72,6 @@ class ExecutorTestSuite : public::testing::TestWithParam<ExecutorTestsParams>{};
 
 t_script_node *new_script_node(char *cmd, t_token_type type);
 char **get_envp();
+t_list *get_ep();
 
 #endif // TESTS_MAIN_H

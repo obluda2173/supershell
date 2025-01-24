@@ -17,3 +17,8 @@ char **get_envp() {
 	envp[1] = NULL;
 	return envp;
 }
+
+t_list *get_ep() {
+	t_env_var *env_var = new_env_var((char*)"PATH", (char*)"path_value");
+	return ft_lstnew(env_var);
+}
