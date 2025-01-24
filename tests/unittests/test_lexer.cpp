@@ -125,6 +125,13 @@ INSTANTIATE_TEST_SUITE_P(
 							new_token(NULL, END_OF_FILE),
 						}},
 					TestTokenizeParams{
+						"echo *$PATH", {
+							new_token("echo", BUILTIN),
+							new_token("*", WILDCARD),
+							new_token("PATH", DOLLAR),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{
 						"echo \"this is a double quoted string\"", {
 							new_token("echo", BUILTIN),
 							new_token("this is a double quoted string", DOUBLE_QUOTE),
@@ -465,5 +472,33 @@ INSTANTIATE_TEST_SUITE_P(
 							new_token("file.txt", WORD),
 							new_token(NULL, END_OF_FILE),
 						}}
+					// TestTokenizeParams{
+					// 	"export asdf$PATH", {
+					// 		new_token("export", BUILTIN),
+					// 		new_token("asdf$PATH", DOLLAR),
+					// 		new_token(NULL, END_OF_FILE),
+					// 	}},
+					// TestTokenizeParams{
+					// 	"export VAR1=\"$PATH\"", {
+					// 		new_token("echo", BUILTIN),
+					// 		new_token("VAR1=$PATH", DOUBLE_QUOTE),
+					// 		new_token(NULL, END_OF_FILE),
+					// 			}},
+					// TestTokenizeParams{
+					// 	"export VAR1='$PATH'", {
+					// 		new_token("echo", BUILTIN),
+					// 			new_token("VAR1=$PATH", WORD),
+					// 			new_token(NULL, END_OF_FILE),
+					// 			}}
+					// TestTokenizeParams{
+					// 	"export VAR1=\"var1\" VAR2=\"var2\" VAR3= VAR4", {
+					// 		new_token("export", BUILTIN),
+					// 		new_token("VAR1=\"var1\"", WORD),
+					// 		new_token("", EQUAL_SIGN)
+					// 		// new_token("EOF", SINGLE_QUOTE),
+					// 		// new_token(">", REDIRECT_OUT),
+					// 		// new_token("file.txt", WORD),
+					// 		// new_token(NULL, END_OF_FILE),
+					// 	}}
 		)
 	);

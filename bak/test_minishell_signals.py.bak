@@ -77,6 +77,46 @@ def test_sigint_in_interactive_mode():
     minishell.close()
 
 
+def test_sigint_in_heredoc_mode():
+    # Start an interactive shell
+    minishell = pexpect.spawn("./minishell", encoding="utf-8")
+
+    # Expect the prompt (this may need to be adjusted depending on your environment)
+    minishell.expect(r"\$ ")
+
+    minishell.sendcontrol("<<EOF")
+    time.sleep(0.01)
+
+    assert minishell.isalive()
+
+    try:
+        minishell.expect(r"\$ ", timeout=0.1)
+    except pexpect.TIMEOUT:
+        print("Timeout occurred")
+        assert False, "Timeout occured"
+
+    assert minishell.before is not None
+    assert minishell.before[: len("^C")] == "^C"
+    assert minishell.before[-len("\r\nkfreyer") :] == "\r\nkfreyer"
+
+    minishell.sendline("echo $?")
+
+    try:
+        minishell.expect(r"\$ ", timeout=0.1)
+    except pexpect.TIMEOUT:
+        print("Timeout occurred")
+        assert False, "Timeout occured"
+
+    output = remove_ansi_sequences(minishell.before)
+    output = output.split("\n")
+    output = [remove_cariage(out) for out in output]
+    code = int(output[1])
+    assert code == 130
+
+    minishell.sendline("exit")
+    minishell.close()
+
+
 #     print(minishell.before.strip())
 
 #     # Send Ctrl-C to interrupt (send control character)

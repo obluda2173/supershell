@@ -51,6 +51,62 @@ void get_input(t_data *data) {
 	prompt = NULL;
 }
 
+void child_input(int pipefd[2], t_data *data) {
+	signal(SIGINT, handle_signals);
+	close(pipefd[0]);
+	get_input(data);
+	if (data->line == NULL) {
+		close(pipefd[1]);          /* Reader will see EOF */
+		free_data(data);
+		exit(EXIT_SUCCESS);
+	}
+	write(pipefd[1], data->line, ft_strlen(data->line) + 1);
+	close(pipefd[1]);          /* Reader will see EOF */
+	free_data(data);
+	exit(EXIT_SUCCESS);
+
+}
+
+void parse_and_execute(t_dllist *tokens, t_data *data) {
+		t_script_node *script = parse(tokens);
+		ft_dllstclear(&tokens, free_token);
+
+		if (script->node_type != ERROR_NODE)
+			execute_script(script,  data);
+		else {
+			ft_putendl_fd((char*)script->node_data.error_node.error, STDERR_FILENO);
+			data->exit_status = 2;
+		}
+		free_script_node(script);
+
+}
+
+bool check(t_data *data) {
+	if (signal_received == 1) {
+		data->exit_status = 130;
+		signal_received = 0;
+	}
+
+	if (ft_strlen(data->line) == 0) {
+		free(data->line);
+		data->line = NULL;
+		return true;
+	}
+
+	if (ft_strncmp(data->line, "exit", 4) == 0)
+	{
+		data->exit = true;
+		return true;
+	}
+
+	if (!check_syntax(data->line))
+	{
+		data->exit_status = 2;
+		return true;
+	}
+	return false;
+}
+
 int repl(t_data *data) {
 	signal(SIGINT, handle_signals_2); // Parent ignores SIGINT
 	while (!data->exit)
@@ -67,27 +123,14 @@ int repl(t_data *data) {
 			return EXIT_FAILURE;
 		}
 
-		if (cpid == 0) {
-			signal(SIGINT, handle_signals);
-			close(pipefd[0]);
-			get_input(data);
-			if (data->line == NULL) {
-				close(pipefd[1]);          /* Reader will see EOF */
-				free_data(data);
-				exit(EXIT_SUCCESS);
-			}
-			write(pipefd[1], data->line, ft_strlen(data->line) + 1);
-			close(pipefd[1]);          /* Reader will see EOF */
-			free_data(data);
-			exit(EXIT_SUCCESS);
-		}
+		if (cpid == 0)
+			child_input(pipefd, data);
 		close(pipefd[1]);
 		wait(NULL);
 
 		free(data->line);
 		data->line = NULL;
 		data->line = malloc(sizeof(char) * 100);
-		*data->line = '\0';
 		char *buf = data->line;
 		int error = read(pipefd[0], buf++, 1);
 
@@ -98,32 +141,8 @@ int repl(t_data *data) {
 		while (read(pipefd[0], buf++, 1) > 0) {}
 		close(pipefd[0]);
 
-		if (signal_received == 1) {
-			data->exit_status = 130;
-			signal_received = 0;
-		}
-
-
-		if (!data->line)
-			break ;
-
-		if (ft_strlen(data->line) == 0) {
-			free(data->line);
-			data->line = NULL;
-			continue ;
-		}
-
-		if (ft_strncmp(data->line, "exit", 4) == 0)
-		{
-			data->exit = true;
-			continue ;
-		}
-
-		if (!check_syntax(data->line))
-		{
-			data->exit_status = 2;
-			continue ;
-		}
+		if (check(data))
+			continue;
 
 		t_dllist *tokens = tokenize(data->line);
 		if (!heredoc_loop(&tokens))
@@ -132,22 +151,11 @@ int repl(t_data *data) {
 			ft_dllstclear(&tokens, free_token);
 			continue ;
 		}
-
-		t_script_node *script = parse(tokens);
-		ft_dllstclear(&tokens, free_token);
-
-		if (script->node_type != ERROR_NODE)
-			execute_script(script,  data);
-		else {
-			ft_putendl_fd((char*)script->node_data.error_node.error, STDERR_FILENO);
-			data->exit_status = 2;
-		}
-		free_script_node(script);
-		free(data->line);
-		data->line = NULL;
+		parse_and_execute(tokens, data);
 	}
 	return EXIT_SUCCESS;
 }
+
 
 
 int	main(int ac, char **av, char **ep)

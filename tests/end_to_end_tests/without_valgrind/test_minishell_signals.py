@@ -77,44 +77,40 @@ def test_sigint_in_interactive_mode():
     minishell.close()
 
 
-#     print(minishell.before.strip())
+def test_eof_in_interactive_mode():
+    # Start an interactive shell
+    minishell = pexpect.spawn("./minishell", encoding="utf-8")
 
-#     # Send Ctrl-C to interrupt (send control character)
+    # Expect the prompt (this may need to be adjusted depending on your environment)
+    minishell.expect(r"\$ ")
 
-#     # Expect the command output
-#     minishell.expect(r"\$ ")
+    minishell.sendline("cat")
+    time.sleep(0.01)
+    minishell.sendcontrol("d")
 
-#     interrupted_output = minishell.before.strip()
+    assert minishell.isalive()
 
-# print("Output after sending Ctrl-C:")
-# print(interrupted_output)
+    try:
+        minishell.expect(r"\$ ", timeout=0.1)
+    except pexpect.TIMEOUT:
+        print("Timeout occurred")
+        assert False, "Timeout occured"
 
-# # Send the exit command to close the session
-# minishell.sendline("exit")
-# minishell.close()
+    assert minishell.before is not None
+    output = remove_ansi_sequences(remove_cariage(minishell.before))
+    assert output == "cat\nkay"
 
-# bash = pexpect.spawn("./bash", encoding="utf-8")
+    minishell.sendline("echo $?")
 
-# bash.expect(r"\$ ")
+    try:
+        minishell.expect(r"\$ ", timeout=0.1)
+    except pexpect.TIMEOUT:
+        print("Timeout occurred")
+        assert False, "Timeout occured"
 
-# # Send a command to be executed in the shell
-# bash.sendline("echo Hello from Bash")
-# bash.expect(r"\$ ")
-# print(bash.before.strip())
+    output = remove_cariage(remove_ansi_sequences(minishell.before))
+    code = int(output.split("\n")[1])
+    assert code == 0
 
-# # Send Ctrl-C to interrupt (send control character)
-# bash.sendcontrol("c")
-
-# # Expect the command output
-# bash.expect(r"\$ ")
-
-# assert bash.isalive()
-# print(bash.isalive())
-# print(bash.isatty())
-# interrupted_output = bash.before.strip()
-
-# print("Output after sending Ctrl-C:")
-# print(interrupted_output)
-# # Send the exit command to close the bash session
-# bash.sendline("exit")
-# bash.close()
+    minishell.sendline("exit")
+    minishell.close()
