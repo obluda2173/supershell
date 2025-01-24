@@ -68,6 +68,7 @@ char	*read_line_from_child(int read_fd)
 	if (error == 0)
 	{
 		free(line);
+		close(read_fd);
 		return (NULL);
 	}
 	while (read(read_fd, buf++, 1) > 0)
