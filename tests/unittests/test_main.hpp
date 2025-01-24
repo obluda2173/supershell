@@ -8,6 +8,7 @@
 
 extern "C" {
 #include "lexer.h"
+#include "minishell.h"
 #include "parser.h"
 #include "executor.h"
 #include "libft.h"

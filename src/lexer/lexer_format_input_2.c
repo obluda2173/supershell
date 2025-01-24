@@ -34,9 +34,9 @@ char	*handle_heredoc(char *input, size_t *i, char *result, size_t *j)
 	while (input[*i] == '<')
 		result[(*j)++] = input[(*i)++];
 	if (input[*i] && !ft_isspace(input[*i]))
-        result[(*j)++] = ' ';
-	while (input[*i] && !ft_isspace(input[*i]))
-		result[(*j)++] = input[(*i)++];
+		result[(*j)++] = ' ';
+	/* while (input[*i] && !ft_isspace(input[*i])) */
+	/* 	result[(*j)++] = input[(*i)++]; */
 	if (input[*i] && input[*i] != ' ')
 		result[(*j)++] = ' ';
 	return (result);

@@ -19,6 +19,8 @@
 #include <unistd.h>
 
 
+volatile sig_atomic_t	signal_received = 0;
+
 void	handle_signals_heredoc(int signum)
 {
 	(void)signum;
@@ -139,9 +141,11 @@ char	*extract_delimiter(t_dllist **heredoc_token)
 		return (NULL);
 	delimiter = NULL;
 	/* token = (t_token *)(*heredoc_token)->content; */
+
 	if ((*heredoc_token)->next)
 	{
 		next_token = (t_token *)(*heredoc_token)->next->content;
+		fflush(stdout);
 		if (next_token->type == WORD || next_token->type == SINGLE_QUOTE)
 		{
 			delimiter = ft_strdup(next_token->content);
@@ -166,6 +170,7 @@ int	heredoc_loop(t_dllist **tokens, t_data *data)
 	heredoc_token = search_heredoc(*tokens);
 	if (!heredoc_token)
 		return EXIT_SUCCESS;
+
 	delimiter = extract_delimiter(&heredoc_token);
 	if (!delimiter)
 		return EXIT_FAILURE;
@@ -186,5 +191,6 @@ int	heredoc_loop(t_dllist **tokens, t_data *data)
 	new_token_node->prev = heredoc_token->prev;
 	heredoc_token->prev->next = new_token_node;
 	ft_dllstdelone(heredoc_token, free_token);
-	return EXIT_SUCCESS;
+	return heredoc_loop(&(new_token_node->next), data);
+	/* return EXIT_SUCCESS; */
 }

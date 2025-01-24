@@ -10,7 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "minishell.h"
+#include <unistd.h>
 
 static char	*trim_spaces(char *str)
 {

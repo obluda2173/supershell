@@ -50,4 +50,5 @@ char	*read_line_from_child(int read_fd);
 
 // heredoc.c
 int			heredoc_loop(t_dllist **tokens, t_data *data);
+char	*read_line_from_child(int read_fd);
 #endif

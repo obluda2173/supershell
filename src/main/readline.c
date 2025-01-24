@@ -54,3 +54,25 @@ char * rl_gets(const char* prompt)
 
 	return (line_read);
 }
+
+char	*read_line_from_child(int read_fd)
+{
+	char	*buf;
+	int		error;
+	char	*line;
+
+	line = NULL;
+	line = malloc(sizeof(char) * 100);
+	buf = line;
+	error = read(read_fd, buf++, 1);
+	if (error == 0)
+	{
+		free(line);
+		return (NULL);
+	}
+	while (read(read_fd, buf++, 1) > 0)
+	{
+	}
+	close(read_fd);
+	return (line);
+}

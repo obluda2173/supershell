@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "lexer.h"
+#include "libft.h"
+#include <unistd.h>
 
 static void	skip_spaces(char *line, int *i)
 {

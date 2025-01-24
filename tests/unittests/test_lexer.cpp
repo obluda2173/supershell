@@ -11,15 +11,16 @@ TEST_P(TestTokenizer, firstTests) {
 	TestTokenizeParams params = GetParam();
 	std::vector<t_token> want_tokens = params.want_tokens;
 
-	testing::internal::CaptureStdout();
+	// testing::internal::CaptureStdout();
 	t_dllist *tokens = tokenize((char*)params.line.c_str());
-	testing::internal::GetCapturedStdout();
+	// testing::internal::GetCapturedStdout();
 	t_dllist *head = tokens;
 
-	ASSERT_EQ(want_tokens.size(),ft_dllstsize(tokens));
+	EXPECT_EQ(want_tokens.size(),ft_dllstsize(tokens));
 	for (size_t i = 0; i < params.want_tokens.size(); i++) {
 		auto want_token = want_tokens[i];
 		t_token *got_token = (t_token*)head->content;
+		std::cout << "content: " << got_token->content << ", type: " << got_token->type << "\n";
 		EXPECT_STREQ(want_token.content, got_token->content);
 		EXPECT_EQ( want_token.type, got_token->type);
 		head = head->next;
@@ -464,12 +465,11 @@ INSTANTIATE_TEST_SUITE_P(
 							new_token(NULL, END_OF_FILE),
 						}},
 					TestTokenizeParams{
-						"echo <<'EOF' > file.txt", {
-							new_token("echo", BUILTIN),
+						"<<EOF <<EOF1", {
 							new_token("<<", HERE_DOC),
-							new_token("EOF", SINGLE_QUOTE),
-							new_token(">", REDIRECT_OUT),
-							new_token("file.txt", WORD),
+							new_token("EOF", WORD),
+							new_token("<<", HERE_DOC),
+							new_token("EOF1", WORD),
 							new_token(NULL, END_OF_FILE),
 						}}
 					// TestTokenizeParams{
