@@ -5,6 +5,7 @@
 # Ctrl+D = EOF
 
 import pexpect
+import os
 import re
 import time
 
@@ -37,6 +38,9 @@ def remove_ansi_sequences(text):
     return ansi_escape.sub("", text)
 
 
+logname = os.getenv("LOGNAME")
+
+
 def test_sigint_in_interactive_mode():
     # Start an interactive shell
     minishell = pexpect.spawn("./minishell", encoding="utf-8")
@@ -57,7 +61,7 @@ def test_sigint_in_interactive_mode():
 
     assert minishell.before is not None
     assert minishell.before[: len("^C")] == "^C"
-    assert minishell.before[-len("\r\nkay") :] == "\r\nkay"
+    assert minishell.before[-len(f"\r\n{logname}") :] == f"\r\n{logname}"
 
     minishell.sendline("echo $?")
 
@@ -98,7 +102,7 @@ def test_eof_in_interactive_mode():
 
     assert minishell.before is not None
     output = remove_ansi_sequences(remove_cariage(minishell.before))
-    assert output == "cat\nkay"
+    assert output == f"cat\n{logname}"
 
     minishell.sendline("echo $?")
 
