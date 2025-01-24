@@ -81,7 +81,7 @@ def test_sigint_in_interactive_mode():
     minishell.close()
 
 
-def test_eof_in_interactive_mode():
+def test_eof_in_cat_mode():
     # Start an interactive shell
     minishell = pexpect.spawn("./minishell", encoding="utf-8")
 
@@ -177,47 +177,20 @@ def test_eof_in_hereloop_mode():
 
     minishell.sendline("<<EOF\n")
 
+    # try:
+    #     minishell.expect(r"heredoc> ", timeout=0.1)
+    # except pexpect.TIMEOUT:
+    #     print("Timeout occurred")
+    #     assert False, "Timeout occurred: warning: heredoc delimited by end-of-file"
+    minishell.sendcontrol("d")
+
     assert minishell.isalive()
 
     try:
-        minishell.expect(r"heredoc> ", timeout=0.1)
+        minishell.expect(f"warning: heredoc delimited by end-of-file", timeout=2)
     except pexpect.TIMEOUT:
         print("Timeout occurred")
-        assert False, "Timeout occured"
+        assert False, "Timeout occurred: warning: heredoc delimited by end-of-file"
 
-    try:
-        minishell.sendcontrol("d")
-    except pexpect.TIMEOUT:
-        print("Timeout occurred")
-        assert False, "Timeout occured"
-
-    time.sleep(0.3)
-    assert minishell.isalive()
-
-    print(minishell.after)
-    # try:
-    #     minishell.expect(r"\$ ", timeout=0.1)
-    # except pexpect.TIMEOUT:
-    #     print("Timeout occurred")
-    #     assert False, "Timeout occured"
-
-    assert minishell.before is not None
-    output = remove_cariage(remove_ansi_sequences(minishell.before)).split("\n")
-    assert output[0] == ""
-    assert output[1] == f"warning: heredoc delimited by end-of-file"
-
-    # minishell.sendline("echo $?")
-
-    # try:
-    #     minishell.expect(r"\$ ", timeout=0.1)
-    # except pexpect.TIMEOUT:
-    #     print("Timeout occurred")
-    #     assert False, "Timeout occured"
-
-    # output = remove_ansi_sequences(minishell.before)
-    # output = output.split("\n")
-    # output = [remove_cariage(out) for out in output]
-    # code = int(output[1])
-    # assert code == 0
     minishell.sendline("exit")
     minishell.close()

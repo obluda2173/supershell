@@ -30,9 +30,9 @@ void	handle_signals(int signum)
 {
 	(void)signum;
 	/* Replace the contents of rl_line_buffer with text. The point and mark are preserved,
-		if possible.
-		* If clear_undo is non-zero,
-			the undo list associated with the current line is cleared.  */
+	   if possible.
+	   * If clear_undo is non-zero,
+	   the undo list associated with the current line is cleared.  */
 	rl_replace_line("", 0);
 	ft_putendl_fd("", STDOUT_FILENO);
 	/*  Tell the update routines that we have moved onto a new (empty) line,

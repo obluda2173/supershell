@@ -88,7 +88,14 @@ char	*read_heredoc_input(char *delimiter, t_data *data)
 		if (cpid == 0) {
 			signal(SIGINT, handle_signals_heredoc);
 			close(pipefd[0]);
-			char* line = rl_gets("heredoc> ");
+
+			char* line= readline("heredoc> ");
+			if (line == NULL)
+			{
+				ft_putendl_fd("warning: heredoc delimited by end-of-file", STDOUT_FILENO);
+				close(pipefd[1]); /* Reader will see EOF */
+				exit(EXIT_SUCCESS);
+			}
 			write(pipefd[1], line, ft_strlen(line) + 1);
 			close(pipefd[1]); /* Reader will see EOF */
 			exit(EXIT_SUCCESS);
