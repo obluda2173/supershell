@@ -90,6 +90,28 @@ void	parse_and_execute(t_dllist *tokens, t_data *data)
 	free_script_node(script);
 }
 
+char	*read_line_from_child(int read_fd)
+{
+	char	*buf;
+	int		error;
+	char	*line;
+
+	line = NULL;
+	line = malloc(sizeof(char) * 100);
+	buf = line;
+	error = read(read_fd, buf++, 1);
+	if (error == 0)
+	{
+		free(line);
+		return (NULL);
+	}
+	while (read(read_fd, buf++, 1) > 0)
+	{
+	}
+	close(read_fd);
+	return (line);
+}
+
 bool	check_data(t_data *data)
 {
 	if (!data->line || !ft_strncmp(data->line, "exit", 4))
@@ -116,54 +138,39 @@ bool	check_data(t_data *data)
 	return (true);
 }
 
-char	*read_line_from_child(int read_fd)
+char	*minishell_input(t_data *data)
 {
-	char	*line;
-	char	*buf;
-	int		error;
+	int		pipefd[2];
+	pid_t	cpid;
 
-	line = NULL;
-	line = malloc(sizeof(char) * 100);
-	buf = line;
-	error = read(read_fd, buf++, 1);
-	if (error == 0)
+	if (pipe(pipefd) == -1)
 	{
-		free(line);
+		perror("pipe");
 		return (NULL);
 	}
-	while (read(read_fd, buf++, 1) > 0)
+	cpid = fork();
+	if (cpid == -1)
 	{
+		perror("fork");
+		return (NULL);
 	}
-	close(read_fd);
-	return (line);
+	if (cpid == 0)
+		child_input(pipefd, data);
+	close(pipefd[1]);
+	wait(NULL);
+	free(data->line);
+	data->line = NULL;
+	return (read_line_from_child(pipefd[0]));
 }
 
 int	repl(t_data *data)
 {
-		int pipefd[2];
-	pid_t		cpid;
 	t_dllist	*tokens;
 
 	signal(SIGINT, handle_signals_2); // Parent ignores SIGINT
 	while (!data->exit)
 	{
-		if (pipe(pipefd) == -1)
-		{
-			perror("pipe");
-			return (EXIT_FAILURE);
-		}
-		cpid = fork();
-		if (cpid == -1)
-		{
-			perror("fork");
-			return (EXIT_FAILURE);
-		}
-		if (cpid == 0)
-			child_input(pipefd, data);
-		close(pipefd[1]);
-		wait(NULL);
-		free(data->line);
-		data->line = read_line_from_child(pipefd[0]);
+		data->line = minishell_input(data);
 		if (!check_data(data))
 			continue ;
 		tokens = tokenize(data->line);
