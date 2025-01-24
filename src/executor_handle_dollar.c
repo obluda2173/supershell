@@ -34,6 +34,7 @@ char	*handle_dollar(const char *word, t_data *data)
 			if (!result)
 				return NULL;
 			i++;
+			return result;
 		}
 		else if (ft_isalnum(word[i]) || word[i] == '_')
 		{

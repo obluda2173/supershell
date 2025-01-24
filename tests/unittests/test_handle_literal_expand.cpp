@@ -25,6 +25,6 @@ INSTANTIATE_TEST_SUITE_P(
 		handleLiteralParams{"hello", "hello"},
 		handleLiteralParams{"hello2", "hello2"},
 		handleLiteralParams{"$PATH", "path_value"},
-		handleLiteralParams{"\"$PATH path $PATH $path\"", "path_value path path_value $path"}
+		handleLiteralParams{"VAR1=\"$PATH path $PATH $path\"", "VAR2=\"path_value path path_value $path\""}
 		)
 	);
