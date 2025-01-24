@@ -10,9 +10,22 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "minishell.h"
+#include <signal.h>
+#include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+#include <unistd.h>
+
+
+void	handle_signals_heredoc(int signum)
+{
+	(void)signum;
+	ft_putendl_fd("", STDOUT_FILENO);
+	exit(EXIT_FAILURE);
+}
+
 
 static t_dllist	*search_heredoc(t_dllist *tokens)
 {
@@ -48,7 +61,7 @@ t_dllist	*create_heredoc_token(t_dllist *heredoc_token, char *heredoc_input)
 	return (new_token_node);
 }
 
-char	*read_heredoc_input(char *delimiter)
+char	*read_heredoc_input(char *delimiter, t_data *data)
 {
 	char	*line;
 	char	*heredoc_input;
@@ -57,7 +70,39 @@ char	*read_heredoc_input(char *delimiter)
 	heredoc_input = ft_strdup("");
 	while (1)
 	{
-		line = readline("heredoc> ");
+
+		int		pipefd[2];
+		pid_t	cpid;
+
+		if (pipe(pipefd) == -1)
+		{
+			perror("pipe");
+			return (NULL);
+		}
+		cpid = fork();
+		if (cpid == -1)
+		{
+			perror("fork");
+			return (NULL);
+		}
+		if (cpid == 0) {
+			signal(SIGINT, handle_signals_heredoc);
+			close(pipefd[0]);
+			char* line = rl_gets("heredoc> ");
+			write(pipefd[1], line, ft_strlen(line) + 1);
+			close(pipefd[1]); /* Reader will see EOF */
+			exit(EXIT_SUCCESS);
+		}
+		close(pipefd[1]);
+		wait(NULL);
+		if (signal_received == 1)
+		{
+			data->exit_status = 130;
+			signal_received = 0;
+			free(heredoc_input);
+			return NULL;
+		}
+		line = read_line_from_child(pipefd[0]);
 		if (!line || ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
@@ -104,7 +149,7 @@ char	*extract_delimiter(t_dllist **heredoc_token)
 	return (delimiter);
 }
 
-int	heredoc_loop(t_dllist **tokens)
+int	heredoc_loop(t_dllist **tokens, t_data *data)
 {
 	char		*delimiter;
 	char		*heredoc_input;
@@ -117,7 +162,7 @@ int	heredoc_loop(t_dllist **tokens)
 	delimiter = extract_delimiter(&heredoc_token);
 	if (!delimiter)
 		return (0);
-	heredoc_input = read_heredoc_input(delimiter);
+	heredoc_input = read_heredoc_input(delimiter, data);
 	free(delimiter);
 	if (!heredoc_input)
 		return (0);

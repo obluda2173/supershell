@@ -11,6 +11,13 @@
 # include "lexer.h"
 
 /* ************************************************************************** */
+/* global variables                                                               * */
+/* ************************************************************************** */
+
+#include <signal.h>
+extern volatile sig_atomic_t	signal_received;
+
+/* ************************************************************************** */
 /* structures                                                               * */
 /* ************************************************************************** */
 
@@ -38,5 +45,9 @@ void	free_data(t_data *data);
 t_data	*init(char **ep);
 char	*meeting_line(t_data **data);
 char * rl_gets(const char* prompt);
+void	handle_signals(int signum);
+char	*read_line_from_child(int read_fd);
 
+// heredoc.c
+int			heredoc_loop(t_dllist **tokens, t_data *data);
 #endif

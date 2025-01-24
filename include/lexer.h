@@ -67,9 +67,6 @@ char		*handle_heredoc(char *input, size_t *i, char *result, size_t *j);
 char		*handle_quotes(const char *input, size_t *i, char *result, size_t *j);
 char		*handle_operators(const char *input, size_t *i, char *result, size_t *j);
 
-// heredoc.c
-int			heredoc_loop(t_dllist **tokens);
-
 // syntax_check_1.c
 int		count_consequitives(char *str, char c);
 bool	check_syntax(char *str);

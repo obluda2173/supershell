@@ -170,13 +170,17 @@ int	repl(t_data *data)
 	signal(SIGINT, handle_signals_2); // Parent ignores SIGINT
 	while (!data->exit)
 	{
+		/* char* prompt = meeting_line(&data); */
+		/* data->line = minishell_input(data, prompt); */
 		data->line = minishell_input(data);
+		/* free(prompt); */
+		/* prompt = NULL; */
 		if (!check_data(data))
 			continue ;
 		tokens = tokenize(data->line);
-		if (!heredoc_loop(&tokens))
+		if (!heredoc_loop(&tokens, data))
 		{
-			printf("Error: Heredoc processing failed.\n");
+			/* printf("Error: Heredoc processing failed.\n"); */
 			ft_dllstclear(&tokens, free_token);
 			continue ;
 		}

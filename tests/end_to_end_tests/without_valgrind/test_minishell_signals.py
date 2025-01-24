@@ -147,26 +147,22 @@ def test_sigint_in_hereloop_mode():
         assert False, "Timeout occured"
 
     assert minishell.before is not None
-    assert minishell.before[: len("^C")] == "^C"
-    assert minishell.before[-len(f"\r\n{logname}") :] == f"\r\n{logname}"
+    output = remove_cariage(remove_ansi_sequences(minishell.before)).split("\n")
+    assert output[1] == "^C"
+    assert output[2] == f"{logname}"
 
-    assert minishell.before is not None
-    assert minishell.before[: len("^C")] == "^C"
-    assert minishell.before[-len(f"\r\n{logname}") :] == f"\r\n{logname}"
+    minishell.sendline("echo $?")
 
+    try:
+        minishell.expect(r"\$ ", timeout=0.1)
+    except pexpect.TIMEOUT:
+        print("Timeout occurred")
+        assert False, "Timeout occured"
+
+    output = remove_ansi_sequences(minishell.before)
+    output = output.split("\n")
+    output = [remove_cariage(out) for out in output]
+    code = int(output[1])
+    assert code == 130
     minishell.sendline("exit")
     minishell.close()
-
-    # minishell.sendline("echo $?")
-
-    # try:
-    #     minishell.expect(r"\$ ", timeout=0.1)
-    # except pexpect.TIMEOUT:
-    #     print("Timeout occurred")
-    #     assert False, "Timeout occured"
-
-    # output = remove_ansi_sequences(minishell.before)
-    # output = output.split("\n")
-    # output = [remove_cariage(out) for out in output]
-    # code = int(output[1])
-    # assert code == 130
