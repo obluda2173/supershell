@@ -30,6 +30,7 @@ from conftest import (
         (["which echo"]),
         (["which echo echo"]),
         (["which echo < tests/end_to_end_tests/test_files/input1.txt"]),
+        (['echo "$LOGNAME path $LOGNAME"']),
     ],
 )
 def test_minishell(cmd):
