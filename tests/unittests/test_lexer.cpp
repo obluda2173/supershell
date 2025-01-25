@@ -134,25 +134,25 @@ INSTANTIATE_TEST_SUITE_P(
 									   }},
 					TestTokenizeParams{
 						"echo \"this is a double quoted string\"",
-            {
-                new_token("echo", BUILTIN),
-                new_token("this is a double quoted string", DOUBLE_QUOTE),
-                new_token(NULL, END_OF_FILE),
-            }},
-        TestTokenizeParams{"echo \"string1 $PATH string2\"",
-                           {
-                               new_token("echo", BUILTIN),
-                               new_token("string1 $PATH string2", DOUBLE_QUOTE),
-                               new_token(NULL, END_OF_FILE),
-                           }},
-        TestTokenizeParams{"echo \'string1 $PATH string2\'",
-                           {
-                               new_token("echo", BUILTIN),
-                               new_token("string1 $PATH string2", SINGLE_QUOTE),
-                               new_token(NULL, END_OF_FILE),
-                           }},
-        TestTokenizeParams{
-            "echo \"string with 'nested single quotes' inside\"",
+						{
+							new_token("echo", BUILTIN),
+							new_token("this is a double quoted string", DOUBLE_QUOTE),
+							new_token(NULL, END_OF_FILE),
+						}},
+					TestTokenizeParams{"echo \"string1 $PATH string2\"",
+									   {
+										   new_token("echo", BUILTIN),
+										   new_token("string1 $PATH string2", DOUBLE_QUOTE),
+										   new_token(NULL, END_OF_FILE),
+									   }},
+					TestTokenizeParams{"echo \'string1 $PATH string2\'",
+									   {
+										   new_token("echo", BUILTIN),
+										   new_token("string1 $PATH string2", SINGLE_QUOTE),
+										   new_token(NULL, END_OF_FILE),
+									   }},
+					TestTokenizeParams{
+						"echo \"string with 'nested single quotes' inside\"",
             {
                 new_token("echo", BUILTIN),
                 new_token("string with 'nested single quotes' inside",
@@ -513,14 +513,11 @@ INSTANTIATE_TEST_SUITE_P(
 							new_token(NULL, END_OF_FILE),
 						}},
 					// TestTokenizeParams{
-					// 	"echo $LOGNAME*\"some string\"\'another string\'", {
-					// 		new_token("echo", BUILTIN),
-					// 		new_token("$LOGNAME*\"some string\"\'another string\'", WILDCARD),
-					// 		new_token("*", WILDCARD),
-					// 		new_token("some string", DOUBLE_QUOTE),
-					// 		new_token("another string", SINGLE_QUOTE),
-					// 		new_token(NULL, END_OF_FILE),
-					// 	}},
+						// "echo $LOGNAME*\"some string\"\'another string\'", {
+						// 	new_token("echo", BUILTIN),
+						// 	new_token("$LOGNAME*\"some string\"\'another string\'", WILDCARD),
+						// 	new_token(NULL, END_OF_FILE),
+						// }},
 	// 	the following tests work just fine and should stay
 					TestTokenizeParams{
 						"echo *src", {
@@ -543,13 +540,13 @@ INSTANTIATE_TEST_SUITE_P(
 					// TestTokenizeParams{
 					// 	"export asdf$PATH", {
 					// 		new_token("export", BUILTIN),
-					// 		new_token("asdf$PATH", DOLLAR),
+					// 		new_token("asdf$PATH", WORD),
 					// 		new_token(NULL, END_OF_FILE),
 					// 	}},
 					// TestTokenizeParams{
 					// 	"export VAR1=\"$PATH\"", {
 					// 		new_token("echo", BUILTIN),
-					// 		new_token("VAR1=$PATH", DOUBLE_QUOTE),
+					// 		new_token("VAR1=$PATH", WORD),
 					// 		new_token(NULL, END_OF_FILE),
 					// 			}},
 					// TestTokenizeParams{
@@ -562,11 +559,10 @@ INSTANTIATE_TEST_SUITE_P(
 					// 	"export VAR1=\"var1\" VAR2=\"var2\" VAR3= VAR4", {
 					// 		new_token("export", BUILTIN),
 					// 		new_token("VAR1=\"var1\"", WORD),
-					// 		new_token("", EQUAL_SIGN)
-					// 		// new_token("EOF", SINGLE_QUOTE),
-					// 		// new_token(">", REDIRECT_OUT),
-					// 		// new_token("file.txt", WORD),
-					// 		// new_token(NULL, END_OF_FILE),
+					// 		new_token("VAR2=\"var2\"", WORD),
+					// 		new_token("VAR3=", WORD),
+					// 		new_token("VAR4", WORD),
+					// 		new_token(NULL, END_OF_FILE),
 					// 	}}
 		)
 	);
