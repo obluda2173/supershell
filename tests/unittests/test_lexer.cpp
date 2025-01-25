@@ -504,7 +504,7 @@ INSTANTIATE_TEST_SUITE_P(
 					//      new_token(NULL, END_OF_FILE),
 					//  }},
 					TestTokenizeParams{
-						"echo $LOGNAME*\"some string\"\'another string\'", {
+						"echo $LOGNAME*\"some string\"'another string\'", {
 							new_token("echo", BUILTIN),
 							new_token("LOGNAME", DOLLAR),
 							new_token("*", WILDCARD),

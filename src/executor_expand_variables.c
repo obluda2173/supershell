@@ -4,7 +4,7 @@
 #include <unistd.h>
 
 
-char *handle_literal(char *word, t_data *data) {
+char *expand_variables(char *word, t_data *data) {
 	if (*word == '$')
 		return handle_dollar(word+1, data);
 	char* head = word;

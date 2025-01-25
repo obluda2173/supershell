@@ -67,5 +67,5 @@ bool	hidden_n_star(char *entry, char *pattern);
 void	expand_env(t_list *arguments, t_data *data);
 int	expand_arguments(t_cmd_node *cmd_node, t_data *data);
 int	expand_redirections(t_cmd_node *cmd_node, t_data *data);
-char *handle_literal(char *word, t_data *data);
+char *expand_variables(char *word, t_data *data);
 #endif // EXECUTOR_
