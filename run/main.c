@@ -155,6 +155,7 @@ int	repl(t_data *data)
 			data->line = NULL;
 			continue ;
 		}
+		add_history(data->line);
 		tokens = tokenize(data->line);
 		free(data->line);
 		data->line = NULL;
