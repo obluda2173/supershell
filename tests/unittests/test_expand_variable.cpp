@@ -30,6 +30,8 @@ INSTANTIATE_TEST_SUITE_P(
 		expandVariableParams{"hello", "hello"},
 		expandVariableParams{"hello2", "hello2"},
 		expandVariableParams{"$PATH", "path_value"},
-		expandVariableParams{"\"$PATH path $PATH $path\"", "path_value path path_value "}
+		expandVariableParams{"\"$PATH path $PATH $path\"", "path_value path path_value "},
+		expandVariableParams{"\"$PATH path $PATH $path\"", "path_value path path_value "},
+		// expandVariableParams{"VAR1=\"$PATH path $PATH $path\"", "VAR1=path_value path path_value "}
 		)
 	);
