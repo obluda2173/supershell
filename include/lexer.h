@@ -19,22 +19,23 @@
 
 extern const char	*token_strings[];
 
-typedef enum e_token_type
-{
-	BUILTIN,			// 0
-	WORD,				// 1
-	REDIRECT_IN,		// 2
-	REDIRECT_OUT,		// 3
-	PIPE,				// 4
-	HERE_DOC,			// 5
-	REDIRECT_APPEND,	// 6
-	END_OF_FILE,		// 7
-	AND,				// 8
-	OR,					// 9
-	WILDCARD,			// 10
-	LPAREN,				// 11
-	RPAREN,				// 12
-	INVALID,			// 13
+typedef enum e_token_type {
+	BUILTIN,         // 0
+	WORD,            // 1
+	REDIRECT_IN,     // 2
+	REDIRECT_OUT,    // 3
+	PIPE,            // 4
+	HERE_DOC,        // 5
+	REDIRECT_APPEND, // 6
+	END_OF_FILE,     // 7
+	AND,             // 8
+	OR,              // 9
+	WILDCARD,        // 10
+	LPAREN,          // 11
+	RPAREN,          // 12
+	INVALID,         // 13
+	SINGLE_QUOTE_HERE_DOC,
+	DOUBLE_QUOTE_HERE_DOC,
 	NONE				/* added by Kay to have a null-value for t_token_type*/
 }	t_token_type;
 

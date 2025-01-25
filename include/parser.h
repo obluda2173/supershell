@@ -29,6 +29,7 @@ typedef enum e_word_type
 {
 	LITERAL,
 	DOUBLE_QUOTE_STR,
+	SINGLE_QUOTE_STR,
 	ENV_EXP,
 	WILDCARD_EXP,
 	EXIT_STATUS_EXP

@@ -100,13 +100,13 @@ INSTANTIATE_TEST_SUITE_P(
 					TestTokenizeParams{"echo  $PATH",
 									   {
 										   new_token("echo", BUILTIN),
-										   new_token("PATH", DOLLAR),
+										   new_token("$PATH", WORD),
 										   new_token(NULL, END_OF_FILE),
 									   }},
 					TestTokenizeParams{"echo $?",
 									   {
 										   new_token("echo", BUILTIN),
-										   new_token("?", DOLLAR),
+										   new_token("$?", WORD),
 										   new_token(NULL, END_OF_FILE),
 									   }},
 					TestTokenizeParams{"echo dir1/dir2/*.c",
@@ -118,8 +118,7 @@ INSTANTIATE_TEST_SUITE_P(
 					TestTokenizeParams{"echo *$PATH",
 									   {
 										   new_token("echo", BUILTIN),
-										   new_token("*", WILDCARD),
-										   new_token("PATH", DOLLAR),
+										   new_token("*$PATH", WILDCARD),
 										   new_token(NULL, END_OF_FILE),
 									   }},
 					TestTokenizeParams{

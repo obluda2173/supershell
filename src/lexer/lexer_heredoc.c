@@ -51,7 +51,10 @@ t_dllist	*create_heredoc_token(t_dllist *heredoc_token, char *heredoc_input)
 	t_dllist	*new_token_node;
 
 	token = (t_token *)heredoc_token->content;
-	new_token_node = ft_dllstnew(create_token(heredoc_input, WORD));
+	if (ft_strchr(token->content, '\''))
+		new_token_node = ft_dllstnew(create_token(heredoc_input, SINGLE_QUOTE_HERE_DOC));
+	else
+		new_token_node = ft_dllstnew(create_token(heredoc_input, DOUBLE_QUOTE_HERE_DOC));
 	if (!new_token_node)
 	{
 		printf("Error: Memory allocation failed 2.\n");
