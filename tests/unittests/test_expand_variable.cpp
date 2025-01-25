@@ -8,8 +8,12 @@ struct expandVariableParams {
 class expandVariableTests : public::testing::TestWithParam<expandVariableParams>{};
 
 t_list *get_ep() {
+	t_list *ep = NULL;
 	t_env_var *env_var = new_env_var((char*)"PATH", (char*)"path_value");
-	return ft_lstnew(env_var);
+	ft_lstadd_back(&ep, ft_lstnew(env_var));
+	env_var = new_env_var((char*)"LOGNAME", (char*)"logname");
+	ft_lstadd_back(&ep, ft_lstnew(env_var));
+	return ep;
 }
 
 TEST_P(expandVariableTests, firstTest) {
@@ -31,7 +35,7 @@ INSTANTIATE_TEST_SUITE_P(
 		expandVariableParams{"hello2", "hello2"},
 		expandVariableParams{"$PATH", "path_value"},
 		expandVariableParams{"\"$PATH path $PATH $path\"", "path_value path path_value "},
-		expandVariableParams{"\"$PATH path $PATH $path\"", "path_value path path_value "},
+		expandVariableParams{"\"$PATH path $PATH$LOGNAME $path\"", "path_value path path_valuelogname "}
 		// expandVariableParams{"VAR1=\"$PATH path $PATH $path\"", "VAR1=path_value path path_value "}
 		)
 	);
