@@ -32,16 +32,6 @@ INSTANTIATE_TEST_SUITE_P(
 	LexerTests, TestTokenizer,
 	testing::Values(TestTokenizeParams{"", {{NULL, END_OF_FILE}}},
 					// TestTokenizeParams{
-					// 	"'", {
-					// 		new_token("'", SINGLE_QUOTE),
-					// 		new_token(NULL, END_OF_FILE),
-					// 	}},
-					// TestTokenizeParams{
-					// 	"\"", {
-					// 		new_token("\"", DOUBLE_QUOTE),
-					// 		new_token(NULL, END_OF_FILE),
-					// 	}},
-					// TestTokenizeParams{
 					// 	"cat CMake\tLists.txt", {
 					// 		new_token("cat", WORD),
 					// 		new_token("CMakeLists.txt", WORD),
@@ -133,115 +123,109 @@ INSTANTIATE_TEST_SUITE_P(
 										   new_token(NULL, END_OF_FILE),
 									   }},
 					TestTokenizeParams{
-						"echo \"this is a double quoted string\"",
-						{
-							new_token("echo", BUILTIN),
-							new_token("this is a double quoted string", DOUBLE_QUOTE),
-							new_token(NULL, END_OF_FILE),
-						}},
+									"echo \"this is a double quoted string\"",
+									{
+										new_token("echo", BUILTIN),
+										new_token("\"this is a double quoted string\"", WORD),
+										new_token(NULL, END_OF_FILE),
+									}},
 					TestTokenizeParams{"echo \"string1 $PATH string2\"",
 									   {
 										   new_token("echo", BUILTIN),
-										   new_token("string1 $PATH string2", DOUBLE_QUOTE),
+										   new_token("\"string1 $PATH string2\"", WORD),
 										   new_token(NULL, END_OF_FILE),
 									   }},
 					TestTokenizeParams{"echo \'string1 $PATH string2\'",
 									   {
 										   new_token("echo", BUILTIN),
-										   new_token("string1 $PATH string2", SINGLE_QUOTE),
+										   new_token("\'string1 $PATH string2\'", WORD),
 										   new_token(NULL, END_OF_FILE),
 									   }},
 					TestTokenizeParams{
-						"echo \"string with 'nested single quotes' inside\"",
-            {
-                new_token("echo", BUILTIN),
-                new_token("string with 'nested single quotes' inside",
-                          DOUBLE_QUOTE),
-                new_token(NULL, END_OF_FILE),
-            }},
-        TestTokenizeParams{
-            "echo 'string with \"nested double quotes\" inside'",
-            {
-                new_token("echo", BUILTIN),
-                new_token("string with \"nested double quotes\" inside",
-                          SINGLE_QUOTE),
-                new_token(NULL, END_OF_FILE),
-            }},
-        TestTokenizeParams{"cat file.txt | grep 'pattern' >> output.txt",
-                           {
-                               new_token("cat", WORD),
-                               new_token("file.txt", WORD),
-                               new_token("|", PIPE),
-                               new_token("grep", WORD),
-                               new_token("pattern", SINGLE_QUOTE),
-                               new_token(">>", REDIRECT_APPEND),
-                               new_token("output.txt", WORD),
-                               new_token(NULL, END_OF_FILE),
-                           }},
-        TestTokenizeParams{"export VAR=value",
-                           {
-                               new_token("export", BUILTIN),
-                               new_token("VAR", WORD),
-                               new_token("=", EQUAL_SIGN),
-                               new_token("value", WORD),
-                               new_token(NULL, END_OF_FILE),
-                           }},
-        TestTokenizeParams{"export VAR=\"value with spaces\"",
-                           {
-                               new_token("export", BUILTIN),
-                               new_token("VAR", WORD),
-                               new_token("=", EQUAL_SIGN),
-                               new_token("value with spaces", DOUBLE_QUOTE),
-                               new_token(NULL, END_OF_FILE),
-                           }},
-        TestTokenizeParams{"unset VAR",
-                           {
-                               new_token("unset", BUILTIN),
-                               new_token("VAR", WORD),
-                               new_token(NULL, END_OF_FILE),
-                           }},
-        TestTokenizeParams{"ls | wc &",
-                           {
-                               new_token("ls", WORD),
-                               new_token("|", PIPE),
-                               new_token("wc", WORD),
-                               new_token("&", WORD),
-                               new_token(NULL, END_OF_FILE),
-                           }},
-        TestTokenizeParams{"cat < input.txt > output.txt",
-                           {
-                               new_token("cat", WORD),
-                               new_token("<", REDIRECT_IN),
-                               new_token("input.txt", WORD),
-                               new_token(">", REDIRECT_OUT),
-                               new_token("output.txt", WORD),
-                               new_token(NULL, END_OF_FILE),
-                           }},
-        TestTokenizeParams{"echo -e \"line1\nline2\"",
-                           {
-                               new_token("echo", BUILTIN),
-                               new_token("-e", WORD),
-                               new_token("line1\nline2", DOUBLE_QUOTE),
-                               new_token(NULL, END_OF_FILE),
-                           }},
-        TestTokenizeParams{"ls -l ",
-                           {
-                               new_token("ls", WORD),
-                               new_token("-l", WORD),
-                               new_token(NULL, END_OF_FILE),
-                           }},
-        TestTokenizeParams{" ls -l ",
-                           {
-                               new_token("ls", WORD),
-                               new_token("-l", WORD),
-                               new_token(NULL, END_OF_FILE),
-                           }},
-        TestTokenizeParams{"  ls -l ",
-                           {
-                               new_token("ls", WORD),
-                               new_token("-l", WORD),
-                               new_token(NULL, END_OF_FILE),
-                           }},
+										"echo \"string with \'nested single quotes\' inside\"",
+										{
+											new_token("echo", BUILTIN),
+											new_token("\"string with \'nested single quotes\' inside\"", WORD),
+											new_token(NULL, END_OF_FILE),
+										}},
+									TestTokenizeParams{
+										"echo 'string with \"nested double quotes\" inside'",
+										{
+											new_token("echo", BUILTIN),
+											new_token("\'string with \"nested double quotes\" inside\'", WORD),
+											new_token(NULL, END_OF_FILE),
+										}},
+					TestTokenizeParams{"cat file.txt | grep 'pattern' >> output.txt",
+										{
+											new_token("cat", WORD),
+											new_token("file.txt", WORD),
+											new_token("|", PIPE),
+											new_token("grep", WORD),
+											new_token("\'pattern\'", WORD),
+											new_token(">>", REDIRECT_APPEND),
+											new_token("output.txt", WORD),
+											new_token(NULL, END_OF_FILE),
+										}},
+					TestTokenizeParams{"export VAR=value",
+										{
+											new_token("export", BUILTIN),
+											new_token("VAR=value", WORD),
+											new_token(NULL, END_OF_FILE),
+										}},
+					TestTokenizeParams{"export VAR=\"value with spaces\"",
+										{
+											new_token("export", BUILTIN),
+											new_token("VAR=\"value with spaces\"", WORD),
+											new_token(NULL, END_OF_FILE),
+										}},
+					TestTokenizeParams{"unset VAR",
+										{
+											new_token("unset", BUILTIN),
+											new_token("VAR", WORD),
+											new_token(NULL, END_OF_FILE),
+										}},
+					TestTokenizeParams{"ls | wc &",
+										{
+											new_token("ls", WORD),
+											new_token("|", PIPE),
+											new_token("wc", WORD),
+											new_token("&", WORD),
+											new_token(NULL, END_OF_FILE),
+										}},
+					TestTokenizeParams{"cat < input.txt > output.txt",
+										{
+											new_token("cat", WORD),
+											new_token("<", REDIRECT_IN),
+											new_token("input.txt", WORD),
+											new_token(">", REDIRECT_OUT),
+											new_token("output.txt", WORD),
+											new_token(NULL, END_OF_FILE),
+										}},
+					TestTokenizeParams{"echo -e \"line1\nline2\"",
+										{
+											new_token("echo", BUILTIN),
+											new_token("-e", WORD),
+											new_token("\"line1\nline2\"", WORD),
+											new_token(NULL, END_OF_FILE),
+										}},
+					TestTokenizeParams{"ls -l ",
+										{
+											new_token("ls", WORD),
+											new_token("-l", WORD),
+											new_token(NULL, END_OF_FILE),
+										}},
+					TestTokenizeParams{" ls -l ",
+										{
+											new_token("ls", WORD),
+											new_token("-l", WORD),
+											new_token(NULL, END_OF_FILE),
+										}},
+					TestTokenizeParams{"  ls -l ",
+										{
+											new_token("ls", WORD),
+											new_token("-l", WORD),
+											new_token(NULL, END_OF_FILE),
+										}},
 					TestTokenizeParams{"  ls -l  ",
 									   {
 										   new_token("ls", WORD),
@@ -305,7 +289,7 @@ INSTANTIATE_TEST_SUITE_P(
 					TestTokenizeParams{"   echo \"hello world\" ",
 									   {
 										   new_token("echo", BUILTIN),
-										   new_token("hello world", DOUBLE_QUOTE),
+										   new_token("\"hello world\"", WORD),
 										   new_token(NULL, END_OF_FILE),
 									   }},
 					TestTokenizeParams{"  cat -n file1.txt ",
@@ -412,7 +396,7 @@ INSTANTIATE_TEST_SUITE_P(
 								new_token(")", RPAREN),
 								new_token(NULL, END_OF_FILE),
 								}},
-					TestTokenizeParams{"(ls -l) || (echo 'Error')",
+					TestTokenizeParams{"(ls -l) || (echo \'Error\')",
 						{
 							new_token("(", LPAREN),
 								new_token("ls", WORD),
@@ -421,7 +405,7 @@ INSTANTIATE_TEST_SUITE_P(
 								new_token("||", OR),
 								new_token("(", LPAREN),
 								new_token("echo", BUILTIN),
-								new_token("Error", SINGLE_QUOTE),
+								new_token("\'Error\'", WORD),
 								new_token(")", RPAREN),
 								new_token(NULL, END_OF_FILE),
 								}},
@@ -464,7 +448,7 @@ INSTANTIATE_TEST_SUITE_P(
 						{
 							new_token("echo", BUILTIN),
 								new_token("<<", HERE_DOC),
-								new_token("EOF", SINGLE_QUOTE),
+								new_token("\'EOF\'", WORD),
 								new_token(">", REDIRECT_OUT),
 								new_token("file.txt", WORD),
 								new_token(NULL, END_OF_FILE),
@@ -480,44 +464,21 @@ INSTANTIATE_TEST_SUITE_P(
 					TestTokenizeParams{"echo any\"something\"",
 						{
 							new_token("echo", BUILTIN),
-								new_token("any", WORD),
-								new_token("something", DOUBLE_QUOTE),
+								new_token("any\"something\"", WORD),
 								new_token(NULL, END_OF_FILE),
 								}},
-					// TestTokenizeParams{"echo any\"something\"",
-					// 	{
-					// 		new_token("echo", BUILTIN),
-					// 			new_token("any\"something\"", WORD),
-					// 			new_token(NULL, END_OF_FILE),
-					// 			}},
 					TestTokenizeParams{
 						"echo *$VAR", {
 							new_token("echo", BUILTIN),
-							new_token("*", WILDCARD),
-							new_token("VAR", DOLLAR),
+							new_token("*$VAR", WILDCARD),
 							new_token(NULL, END_OF_FILE),
 						}},
-					// TestTokenizeParams{
-					// 	"echo *$VAR", {
-					// 		new_token("echo", BUILTIN),
-					// 		new_token("*$VAR", WILDCARD),
-					// 		new_token(NULL, END_OF_FILE),
-					// 	}},
 					TestTokenizeParams{
 						"echo $LOGNAME*\"some string\"\'another string\'", {
 							new_token("echo", BUILTIN),
-							new_token("LOGNAME", DOLLAR),
-							new_token("*", WILDCARD),
-							new_token("some string", DOUBLE_QUOTE),
-							new_token("another string", SINGLE_QUOTE),
+							new_token("$LOGNAME*\"some string\"\'another string\'", WILDCARD),
 							new_token(NULL, END_OF_FILE),
 						}},
-					// TestTokenizeParams{
-						// "echo $LOGNAME*\"some string\"\'another string\'", {
-						// 	new_token("echo", BUILTIN),
-						// 	new_token("$LOGNAME*\"some string\"\'another string\'", WILDCARD),
-						// 	new_token(NULL, END_OF_FILE),
-						// }},
 	// 	the following tests work just fine and should stay
 					TestTokenizeParams{
 						"echo *src", {
