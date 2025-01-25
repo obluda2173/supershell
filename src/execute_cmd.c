@@ -22,24 +22,15 @@ int	error_fork(void)
 	return (EXIT_FAILURE);
 }
 
-static int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2])
-{
-	pid_t	pid;
-	char	**env_matrix;
-	int		status;
-	int		count;
+char **ep_to_matrix(int fds[2], t_list* ep) {
+	int count;
+		char** env_matrix = (char **)malloc(sizeof(char *) * (ft_lstsize(ep) + 1));
 
-	pid = fork();
-	if (pid < 0)
-		return (error_fork());
-	if (pid == 0)
-	{
-		env_matrix = (char **)malloc(sizeof(char *) * (ft_lstsize(ep) + 1));
 		if (!env_matrix)
 		{
 			close_fds(fds);
 			ft_putendl_fd("Allocation error", STDERR_FILENO);
-			exit(EXIT_FAILURE);
+			return NULL;
 		}
 		count = 0;
 		while (ep)
@@ -59,6 +50,23 @@ static int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2])
 			count++;
 		}
 		env_matrix[count] = NULL;
+		return env_matrix;
+}
+
+static int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2])
+{
+	pid_t	pid;
+	char	**env_matrix;
+	int		status;
+
+	pid = fork();
+	if (pid < 0)
+		return (error_fork());
+	if (pid == 0)
+	{
+		env_matrix = ep_to_matrix(fds, ep);
+		if (!env_matrix)
+			exit(EXIT_FAILURE);
 		dup2(fds[0], STDIN_FILENO);
 		dup2(fds[1], STDOUT_FILENO);
 		if (execve(cmd_path, args, env_matrix) == -1)
@@ -78,7 +86,7 @@ static int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2])
 	}
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
-	fprintf(stderr, "Child process did not terminate normally\n");
+	ft_putendl_fd("", STDOUT_FILENO);
 	return (EXIT_FAILURE);
 }
 

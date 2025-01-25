@@ -74,6 +74,7 @@ char	*read_line_from_child(int read_fd)
 	while (read(read_fd, buf++, 1) > 0)
 	{
 	}
+	buf = NULL;
 	close(read_fd);
 	return (line);
 }

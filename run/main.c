@@ -25,6 +25,7 @@ void	handle_signals_2(int signum)
 	(void)signum;
 	signal_received = 1;
 }
+
 void	handle_signals(int signum)
 {
 	(void)signum;
@@ -149,9 +150,14 @@ int	repl(t_data *data)
 	while (!data->exit)
 	{
 		data->line = minishell_input(data);
-		if (!check_data(data))
+		if (!check_data(data)) {
+			free(data->line);
+			data->line = NULL;
 			continue ;
+		}
 		tokens = tokenize(data->line);
+		free(data->line);
+		data->line = NULL;
 		if (heredoc_loop(&tokens, data))
 		{
 			/* printf("Error: Heredoc processing failed.\n"); */
@@ -159,8 +165,6 @@ int	repl(t_data *data)
 			continue ;
 		}
 		parse_and_execute(tokens, data);
-		free(data->line);
-		data->line = NULL;
 	}
 	return (EXIT_SUCCESS);
 }

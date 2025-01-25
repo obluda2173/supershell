@@ -100,6 +100,7 @@ char	*read_heredoc_input(char *delimiter, t_data *data)
 			}
 			write(pipefd[1], line, ft_strlen(line) + 1);
 			close(pipefd[1]); /* Reader will see EOF */
+			free(line);
 			exit(EXIT_SUCCESS);
 		}
 		close(pipefd[1]);
@@ -192,5 +193,4 @@ int	heredoc_loop(t_dllist **tokens, t_data *data)
 	heredoc_token->prev->next = new_token_node;
 	ft_dllstdelone(heredoc_token, free_token);
 	return heredoc_loop(&(new_token_node->next), data);
-	/* return EXIT_SUCCESS; */
 }
