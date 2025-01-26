@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 13:46:03 by erian             #+#    #+#             */
-/*   Updated: 2025/01/26 14:42:02 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/26 15:24:09 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,11 @@ static bool	valid_key(char *key)
 	int	i;
 
 	i = 1;
-	if (key[0] != '$')
-		return (false);
 	if (!ft_isalpha(key[i]) && key[i] != '_')
 		return (false);
 	while (key[++i])
-	{
 		if (!ft_isalnum(key[i]) && key[i] != '_')
-		{
-			printf("here fails 3\n");
 			return (false);
-		}
-	}
 	return (true);
 }
 
@@ -54,7 +47,7 @@ static char	*sanitize_key(char *key)
 {
 	char	*sanitized_key;
 
-	sanitized_key = ft_strdup(key + 1);
+	sanitized_key = ft_strdup(key);
 	free(key);
 	return (sanitized_key);
 }
@@ -62,7 +55,7 @@ static char	*sanitize_key(char *key)
 static char	*sanitize_value(char *value)
 {
 	char	*trimmed_value;
-	if (value[0] == '"' && ft_strlen(value) > 0)
+	if (value[0] == '\"' && ft_strlen(value) > 0)
 	{
 		trimmed_value = ft_strtrim(value, "\"");
 		free(value);

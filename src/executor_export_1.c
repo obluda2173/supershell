@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 09:37:32 by erian             #+#    #+#             */
-/*   Updated: 2025/01/26 15:02:04 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/26 15:31:18 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,9 @@ static bool	add_var(t_list **ep, t_list *arg_lst)
 	while (arg_i)
 	{
 		current_arg = (t_argument *)arg_i->content;
-
 		new_var = malloc(sizeof(t_env_var));
 		if (!new_var)
 			return (false);
-
 		if (!assign_var(&new_var, current_arg->word))
 		{
 			free(new_var);
@@ -111,7 +109,11 @@ static void	print_export(t_list **ep)
 	while (tmp_ep)
 	{
 		env_var = (t_env_var *)tmp_ep->content;
-
+		if (env_var->key[0] == '_')
+		{
+			tmp_ep = tmp_ep->next;
+			continue ;
+		}
 		if (env_var->value)
 			printf("declare -x %s=\"%s\"\n", env_var->key, env_var->value);
 		else
