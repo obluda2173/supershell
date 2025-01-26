@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:07:34 by erian             #+#    #+#             */
-/*   Updated: 2025/01/25 15:29:19 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/26 09:29:48 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ t_dllist	*tokenize(char *line)
 	t_dllist	*tokens;
 
 	line = format_input(line);
-	printf("\nformated line: %s\n\n", line);															//debuging
 	if (!line)
 		return (NULL);
 	tokens = tokenize_line(line);

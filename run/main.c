@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:59:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/25 15:46:56 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/26 09:30:33 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,50 +18,6 @@
 #include <readline/readline.h>
 #include <stdio.h>
 #include <unistd.h>
-
-const char *token_strings[] = {
-	"BUILTIN",
-	"WORD",
-	"<",
-	">",
-	"|",
-	"<<",
-	">>",
-	"END",
-	"&&",
-	"||",
-	"*",
-	"(",
-	")",
-	"INV",
-	"NONE"
-};
-
-void    print_tokens(t_dllist *head)
-{
-	t_dllist *current;
-	t_token *token;
-
-	if (!head)
-	{
-		printf("The token list is empty.\n");
-		return;
-	}
-	current = head;
-	printf("Tokens in the doubly linked list:\n");
-	while (current && current->content)
-	{
-		if (!current->content)
-		{
-			printf("Corrupted token node detected.\n");
-			break;
-		}
-		token = (t_token *)current->content;
-		if (token)
-			printf("Content: %s, Type: %s\n", token->content, token_strings[token->type]);
-		current = current->next;
-	}
-}
 
 void	handle_signals_2(int signum)
 {
@@ -195,9 +151,6 @@ int	repl(t_data *data)
 		if (!check_data(data))
 			continue ;
 		tokens = tokenize(data->line);
-
-		print_tokens(tokens);										//debuging
-
 		if (heredoc_loop(&tokens, data))
 		{
 			/* printf("Error: Heredoc processing failed.\n"); */
