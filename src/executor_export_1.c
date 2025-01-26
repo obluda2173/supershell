@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 09:37:32 by erian             #+#    #+#             */
-/*   Updated: 2025/01/26 15:31:18 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/26 16:04:46 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,9 +129,7 @@ int	cstm_export(t_list **ep, t_cmd_node *cmd_node)
 		print_export(ep);
 		return (EXIT_SUCCESS);
 	}
-	
 	if (!add_var(ep, cmd_node->arguments))
 		return (EXIT_FAILURE);
-
 	return (EXIT_SUCCESS);
 }

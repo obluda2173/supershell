@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 13:46:03 by erian             #+#    #+#             */
-/*   Updated: 2025/01/26 15:24:09 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/26 16:04:04 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ static bool	assign_key_value(char *raw_var, char **key, char **value)
 	else
 	{
 		*key = ft_strdup(raw_var);
-		*value = ft_strdup("");
+		*value = NULL;
 	}
-	return (*key && *value);
+	return (*key);
 }
 
 static char	*sanitize_key(char *key)
@@ -55,6 +55,9 @@ static char	*sanitize_key(char *key)
 static char	*sanitize_value(char *value)
 {
 	char	*trimmed_value;
+
+	if (!value)
+		return (NULL);
 	if (value[0] == '\"' && ft_strlen(value) > 0)
 	{
 		trimmed_value = ft_strtrim(value, "\"");
@@ -73,6 +76,7 @@ bool	assign_var(t_env_var **new_var, char *raw_var)
 		return (false);
 	if (!valid_key(key))
 	{
+		printf("bash: export: \'%s=\"%s\"\': not a valid identifier\n", key, value);
 		free(key);
 		free(value);
 		return (false);
