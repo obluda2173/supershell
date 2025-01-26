@@ -47,6 +47,29 @@ INSTANTIATE_TEST_SUITE_P(
 		expandVariableParams{"\"\"", ""},
 		expandVariableParams{"", ""},
 		expandVariableParams{"VAR='$PATH path $PATH $path '", "VAR=$PATH path $PATH $path "},
-		expandVariableParams{"$LOGNAME\"$LOGNAME\"", "lognamelogname"}
+		expandVariableParams{"$LOGNAME\"$LOGNAME\"", "lognamelogname"},
+		expandVariableParams{"\"$PATH\"", "path_value"},
+		expandVariableParams{"'$PATH'", "$PATH"},
+		expandVariableParams{"\"$PATH $LOGNAME\"", "path_value logname"},
+		expandVariableParams{"'$PATH $LOGNAME'", "$PATH $LOGNAME"},
+		expandVariableParams{"\"$PATH-path_$LOGNAME\"", "path_value-path_logname"},
+		expandVariableParams{"'$PATH-path_$LOGNAME'", "$PATH-path_$LOGNAME"},
+		expandVariableParams{"\"The path is $PATH and logname is $LOGNAME\"", "The path is path_value and logname is logname"},
+
+expandVariableParams{"\"$UNSET_VAR\"", ""},
+expandVariableParams{"'Unchanged $UNSET_VAR'", "Unchanged $UNSET_VAR"},
+expandVariableParams{"$", "$"},
+expandVariableParams{"\"$\"", "$"}
+// expandVariableParams{"\"Just text with no variables\"", "Just text with no variables"},
+// expandVariableParams{"\"$$PATH\"", "$path_value"},
+// expandVariableParams{"\"$PATH\"'$LOGNAME'", "path_valuelogname"},
+// expandVariableParams{"'\"$PATH\"$LOGNAME'", "\"$PATH\"logname"},
+// expandVariableParams{"\"PATH$PATH\"", "PATHpath_value"},
+// expandVariableParams{"\"$LOGNAME/$PATH\"", "logname/path_value"},
+// expandVariableParams{"\"$PATH$LOGNAME\"", "path_valuelogname"},
+// expandVariableParams{"\"$1_PATH\"", ""},  // Assuming $1 is not set.
+// expandVariableParams{"'$$'", "$$"},
+// expandVariableParams{"\"${PATH}text\"", "path_valuetext"},
+// expandVariableParams{"\"$10$LOGNAME\"", ""}  // Assuming $10 and $LOGNAME unset or empty.
 		)
 	);
