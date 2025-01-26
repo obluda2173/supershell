@@ -31,17 +31,17 @@ INSTANTIATE_TEST_SUITE_P(
                 new_token(NULL, END_OF_FILE),
             },
                          new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error redirection"), {})},
-        ParserTestParams{0, ERROR_TEST, {
-                new_token("<<", HERE_DOC),
-                new_token(NULL, END_OF_FILE),
-            },
-                         new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error redirection"), {})},
         ParserTestParams{1, ERROR_TEST, {
                 new_token("<<", HERE_DOC),
-                new_token("line1\nline2", WORD),
                 new_token(NULL, END_OF_FILE),
             },
                          new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error redirection"), {})},
+        // ParserTestParams{1, ERROR_TEST, {
+        //         new_token("<<", HERE_DOC),
+        //         new_token("line1\nline2", WORD),
+        //         new_token(NULL, END_OF_FILE),
+        //     },
+                         // new_test_script_node(ERROR_NODE, {}, new_error_node("parsing error redirection"), {})},
         ParserTestParams{2, ERROR_TEST, {
                 new_token(">", REDIRECT_APPEND),
                 new_token("echo", BUILTIN),

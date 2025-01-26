@@ -62,7 +62,7 @@ INSTANTIATE_TEST_SUITE_P(
             {
                 new_token("cat", WORD),
                 new_token("<<", HERE_DOC),
-                new_token("line1\n$PATH\nline2", DOUBLE_QUOTE_HERE_DOC),
+                new_token("line1\n$PATH\nline2", WORD),
                 new_token("3>",
                           REDIRECT_OUT), // here I added the file descriptor 3
                 // before the command
@@ -74,7 +74,7 @@ INSTANTIATE_TEST_SUITE_P(
                 {new_test_cmd_node(
                         new_token("cat", WORD), {},
                         {
-                            new_redirection(0, HERED, "line1\n$PATH\nline2", DOUBLE_QUOTE_STR),
+                            new_redirection(0, HERED, "line1\n$PATH\nline2", LITERAL),
                             new_redirection(3, OUT, "\"line3 $PATH line4\"", LITERAL),
 
                         })},
@@ -85,7 +85,7 @@ INSTANTIATE_TEST_SUITE_P(
             {
                 new_token("cat", WORD),
                 new_token("<<", HERE_DOC),
-                new_token("line1\n$PATH\nline2", DOUBLE_QUOTE_HERE_DOC),
+                new_token("line1\n$PATH\nline2", WORD),
                 new_token(">", REDIRECT_OUT),
                 new_token("\"line3 $PATH line4\"", WORD),
                 new_token(NULL, END_OF_FILE),
@@ -95,8 +95,7 @@ INSTANTIATE_TEST_SUITE_P(
                 {new_test_cmd_node(
                         new_token("cat", WORD), {},
                         {
-                            new_redirection(0, HERED, "line1\n$PATH\nline2",
-                                            DOUBLE_QUOTE_STR),
+                            new_redirection(0, HERED, "line1\n$PATH\nline2", LITERAL),
                             new_redirection(1, OUT, "\"line3 $PATH line4\"",
                                             LITERAL),
 
@@ -108,42 +107,40 @@ INSTANTIATE_TEST_SUITE_P(
             {
                 new_token("cat", WORD),
                 new_token("<<", HERE_DOC),
-                new_token("line1\n$PATH\nline2", DOUBLE_QUOTE_HERE_DOC),
+                new_token("line1\n$PATH\nline2", WORD),
                 new_token(NULL, END_OF_FILE),
             },
             new_test_script_node(
                 CMD_NODE,
                 {new_test_cmd_node(new_token("cat", WORD), {},
                                    {new_redirection(0, HERED,
-                                                    "line1\n$PATH\nline2",
-                                                    DOUBLE_QUOTE_STR)})},
+                                                    "line1\n$PATH\nline2", LITERAL)})},
                 {}, {})},
         ParserTestParams{
             3,
             CMD_TEST,
             {
                 new_token("<<", HERE_DOC),
-                new_token("line1\n$PATH\nline2", DOUBLE_QUOTE_HERE_DOC),
+                new_token("line1\n$PATH\nline2", WORD),
                 new_token(NULL, END_OF_FILE),
             },
             new_test_script_node(
                 CMD_NODE,
                 {new_test_cmd_node(new_token(NULL, NONE), {},
-                                   {new_redirection(0, HERED, "line1\n$PATH\nline2",
-                                                    DOUBLE_QUOTE_STR)})},
+                                   {new_redirection(0, HERED, "line1\n$PATH\nline2", LITERAL)})},
                 {}, {})},
         ParserTestParams{
             4,
             CMD_TEST,
             {
                 new_token("<<", HERE_DOC),
-                new_token("line1\nline2", SINGLE_QUOTE_HERE_DOC),
+                new_token("'line1\nline2'", WORD),
                 new_token(NULL, END_OF_FILE),
             },
             new_test_script_node(
                 CMD_NODE,
                 {new_test_cmd_node(new_token(NULL, NONE), {},
-                                   {new_redirection(0, HERED, "line1\nline2", SINGLE_QUOTE_STR)})},
+                                   {new_redirection(0, HERED, "'line1\nline2'", LITERAL)})},
                 {}, {})} ,
         ParserTestParams{
             5,
@@ -296,7 +293,7 @@ INSTANTIATE_TEST_SUITE_P(
             CMD_TEST,
             {
                 new_token("<<", HERE_DOC),
-                new_token("line1\n$PATH\nline2", DOUBLE_QUOTE_HERE_DOC),
+                new_token("line1\n$PATH\nline2", WORD),
                 new_token("cat", WORD),
                 new_token(">", REDIRECT_OUT),
                 new_token("\"line3 $PATH line4\"", WORD),
@@ -307,8 +304,7 @@ INSTANTIATE_TEST_SUITE_P(
                 {new_test_cmd_node(
                         new_token("cat", WORD), {},
                         {
-                            new_redirection(0, HERED, "line1\n$PATH\nline2",
-                                            DOUBLE_QUOTE_STR),
+                            new_redirection(0, HERED, "line1\n$PATH\nline2", LITERAL),
                             new_redirection(1, OUT, "\"line3 $PATH line4\"",
                                             LITERAL),
 

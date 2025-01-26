@@ -55,18 +55,18 @@ t_redirection	*parse_redirection_token(t_token t)
 t_redirection	*parse_redirection_word(t_token t, t_redirection *r)
 {
 	/* if (r->type == HERED && (t.type != SINGLE_QUOTE && t.type != DOUBLE_QUOTE)) */
-	if (r->type == HERED && (t.type != SINGLE_QUOTE_HERE_DOC && t.type != DOUBLE_QUOTE_HERE_DOC))
-	{
-		free(r);
-		return (NULL);
-	}
+	/* if (r->type == HERED && (t.type != SINGLE_QUOTE_HERE_DOC && t.type != DOUBLE_QUOTE_HERE_DOC)) */
+	/* { */
+	/* 	free(r); */
+	/* 	return (NULL); */
+	/* } */
 	/* if (t.type == WORD || t.type == SINGLE_QUOTE) */
 	if (t.type == WORD)
 		r->word_type = LITERAL;
-	else if (t.type == DOUBLE_QUOTE_HERE_DOC)
-		r->word_type = DOUBLE_QUOTE_STR;
-	else if (t.type == SINGLE_QUOTE_HERE_DOC)
-		r->word_type = SINGLE_QUOTE_STR;
+	/* else if (t.type == DOUBLE_QUOTE_HERE_DOC) */
+	/* 	r->word_type = DOUBLE_QUOTE_STR; */
+	/* else if (t.type == SINGLE_QUOTE_HERE_DOC) */
+	/* 	r->word_type = SINGLE_QUOTE_STR; */
 	/* else if (t.type == DOLLAR) */
 	/* 	r->word_type = ENV_EXP; */
 	/* else if (t.type == DOUBLE_QUOTE) */

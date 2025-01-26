@@ -34,8 +34,6 @@ typedef enum e_token_type {
 	LPAREN,          // 11
 	RPAREN,          // 12
 	INVALID,         // 13
-	SINGLE_QUOTE_HERE_DOC,
-	DOUBLE_QUOTE_HERE_DOC,
 	NONE				/* added by Kay to have a null-value for t_token_type*/
 }	t_token_type;
 
