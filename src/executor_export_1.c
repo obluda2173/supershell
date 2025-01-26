@@ -6,31 +6,58 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 09:37:32 by erian             #+#    #+#             */
-/*   Updated: 2025/01/26 13:49:02 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/26 14:10:40 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-static bool add_expansions(t_list **ep, t_list *arg_lst)
+bool    rewrite_var(t_list **ep, t_env_var *new_var)
 {
-    t_list      *arg_i;
-    t_env_var   *new_var;
-    t_argument  *current_arg;
+    t_list *tmp_ep;
+    t_env_var *tmp_var;
+    
+    tmp_ep = *ep;
+    while (tmp_ep)
+    {
+        tmp_var = (t_env_var *)tmp_ep->content;
+        if (ft_strcmp(tmp_var->key, new_var->key) == 0)
+        {
+            free(tmp_var->value);
+            tmp_var->value = ft_strdup(new_var->value);
+            free(new_var->value);
+            free(new_var->key);
+            free(new_var);
+            return (true);
+        }
+        tmp_ep = tmp_ep->next;
+    }
+    return (false);
+}
+
+static bool add_var(t_list **ep, t_list *arg_lst)
+{
+    t_list *arg_i;
+    t_env_var *new_var;
+    t_argument *current_arg;
 
     arg_i = arg_lst;
     while (arg_i)
     {
         current_arg = (t_argument *)arg_i->content;
-        
+
         new_var = malloc(sizeof(t_env_var));
-        
+        if (!new_var)
+            return (false);
+
         if (!assign_var(&new_var, current_arg->word))
         {
             free(new_var);
-            return (false);
+            arg_i = arg_i->next;
+            continue;
         }
-        ft_lstadd_back(ep, ft_lstnew(new_var));
+        if (!rewrite_var(ep, new_var))
+            ft_lstadd_back(ep, ft_lstnew(new_var));
         arg_i = arg_i->next;
     }
     return (true);
@@ -103,7 +130,7 @@ int	export(t_list **ep, t_cmd_node *cmd_node)
 		return EXIT_SUCCESS;
 	}
 	
-	if (!add_expansions(ep, cmd_node->arguments))
+	if (!add_var(ep, cmd_node->arguments))
 		return EXIT_FAILURE;
 
 	return EXIT_SUCCESS;
