@@ -36,7 +36,10 @@ INSTANTIATE_TEST_SUITE_P(
 		expandVariableParams{"$PATH", "path_value"},
 		expandVariableParams{"\"$PATH path $PATH $path\"", "path_value path path_value "},
 		expandVariableParams{"\"$PATH path $PATH$LOGNAME $path\"", "path_value path path_valuelogname "},
-		expandVariableParams{"VAR=\"$PATH path $PATH $path\"", "VAR=path_value path path_value "}
-		// expandVariableParams{"VAR1=\"$PATH path $PATH $path\"", "VAR1=path_value path path_value "}
+		expandVariableParams{"VAR=\"$PATH path $PATH $path \"", "VAR=path_value path path_value  "},
+		// fuzzy tests
+		expandVariableParams{"VAR=\"\"", "VAR="},
+		expandVariableParams{"\"\"", ""},
+		expandVariableParams{"", ""}
 		)
 	);

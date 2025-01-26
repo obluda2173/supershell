@@ -24,7 +24,7 @@ char    *handle_double_quotes(const char *word,  t_data *data)
 
 	result[0] = '\0';
 
-	while (i < len)
+	while (i < len && word[i] != '\"')
 	{
 		if (word[i] == '$')
 		{
