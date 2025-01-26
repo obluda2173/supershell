@@ -11,6 +11,8 @@ t_list *get_ep() {
 	t_list *ep = NULL;
 	t_env_var *env_var = new_env_var((char*)"PATH", (char*)"path_value");
 	ft_lstadd_back(&ep, ft_lstnew(env_var));
+	env_var = new_env_var((char*)"$", (char*)"1234");
+	ft_lstadd_back(&ep, ft_lstnew(env_var));
 	env_var = new_env_var((char*)"LOGNAME", (char*)"logname");
 	ft_lstadd_back(&ep, ft_lstnew(env_var));
 	return ep;
@@ -55,15 +57,16 @@ INSTANTIATE_TEST_SUITE_P(
 		expandVariableParams{"\"$PATH-path_$LOGNAME\"", "path_value-path_logname"},
 		expandVariableParams{"'$PATH-path_$LOGNAME'", "$PATH-path_$LOGNAME"},
 		expandVariableParams{"\"The path is $PATH and logname is $LOGNAME\"", "The path is path_value and logname is logname"},
-
-expandVariableParams{"\"$UNSET_VAR\"", ""},
-expandVariableParams{"'Unchanged $UNSET_VAR'", "Unchanged $UNSET_VAR"},
-expandVariableParams{"$", "$"},
-expandVariableParams{"\"$\"", "$"}
-// expandVariableParams{"\"Just text with no variables\"", "Just text with no variables"},
-// expandVariableParams{"\"$$PATH\"", "$path_value"},
-// expandVariableParams{"\"$PATH\"'$LOGNAME'", "path_valuelogname"},
-// expandVariableParams{"'\"$PATH\"$LOGNAME'", "\"$PATH\"logname"},
+		expandVariableParams{"\"$UNSET_VAR\"", ""},
+		expandVariableParams{"'Unchanged $UNSET_VAR'", "Unchanged $UNSET_VAR"},
+		expandVariableParams{"$LOGNAME='hello'", "logname=hello"},
+		expandVariableParams{"$LOGNAME!", "logname!"},
+		expandVariableParams{"$", "$"},
+		expandVariableParams{"\"$\"", "$"},
+		expandVariableParams{"\"Just text with no variables\"", "Just text with no variables"},
+		expandVariableParams{"\"$$PATH\"", "$path_value"},
+		expandVariableParams{"\"$PATH\"'$LOGNAME'", "path_value$LOGNAME"},
+		expandVariableParams{"'\"$PATH\"$LOGNAME'", "\"$PATH\"$LOGNAME"}
 // expandVariableParams{"\"PATH$PATH\"", "PATHpath_value"},
 // expandVariableParams{"\"$LOGNAME/$PATH\"", "logname/path_value"},
 // expandVariableParams{"\"$PATH$LOGNAME\"", "path_valuelogname"},

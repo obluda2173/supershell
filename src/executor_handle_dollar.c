@@ -14,6 +14,8 @@
 
 char	*handle_dollar(const char *word, t_data *data)
 {
+	if (!is_env_var_char(*word) && *word != '?')
+		return ft_strdup("$");
 	size_t len = ft_strlen(word);
 	char *result = malloc(1);
 	size_t result_len = 0;

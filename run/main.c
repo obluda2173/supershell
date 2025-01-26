@@ -157,6 +157,11 @@ int	repl(t_data *data)
 		}
 		add_history(data->line);
 		tokens = tokenize(data->line);
+		t_dllist *head = tokens;
+		while (head) {
+			printf("%s\n", ((t_token*)head->content)->content);
+			head = head->next;
+		}
 		free(data->line);
 		data->line = NULL;
 		if (heredoc_loop(&tokens, data))

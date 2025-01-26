@@ -59,14 +59,30 @@ char *expand_from_double_quote(char* word, t_data *data) {
 	return result;
 }
 
+bool is_env_var_char(char c) {
+	if (ft_isalnum(c) || c == '_' )
+		return true;
+	return false;
+}
+
+char *advance_end_of_env_var(char* word) {
+	if (!word)
+		return NULL;
+	if (*word == '?')
+		return word+1;
+	while (is_env_var_char(*word))
+		word++;
+	return word;
+}
+
 char *expand_from_dollar(char *word, t_data *data) {
 	char* next;
 	char* after;
 	char* prepend;
 	char* result;
-	next = ft_strchr(word + 1, '$');
+	next = advance_end_of_env_var(word+1);
 	if (next)
-		after = expand_variables(ft_strchr(next, '$'), data);
+		after = expand_variables(next, data);
 	else
 		after = ft_strdup("");
 	prepend = handle_dollar(word + 1, data);
