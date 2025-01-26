@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:29:43 by erian             #+#    #+#             */
-/*   Updated: 2025/01/14 13:10:23 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/26 16:52:33 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,31 +26,28 @@ bool	check_consecutive_chars(char *str, char c)
 
 bool	check_unclosed_quotes(char *str)
 {
-	int	i;
-	int	single_quote_count;
-	int	double_quote_count;
+	int		i;
+	bool	in_single_quote;
+	bool	in_double_quote;
 
-	i = -1;
-	single_quote_count = 0;
-	double_quote_count = 0;
-	while (str[++i])
+	i = 0;
+	in_single_quote = false;
+	in_double_quote = false;
+	while (str[i])
 	{
-		if (str[i] == '\'')
-			single_quote_count++;
-		else if (str[i] == '\"')
-			double_quote_count++;
+		if (str[i] == '\'' && !in_double_quote)
+			in_single_quote = !in_single_quote;
+		else if (str[i] == '\"' && !in_single_quote)
+			in_double_quote = !in_double_quote;
+		i++;
 	}
-	if (single_quote_count % 2 != 0)
-	{
+	if (in_single_quote)
 		ft_putendl_fd("Unclosed single quote", STDERR_FILENO);
-		return (false);
-	}
-	if (double_quote_count % 2 != 0)
-	{
+	else if (in_double_quote)
 		ft_putendl_fd("Unclosed double quote", STDERR_FILENO);
-		return (false);
-	}
-	return (true);
+	else
+		return (true);
+	return (false);
 }
 
 bool	check_invalid_symbol(char *str)

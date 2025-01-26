@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:36:06 by erian             #+#    #+#             */
-/*   Updated: 2025/01/26 15:33:51 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/26 17:01:05 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,8 @@ int execute_builtin(t_cmd_node *cmd_node, t_data *data, int fds[2]) {
 		return echo(*cmd_node, fds);
 	if (!ft_strcmp("export", cmd_node->cmd_token.content))
 		return (cstm_export(&data->ep, cmd_node));
+	if (!ft_strcmp("unset", cmd_node->cmd_token.content))
+		cstm_unset(&data->ep, cmd_node);					//unset does not return anything
 	return EXIT_SUCCESS;
 }
 
