@@ -6,25 +6,86 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 09:37:32 by erian             #+#    #+#             */
-/*   Updated: 2025/01/26 11:39:34 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/26 13:43:20 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-bool	valid_var(char *arg)
+bool	valid_key(char *key)
 {
 	int	i;
 
-	i = -1;
-	if (!(ft_isalpha(arg[0]) || arg[0] == '_'))
+	i = 1;
+	if (key[0] != '$')
 		return (false);
-	while (arg[++i] != '=')
+    if (!ft_isalpha(key[i]) && key[i] != '_')
+		return (false);
+	while (key[++i])
 	{
-		if (!(ft_isalnum(arg[i]) || arg[i] == '_'))
+		if (!ft_isalnum(key[i]) && key[i] != '_')
+        {
+            printf("here fails 3\n");
 			return (false);
+        }
 	}
 	return (true);
+}
+
+bool assign_key_value(char *raw_var, char **key, char **value)
+{
+    char *equals_sign = ft_strchr(raw_var, '=');
+    if (equals_sign)
+    {
+        *key = ft_substr(raw_var, 0, equals_sign - raw_var);
+        *value = ft_strdup(equals_sign + 1);
+    }
+    else
+    {
+        *key = ft_strdup(raw_var);
+        *value = ft_strdup("");
+    }
+    return (*key && *value);
+}
+
+char *sanitize_key(char *key)
+{
+    char *sanitized_key = ft_strdup(key + 1);
+    free(key);
+    return sanitized_key;
+}
+
+char *sanitize_value(char *value)
+{
+    char *trimmed_value;
+    if (value[0] == '"' && ft_strlen(value) > 0)
+    {
+        trimmed_value = ft_strtrim(value, "\"");
+        free(value);
+        return trimmed_value;
+    }
+    return value;
+}
+
+bool assign_var(t_env_var **new_var, char *raw_var)
+{
+    char *key;
+    char *value;
+
+    if (!assign_key_value(raw_var, &key, &value))
+        return false;
+
+    if (!valid_key(key))
+    {
+        free(key);
+        free(value);
+        return false;
+    }
+
+    (*new_var)->key = sanitize_key(key);
+    (*new_var)->value = sanitize_value(value);
+
+    return true;
 }
 
 bool add_expansions(t_list **ep, t_list *arg_lst)
@@ -32,31 +93,19 @@ bool add_expansions(t_list **ep, t_list *arg_lst)
     t_list      *arg_i;
     t_env_var   *new_var;
     t_argument  *current_arg;
-    char        *key;
-    char        *value;
-    char        *equals_sign;
 
     arg_i = arg_lst;
     while (arg_i)
     {
         current_arg = (t_argument *)arg_i->content;
-        equals_sign = ft_strchr(current_arg->word, '=');
         
-        if (equals_sign)
-        {
-            key = ft_substr(current_arg->word, 1, equals_sign - current_arg->word);
-            value = ft_strdup(equals_sign + 1);
-        }
-        else
-        {
-            key = ft_strdup(current_arg->word);
-            value = ft_strdup("");
-        }
         new_var = malloc(sizeof(t_env_var));
-        if (!new_var || !key || !value)
+        
+        if (!assign_var(&new_var, current_arg->word))
+        {
+            free(new_var);
             return (false);
-        new_var->key = key;
-        new_var->value = value;
+        }
         ft_lstadd_back(ep, ft_lstnew(new_var));
         arg_i = arg_i->next;
     }
