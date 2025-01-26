@@ -90,7 +90,6 @@ void	parse_and_execute(t_dllist *tokens, t_data *data)
 	free_script_node(script);
 }
 
-
 bool	check_data(t_data *data)
 {
 	if (!data->line || !ft_strncmp(data->line, "exit", 4))

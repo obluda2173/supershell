@@ -66,13 +66,12 @@ INSTANTIATE_TEST_SUITE_P(
 		expandVariableParams{"\"Just text with no variables\"", "Just text with no variables"},
 		expandVariableParams{"\"$$PATH\"", "$path_value"},
 		expandVariableParams{"\"$PATH\"'$LOGNAME'", "path_value$LOGNAME"},
-		expandVariableParams{"'\"$PATH\"$LOGNAME'", "\"$PATH\"$LOGNAME"}
-// expandVariableParams{"\"PATH$PATH\"", "PATHpath_value"},
-// expandVariableParams{"\"$LOGNAME/$PATH\"", "logname/path_value"},
-// expandVariableParams{"\"$PATH$LOGNAME\"", "path_valuelogname"},
-// expandVariableParams{"\"$1_PATH\"", ""},  // Assuming $1 is not set.
-// expandVariableParams{"'$$'", "$$"},
-// expandVariableParams{"\"${PATH}text\"", "path_valuetext"},
-// expandVariableParams{"\"$10$LOGNAME\"", ""}  // Assuming $10 and $LOGNAME unset or empty.
+		expandVariableParams{"'\"$PATH\"$LOGNAME'", "\"$PATH\"$LOGNAME"},
+		expandVariableParams{"\"PATH$PATH\"", "PATHpath_value"},
+		expandVariableParams{"\"$LOGNAME/$PATH\"", "logname/path_value"},
+		expandVariableParams{"\"$PATH$LOGNAME\"", "path_valuelogname"},
+		expandVariableParams{"\"$1_PATH\"", ""},  // Assuming $1 is not set.
+		expandVariableParams{"'$$'", "$$"},
+		expandVariableParams{"\"$10$LOGUNSET\"", ""}  // Assuming $10 and $LOGNAME unset or empty.
 		)
 	);
