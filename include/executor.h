@@ -70,7 +70,7 @@ int	expand_redirections(t_cmd_node *cmd_node, t_data *data);
 char *handle_literal(char *word, t_data *data);
 
 // executor_export_1.c
-int	export(t_list **ep, t_cmd_node *cmd_node);
+int	cstm_export(t_list **ep, t_cmd_node *cmd_node);
 
 // executor_export_2.c
 bool assign_var(t_env_var **new_var, char *raw_var);
