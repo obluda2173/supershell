@@ -140,3 +140,11 @@ def remove_ansi_sequences(text):
     )
 
     return ansi_escape.sub("", text)
+
+
+def cstm_expect(expr, shell):
+    try:
+        shell.expect(expr, timeout=1)
+    except pexpect.TIMEOUT:
+        print("Timeout occurred")
+        assert False, f"Timeout occurred: warning: {expr}"

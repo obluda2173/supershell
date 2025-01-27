@@ -2,7 +2,7 @@
 import pytest
 import pexpect
 import os
-from conftest import remove_cariage, remove_ansi_sequences
+from conftest import remove_cariage, remove_ansi_sequences, cstm_expect
 
 
 def assert_equal_export(bash_export_output, minishell_export_output):
@@ -19,14 +19,6 @@ def assert_equal_export(bash_export_output, minishell_export_output):
 
 
 logname = os.getenv("LOGNAME")
-
-
-def cstm_expect(expr, shell):
-    try:
-        shell.expect(expr, timeout=1)
-    except pexpect.TIMEOUT:
-        print("Timeout occurred")
-        assert False, f"Timeout occurred: warning: {expr}"
 
 
 def get_bash_export_output(bash, line):
@@ -97,7 +89,7 @@ def get_minishell_export_output(minishell, line):
         (['export VAR="$USER"', "export VAR"], "export"),
     ],
 )
-def test_export_with_redirection(precommands, export_cmd):
+def test_export(precommands, export_cmd):
     bash = pexpect.spawn("./bash", encoding="utf-8")
     for cmd in precommands:
         cstm_expect(r"\$ ", bash)
