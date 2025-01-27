@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 09:37:32 by erian             #+#    #+#             */
-/*   Updated: 2025/01/27 10:36:56 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/27 11:20:02 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ static bool	rewrite_var(t_list **ep, t_env_var *new_var)
 		tmp_var = (t_env_var *)tmp_ep->content;
 		if (ft_strcmp(tmp_var->key, new_var->key) == 0)
 		{
-			free(tmp_var->value);
 			if (new_var->value)
+			{
+				free(tmp_var->value);
 				tmp_var->value = ft_strdup(new_var->value);
-			else
-				tmp_var->value = NULL;
+			}
 			free(new_var->value);
 			free(new_var->key);
 			free(new_var);

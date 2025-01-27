@@ -80,5 +80,5 @@ int	cstm_export(t_list **ep, t_cmd_node *cmd_node);
 bool assign_var(t_env_var **new_var, char *raw_var);
 
 // executor_unset.c
-void cstm_unset(t_list **ep, t_cmd_node *cmd_node);
+int cstm_unset(t_list **ep, t_cmd_node *cmd_node);
 #endif // EXECUTOR_
