@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 09:37:32 by erian             #+#    #+#             */
-/*   Updated: 2025/01/27 11:20:02 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/27 15:58:07 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static void	sort_for_export(t_list **ep)
 	int			list_size;
 
 	if (!ep || !*ep)
-		return;
+		return ;
 	sort_arguments(ep);
 	tmp_lst = *ep;
 	last_node = ft_lstlast(*ep);
@@ -125,10 +125,12 @@ void print_env_var(char* key, char *value) {
 static void	print_export(t_list **ep)
 {
 	t_list		*tmp_ep;
+	t_list		**cpy_ep;
 	t_env_var	*env_var;
 
-	sort_for_export(ep);
-	tmp_ep = *ep;
+	cpy_ep = copy_ep(*ep);
+	sort_for_export(cpy_ep);
+	tmp_ep = *cpy_ep;
 	while (tmp_ep)
 	{
 		env_var = (t_env_var *)tmp_ep->content;
@@ -143,6 +145,8 @@ static void	print_export(t_list **ep)
 			printf("declare -x %s\n", env_var->key);
 		tmp_ep = tmp_ep->next;
 	}
+	ft_lstclear(cpy_ep, free_env_var);
+	free(cpy_ep);
 }
 
 int	cstm_export(t_list **ep, t_cmd_node *cmd_node)

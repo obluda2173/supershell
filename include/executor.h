@@ -79,6 +79,9 @@ int	cstm_export(t_list **ep, t_cmd_node *cmd_node);
 // executor_export_2.c
 bool assign_var(t_env_var **new_var, char *raw_var);
 
+// execurtor_export_3.c
+t_list	**copy_ep(t_list *ep);
+
 // executor_unset.c
 int cstm_unset(t_list **ep, t_cmd_node *cmd_node);
 
