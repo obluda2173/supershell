@@ -28,9 +28,7 @@ typedef enum e_node_type
 typedef enum e_word_type
 {
 	LITERAL,
-	ENV_EXP,
 	WILDCARD_EXP,
-	EXIT_STATUS_EXP
 }							t_word_type;
 
 typedef enum e_redirection_type
