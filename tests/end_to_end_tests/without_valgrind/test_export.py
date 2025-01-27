@@ -93,6 +93,8 @@ def get_minishell_export_output(minishell, line):
         (["export VAR1=\"some 'inside' string\""], "export"),
         (["export VAR1='value'"], "export"),
         ([f"export VAR1={1000 * logname}"], "export"),
+        (['export VAR="$USER"', "export VAR="], "export"),
+        (['export VAR="$USER"', "export VAR"], "export"),
     ],
 )
 def test_export_with_redirection(precommands, export_cmd):

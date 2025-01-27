@@ -32,11 +32,8 @@ from conftest import (
         (["which echo < tests/end_to_end_tests/test_files/input1.txt"]),
         (['echo "$LOGNAME path $LOGNAME"']),
         (['echo "$? path $LOGNAME"']),
-        (
-            [
-                "echo llllllllllllllllloooooooooooooooooooooooooooonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnngggggggggggggggggggggggggggggggg ssssssssssssssssssssssssssssstttttttttttttttttttrrrrrrrrrrrrrriiiiiiiiiiiiinnnnnnnnnnnnngggg"
-            ]
-        ),
+        ([f'echo {10000 * "l"}']),
+        (["echo \"hello ' $LOGNAME ' hello ' \" "]),
     ],
 )
 def test_minishell(cmd):
