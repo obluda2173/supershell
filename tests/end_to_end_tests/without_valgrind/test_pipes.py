@@ -10,6 +10,7 @@ from conftest import cstm_expect, remove_cariage, remove_ansi_sequences, get_exi
     [
         ("echo hello | cat"),
         ("echo hello2 | cat"),
+        ("echo hello2 | wc -c | cat | wc -c"),
         # ("ls | cat")
     ],
 )
