@@ -2,7 +2,7 @@
 import pytest
 import pexpect
 import os
-from conftest import remove_cariage, remove_ansi_sequences, cstm_expect
+from conftest import remove_cariage, remove_ansi_sequences, cstm_expect, get_exit_status
 
 
 def assert_equal_export(bash_export_output, minishell_export_output):
@@ -95,6 +95,9 @@ def test_export(precommands, export_cmd):
         cstm_expect(r"\$ ", bash)
         bash.sendline(cmd)
     bash_export_output = get_bash_export_output(bash, export_cmd)
+
+    bash_exit_status = get_exit_status(bash)
+
     bash.sendline("exit")
     bash.close()
 
@@ -103,10 +106,13 @@ def test_export(precommands, export_cmd):
         cstm_expect(r"\$ ", minishell)
         minishell.sendline(cmd)
     minishell_export_output = get_minishell_export_output(minishell, export_cmd)
+    minishell_exit_status = get_exit_status(minishell)
+
     minishell.sendline("exit")
     minishell.close()
 
     assert_equal_export(bash_export_output, minishell_export_output)
+    assert bash_exit_status == minishell_exit_status
 
 
 @pytest.mark.parametrize(
@@ -125,5 +131,6 @@ def test_export_errors(cmd, err_msg):
     ]
 
     assert err_msg in minishell_export_output[1]
+    assert get_exit_status(minishell) == 1
     minishell.sendline("exit")
     minishell.close()

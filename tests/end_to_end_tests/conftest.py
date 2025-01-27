@@ -3,6 +3,7 @@ import stat
 import os
 import time
 import re
+import pexpect
 
 
 def start_process(shell):
@@ -148,3 +149,11 @@ def cstm_expect(expr, shell):
     except pexpect.TIMEOUT:
         print("Timeout occurred")
         assert False, f"Timeout occurred: warning: {expr}"
+
+
+def get_exit_status(shell):
+    shell.sendline("echo $?")
+    cstm_expect(r"\$ ", shell)
+
+    assert shell.before is not None
+    return int(remove_ansi_sequences(remove_cariage(shell.before.split("\n")[1])))
