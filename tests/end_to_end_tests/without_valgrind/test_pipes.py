@@ -1,14 +1,22 @@
 #!/usr/bin/env python3
 
+import pytest
 import pexpect
 from conftest import cstm_expect, remove_cariage, remove_ansi_sequences, get_exit_status
 
 
-def test_pipes():
-    line = "echo hello | cat"
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        ("echo hello | cat"),
+        ("echo hello2 | cat"),
+        # ("ls | cat")
+    ],
+)
+def test_pipes(cmd):
     bash = pexpect.spawn("./bash", encoding="utf-8")
     cstm_expect(r"\$ ", bash)
-    bash.sendline(line)
+    bash.sendline(cmd)
     cstm_expect(r"\$ ", bash)
 
     assert bash.before is not None
@@ -24,7 +32,7 @@ def test_pipes():
 
     minishell = pexpect.spawn("./minishell", encoding="utf-8")
     cstm_expect(r"\$ ", minishell)
-    minishell.sendline(line)
+    minishell.sendline(cmd)
     cstm_expect(r"\$ ", minishell)
 
     assert minishell.before is not None
@@ -36,19 +44,7 @@ def test_pipes():
     # minishell_exit_status = get_exit_status(minishell)
 
     assert len(bash_output) == len(minishell_output)
+    assert bash_output[0] == minishell_output[0]
 
     minishell.sendline("exit")
     minishell.close()
-    # minishell_export_output = get_minishell_export_output(minishell, export_cmd)
-    # minishell.sendline("exit")
-    # minishell.close()
-
-    # minishell = pexpect.spawn("./minishell", encoding="utf-8")
-    # for cmd in precommands:
-    #     cstm_expect(r"\$ ", minishell)
-    #     minishell.sendline(cmd)
-    # minishell_export_output = get_minishell_export_output(minishell, export_cmd)
-    # minishell.sendline("exit")
-    # minishell.close()
-
-    # assert_equal_export(minishell_export_output, minishell_export_output)

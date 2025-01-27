@@ -82,7 +82,7 @@ static int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2])
 	if (waitpid(pid, &status, 0) == -1)
 	{
 		perror("waitpid");
-		return (1);
+		return EXIT_FAILURE;
 	}
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
