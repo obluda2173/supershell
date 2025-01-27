@@ -9,34 +9,7 @@ import os
 import re
 import time
 
-
-def remove_cariage(text):
-    ansi_escape = re.compile(
-        r"""\r""",
-        re.VERBOSE,
-    )
-
-    return ansi_escape.sub("", text)
-
-
-def remove_ansi_sequences(text):
-    ansi_escape = re.compile(
-        r"""
-        \x1B  # ESC
-        (?:   # 7-bit C1 Control Sequence
-            [@-Z\\-_]
-        |     # or [ for CSI
-            \[
-            [0-?]*  # Parameter bytes
-            [ -/]*  # Intermediate bytes
-            [@-~]   # Final byte
-        )
-    """,
-        re.VERBOSE,
-    )
-
-    return ansi_escape.sub("", text)
-
+from conftest import remove_cariage, remove_ansi_sequences
 
 logname = os.getenv("LOGNAME")
 

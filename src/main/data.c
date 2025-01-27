@@ -48,6 +48,8 @@ t_data	*init(char **ep)
 
 		if (key_and_value[1])
 			value = key_and_value[1];
+		else
+			value = "";
 
 		t_env_var *env_var = new_env_var(key, value);
 		if (!env_var) {

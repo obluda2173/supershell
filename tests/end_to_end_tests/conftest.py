@@ -2,6 +2,7 @@ import subprocess
 import stat
 import os
 import time
+import re
 
 
 def start_process(shell):
@@ -111,3 +112,31 @@ def parse_out_and_err_minishell(
     ]
     stderr_minishell = stderr_minishell.decode()
     return stdout_minishell, stderr_minishell
+
+
+def remove_cariage(text):
+    ansi_escape = re.compile(
+        r"""\r""",
+        re.VERBOSE,
+    )
+
+    return ansi_escape.sub("", text)
+
+
+def remove_ansi_sequences(text):
+    ansi_escape = re.compile(
+        r"""
+        \x1B  # ESC
+        (?:   # 7-bit C1 Control Sequence
+            [@-Z\\-_]
+        |     # or [ for CSI
+            \[
+            [0-?]*  # Parameter bytes
+            [ -/]*  # Intermediate bytes
+            [@-~]   # Final byte
+        )
+    """,
+        re.VERBOSE,
+    )
+
+    return ansi_escape.sub("", text)

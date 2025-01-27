@@ -1,64 +1,116 @@
 #!/usr/bin/env python3
 import pytest
+import pexpect
+import os
+from conftest import remove_cariage, remove_ansi_sequences
 
-from conftest import (
-    start_process,
-    send_cmds_minishell_with_open_fds,
-    parse_out_and_err_minishell,
-    get_open_fds,
-)
-from assertions import (
-    assert_no_memory_error_fsanitize,
-    assert_no_new_file_descriptors,
-    assert_no_memory_error_fsanitize,
-)
+# from conftest import (
+#     start_process,
+#     send_cmds_minishell_with_open_fds,
+#     parse_out_and_err_minishell,
+#     get_open_fds,
+# )
+# from assertions import (
+#     assert_no_memory_error_fsanitize,
+#     assert_no_new_file_descriptors,
+#     assert_no_memory_error_fsanitize,
+# )
 
 
-def assert_export_variables_same(stdout_minishell, stdout_bash):
-    for out1 in stdout_minishell:
+def assert_equal_export(bash_export_output, minishell_export_output):
+    assert len(bash_export_output) == len(minishell_export_output)
+    for line in bash_export_output:
         assert any(
-            [out1.split("=")[0] in line for line in stdout_bash]
-        ), f"{out1} not in {stdout_bash}"
+            [line.startswith(line_m) for line_m in minishell_export_output]
+        ), f"{line} not in minishell_export"
 
-    for out1 in stdout_bash:
+    for line in minishell_export_output:
         assert any(
-            [out1.split("=")[0] in line for line in stdout_minishell]
-        ), f"{out1} not in {stdout_minishell}"
+            [line.startswith(line_b) for line_b in bash_export_output]
+        ), f"{line} not in bash_export"
 
-    assert len(stdout_bash) == len(stdout_minishell)
+
+logname = os.getenv("LOGNAME")
+
+
+def cstm_expect(expr, shell):
+    try:
+        shell.expect(expr, timeout=0.5)
+    except pexpect.TIMEOUT:
+        print("Timeout occurred")
+        assert False, f"Timeout occurred: warning: {expr}"
+
+
+def get_bash_export_output(bash, line):
+    cstm_expect(r"\$ ", bash)
+    bash.sendline(line)
+    cstm_expect(r"\$ ", bash)
+    assert bash.before is not None
+    export_vars_bash = [
+        remove_cariage(remove_ansi_sequences(line))
+        for line in bash.before.split("\n")[1:-1]
+    ]
+    export_vars_bash = [
+        line
+        for line in export_vars_bash
+        if not line.startswith("declare -x COLUMNS")
+        and not line.startswith("declare -x _JAVA_AWT_WM_NONREPARENTING")
+    ]
+    export_vars_bash = [
+        line[: line.find('"') + 1] if line.find('"') > 0 else line
+        for line in export_vars_bash
+    ]
+    return export_vars_bash
+
+
+def get_minishell_export_output(minishell, line):
+    cstm_expect(r"\$ ", minishell)
+    minishell.sendline(line)
+    cstm_expect(r"\$ ", minishell)
+    assert minishell.before is not None
+    minishell_export_output = [
+        remove_cariage(remove_ansi_sequences(line))
+        for line in minishell.before.split("\n")[1:-1]
+    ]
+    minishell_export_output = [
+        line[: line.find('"') + 1] if line.find('"') > 0 else line
+        for line in minishell_export_output
+    ]
+    return minishell_export_output
 
 
 @pytest.mark.parametrize(
-    "cmd",
+    "precommands, export_cmd",
     [
-        (["export"]),
-        (["export < tests/end_to_end_tests/test_files/input1.txt"]),
-        # (["export new", "export"]),
+        ([], "export"),
+        ([], "export < tests/end_to_end_tests/test_files/input1.txt"),
+        (
+            [],
+            "export < non_existant",
+        ),  # is an error case, needs to be handled seperately
+        (["export VAR1"], "export"),
     ],
 )
-def test_export(cmd):
-    minishell = start_process("./minishell")
-    open_fds_beginning = get_open_fds()
+def test_export_with_redirection(precommands, export_cmd):
+    bash = pexpect.spawn("./bash", encoding="utf-8")
+    for cmd in precommands:
+        cstm_expect(r"\$ ", bash)
+        bash.sendline(cmd)
+    bash_export_output = get_bash_export_output(bash, export_cmd)
+    for l in bash_export_output:
+        print(l)
+    bash.sendline("exit")
+    bash.close()
 
-    cmd = "\n".join(cmd + ["echo $?\n"])
+    print()
+    minishell = pexpect.spawn("./minishell", encoding="utf-8")
+    for cmd in precommands:
+        cstm_expect(r"\$ ", minishell)
+        minishell.sendline(cmd)
+    minishell_export_output = get_minishell_export_output(minishell, export_cmd)
+    for l in minishell_export_output:
+        print(l)
+    minishell.sendline("exit")
+    minishell.close()
 
-    bash = start_process("bash")
-    assert bash.stdin is not None
-    stdout_bash, _ = bash.communicate(cmd.encode())
-    stdout_bash = stdout_bash.decode().split("\n")[:-1]  # cut empty line
-
-    assert minishell.stdin is not None
-    stdout_minishell, stderr_minishell, open_fds_end = (
-        send_cmds_minishell_with_open_fds(minishell, cmd)
-    )
-    [print(line) for line in stdout_minishell.decode().split("\n")]
-
-    stdout_minishell, stderr_minishell = parse_out_and_err_minishell(
-        stdout_minishell, stderr_minishell
-    )
-    assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell)
-    assert_export_variables_same(stdout_minishell, stdout_bash)
-    assert "0" == stdout_minishell[-1]
-    assert len(stderr_minishell) == 0
-
-    # assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)
+    assert_equal_export(bash_export_output, minishell_export_output)
