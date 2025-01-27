@@ -91,4 +91,7 @@ int	cstm_env(t_list **ep, t_cmd_node *cmd_node);
 // executor_builtin_pwd.c
 int	cstm_pwd(t_list **ep, t_cmd_node *cmd_node);
 
+// executor_builtin_cd.c
+int cstm_cd(t_list **ep, t_list *args);
+
 #endif // EXECUTOR_
