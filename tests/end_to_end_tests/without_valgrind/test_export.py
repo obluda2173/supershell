@@ -56,8 +56,6 @@ def test_export(cmd):
     stdout_minishell, stderr_minishell = parse_out_and_err_minishell(
         stdout_minishell, stderr_minishell
     )
-    # print(stdout_bash)
-    # print("hello")
     assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell)
     assert_export_variables_same(stdout_minishell, stdout_bash)
     assert "0" == stdout_minishell[-1]

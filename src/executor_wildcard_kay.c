@@ -170,28 +170,3 @@ void	replace_list_next_with_new(t_list *list, t_list *new)
 	ft_lstclear(&tmp, free_arguments);
 }
 
-int	expand_wildcards_in_arguments(t_list **list)
-{
-	t_list	*head;
-	t_list	*new;
-	t_list	dummy;
-
-	if (!list || !*list)
-		return (EXIT_FAILURE);
-	dummy = (t_list){NULL, *list};
-	head = &dummy;
-	while (head->next)
-	{
-		if (((t_argument *)head->next->content)->type == WILDCARD_EXP)
-		{
-			new = handle_wildcard_argument(*(t_argument *)head->next->content);
-			if (!new)
-				return (EXIT_FAILURE);
-			sort_arguments(&new);
-			replace_list_next_with_new(head, new);
-		}
-		head = head->next;
-	}
-	*list = dummy.next;
-	return (EXIT_SUCCESS);
-}

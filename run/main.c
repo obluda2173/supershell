@@ -155,7 +155,6 @@ int	repl(t_data *data)
 		}
 		add_history(data->line);
 		tokens = tokenize(data->line);
-
 		free(data->line);
 		data->line = NULL;
 		if (heredoc_loop(&tokens, data))

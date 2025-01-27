@@ -86,7 +86,7 @@ def send_cmds_minishell_with_open_fds(minishell, cmd):
     assert minishell.stdin is not None
     minishell.stdin.write(cmd.encode())
     minishell.stdin.flush()
-    time.sleep(0.05)  # give the OS time to close the file descriptor
+    time.sleep(0.1)  # give the OS time to close the file descriptor
     open_fds_end = get_open_fds()
     stdout_minishell, stderr_minishell = minishell.communicate()
     return stdout_minishell, stderr_minishell, open_fds_end

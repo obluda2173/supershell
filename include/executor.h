@@ -55,6 +55,7 @@ void	close_fds(int fds[2]);
 // executor_prepare_argv.c
 char **list_to_argv(t_list *arguments, char *cmd_path);
 int expand_wildcards_in_arguments(t_list **list);
+t_list	*handle_wildcard_argument(t_argument argument);
 
 void	sort_arguments(t_list **list);
 

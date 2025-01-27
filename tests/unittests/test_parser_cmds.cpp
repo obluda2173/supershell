@@ -488,7 +488,20 @@ INSTANTIATE_TEST_SUITE_P(
                 new_token("echo", BUILTIN),
                 new_token(NULL, END_OF_FILE),
             },
-            new_test_script_node(CMD_NODE, {new_test_cmd_node(new_token("which", WORD), {new_argument("echo", LITERAL)}, {})}, {}, {})}
+            new_test_script_node(CMD_NODE, {new_test_cmd_node(new_token("which", WORD), {new_argument("echo", LITERAL)}, {})}, {}, {})},
+        ParserTestParams{14, CMD_TEST,
+                         {
+                         new_token("echo", BUILTIN),
+                         new_token("*", WILDCARD),
+                         new_token(NULL, END_OF_FILE),
+                     },
+                         new_test_script_node(
+                             CMD_NODE,
+                             new_test_cmd_node(new_token("echo", BUILTIN),
+                                               {new_argument("*", WILDCARD_EXP),
+                                           },
+                                               {}),
+                             {}, {})}
     ));
 
 INSTANTIATE_TEST_SUITE_P(
