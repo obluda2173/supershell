@@ -24,7 +24,8 @@ int	execute_script(t_script_node *script_node, t_data *data)
 				data);
 		return (data->exit_status);
 	}
-	if (script_node->downstream)
-		return (execute_script(script_node->downstream, data));
+	if (script_node->node_type == PIPE_NODE) {
+		printf("hello\n");
+	}
 	return (0);
 }
