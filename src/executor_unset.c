@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 16:17:14 by erian             #+#    #+#             */
-/*   Updated: 2025/01/27 12:09:16 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/27 12:14:26 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int cstm_unset(t_list **ep, t_cmd_node *cmd_node)
 
     arg_lst = (t_list *)cmd_node->arguments;
     if (!ft_lstsize(cmd_node->arguments))
-        return ;
+        return (EXIT_SUCCESS);
     while (arg_lst)
     {
         arg = (t_argument *)arg_lst->content;
