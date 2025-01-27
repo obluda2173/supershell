@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "libft.h"
+#include <unistd.h>
 
 static bool	rewrite_var(t_list **ep, t_env_var *new_var)
 {
@@ -99,6 +101,24 @@ static void	sort_for_export(t_list **ep)
 	}
 }
 
+bool should_be_escaped(char c) {
+	if (c == '$' || c == '\\' || c == '\"')
+		return true;
+	return false;
+}
+
+void print_env_var(char* key, char *value) {
+	ft_putstr_fd("declare -x ", STDOUT_FILENO);
+	ft_putstr_fd(key, STDOUT_FILENO);
+	ft_putstr_fd("=\"", STDOUT_FILENO);
+	while (*value) {
+		if (should_be_escaped(*value))
+			ft_putchar_fd('\\', STDOUT_FILENO);
+		ft_putchar_fd( *value++, STDOUT_FILENO);
+	}
+	ft_putendl_fd("\"", STDOUT_FILENO);
+}
+
 static void	print_export(t_list **ep)
 {
 	t_list		*tmp_ep;
@@ -115,7 +135,7 @@ static void	print_export(t_list **ep)
 			continue ;
 		}
 		if (env_var->value)
-			printf("declare -x %s=\"%s\"\n", env_var->key, env_var->value);
+			print_env_var(env_var->key, env_var->value);
 		else
 			printf("declare -x %s\n", env_var->key);
 		tmp_ep = tmp_ep->next;

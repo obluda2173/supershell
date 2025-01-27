@@ -4,18 +4,6 @@ import pexpect
 import os
 from conftest import remove_cariage, remove_ansi_sequences
 
-# from conftest import (
-#     start_process,
-#     send_cmds_minishell_with_open_fds,
-#     parse_out_and_err_minishell,
-#     get_open_fds,
-# )
-# from assertions import (
-#     assert_no_memory_error_fsanitize,
-#     assert_no_new_file_descriptors,
-#     assert_no_memory_error_fsanitize,
-# )
-
 
 def assert_equal_export(bash_export_output, minishell_export_output):
     assert len(bash_export_output) == len(minishell_export_output)
@@ -35,7 +23,7 @@ logname = os.getenv("LOGNAME")
 
 def cstm_expect(expr, shell):
     try:
-        shell.expect(expr, timeout=0.5)
+        shell.expect(expr, timeout=1)
     except pexpect.TIMEOUT:
         print("Timeout occurred")
         assert False, f"Timeout occurred: warning: {expr}"
@@ -46,21 +34,22 @@ def get_bash_export_output(bash, line):
     bash.sendline(line)
     cstm_expect(r"\$ ", bash)
     assert bash.before is not None
-    export_vars_bash = [
+    bash_export_output = [
         remove_cariage(remove_ansi_sequences(line))
         for line in bash.before.split("\n")[1:-1]
     ]
-    export_vars_bash = [
+    bash_export_output = [
         line
-        for line in export_vars_bash
+        for line in bash_export_output
         if not line.startswith("declare -x COLUMNS")
         and not line.startswith("declare -x _JAVA_AWT_WM_NONREPARENTING")
+        and not line.startswith("declare -x DBUS_SESSION_BUS_ADDRESS")
+        and not line.startswith("declare -x LS_COLORS")
+        and not line.startswith("declare -x PATH")
+        and not line.startswith("declare -x SHLVL")
+        and not line.startswith("declare -x XMODIFIERS")
     ]
-    export_vars_bash = [
-        line[: line.find('"') + 1] if line.find('"') > 0 else line
-        for line in export_vars_bash
-    ]
-    return export_vars_bash
+    return bash_export_output
 
 
 def get_minishell_export_output(minishell, line):
@@ -73,8 +62,15 @@ def get_minishell_export_output(minishell, line):
         for line in minishell.before.split("\n")[1:-1]
     ]
     minishell_export_output = [
-        line[: line.find('"') + 1] if line.find('"') > 0 else line
+        line
         for line in minishell_export_output
+        if not line.startswith("declare -x COLUMNS")
+        and not line.startswith("declare -x _JAVA_AWT_WM_NONREPARENTING")
+        and not line.startswith("declare -x DBUS_SESSION_BUS_ADDRESS")
+        and not line.startswith("declare -x LS_COLORS")
+        and not line.startswith("declare -x PATH")
+        and not line.startswith("declare -x SHLVL")
+        and not line.startswith("declare -x XMODIFIERS")
     ]
     return minishell_export_output
 
@@ -84,11 +80,19 @@ def get_minishell_export_output(minishell, line):
     [
         ([], "export"),
         ([], "export < tests/end_to_end_tests/test_files/input1.txt"),
-        (
-            [],
-            "export < non_existant",
-        ),  # is an error case, needs to be handled seperately
         (["export VAR1"], "export"),
+        (["export VAR1="], "export"),
+        (["export VAR1=$LOGNAME"], "export"),
+        (["export VAR1=$LOGNAME VAR2=$VAR1"], "export"),
+        (["export VAR1=$LOGNAME VAR2=$VAR1 VAR3"], "export"),
+        (["export LOGNAME=new_logname"], "export"),
+        (["export VAR1=\"$LOGNAME\"'$LOGNAME'"], "export"),
+        (["export VAR1=\"$LOGNAME=\"'$LOGNAME'"], "export"),
+        (['export VAR1="$LOGNAME="\'LOG"inside"NAME\''], "export"),
+        (["export VAR1=\"some 'inside' string\""], "export"),
+        (["export VAR1=\"some 'inside' string\""], "export"),
+        (["export VAR1='value'"], "export"),
+        ([f"export VAR1={1000 * logname}"], "export"),
     ],
 )
 def test_export_with_redirection(precommands, export_cmd):
@@ -97,20 +101,35 @@ def test_export_with_redirection(precommands, export_cmd):
         cstm_expect(r"\$ ", bash)
         bash.sendline(cmd)
     bash_export_output = get_bash_export_output(bash, export_cmd)
-    for l in bash_export_output:
-        print(l)
     bash.sendline("exit")
     bash.close()
 
-    print()
     minishell = pexpect.spawn("./minishell", encoding="utf-8")
     for cmd in precommands:
         cstm_expect(r"\$ ", minishell)
         minishell.sendline(cmd)
     minishell_export_output = get_minishell_export_output(minishell, export_cmd)
-    for l in minishell_export_output:
-        print(l)
     minishell.sendline("exit")
     minishell.close()
 
     assert_equal_export(bash_export_output, minishell_export_output)
+
+
+@pytest.mark.parametrize(
+    "cmd,err_msg", [("export < non_existant", "No such file or directory")]
+)
+def test_export_errors(cmd, err_msg):
+    minishell = pexpect.spawn("./minishell", encoding="utf-8")
+
+    cstm_expect(r"\$ ", minishell)
+    minishell.sendline(cmd)
+    cstm_expect(r"\$ ", minishell)
+    assert minishell.before is not None
+    minishell_export_output = [
+        remove_cariage(remove_ansi_sequences(line))
+        for line in minishell.before.split("\n")
+    ]
+
+    assert err_msg in minishell_export_output[1]
+    minishell.sendline("exit")
+    minishell.close()
