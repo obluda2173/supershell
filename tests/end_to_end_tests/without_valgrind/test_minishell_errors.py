@@ -74,12 +74,12 @@ def test_errors_executables():
 
     err_msg = "Permission denied"
     want_exit_status = 1
-    if os.path.isfile(f"/home/{logname}/.local/bin/deleteme"):
-        os.remove(f"/home/{logname}/.local/bin/deleteme")
-    with open(f"/home/{logname}/.local/bin/deleteme", "w") as file:
+    if os.path.isfile(f"/home/{logname}/bin/deleteme"):
+        os.remove(f"/home/{logname}/bin/deleteme")
+    with open(f"/home/{logname}/bin/deleteme", "w") as file:
         file.write("Hello, World!")
     os.chmod(
-        f"/home/{logname}/.local/bin/deleteme", 0o644
+        f"/home/{logname}/bin/deleteme", 0o644
     )  # Owner can read/write, others can only read
 
     minishell = start_process("./minishell")
@@ -100,5 +100,5 @@ def test_errors_executables():
     assert err_msg in stderr_minishell
     assert want_exit_status == int(stdout_minishell[0])
 
-    os.remove(f"/home/{logname}/.local/bin/deleteme")
+    os.remove(f"/home/{logname}/bin/deleteme")
     # assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)
