@@ -15,9 +15,26 @@
 #include "parser.h"
 #include <unistd.h>
 
+void print_tokens_kay(t_dllist *tokens) {
+
+	t_dllist* head2 = tokens;
+	int count = 1;
+	while (head2) {
+		printf("count: %d\n", count++);
+		printf("%s\n", ((t_token*)head2->content)->content);
+		printf("%d\n", ((t_token*)head2->content)->type);
+		fflush(stdout);
+		head2 = head2->next;
+	}
+	printf("vorbei\n");
+	fflush(stdout);
+
+}
+
 t_redirection	*extract_redirection(t_dllist *tokens)
 {
 	t_redirection	*r;
+
 
 	r = parse_redirection_token(*(t_token *)tokens->content);
 	if (!r)
@@ -33,16 +50,17 @@ t_argument	*extract_argument(t_token *t)
 	if (!arg)
 		return (NULL);
 	arg->word = ft_strdup(t->content);
-	if (t->type == WORD || t->type == DOUBLE_QUOTE || t->type == SINGLE_QUOTE || t->type == BUILTIN)
+	/* if (t->type == WORD || t->type == DOUBLE_QUOTE || t->type == SINGLE_QUOTE || t->type == BUILTIN) */
+	if (t->type == WORD || t->type == BUILTIN)
 		arg->type = LITERAL;
-	if (t->type == DOUBLE_QUOTE)
-		arg->type = DOUBLE_QUOTE_STR;
-	if (t->type == DOLLAR)
-	{
-		arg->type = ENV_EXP;
-		if (!ft_strncmp(arg->word, "?", 1))
-			arg->type = EXIT_STATUS_EXP;
-	}
+	/* if (t->type == DOUBLE_QUOTE) */
+	/* 	arg->type = DOUBLE_QUOTE_STR; */
+	/* if (t->type == DOLLAR) */
+	/* { */
+	/* 	arg->type = ENV_EXP; */
+	/* 	if (!ft_strncmp(arg->word, "?", 1)) */
+	/* 		arg->type = EXIT_STATUS_EXP; */
+	/* } */
 	if (t->type == WILDCARD)
 		arg->type = WILDCARD_EXP;
 	return (arg);

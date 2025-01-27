@@ -10,13 +10,13 @@ void	expand_env(t_list *arguments, t_data *data)
 	while (head)
 	{
 		a = (t_argument *)head->content;
-		if (a->type == DOUBLE_QUOTE_STR)
-		{
-			new_word = handle_double_quotes(a->word, data);
-			free(a->word);
-			a->word = new_word;
-			a->type = LITERAL;
-		}
+		/* if (a->type == DOUBLE_QUOTE_STR) */
+		/* { */
+		/* 	new_word = handle_double_quotes(a->word, data); */
+		/* 	free(a->word); */
+		/* 	a->word = new_word; */
+		/* 	a->type = LITERAL; */
+		/* } */
 		if (a->type == ENV_EXP || a->type == EXIT_STATUS_EXP)
 		{
 			new_word = handle_dollar(a->word, data);

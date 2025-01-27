@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 14:55:43 by erian             #+#    #+#             */
-/*   Updated: 2025/01/15 11:59:53 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/25 13:19:34 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,15 +65,14 @@ void	init_operators_list(char **operators)
 	operators[4] = "|";
 	operators[5] = ">";
 	operators[6] = "<";
-	operators[7] = "=";
-	operators[8] = "(";
-	operators[9] = ")";
+	operators[7] = "(";
+	operators[8] = ")";
 }
 
 char	*handle_operators(const char *input, size_t *i,
 								char *result, size_t *j)
 {
-	char	*operators[10];
+	char	*operators[9];
 	size_t	op_len;
 	size_t	k;
 	size_t	l;
@@ -81,7 +80,7 @@ char	*handle_operators(const char *input, size_t *i,
 	op_len = 0;
 	k = -1;
 	init_operators_list(operators);
-	while (++k < 10)
+	while (++k < 9)
 	{
 		op_len = ft_strlen(operators[k]);
 		if (ft_strncmp(&input[*i], operators[k], op_len) == 0)

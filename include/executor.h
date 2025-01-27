@@ -67,6 +67,17 @@ bool	hidden_n_star(char *entry, char *pattern);
 void	expand_env(t_list *arguments, t_data *data);
 int	expand_arguments(t_cmd_node *cmd_node, t_data *data);
 int	expand_redirections(t_cmd_node *cmd_node, t_data *data);
+
 char *expand_variables(char *word, t_data *data);
 bool is_env_var_char(char c);
+char *handle_literal(char *word, t_data *data);
+
+// executor_export_1.c
+int	cstm_export(t_list **ep, t_cmd_node *cmd_node);
+
+// executor_export_2.c
+bool assign_var(t_env_var **new_var, char *raw_var);
+
+// executor_unset.c
+void cstm_unset(t_list **ep, t_cmd_node *cmd_node);
 #endif // EXECUTOR_

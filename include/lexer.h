@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: erian <erian@student.42>                   +#+  +:+       +#+        */
+/*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 14:58:41 by erian             #+#    #+#             */
-/*   Updated: 2025/01/16 20:24:42 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/25 15:21:28 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,26 +19,21 @@
 
 extern const char	*token_strings[];
 
-typedef enum e_token_type
-{
-	BUILTIN,			// 0
-	WORD,				// 1
-	SINGLE_QUOTE,		// 2
-	DOUBLE_QUOTE,		// 3
-	REDIRECT_IN,		// 4
-	REDIRECT_OUT,		// 5
-	PIPE,				// 6
-	HERE_DOC,			// 7
-	REDIRECT_APPEND,	// 8
-	END_OF_FILE,		// 9
-	DOLLAR,				// 10
-	AND,				// 11
-	OR,					// 12
-	WILDCARD,			// 13
-	EQUAL_SIGN,			// 14
-	LPAREN,				// 15
-	RPAREN,				// 16
-	INVALID,			// 17
+typedef enum e_token_type {
+	BUILTIN,         // 0
+	WORD,            // 1
+	REDIRECT_IN,     // 2
+	REDIRECT_OUT,    // 3
+	PIPE,            // 4
+	HERE_DOC,        // 5
+	REDIRECT_APPEND, // 6
+	END_OF_FILE,     // 7
+	AND,             // 8
+	OR,              // 9
+	WILDCARD,        // 10
+	LPAREN,          // 11
+	RPAREN,          // 12
+	INVALID,         // 13
 	NONE				/* added by Kay to have a null-value for t_token_type*/
 }	t_token_type;
 
@@ -87,9 +82,7 @@ t_token		*get_next_token(t_line_container *lc);
 
 // lexer_tokenize_2.c
 void		skip_operator(t_line_container *lc);
-void		skip_quoted_text(t_line_container *lc);
-void		skip_variable(t_line_container *lc);
-void		skip_unquoted_word(t_line_container *lc);
+void		skip_word(t_line_container *lc);
 char		*allocate_word(const char *line, int start, size_t len);
 
 // lexer_tokenize_3.c

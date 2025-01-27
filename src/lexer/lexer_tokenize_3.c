@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 17:23:51 by erian             #+#    #+#             */
-/*   Updated: 2025/01/13 13:42:29 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/25 14:35:49 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ static t_token_type	assign_operator_type(char *str)
 		return (OR);
 	if (!ft_strcmp(str, "&&\0"))
 		return (AND);
-	if (!ft_strcmp(str, "=\0"))
-		return (EQUAL_SIGN);
 	if (!ft_strcmp(str, "|\0"))
 		return (PIPE);
 	if (!ft_strncmp(str, "<<", 2))
@@ -52,12 +50,6 @@ static t_token_type	assign_general_type(char *str)
 {
 	if (!str)
 		return (END_OF_FILE);
-	if (!ft_strncmp(str, "\'", 1))
-		return (SINGLE_QUOTE);
-	if (!ft_strncmp(str, "\"", 1))
-		return (DOUBLE_QUOTE);
-	if (!ft_strncmp(str, "$", 1) && ft_strlen(str) > 1)
-		return (DOLLAR);
 	if (ft_strchr(str, '*'))
 		return (WILDCARD);
 	if (ft_strchr(str, ';') || ft_strchr(str, '\\'))
@@ -74,5 +66,6 @@ t_token_type	assign_type(char *str)
 	type = assign_operator_type(str);
 	if (type != WORD)
 		return (type);
-	return (assign_general_type(str));
+	type = assign_general_type(str);
+	return (type);
 }

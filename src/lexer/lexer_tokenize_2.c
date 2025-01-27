@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 17:06:20 by erian             #+#    #+#             */
-/*   Updated: 2025/01/13 13:50:41 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/25 15:20:50 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,30 +27,26 @@ void	skip_operator(t_line_container *lc)
 		lc->pos++;
 }
 
-void	skip_quoted_text(t_line_container *lc)
+void	skip_word(t_line_container *lc)
 {
-	char	quote;
-
-	quote = lc->line[lc->pos];
-	lc->pos++;
-	while (lc->line[lc->pos] && lc->line[lc->pos] != quote)
-		lc->pos++;
-	if (lc->line[lc->pos] == quote)
-		lc->pos++;
-}
-
-void	skip_variable(t_line_container *lc)
-{
-	lc->pos++;
-	while (lc->line[lc->pos] && (ft_isalnum(lc->line[lc->pos])
-			|| lc->line[lc->pos] == '_' || lc->line[lc->pos] == '?'))
-		lc->pos++;
-}
-
-void	skip_unquoted_word(t_line_container *lc)
-{
-	while (lc->line[lc->pos] && !ft_strchr(" \'\"<>|&$()", lc->line[lc->pos]))
-		lc->pos++;
+	char quote;
+	
+	while (lc->line[lc->pos])
+	{
+		if (lc->line[lc->pos] == '\'' || lc->line[lc->pos] == '\"')
+		{
+			quote = lc->line[lc->pos];
+			lc->pos++;
+			while (lc->line[lc->pos] && lc->line[lc->pos] != quote)
+				lc->pos++;
+			if (lc->line[lc->pos] == quote)
+				lc->pos++;
+		}
+		else if (ft_strchr(" <>|&()", lc->line[lc->pos]))
+			break;
+		else
+			lc->pos++;
+	}
 }
 
 char	*allocate_word(const char *line, int start, size_t len)

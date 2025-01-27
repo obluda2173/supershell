@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:59:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/15 13:25:54 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/26 09:30:33 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 #include <readline/readline.h>
 #include <stdio.h>
 #include <unistd.h>
-
 
 void	handle_signals_2(int signum)
 {
@@ -156,11 +155,7 @@ int	repl(t_data *data)
 		}
 		add_history(data->line);
 		tokens = tokenize(data->line);
-		t_dllist *head = tokens;
-		while (head) {
-			printf("%s\n", ((t_token*)head->content)->content);
-			head = head->next;
-		}
+
 		free(data->line);
 		data->line = NULL;
 		if (heredoc_loop(&tokens, data))

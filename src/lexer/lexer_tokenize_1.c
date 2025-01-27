@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 10:42:33 by erian             #+#    #+#             */
-/*   Updated: 2025/01/15 13:25:15 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/25 15:21:06 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,16 @@ static char	*extract_word(t_line_container *lc)
 	size_t	len;
 
 	skip_spaces((char *)lc->line, &(lc->pos));
-	start = lc->pos;
 	if (!lc->line[lc->pos])
 		return (NULL);
+	start = lc->pos;
 	if (ft_strchr("<>&|()", lc->line[lc->pos]))
 		skip_operator(lc);
 	else if (lc->line[lc->pos] >= '0' && lc->line[lc->pos] <= '2'
 		&& lc->line[lc->pos + 1] == '>' && lc->line[lc->pos + 2] != '>')
 		lc->pos += 2;
-	else if (lc->line[lc->pos] == '\'' || lc->line[lc->pos] == '\"')
-		skip_quoted_text(lc);
-	else if (lc->line[lc->pos] == '$')
-		skip_variable(lc);
 	else
-		skip_unquoted_word(lc);
+		skip_word(lc);
 	len = lc->pos - start;
 	if (len == 0)
 		return (NULL);
@@ -64,10 +60,10 @@ t_token	*get_next_token(t_line_container *lc)
 {
 	char	*word;
 
-	if (!lc->line)
-		return (NULL);
-	if (lc->line[lc->pos] == '\0')
+	if (!lc->line || lc->line[lc->pos] == '\0')
 		return (create_token(NULL, END_OF_FILE));
 	word = extract_word(lc);
+	if (!word)
+		return (create_token(NULL, END_OF_FILE));
 	return (create_token(word, assign_type(word)));
 }
