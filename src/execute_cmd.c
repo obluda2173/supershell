@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:36:06 by erian             #+#    #+#             */
-/*   Updated: 2025/01/27 12:07:46 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/27 13:01:19 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,9 @@ int execute_builtin(t_cmd_node *cmd_node, t_data *data, int fds[2]) {
 		return (cstm_export(&data->ep, cmd_node));
 	if (!ft_strcmp("unset", cmd_node->cmd_token.content))
 		return (cstm_unset(&data->ep, cmd_node));
-	return EXIT_SUCCESS;
+	if (!ft_strcmp("env", cmd_node->cmd_token.content))
+		return (cstm_env(&data->ep, cmd_node));
+	return (EXIT_SUCCESS);
 }
 
 int	execute_command(t_cmd_node *cmd_node, t_data *data)
