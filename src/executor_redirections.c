@@ -69,7 +69,11 @@ int	set_input(t_redirection r, int fds[2], int hered_pipe[2])
 	}
 	if (r.type == HERED)
 	{
-		pipe(hered_pipe);
+		if (pipe(hered_pipe) == -1) {
+			perror("pipe");
+			close_fds(fds);
+			return EXIT_FAILURE;
+		}
 		write(hered_pipe[1], r.word, ft_strlen(r.word));
 		close(hered_pipe[1]);
 		if (fds[0] != STDIN_FILENO)

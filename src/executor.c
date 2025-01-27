@@ -12,6 +12,7 @@
 
 #include "executor.h"
 #include "parser.h"
+#include <sys/wait.h>
 #include <unistd.h>
 
 int	execute_script(t_script_node *script_node, t_data *data)
@@ -19,13 +20,31 @@ int	execute_script(t_script_node *script_node, t_data *data)
 	if (!script_node)
 		return (0);
 	if (script_node->node_type == CMD_NODE)
-	{
-		data->exit_status = execute_command(&script_node->node_data.cmd_node,
-				data);
-		return (data->exit_status);
-	}
-	if (script_node->node_type == PIPE_NODE) {
-		printf("hello\n");
-	}
-	return (0);
+		return execute_command(&script_node->node_data.cmd_node, data);
+	/* if (script_node->node_type == PIPE_NODE) { */
+	/* 	int pipedes[2]; */
+	/* 	int status; */
+	/* 	if (pipe(pipedes) == -1) */
+	/* 	{ */
+	/* 		perror("pipe"); */
+	/* 		return EXIT_FAILURE; */
+	/* 	} */
+	/* 	pid_t pid = fork(); */
+	/* 	if (pid < 0) */
+	/* 		return (error_fork()); */
+	/* 	if (pid == 0) { */
+	/* 		close(pipedes[0]); */
+	/* 		dup2(pipedes[1], STDOUT_FILENO); */
+	/* 		execute_script(script_node->upstream, data); */
+	/* 	} */
+	/* 	if (waitpid(pid, &status, 0) == -1) { */
+	/* 		perror("waitpid"); */
+	/* 		return EXIT_FAILURE; */
+	/* 	} */
+	/* 	if (WIFEXITED(status)) { */
+
+	/* 	} */
+	/* 	printf("hello\n"); */
+	/* } */
+	return EXIT_SUCCESS;
 }
