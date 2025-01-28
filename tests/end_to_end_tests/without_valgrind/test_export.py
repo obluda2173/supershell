@@ -18,7 +18,7 @@ def assert_equal_export(bash_export_output, minishell_export_output):
         ), f"{line} not in bash_export"
 
 
-logname = os.getenv("LOGNAME")
+logname = os.getenv("LOGNAME", "")
 
 
 def get_bash_export_output(bash, line):

@@ -64,7 +64,7 @@ def test_errors(cmd, err_msg, want_exit_status):
 #
 import os
 
-logname = os.getenv("LOGNAME")
+logname = os.getenv("LOGNAME", "")
 
 
 cmd = "echo $PATH\n"

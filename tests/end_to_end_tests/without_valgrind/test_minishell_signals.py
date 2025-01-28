@@ -11,7 +11,7 @@ import time
 
 from conftest import remove_cariage, remove_ansi_sequences
 
-logname = os.getenv("LOGNAME")
+logname = os.getenv("LOGNAME", "")
 
 
 def test_sigint_in_interactive_mode():
