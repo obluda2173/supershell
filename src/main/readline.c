@@ -38,7 +38,7 @@ char	*meeting_line(t_data **data)
 		}
 		start = start->next;
 	}
-	return (NULL);
+	return ft_strdup("$ ");
 }
 
 char	*rl_gets(const char *prompt)

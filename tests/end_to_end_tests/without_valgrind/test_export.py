@@ -87,6 +87,7 @@ def get_minishell_export_output(minishell, line):
         ([f"export VAR1={1000 * logname}"], "export"),
         (['export VAR="$USER"', "export VAR="], "export"),
         (['export VAR="$USER"', "export VAR"], "export"),
+        (["unset LOGNAME"], "export"),
     ],
 )
 def test_export(precommands, export_cmd):
