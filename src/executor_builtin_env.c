@@ -22,7 +22,7 @@ int	cstm_env(t_list **ep, t_cmd_node *cmd_node)
 	{
 		error_arg = cmd_node->arguments->content;
 		printf("env: \'%s\': No such file or directory\n", error_arg->word);
-		return (EXIT_FAILURE);
+		return 127;
 	}
 	tmp_ep = *ep;
 	while (tmp_ep)

@@ -117,9 +117,10 @@ def test_export(precommands, export_cmd):
 
 
 @pytest.mark.parametrize(
-    "cmd,err_msg", [("export < non_existant", "No such file or directory")]
+    "cmd,err_msg,want_exit_status",
+    [("export < non_existant", "No such file or directory", 1)],
 )
-def test_export_errors(cmd, err_msg):
+def test_export_errors(cmd, err_msg, want_exit_status):
     minishell = pexpect.spawn("./minishell", encoding="utf-8")
 
     cstm_expect(r"\$ ", minishell)
@@ -132,6 +133,7 @@ def test_export_errors(cmd, err_msg):
     ]
 
     assert err_msg in minishell_export_output[1]
-    assert get_exit_status(minishell) == 1
+    assert get_exit_status(minishell) == want_exit_status
+
     minishell.sendline("exit")
     minishell.close()

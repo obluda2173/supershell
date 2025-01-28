@@ -99,3 +99,28 @@ def test_env(precommands, env_cmd):
 
     assert_equal_env(bash_env_output, minishell_env_output)
     assert bash_exit_status == minishell_exit_status
+
+
+@pytest.mark.parametrize(
+    "cmd,err_msg,want_exit_status",
+    [
+        ("env < non", "No such file or directory", 1),
+        ("env non", "No such file or directory", 127),
+    ],
+)
+def test_env_errors(cmd, err_msg, want_exit_status):
+    minishell = pexpect.spawn("./minishell", encoding="utf-8")
+
+    cstm_expect(r"\$ ", minishell)
+    minishell.sendline(cmd)
+    cstm_expect(r"\$ ", minishell)
+    assert minishell.before is not None
+    minishell_env_output = [
+        remove_cariage(remove_ansi_sequences(line))
+        for line in minishell.before.split("\n")
+    ]
+
+    assert err_msg in minishell_env_output[1]
+    assert get_exit_status(minishell) == want_exit_status
+    minishell.sendline("exit")
+    minishell.close()
