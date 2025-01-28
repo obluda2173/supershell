@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 17:20:33 by erian             #+#    #+#             */
-/*   Updated: 2025/01/28 10:40:30 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/28 11:29:25 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,28 +30,30 @@ t_env_var	*get_env_var(t_list *ep, char *key)
 
 static void update_dirs(t_list **ep)
 {
-    char *tmp;
-	t_env_var *oldpwd;
-	t_env_var *pwd;
-	
-	tmp = getcwd(NULL, 0);
+    char *tmp = getcwd(NULL, 0);
+    t_env_var *oldpwd = get_env_var(*ep, "OLDPWD");
+    t_env_var *pwd = get_env_var(*ep, "PWD");
+
     if (!tmp)
     {
         perror("getcwd");
-        return;
-    }
-    oldpwd = get_env_var(*ep, "OLDPWD");
-	pwd = get_env_var(*ep, "PWD");
+        return ;
+	}
     if (oldpwd)
     {
-        free(oldpwd->value);
-        oldpwd->value = ft_strdup(pwd->value);
+		free(oldpwd->value);
+		if (pwd && pwd->value)
+			oldpwd->value = ft_strdup(pwd->value);
+		else
+			oldpwd->value = ft_strdup(tmp);
     }
     if (pwd)
     {
         free(pwd->value);
         pwd->value = tmp;
     }
+    else
+        free(tmp); 
 }
 
 static int check_args(t_list *args)
