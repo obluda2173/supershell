@@ -157,3 +157,9 @@ def get_exit_status(shell):
 
     assert shell.before is not None
     return int(remove_ansi_sequences(remove_cariage(shell.before.split("\n")[1])))
+
+
+def remove_files(files):
+    for f in files:
+        if os.path.isfile(f):
+            os.remove(f)

@@ -7,12 +7,14 @@ from conftest import (
     get_open_fds,
     send_cmds_minishell_with_open_fds,
     parse_out_and_err_minishell,
+    remove_files,
 )
 from assertions import (
     assert_no_memory_error_fsanitize,
     assert_same_lines_ordered,
     assert_no_new_file_descriptors,
 )
+import os
 
 
 @pytest.mark.parametrize(
@@ -149,3 +151,30 @@ def test_in_and_heredoc_redirections(cmd):
     assert_same_lines_ordered(stdout_minishell, stdout_bash)
 
     # assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)
+
+
+def test_multiple_redirect_out():
+    cmd = "\n".join(["echo -n hello  >file1>file2>file3"] + ["echo $?\n"])
+    minishell = start_process("./minishell")
+    stdout_minishell, stderr_minishell, open_fds_end = (
+        send_cmds_minishell_with_open_fds(minishell, cmd)
+    )
+    stdout_minishell, stderr_minishell = parse_out_and_err_minishell(
+        stdout_minishell, stderr_minishell
+    )
+
+    assert int(stdout_minishell[0]) == 0
+
+    assert os.path.isfile("file1")
+    assert os.path.isfile("file2")
+    assert os.path.isfile("file3")
+
+    with open("file1", "r") as f:
+        assert len(f.readlines()) == 0
+    with open("file2", "r") as f:
+        assert len(f.readlines()) == 0
+    with open("file3", "r") as f:
+        lines = f.readlines()
+        assert lines[0] == "hello"
+
+    remove_files(["file1", "file2", "file3"])
