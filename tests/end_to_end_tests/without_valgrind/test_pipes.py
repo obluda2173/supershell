@@ -11,6 +11,8 @@ from conftest import cstm_expect, remove_cariage, remove_ansi_sequences, get_exi
         ("echo hello | cat"),
         ("echo hello2 | cat"),
         ("echo hello2 | wc -c | cat | wc -c"),
+        ("export VAR=asdf | echo $VAR"),
+        ("export LOGNAME=asdf | echo $LOGNAME"),
         # ("echo hello | cat < non_existant"),
         # ("ls | cat")
     ],
@@ -59,6 +61,14 @@ def test_pipes(cmd):
         ("echo hello | cat < no", "No such file or directory", 1),
         ("echo hello | asdf", "Command not found", 127),
         ("echo hello | cat | asdf", "Command not found", 127),
+        ("export < non | echo hello", "No such file or directory", 0),
+        ("echo hello | export < non", "No such file or directory", 1),
+        ("echo hello | echo hello | export < non", "No such file or directory", 1),
+        (
+            "echo hello | echo hello | export < tests/end_to_end_tests/test_files/no_perm.txt",
+            "Permission denied",
+            1,
+        ),
     ],
 )
 def test_pipe_errors(cmd, err_msg, want_exit_status):

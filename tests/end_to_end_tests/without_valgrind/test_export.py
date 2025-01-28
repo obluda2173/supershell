@@ -118,7 +118,14 @@ def test_export(precommands, export_cmd):
 
 @pytest.mark.parametrize(
     "cmd,err_msg,want_exit_status",
-    [("export < non_existant", "No such file or directory", 1)],
+    [
+        ("export < non_existant", "No such file or directory", 1),
+        (
+            "export < tests/end_to_end_tests/test_files/no_perm.txt",
+            "Permission denied",
+            1,
+        ),
+    ],
 )
 def test_export_errors(cmd, err_msg, want_exit_status):
     minishell = pexpect.spawn("./minishell", encoding="utf-8")
