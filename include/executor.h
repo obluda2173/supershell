@@ -97,4 +97,7 @@ int cstm_cd(t_list **ep, t_list *args);
 // executor_builtin_exit.c
 int	cstm_exit(t_list *args, t_data *data);
 
+
+/* execute_pipeline.c */
+int	execute_pipeline(t_script_node *sn, t_data *data);
 #endif // EXECUTOR_
