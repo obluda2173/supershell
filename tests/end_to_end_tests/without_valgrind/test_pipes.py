@@ -2,7 +2,11 @@
 
 import pytest
 import pexpect
-from conftest import cstm_expect, remove_cariage, remove_ansi_sequences, get_exit_status
+from conftest import (
+    cstm_expect,
+    remove_cariage,
+    remove_ansi_sequences,
+)
 
 
 @pytest.mark.parametrize(

@@ -137,7 +137,7 @@ char	*minishell_input(t_data *data)
 	wait(NULL);
 	free(data->line);
 	data->line = NULL;
-	return (read_line_from_child(pipefd[0]));
+	return (read_line_from_fd(pipefd[0]));
 }
 
 int	repl(t_data *data)

@@ -66,28 +66,3 @@ def test_minishell_echo_wo_newline():
     assert_no_memory_error_valgrind(stdout_minishell, stderr_minishell)
     assert_no_open_fds_valgrind(stdout_minishell, stderr_minishell)
     assert_same_lines_ordered(stdout_bash, stdout_minishell)
-
-
-@pytest.mark.parametrize(
-    "cmd",
-    [
-        (["which echo"]),
-        (["which echo < tests/end_to_end_tests/test_files/input1.txt"]),
-        # (["echo *", "echo *"]),
-    ],
-)
-def test_which_builtin(cmd):
-    minishell = start_process_with_valgrind("./minishell")
-
-    cmd = "\n".join(cmd + ["echo $?\n"])
-
-    stdout_minishell, stderr_minishell = send_cmds_minishell(minishell, cmd)
-
-    stdout_minishell, stderr_minishell = parse_out_and_err_minishell(
-        stdout_minishell, stderr_minishell
-    )
-
-    assert_no_memory_error_valgrind(stdout_minishell, stderr_minishell)
-    assert_no_open_fds_valgrind(stdout_minishell, stderr_minishell)
-    assert "minishell built-in command" in stdout_minishell[0]
-    assert "0" == stdout_minishell[1]

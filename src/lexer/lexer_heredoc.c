@@ -132,7 +132,7 @@ char	*read_heredoc_input(char *delimiter, t_data *data)
 			free(heredoc_input);
 			return NULL;
 		}
-		line = read_line_from_child(pipefd[0]);
+		line = read_line_from_fd(pipefd[0]);
 		if (!line || ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);

@@ -99,7 +99,7 @@ void *my_realloc(void *ptr, size_t new_size) {
 	return new_ptr;
 }
 
-char	*read_line_from_child(int fd)
+char	*read_line_from_fd(int fd)
 {
 	char	buffer[BUFFER_SIZE];
 	char	*content;
@@ -135,5 +135,6 @@ char	*read_line_from_child(int fd)
 		return (NULL);
 	if (content)
 		content[total_size] = '\0'; // Null-terminate the string
+	close(fd);
 	return (content);
 }
