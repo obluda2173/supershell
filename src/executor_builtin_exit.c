@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 12:13:32 by erian             #+#    #+#             */
-/*   Updated: 2025/01/28 15:34:00 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/28 16:29:40 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,28 +36,30 @@ static bool valid_arg(char *str)
     return true;
 }
 
-int cstm_exit(t_list *args)
+int cstm_exit(t_list *args, t_data *data)
 {
     t_argument *arg;
     int exit_status = 0;
 
     if (ft_lstsize(args) > 1)
     {
-        ft_putstr_fd("exit\nexit: too many arguments\n", STDERR_FILENO);
-        return (EXIT_FAILURE);
-    }
-    if (ft_lstsize(args) > 0)
-    {
         arg = (t_argument *)args->content;
         if (!valid_arg(arg->word))
         {
             ft_putstr_fd("exit\nminishell: numeric argument required\n", STDERR_FILENO);
-            exit(2);
+            data->exit = true;
+            exit_status = ft_atoi(arg->word) % 256;
+            if (exit_status < 0)
+                exit_status += 256;
         }
-        exit_status = ft_atoi(arg->word) % 256;
-        if (exit_status < 0)
-            exit_status += 256;
+        else
+        {
+            ft_putstr_fd("exit\nexit: too many arguments\n", STDERR_FILENO);
+            return (EXIT_FAILURE);
+        }
     }
-    ft_putstr_fd("exit\n", STDOUT_FILENO);
+    else
+        ft_putstr_fd("exit\n", STDOUT_FILENO);
+    data->exit = true;
     return (exit_status);
 }
