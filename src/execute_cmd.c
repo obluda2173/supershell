@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 15:36:06 by erian             #+#    #+#             */
-/*   Updated: 2025/01/28 09:39:57 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/28 15:32:33 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,8 @@ int execute_builtin(t_cmd_node *cmd_node, t_data *data, int fds[2]) {
 		return (cstm_pwd(&data->ep, cmd_node));
 	if (!ft_strcmp("cd", cmd_node->cmd_token.content))
 		return (cstm_cd(&data->ep, cmd_node->arguments));
+	if (!ft_strcmp("exit", cmd_node->cmd_token.content))
+		return (cstm_exit(cmd_node->arguments));
 	return (EXIT_SUCCESS);
 }
 

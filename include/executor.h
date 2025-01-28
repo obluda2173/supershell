@@ -94,4 +94,7 @@ int	cstm_pwd(t_list **ep, t_cmd_node *cmd_node);
 // executor_builtin_cd.c
 int cstm_cd(t_list **ep, t_list *args);
 
+// executor_builtin_exit.c
+int	cstm_exit(t_list *args);
+
 #endif // EXECUTOR_

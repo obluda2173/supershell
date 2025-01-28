@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:59:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/26 09:30:33 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/28 15:36:02 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	parse_and_execute(t_dllist *tokens, t_data *data)
 
 bool	check_data(t_data *data)
 {
-	if (!data->line || !ft_strncmp(data->line, "exit", 4))
+	if (!data->line)
 	{
 		data->exit = true;
 		return (false);
