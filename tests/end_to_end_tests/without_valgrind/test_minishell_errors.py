@@ -39,6 +39,7 @@ import pytest
             "Command not found",
             127,
         ),
+        (["minishell"], "Command not found", 127),
     ],
 )
 def test_errors(cmd, err_msg, want_exit_status):

@@ -88,6 +88,7 @@ def get_minishell_export_output(minishell, line):
         (['export VAR="$USER"', "export VAR="], "export"),
         (['export VAR="$USER"', "export VAR"], "export"),
         (["unset LOGNAME"], "export"),
+        (["export VAR1=var1 VAR2=var2", "unset VAR1 VAR2"], "export"),
     ],
 )
 def test_export(precommands, export_cmd):

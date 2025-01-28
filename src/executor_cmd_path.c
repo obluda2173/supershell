@@ -58,9 +58,13 @@ char	*find_path(char *cmd, char *path_env)
 
 	if (!cmd || !path_env)
 		return (NULL);
+
+	if (ft_strchr(cmd, '/') && access(cmd, F_OK) == 0)
+		return ft_strdup(cmd);
 	paths = ft_split(path_env, ':');
 	if (!paths)
 		return (NULL);
+
 	final_path = search_in_paths(cmd, paths);
 	free_char_array(paths);
 	return (final_path);

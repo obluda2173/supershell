@@ -34,6 +34,10 @@ from conftest import (
         (['echo "$? path $LOGNAME"']),
         ([f'echo {10000 * "l"}']),
         (["echo \"hello ' $LOGNAME ' hello ' \" "]),
+        (["echo $PWD"]),
+        (["/usr/bin/ls"]),
+        (["tests/end_to_end_tests/test_executables/hello_world"]),
+        (["./tests/end_to_end_tests/test_executables/hello_world"]),
     ],
 )
 def test_minishell(cmd):
