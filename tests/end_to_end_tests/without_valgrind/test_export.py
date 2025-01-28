@@ -6,7 +6,6 @@ from conftest import remove_cariage, remove_ansi_sequences, cstm_expect, get_exi
 
 
 def assert_equal_export(bash_export_output, minishell_export_output):
-    assert len(bash_export_output) == len(minishell_export_output)
     for line in bash_export_output:
         assert any(
             [line.startswith(line_m) for line_m in minishell_export_output]
@@ -16,6 +15,7 @@ def assert_equal_export(bash_export_output, minishell_export_output):
         assert any(
             [line.startswith(line_b) for line_b in bash_export_output]
         ), f"{line} not in bash_export"
+    assert len(bash_export_output) == len(minishell_export_output)
 
 
 logname = os.getenv("LOGNAME", "")
@@ -40,6 +40,7 @@ def get_bash_export_output(bash, line):
         and not line.startswith("declare -x PATH")
         and not line.startswith("declare -x SHLVL")
         and not line.startswith("declare -x XMODIFIERS")
+        and not line.startswith("declare -x PYENV_SHELL")
     ]
     return bash_export_output
 
@@ -63,6 +64,7 @@ def get_minishell_export_output(minishell, line):
         and not line.startswith("declare -x PATH")
         and not line.startswith("declare -x SHLVL")
         and not line.startswith("declare -x XMODIFIERS")
+        and not line.startswith("declare -x PYENV_SHELL")
     ]
     return minishell_export_output
 

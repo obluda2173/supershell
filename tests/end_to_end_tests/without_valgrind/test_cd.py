@@ -23,7 +23,7 @@ def assert_equal_lines(bash_output, minishell_output):
 @pytest.mark.parametrize(
     "commands",
     [
-        (["cd src", "ls"]),
+        (["cd src", "ls -l"]),
         ("unset PWD", "cd .."),
         (
             "mkdir a",

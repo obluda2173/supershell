@@ -124,6 +124,15 @@ def remove_cariage(text):
     return ansi_escape.sub("", text)
 
 
+def remove_tab(text):
+    ansi_escape = re.compile(
+        r"""\t""",
+        re.VERBOSE,
+    )
+
+    return ansi_escape.sub("", text)
+
+
 def remove_ansi_sequences(text):
     ansi_escape = re.compile(
         r"""

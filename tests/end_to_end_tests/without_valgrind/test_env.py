@@ -26,6 +26,7 @@ def get_bash_env_output(bash, line):
         and not line.startswith("PATH")
         and not line.startswith("SHLVL")
         and not line.startswith("XMODIFIERS")
+        and not line.startswith("PYENV_SHELL")
     ]
     return bash_env_output
 
@@ -50,6 +51,7 @@ def get_minishell_env_output(minishell, line):
         and not line.startswith("PATH")
         and not line.startswith("SHLVL")
         and not line.startswith("XMODIFIERS")
+        and not line.startswith("PYENV_SHELL")
     ]
     return minishell_env_output
 
