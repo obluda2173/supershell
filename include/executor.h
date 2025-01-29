@@ -102,4 +102,5 @@ int cstm_cd(t_list **ep, t_list *args);
 
 // executor_vuiltin_cd_2.c
 t_env_var	*get_env_var(t_list *ep, char *key);
+int	check_args(t_list *args);
 #endif // EXECUTOR_
