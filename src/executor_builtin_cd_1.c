@@ -1,47 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_builtin_cd.c                              :+:      :+:    :+:   */
+/*   executor_builtin_cd_1.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 17:20:33 by erian             #+#    #+#             */
-/*   Updated: 2025/01/28 12:02:36 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/29 14:00:31 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-t_env_var	*get_env_var(t_list *ep, char *key)
+static void	update_oldpwd(t_list **ep, char *tmp)
 {
-	t_list		*tmp_ep;
-	t_env_var	*tmp_var;
-
-	tmp_ep = ep;
-	while (tmp_ep)
-	{
-		tmp_var = (t_env_var *)tmp_ep->content;
-		if (!ft_strcmp(tmp_var->key, key))
-			return (tmp_var);
-		tmp_ep = tmp_ep->next;
-	}
-	return (NULL);
-}
-
-static void	update_dirs(t_list **ep)
-{
-	char		*tmp;
 	t_env_var	*oldpwd;
 	t_env_var	*pwd;
 
-	tmp = getcwd(NULL, 0);
 	oldpwd = get_env_var(*ep, "OLDPWD");
 	pwd = get_env_var(*ep, "PWD");
-	if (!tmp)
-	{
-		perror("getcwd");
-		return ;
-	}
 	if (oldpwd)
 	{
 		free(oldpwd->value);
@@ -50,6 +27,21 @@ static void	update_dirs(t_list **ep)
 		else
 			oldpwd->value = ft_strdup(tmp);
 	}
+}
+
+static void	update_dirs(t_list **ep)
+{
+	char		*tmp;
+	t_env_var	*pwd;
+
+	tmp = getcwd(NULL, 0);
+	if (!tmp)
+	{
+		perror("getcwd");
+		return ;
+	}
+	update_oldpwd(ep, tmp);
+	pwd = get_env_var(*ep, "PWD");
 	if (pwd)
 	{
 		free(pwd->value);
