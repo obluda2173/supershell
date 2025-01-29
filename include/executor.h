@@ -24,8 +24,14 @@ char	*find_path(char *cmd, char *path_env);
 // executor_handle_double_quotes.c
 char    *handle_double_quotes(const char *word,  t_data *data);
 
-// executor_handle_dollar.c
+// executor_handle_dollar_1.c
 char	*handle_dollar(const char *word, t_data *data);
+
+// executor_handle_dollar_2.c
+char	*handle_exit_status(size_t *i, t_data *data);
+char	*handle_env_var(size_t *i, const char *word, t_data *data);
+char	*handle_other_char(size_t *i, const char *word);
+char	*append_and_check(char *result, size_t *result_len, char *str);
 
 // executor_handle_utils.c
 char *handle_env_expansion(const char *var_name, t_data *data);
