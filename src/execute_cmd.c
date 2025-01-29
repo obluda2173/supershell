@@ -64,6 +64,7 @@ static int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2])
 		return (error_fork());
 	if (pid == 0)
 	{
+		signal(SIGQUIT, SIG_DFL);
 		env_matrix = ep_to_matrix(fds, ep);
 		if (!env_matrix)
 			exit(EXIT_FAILURE);
@@ -86,8 +87,11 @@ static int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2])
 	}
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
-	ft_putendl_fd("", STDOUT_FILENO);
-	return (EXIT_FAILURE);
+	if (status == 131)
+		ft_putendl_fd("Quit (core dumped)", STDOUT_FILENO);
+	else
+		ft_putendl_fd("", STDOUT_FILENO);
+	return status;
 }
 
 int	echo(t_cmd_node cmd_node, int fds[2])

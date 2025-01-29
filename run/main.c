@@ -145,6 +145,7 @@ int	repl(t_data *data)
 	t_dllist	*tokens;
 
 	signal(SIGINT, handle_signals_2); // Parent ignores SIGINT
+	signal(SIGQUIT, SIG_IGN);
 	while (!data->exit)
 	{
 		data->line = minishell_input(data);
