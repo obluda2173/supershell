@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
+#include "minishell.h"
+#include "parser.h"
 
 void	free_var(t_list *ep)
 {

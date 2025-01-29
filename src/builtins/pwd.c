@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
+#include "minishell.h"
+#include "parser.h"
 
 int	cstm_pwd(t_list **ep, t_cmd_node *cmd_node)
 {

@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
+#include "minishell.h"
+#include "parser.h"
 
 static bool	valid_arg(char *str)
 {

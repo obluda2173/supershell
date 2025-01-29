@@ -9,7 +9,8 @@
 #include "libft.h"
 #include "parser.h"
 #include "minishell.h"
-
+#include "executor_builtins.h"
+#include "executor_expansions.h"
 
 /* ************************************************************************** */
 /* c files                                                                    */
@@ -57,13 +58,11 @@ int matches_pattern(const char *pattern, const char *str);
 
 /* executor_redirections.c */
 int	set_redirections(t_list **redirections, int fds[2]);
-void	close_fds(int fds[2]);
 // executor_prepare_argv.c
 char **list_to_argv(t_list *arguments, char *cmd_path);
 int expand_wildcards_in_arguments(t_list **list);
 t_list	*handle_wildcard_argument(t_argument argument);
 
-void	sort_arguments(t_list **list);
 
 void	replace_list_next_with_new(t_list *list, t_list *new_node);
 char	*get_dir_path(char* path);
@@ -76,12 +75,6 @@ int	expand_arguments(t_cmd_node *cmd_node, t_data *data);
 int	expand_redirections(t_cmd_node *cmd_node, t_data *data);
 
 
-// executor_export_1.c
-int	cstm_export(t_list **ep, t_cmd_node *cmd_node);
-
-// executor_export_2.c
-bool assign_var(t_env_var **new_var, char *raw_var);
-
 // execurtor_export_3.c
 t_list	**copy_ep(t_list *ep);
 bool	should_be_escaped(char c);
@@ -89,35 +82,12 @@ void	print_env_var(char *key, char *value);
 void	move_invalid_keys(t_list **ep, t_list **tmp_lst, 
 								t_list **prev, t_list **last_node);
 
-// executor_unset.c
-int cstm_unset(t_list **ep, t_cmd_node *cmd_node);
-
-// executor_env.c
-int	cstm_env(t_list **ep, t_cmd_node *cmd_node);
-
-// executor_builtin_pwd.c
-int	cstm_pwd(t_list **ep, t_cmd_node *cmd_node);
-
-// executor_builtin_exit.c
-int	cstm_exit(t_list *args, t_data *data);
+/* executor_helpers.c */
+void	close_fds(int fds[2]);
+t_env_var	*get_env_var(t_list *ep, char *key);
 
 /* execute_pipeline.c */
 int	execute_pipeline(t_script_node *sn, t_data *data);
 
-// executor_builtin_cd_1.c
-int cstm_cd(t_list **ep, t_list *args);
 
-// executor_vuiltin_cd_2.c
-void	update_dirs(t_list **ep);
-t_env_var	*get_env_var(t_list *ep, char *key);
-int	check_args(t_list *args);
-
-/* src/expansions */
-/* expand_string.c */
-char	*expand_string(char *string, t_data *data);
-
-/* expand_string_2.c */
-bool	is_env_var_char(char c);
-char	*advance_to_end_of_end_var(char *word);
-char	*get_next_break(char *word);
 #endif // EXECUTOR_

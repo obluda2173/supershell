@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "libft.h"
-#include <unistd.h>
 
 static bool	rewrite_var(t_list **ep, t_env_var *new_var)
 {

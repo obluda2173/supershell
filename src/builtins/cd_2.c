@@ -51,22 +51,6 @@ void	update_dirs(t_list **ep)
 		free(tmp);
 }
 
-t_env_var	*get_env_var(t_list *ep, char *key)
-{
-	t_list		*tmp_ep;
-	t_env_var	*tmp_var;
-
-	tmp_ep = ep;
-	while (tmp_ep)
-	{
-		tmp_var = (t_env_var *)tmp_ep->content;
-		if (!ft_strcmp(tmp_var->key, key))
-			return (tmp_var);
-		tmp_ep = tmp_ep->next;
-	}
-	return (NULL);
-}
-
 int	check_args(t_list *args)
 {
 	if (ft_lstsize(args) > 1)

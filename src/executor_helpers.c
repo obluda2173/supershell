@@ -1,36 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_builtin_env.c                             :+:      :+:    :+:   */
+/*   executor_helpers.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kfreyer <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/27 12:28:28 by erian             #+#    #+#             */
-/*   Updated: 2025/01/29 15:02:24 by erian            ###   ########.fr       */
+/*   Created: 2025/01/29 18:18/27 by kfreyer           #+#    #+#             */
+/*   Updated: 2025/01/29 18:18:27 by kfreyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
 
-int	cstm_env(t_list **ep, t_cmd_node *cmd_node)
+void	close_fds(int fds[2])
+{
+	if (fds[0] != STDIN_FILENO)
+		close(fds[0]);
+	if (fds[1] != STDOUT_FILENO)
+		close(fds[1]);
+	return ;
+}
+
+t_env_var	*get_env_var(t_list *ep, char *key)
 {
 	t_list		*tmp_ep;
 	t_env_var	*tmp_var;
-	t_argument	*error_arg;
 
-	if (ft_lstsize(cmd_node->arguments))
-	{
-		error_arg = cmd_node->arguments->content;
-		printf("env: \'%s\': No such file or directory\n", error_arg->word);
-		return (127);
-	}
-	tmp_ep = *ep;
+	tmp_ep = ep;
 	while (tmp_ep)
 	{
 		tmp_var = (t_env_var *)tmp_ep->content;
-		if (tmp_var->value)
-			printf("%s=%s\n", tmp_var->key, tmp_var->value);
+		if (!ft_strcmp(tmp_var->key, key))
+			return (tmp_var);
 		tmp_ep = tmp_ep->next;
 	}
-	return (EXIT_SUCCESS);
+	return (NULL);
 }

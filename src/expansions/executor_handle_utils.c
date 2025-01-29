@@ -11,23 +11,26 @@
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "libft.h"
-#include <unistd.h>
 
-char *custom_getenv(const char* key, t_data *data) {
-	t_list* ep = data->ep;
-	while (ep) {
-		t_env_var* env_var = (t_env_var*)ep->content;
-		if (!ft_strcmp(key, env_var->key)) {
-			if (env_var->value) {
-				return ft_strdup(env_var->value);
-			} else {
-				return ft_strdup("");
-			}
+char	*custom_getenv(const char *key, t_data *data)
+{
+	t_list		*ep;
+	t_env_var	*env_var;
+
+	ep = data->ep;
+	while (ep)
+	{
+		env_var = (t_env_var *)ep->content;
+		if (!ft_strcmp(key, env_var->key))
+		{
+			if (env_var->value)
+				return (ft_strdup(env_var->value));
+			else
+				return (ft_strdup(""));
 		}
 		ep = ep->next;
 	}
-	return NULL;
+	return (NULL);
 }
 
 char	*handle_env_expansion(const char *var_name, t_data *data)
@@ -35,9 +38,8 @@ char	*handle_env_expansion(const char *var_name, t_data *data)
 	char	*value;
 
 	value = custom_getenv(var_name, data);
-	if (value) {
-		return value;
-	}
+	if (value)
+		return (value);
 	free(value);
 	return (ft_strdup(""));
 }

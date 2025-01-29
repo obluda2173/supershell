@@ -11,10 +11,8 @@
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "libft.h"
+#include "executor.h"
 #include "minishell.h"
-#include <sys/types.h>
-#include <unistd.h>
 
 t_env_var *new_env_var(char *key, char *value) {
 	t_env_var *env_var = (t_env_var*)malloc(sizeof(t_env_var));
