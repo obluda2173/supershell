@@ -23,7 +23,7 @@ char	*get_path_env(t_list *envp);
 char	*find_path(char *cmd, char *path_env);
 
 // execute_cmd.c
-int execute_command(t_cmd_node *cmd_node, t_data *data);
+int	execute_cmd_node(t_cmd_node *cmd_node, t_data *data);
 
 // executor_matrix_manipulation.c
 void free_char_array(char **matrix);

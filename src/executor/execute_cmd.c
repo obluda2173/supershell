@@ -167,17 +167,43 @@ int	execute_builtin(t_cmd_node *cmd_node, t_data *data, int fds[2])
 	return (EXIT_SUCCESS);
 }
 
-int	execute_command(t_cmd_node *cmd_node, t_data *data)
+int	execute_cmd(t_cmd_node *cmd_node, t_data *data, int fds[2])
 {
-	char	*cmd_path;
-	char	**argv;
-	int		fds[2];
-	int		res;
 	char	*path_env;
+	char	*cmd_path;
+	int		res;
+	char	**argv;
+
+	argv = NULL;
+	path_env = get_path_env(data->ep);
+	cmd_path = find_path(cmd_node->cmd_token.content, path_env);
+	if (!cmd_path)
+	{
+		fprintf(stderr, "Command not found: %s\n", cmd_node->cmd_token.content);
+		res = 127;
+	}
+	else
+	{
+		argv = list_to_argv(cmd_node->arguments, cmd_path);
+		if (!argv)
+			res = EXIT_FAILURE;
+		else
+		{
+			res = custom_exec(cmd_path, argv, data->ep, fds);
+			free_char_array(argv);
+		}
+		free(cmd_path);
+	}
+	return (res);
+}
+
+int	execute_cmd_node(t_cmd_node *cmd_node, t_data *data)
+{
+	int	fds[2];
+	int	res;
 
 	fds[0] = STDIN_FILENO;
 	fds[1] = STDOUT_FILENO;
-	argv = NULL;
 	if (expand(cmd_node, data))
 		return (EXIT_FAILURE);
 	if (set_redirections(&(cmd_node->redirections), fds))
@@ -186,28 +212,7 @@ int	execute_command(t_cmd_node *cmd_node, t_data *data)
 	if (cmd_node->cmd_token.type == BUILTIN)
 		res = execute_builtin(cmd_node, data, fds);
 	if (cmd_node->cmd_token.type == WORD)
-	{
-		path_env = get_path_env(data->ep);
-		cmd_path = find_path(cmd_node->cmd_token.content, path_env);
-		if (!cmd_path)
-		{
-			fprintf(stderr, "Command not found: %s\n",
-				cmd_node->cmd_token.content);
-			res = 127;
-		}
-		else
-		{
-			argv = list_to_argv(cmd_node->arguments, cmd_path);
-			if (!argv)
-				res = EXIT_FAILURE;
-			else
-			{
-				res = custom_exec(cmd_path, argv, data->ep, fds);
-				free_char_array(argv);
-			}
-			free(cmd_path);
-		}
-	}
+		res = execute_cmd(cmd_node, data, fds);
 	close_fds(fds);
 	return (res);
 }

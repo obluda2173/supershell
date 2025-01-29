@@ -23,7 +23,7 @@ int	execute_script(t_script_node *sn, t_data *data)
 	if (!sn)
 		return (0);
 	if (sn->node_type == CMD_NODE)
-		return (execute_command(&sn->node_data.cmd_node, data));
+		return (execute_cmd_node(&sn->node_data.cmd_node, data));
 	if (sn->node_type == PIPE_NODE)
 		return (execute_pipeline(sn, data));
 	if (sn->node_type == AND_NODE)
