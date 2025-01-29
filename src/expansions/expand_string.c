@@ -38,7 +38,7 @@ char *expand_from_single_quote(char* word, t_data *data) {
 	char* after;
 	char* prepend;
 	char* result;
-	after = expand_variables(ft_strchr(word + 1, '\'') + 1, data);
+	after = expand_string(ft_strchr(word + 1, '\'') + 1, data);
 	prepend = malloc(sizeof(char) * (ft_strchr(word + 1, '\'') - word));
 	ft_strlcpy(prepend, word + 1, (ft_strchr(word + 1, '\'') - word));
 	result = ft_strjoin(prepend, after);
@@ -51,7 +51,7 @@ char *expand_from_double_quote(char* word, t_data *data) {
 	char* after;
 	char* prepend;
 	char* result;
-	after = expand_variables(ft_strchr(word + 1, '\"') + 1, data);
+	after = expand_string(ft_strchr(word + 1, '\"') + 1, data);
 	prepend = handle_double_quotes(word + 1, data);
 	result = ft_strjoin(prepend, after);
 	free(prepend);
@@ -82,7 +82,7 @@ char *expand_from_dollar(char *word, t_data *data) {
 	char* result;
 	next = advance_end_of_env_var(word+1);
 	if (next)
-		after = expand_variables(next, data);
+		after = expand_string(next, data);
 	else
 		after = ft_strdup("");
 	prepend = handle_dollar(word + 1, data);
@@ -103,7 +103,7 @@ char *expand_from_here(char *word, t_data *data) {
 		result = ft_strdup(word);
 	else
 	{
-		after = expand_variables(next, data);
+		after = expand_string(next, data);
 		*next = '\0';
 		result = ft_strjoin(word, after);
 	}
@@ -111,21 +111,21 @@ char *expand_from_here(char *word, t_data *data) {
 	return result;
 }
 
-char	*expand_variables(char *word, t_data *data)
+char	*expand_string(char *string, t_data *data)
 {
 	char	*result;
 
-	word = ft_strdup(word);
+	string = ft_strdup(string);
 	result = NULL;
-	if (*word == '\'')
-		result = expand_from_single_quote(word, data);
-	if (*word == '\"')
-		result = expand_from_double_quote(word, data);
-	if (*word == '$')
-		result =expand_from_dollar(word, data);
+	if (*string == '\'')
+		result = expand_from_single_quote(string, data);
+	if (*string == '\"')
+		result = expand_from_double_quote(string, data);
+	if (*string == '$')
+		result =expand_from_dollar(string, data);
 	if (!result)
-		result = expand_from_here(word, data);
-	free(word);
+		result = expand_from_here(string, data);
+	free(string);
 	return result;
 
 }

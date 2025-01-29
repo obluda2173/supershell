@@ -227,7 +227,7 @@ void	expand_env_redirection(t_list *redirections, t_data *data)
 	while (head)
 	{
 		r = (t_redirection *)head->content;
-		new_word = expand_variables(r->word, data);
+		new_word = expand_string(r->word, data);
 		free(r->word);
 		r->word = new_word;
 		head = head->next;
