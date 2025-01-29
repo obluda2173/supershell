@@ -91,12 +91,11 @@ void	expand_env_redirection(t_list *redirections, t_data *data)
 
 int	expand_redirections(t_cmd_node *cmd_node, t_data *data)
 {
-	if (cmd_node->redirections)
-	{
-		expand_env_redirection(cmd_node->redirections, data);
-		if (expand_wildcards_in_redirections(&cmd_node->redirections) == EXIT_FAILURE)
-			return (EXIT_FAILURE);
-	}
+	if (!cmd_node->redirections)
+		return (EXIT_SUCCESS);
+	expand_env_redirection(cmd_node->redirections, data);
+	if (expand_wildcards_in_redirections(&cmd_node->redirections))
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 

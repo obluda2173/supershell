@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "executor_expansions.h"
 
 int	set_output(t_redirection r, int fds[2], int hered_pipe[2])
 {
@@ -20,22 +21,14 @@ int	set_output(t_redirection r, int fds[2], int hered_pipe[2])
 		fds[1] = open(r.word, O_CREAT | O_WRONLY | O_TRUNC,
 				S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 		if (fds[1] < 0)
-		{
-			perror("open");
-			close_fds(fds);
-			return (EXIT_FAILURE);
-		}
+			return (teardown_close_fds(fds, "open"));
 	}
 	if (r.type == APPEND)
 	{
 		fds[1] = open(r.word, O_APPEND | O_WRONLY | O_CREAT,
 				S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 		if (fds[1] < 0)
-		{
-			perror("open");
-			close_fds(fds);
-			return (EXIT_FAILURE);
-		}
+			return (teardown_close_fds(fds, "open"));
 	}
 	return (EXIT_SUCCESS);
 }
@@ -48,20 +41,12 @@ int	set_input(t_redirection r, int fds[2], int hered_pipe[2])
 			close(fds[0]);
 		fds[0] = open(r.word, O_RDONLY, NULL);
 		if (fds[0] < 0)
-		{
-			perror("open");
-			close_fds(fds);
-			return (EXIT_FAILURE);
-		}
+			return (teardown_close_fds(fds, "open"));
 	}
 	if (r.type == HERED)
 	{
 		if (pipe(hered_pipe) == -1)
-		{
-			perror("pipe");
-			close_fds(fds);
-			return (EXIT_FAILURE);
-		}
+			return (teardown_close_fds(fds, "pipe"));
 		write(hered_pipe[1], r.word, ft_strlen(r.word));
 		close(hered_pipe[1]);
 		if (fds[0] != STDIN_FILENO)

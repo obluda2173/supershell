@@ -24,6 +24,7 @@ int	set_input(t_redirection r, int fds[2], int hered_pipe[2]);
 bool	is_current_dir(char *dir_path);
 void	*teardown_redirect(char *dir_path, char *pattern, t_list *dir_entries);
 t_list	*new_redirection_from_entry(char *entry, t_redirection redirection);
+int teardown_close_fds(int fds[2], char* err_msg);
 
 /* sort_arguments.c */
 void	sort_arguments(t_list **list);

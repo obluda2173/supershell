@@ -25,8 +25,9 @@ SRC_FILES 	:= 	$(wildcard src/*.c) \
 				$(wildcard src/lexer/*.c) \
 				$(wildcard src/parser/*.c) \
 				$(wildcard src/main/*.c) \
-				$(wildcard src/builtins/*.c) \
-				$(wildcard src/expansions/*.c)
+				$(wildcard src/executor/*.c) \
+				$(wildcard src/executor/builtins/*.c) \
+				$(wildcard src/executor/expansions/*.c)
 
 OBJ_FILES 	:= 	$(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
@@ -61,8 +62,9 @@ $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)/main
 	@mkdir -p $(OBJ_DIR)/lexer
 	@mkdir -p $(OBJ_DIR)/parser
-	@mkdir -p $(OBJ_DIR)/builtins
-	@mkdir -p $(OBJ_DIR)/expansions
+	@mkdir -p $(OBJ_DIR)/executor
+	@mkdir -p $(OBJ_DIR)/executor/builtins
+	@mkdir -p $(OBJ_DIR)/executor/expansions
 
 $(BIN_DIR):
 	@mkdir -p $(BIN_DIR)
