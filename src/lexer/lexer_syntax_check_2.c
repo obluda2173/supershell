@@ -6,11 +6,18 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:29:43 by erian             #+#    #+#             */
-/*   Updated: 2025/01/29 12:47:30 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/29 13:47:47 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	skip_double_quotes(char *str, size_t *i)
+{
+	(*i)++;
+	while (str[*i] != '\"' && str[*i])
+		(*i)++;
+}
 
 bool	check_consecutive_chars(char *str, char c)
 {
@@ -59,13 +66,6 @@ bool	check_invalid_symbol(char *str)
 		return (false);
 	}
 	return (true);
-}
-
-static void	skip_double_quotes(char *str, size_t *i)
-{
-	(*i)++;
-	while (str[*i] != '\"' && str[*i])
-		(*i)++;
 }
 
 bool	check_unclosed_parenthesis(char *str, size_t open_paren)

@@ -6,11 +6,24 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 14:55:43 by erian             #+#    #+#             */
-/*   Updated: 2025/01/29 13:18:06 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/29 13:45:01 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	init_operators_list(char **operators)
+{
+	operators[0] = ">>";
+	operators[1] = "<<";
+	operators[2] = "||";
+	operators[3] = "&&";
+	operators[4] = "|";
+	operators[5] = ">";
+	operators[6] = "<";
+	operators[7] = "(";
+	operators[8] = ")";
+}
 
 char	*handle_redirection(char *input, size_t *i, char *result, size_t *j)
 {
@@ -50,19 +63,6 @@ char	*handle_quotes(const char *input, size_t *i,
 	if (input[*i])
 		result[(*j)++] = input[(*i)++];
 	return (result);
-}
-
-void	init_operators_list(char **operators)
-{
-	operators[0] = ">>";
-	operators[1] = "<<";
-	operators[2] = "||";
-	operators[3] = "&&";
-	operators[4] = "|";
-	operators[5] = ">";
-	operators[6] = "<";
-	operators[7] = "(";
-	operators[8] = ")";
 }
 
 char	*handle_operators(const char *input, size_t *i,

@@ -6,23 +6,14 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:07:34 by erian             #+#    #+#             */
-/*   Updated: 2025/01/26 09:29:48 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/29 13:49:11 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "lexer.h"
 
-void	free_token(void *content)
-{
-	t_token	*token;
-
-	token = (t_token *)content;
-	free(token->content);
-	free(token);
-}
-
-t_dllist	*tokenize_line(const char *line)
+static t_dllist	*tokenize_line(const char *line)
 {
 	t_token				*token;
 	t_dllist			*token_list;
@@ -48,6 +39,15 @@ t_dllist	*tokenize_line(const char *line)
 			break ;
 	}
 	return (token_list);
+}
+
+void	free_token(void *content)
+{
+	t_token	*token;
+
+	token = (t_token *)content;
+	free(token->content);
+	free(token);
 }
 
 t_dllist	*tokenize(char *line)
