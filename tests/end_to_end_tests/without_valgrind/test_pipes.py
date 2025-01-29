@@ -62,6 +62,8 @@ def test_pipes(cmd):
     minishell.sendline("exit")
     minishell.close()
 
+    print(bash_output)
+    print(minishell_output)
     assert len(bash_output) == len(minishell_output)
     assert bash_output[0] == minishell_output[0]
     assert bash_exit_status == minishell_exit_status

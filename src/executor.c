@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "libft.h"
 #include "parser.h"
 #include <sys/wait.h>
 #include <unistd.h>
@@ -23,5 +24,17 @@ int	execute_script(t_script_node *sn, t_data *data)
 		return (execute_command(&sn->node_data.cmd_node, data));
 	if (sn->node_type == PIPE_NODE)
 		return (execute_pipeline(sn, data));
+	if (sn->node_type == AND_NODE) {
+		int exit_upstream = execute_script(sn->upstream, data);
+		if (exit_upstream)
+			return exit_upstream;
+		return execute_script(sn->downstream, data);
+	}
+	if (sn->node_type == OR_NODE) {
+		int exit_upstream = execute_script(sn->upstream, data);
+		if (!exit_upstream)
+			return exit_upstream;
+		return execute_script(sn->downstream, data);
+	}
 	return (EXIT_SUCCESS);
 }
