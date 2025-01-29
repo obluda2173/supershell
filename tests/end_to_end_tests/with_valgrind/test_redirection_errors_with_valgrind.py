@@ -65,8 +65,39 @@ def test_redirection_errors(cmd, err_msg, want_exit_status):
         stdout_minishell, stderr_minishell
     )
 
-    assert_no_memory_error_valgrind(stderr_minishell, stderr_minishell)
-    assert_no_open_fds_valgrind(stdout_minishell, stderr_minishell)
+    assert_no_memory_error_valgrind(stderr_minishell)
+    assert_no_open_fds_valgrind(stderr_minishell)
+    assert len(stdout_minishell) == 1
+    assert err_msg in stderr_minishell
+    assert want_exit_status == int(stdout_minishell[0])
+
+
+import os
+
+logname = os.getenv("LOGNAME", "")
+
+
+cmd = "echo $PATH\n"
+
+
+def test_errors_executables():
+
+    err_msg = "Permission denied"
+    want_exit_status = 1
+
+    minishell = start_process_with_valgrind("./minishell")
+    minishell = start_process_with_valgrind("./minishell")
+
+    cmd = "\n".join(["tests/end_to_end_tests/test_executables/no_perm"] + ["echo $?\n"])
+    stdout_minishell, stderr_minishell = send_cmds_minishell(minishell, cmd)
+    stdout_minishell, stderr_minishell = parse_out_and_err_minishell(
+        stdout_minishell, stderr_minishell
+    )
+
+    assert_no_memory_error_valgrind(stderr_minishell)
+    assert_no_open_fds_valgrind(stderr_minishell)
+
+    assert len(stderr_minishell) != 0
     assert len(stdout_minishell) == 1
     assert err_msg in stderr_minishell
     assert want_exit_status == int(stdout_minishell[0])

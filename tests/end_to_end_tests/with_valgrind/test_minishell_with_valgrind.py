@@ -25,7 +25,7 @@ from conftest import (
         (["echo asdf $PATH asdf"]),
         (["echo  asdf    $PATH   asdf  "]),
         (['echo "$PATH"']),
-        # (["echo *", "echo *"]),
+        (["echo *", "echo *"]),
     ],
 )
 def test_minishell(cmd):
@@ -43,8 +43,8 @@ def test_minishell(cmd):
         stdout_minishell, stderr_minishell
     )
 
-    assert_no_memory_error_valgrind(stdout_minishell, stderr_minishell)
-    assert_no_open_fds_valgrind(stdout_minishell, stderr_minishell)
+    assert_no_memory_error_valgrind(stderr_minishell)
+    assert_no_open_fds_valgrind(stderr_minishell)
     assert_same_lines_ordered(stdout_bash, stdout_minishell)
 
 
@@ -63,6 +63,6 @@ def test_minishell_echo_wo_newline():
     stdout_minishell = stdout_minishell.decode().split("\n")[1][: -len(prompt)]
     stderr_minishell = stderr_minishell.decode()
 
-    assert_no_memory_error_valgrind(stdout_minishell, stderr_minishell)
-    assert_no_open_fds_valgrind(stdout_minishell, stderr_minishell)
+    assert_no_memory_error_valgrind(stderr_minishell)
+    assert_no_open_fds_valgrind(stderr_minishell)
     assert_same_lines_ordered(stdout_bash, stdout_minishell)

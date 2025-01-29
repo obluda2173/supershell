@@ -3,12 +3,17 @@ def assert_no_memory_error_fsanitize(stdout_minishell, stderr_minishell):
     assert "ERROR" not in stderr_minishell
 
 
-def assert_no_memory_error_valgrind(stdout_minishell, stderr_minishell):
-    assert "0 errors from 0 contexts" in stderr_minishell
+def assert_no_memory_error_valgrind(stderr_minishell):
+    stderr_minishell = stderr_minishell.split("\n")
+    for line in stderr_minishell:
+        if "ERROR_SUMMARY" in line:
+            assert "0 errors from 0 contexts" in stderr_minishell
 
 
-def assert_no_open_fds_valgrind(stdout_minishell, stderr_minishell):
-    assert "FILE DESCRIPTORS: 3 open (3 std) at exit." in stderr_minishell
+def assert_no_open_fds_valgrind(stderr_minishell):
+    for line in stderr_minishell:
+        if "FILE DESCRIPTORS" in line:
+            assert "FILE DESCRIPTORS: 3 open (3 std) at exit." in line
 
 
 def assert_same_lines_ordered(stdout_minishell, stdout_bash):

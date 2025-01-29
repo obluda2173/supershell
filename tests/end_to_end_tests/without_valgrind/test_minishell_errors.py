@@ -78,11 +78,10 @@ def test_errors_executables():
 
     minishell = start_process("./minishell")
     minishell = start_process("./minishell")
-    open_fds_beginning = get_open_fds()
 
     cmd = "\n".join(["tests/end_to_end_tests/test_executables/no_perm"] + ["echo $?\n"])
-    stdout_minishell, stderr_minishell, open_fds_end = (
-        send_cmds_minishell_with_open_fds(minishell, cmd)
+    stdout_minishell, stderr_minishell, _ = send_cmds_minishell_with_open_fds(
+        minishell, cmd
     )
     stdout_minishell, stderr_minishell = parse_out_and_err_minishell(
         stdout_minishell, stderr_minishell
@@ -93,5 +92,3 @@ def test_errors_executables():
     assert len(stdout_minishell) == 1
     assert err_msg in stderr_minishell
     assert want_exit_status == int(stdout_minishell[0])
-
-    # assert_no_new_file_descriptors(open_fds_beginning, open_fds_end)

@@ -8,7 +8,6 @@ from conftest import (
 from assertions import (
     assert_no_memory_error_valgrind,
     assert_no_open_fds_valgrind,
-    assert_no_new_file_descriptors,
 )
 
 import pytest
@@ -49,8 +48,8 @@ def test_errors(cmd, err_msg, want_exit_status):
         stdout_minishell, stderr_minishell
     )
 
-    assert_no_memory_error_valgrind(stdout_minishell, stderr_minishell)
-    assert_no_open_fds_valgrind(stdout_minishell, stderr_minishell)
+    assert_no_memory_error_valgrind(stderr_minishell)
+    assert_no_open_fds_valgrind(stderr_minishell)
     assert len(stderr_minishell) != 0
     assert len(stdout_minishell) == 1
     assert err_msg in stderr_minishell
