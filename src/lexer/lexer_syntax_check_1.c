@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 09:40:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/14 12:54:19 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/29 12:46:13 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,41 @@ int	count_consequitives(char *str, char c)
 	return (c_counter);
 }
 
+
+/*
+
+" just 'a simpl"e and mere text written" by 'mr' Erik' An"
+
+*/
+
+bool	check_inv_char(char *str)
+{
+	int	i;
+	int d_quotes;
+	int s_quotes;
+
+	i = -1;
+	d_quotes = 0;
+	s_quotes = 0;
+	while (str[++i])
+	{
+		if (str[i] == '\'' && (d_quotes % 2 == 0))
+			s_quotes++;
+		if (str[i] == '\"' && (s_quotes % 2 == 0))
+			d_quotes++;
+		if ((s_quotes % 2 == 0) && (d_quotes % 2 == 0) &&
+			(str[i] == '\\' || str[i] == ';'))
+		{
+			if (str[i] == ';')
+				ft_putendl_fd("syntax error near unexpected token: \';\'", STDERR_FILENO);
+			else
+				ft_putendl_fd("syntax error near unexpected token: \'\\\'", STDERR_FILENO);
+			return (false);
+		}
+	}
+	return (true);
+}
+
 bool	check_syntax(char *str)
 {
 	int		i;
@@ -59,6 +94,8 @@ bool	check_syntax(char *str)
 	if (!check_invalid_symbol(str))
 		return (false);
 	if (!check_unclosed_parenthesis(str, 0))
+		return (false);
+	if (!check_inv_char(str))
 		return (false);
 	return (true);
 }

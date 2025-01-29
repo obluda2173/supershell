@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:29:43 by erian             #+#    #+#             */
-/*   Updated: 2025/01/26 16:52:33 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/29 12:47:30 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,7 @@ bool	check_unclosed_quotes(char *str)
 
 bool	check_invalid_symbol(char *str)
 {
-	if (ft_strchr(str, ';') || ft_strchr(str, '\\')
-		|| ft_strchr(str, '{') || ft_strchr(str, '}')
+	if (ft_strchr(str, '{') || ft_strchr(str, '}')
 		|| ft_strchr(str, '[') || ft_strchr(str, ']'))
 	{
 		ft_putendl_fd("Invalid input", STDERR_FILENO);
