@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_export_2.c                                :+:      :+:    :+:   */
+/*   executor_builtin_export_2.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 13:46:03 by erian             #+#    #+#             */
-/*   Updated: 2025/01/26 16:04:04 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/29 16:49:58 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static bool	valid_key(char *key)
 static bool	assign_key_value(char *raw_var, char **key, char **value)
 {
 	char	*equals_sign;
-	
+
 	equals_sign = ft_strchr(raw_var, '=');
 	if (equals_sign)
 	{
@@ -76,7 +76,8 @@ bool	assign_var(t_env_var **new_var, char *raw_var)
 		return (false);
 	if (!valid_key(key))
 	{
-		printf("bash: export: \'%s=\"%s\"\': not a valid identifier\n", key, value);
+		printf("bash: export: \'%s=\"%s\"\': not a valid identifier\n",
+			key, value);
 		free(key);
 		free(value);
 		return (false);

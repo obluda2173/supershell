@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_export_1.c                                :+:      :+:    :+:   */
+/*   executor_builtin_export_1.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 09:37:32 by erian             #+#    #+#             */
-/*   Updated: 2025/01/27 15:58:07 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/29 16:47:40 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ static void	sort_for_export(t_list **ep)
 	t_list		*tmp_lst;
 	t_list		*prev;
 	t_list		*last_node;
-	t_env_var	*env_var;
 	int			list_size;
 
 	if (!ep || !*ep)
@@ -83,43 +82,9 @@ static void	sort_for_export(t_list **ep)
 	prev = NULL;
 	while (list_size > 0 && tmp_lst)
 	{
-		env_var = (t_env_var *)tmp_lst->content;
-		if (!ft_isalpha(env_var->key[0]))
-		{
-			if (prev)
-				prev->next = tmp_lst->next;
-			else
-				*ep = tmp_lst->next;
-			last_node->next = tmp_lst;
-			tmp_lst->next = NULL;
-			last_node = tmp_lst;
-			tmp_lst = (prev) ? prev->next : *ep;
-		}
-		else
-		{
-			prev = tmp_lst;
-			tmp_lst = tmp_lst->next;
-		}
+		move_invalid_keys(ep, &tmp_lst, &prev, &last_node);
 		list_size--;
 	}
-}
-
-bool should_be_escaped(char c) {
-	if (c == '$' || c == '\\' || c == '\"')
-		return true;
-	return false;
-}
-
-void print_env_var(char* key, char *value) {
-	ft_putstr_fd("declare -x ", STDOUT_FILENO);
-	ft_putstr_fd(key, STDOUT_FILENO);
-	ft_putstr_fd("=\"", STDOUT_FILENO);
-	while (*value) {
-		if (should_be_escaped(*value))
-			ft_putchar_fd('\\', STDOUT_FILENO);
-		ft_putchar_fd( *value++, STDOUT_FILENO);
-	}
-	ft_putendl_fd("\"", STDOUT_FILENO);
 }
 
 static void	print_export(t_list **ep)

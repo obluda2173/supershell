@@ -78,6 +78,10 @@ bool assign_var(t_env_var **new_var, char *raw_var);
 
 // execurtor_export_3.c
 t_list	**copy_ep(t_list *ep);
+bool	should_be_escaped(char c);
+void	print_env_var(char *key, char *value);
+void	move_invalid_keys(t_list **ep, t_list **tmp_lst, 
+								t_list **prev, t_list **last_node);
 
 // executor_unset.c
 int cstm_unset(t_list **ep, t_cmd_node *cmd_node);

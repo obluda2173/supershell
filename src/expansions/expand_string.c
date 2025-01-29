@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   expand_string.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfreyer <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/29 16:07/50 by kfreyer           #+#    #+#             */
-/*   Updated: 2025/01/29 16:07:50 by kfreyer          ###   ########.fr       */
+/*   Created: 2025/01/29 16:07:50 by kfreyer           #+#    #+#             */
+/*   Updated: 2025/01/29 16:43:17 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "executor_kay.h"
+// #include "executor_kay.h"
 
 char	*expand_from_single_quote(char *word, t_data *data)
 {

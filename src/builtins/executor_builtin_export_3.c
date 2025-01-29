@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_export_3.c                                :+:      :+:    :+:   */
+/*   executor_builtin_export_3.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 15:04:24 by erian             #+#    #+#             */
-/*   Updated: 2025/01/27 15:58:50 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/29 16:50:48 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,7 @@ t_list	**copy_ep(t_list *ep)
 	if (!ret_ep)
 		return (NULL);
 	*ret_ep = NULL;
-	
 	tmp_ep = ep;
-
 	while (tmp_ep)
 	{
 		tmp_var = (t_env_var *)tmp_ep->content;
@@ -64,8 +62,55 @@ t_list	**copy_ep(t_list *ep)
 			return (NULL);
 		}
 		ft_lstadd_back(ret_ep, ft_lstnew(ret_var));
-
 		tmp_ep = tmp_ep->next;
 	}
 	return (ret_ep);
+}
+
+bool	should_be_escaped(char c)
+{
+	if (c == '$' || c == '\\' || c == '\"')
+		return (true);
+	return (false);
+}
+
+void	print_env_var(char *key, char *value)
+{
+	ft_putstr_fd("declare -x ", STDOUT_FILENO);
+	ft_putstr_fd(key, STDOUT_FILENO);
+	ft_putstr_fd("=\"", STDOUT_FILENO);
+	while (*value)
+	{
+		if (should_be_escaped(*value))
+			ft_putchar_fd('\\', STDOUT_FILENO);
+		ft_putchar_fd(*value++, STDOUT_FILENO);
+	}
+	ft_putendl_fd("\"", STDOUT_FILENO);
+}
+
+void	move_invalid_keys(t_list **ep, t_list **tmp_lst,
+								t_list **prev, t_list **last_node)
+{
+	t_env_var	*env_var;
+
+	env_var = (t_env_var *)(*tmp_lst)->content;
+	if (!ft_isalpha(env_var->key[0]))
+	{
+		if (*prev)
+			(*prev)->next = (*tmp_lst)->next;
+		else
+			*ep = (*tmp_lst)->next;
+		(*last_node)->next = *tmp_lst;
+		(*tmp_lst)->next = NULL;
+		*last_node = *tmp_lst;
+		if (*prev)
+			*tmp_lst = (*prev)->next;
+		else
+			*tmp_lst = *ep;
+	}
+	else
+	{
+		*prev = *tmp_lst;
+		*tmp_lst = (*tmp_lst)->next;
+	}
 }

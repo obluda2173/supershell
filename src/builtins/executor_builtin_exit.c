@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 12:13:32 by erian             #+#    #+#             */
-/*   Updated: 2025/01/29 15:06:51 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/29 16:36:56 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,11 @@ static bool	valid_arg(char *str)
 	return (true);
 }
 
+static void	i_hate_norminette(void)
+{
+	ft_putstr_fd("minishell: numeric argument required\n", STDERR_FILENO);
+}
+
 int	cstm_exit(t_list *args, t_data *data)
 {
 	t_argument	*arg;
@@ -51,7 +56,7 @@ int	cstm_exit(t_list *args, t_data *data)
 		arg = (t_argument *)args->content;
 		if (!valid_arg(arg->word))
 		{
-			ft_putstr_fd("minishell: numeric argument required\n", STDERR_FILENO);
+			i_hate_norminette();
 			data->exit = true;
 			return (2);
 		}

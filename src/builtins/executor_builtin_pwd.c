@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 16:43:42 by erian             #+#    #+#             */
-/*   Updated: 2025/01/27 16:52:44 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/29 16:52:43 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	cstm_pwd(t_list **ep, t_cmd_node *cmd_node)
 {
-	t_list	*tmp_ep;
-	t_env_var *tmp_var;
+	t_list		*tmp_ep;
+	t_env_var	*tmp_var;
 
 	(void)cmd_node;
 	tmp_ep = *ep;
