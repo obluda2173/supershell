@@ -1,7 +1,4 @@
-#include "libft.h"
 #include "minishell.h"
-#include <readline/history.h>
-#include <readline/readline.h>
 
 // finding meeting line
 char	*meeting_line(t_data **data)

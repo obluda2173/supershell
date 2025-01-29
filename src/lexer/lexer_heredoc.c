@@ -6,18 +6,12 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 11:00:40 by erian             #+#    #+#             */
-/*   Updated: 2025/01/25 15:06:40 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/29 13:21:25 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "minishell.h"
-#include <signal.h>
 #include <sys/wait.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-#include <unistd.h>
-
 
 volatile sig_atomic_t	signal_received = 0;
 

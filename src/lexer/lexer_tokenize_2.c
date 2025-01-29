@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 17:06:20 by erian             #+#    #+#             */
-/*   Updated: 2025/01/25 15:20:50 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/29 13:28:57 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ void	skip_operator(t_line_container *lc)
 
 void	skip_word(t_line_container *lc)
 {
-	char quote;
-	
+	char	quote;
+
 	while (lc->line[lc->pos])
 	{
 		if (lc->line[lc->pos] == '\'' || lc->line[lc->pos] == '\"')
@@ -43,7 +43,7 @@ void	skip_word(t_line_container *lc)
 				lc->pos++;
 		}
 		else if (ft_strchr(" <>|&()", lc->line[lc->pos]))
-			break;
+			break ;
 		else
 			lc->pos++;
 	}

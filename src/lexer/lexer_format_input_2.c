@@ -6,13 +6,11 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 14:55:43 by erian             #+#    #+#             */
-/*   Updated: 2025/01/25 13:19:34 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/29 13:18:06 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
 
 char	*handle_redirection(char *input, size_t *i, char *result, size_t *j)
 {
@@ -35,8 +33,6 @@ char	*handle_heredoc(char *input, size_t *i, char *result, size_t *j)
 		result[(*j)++] = input[(*i)++];
 	if (input[*i] && !ft_isspace(input[*i]))
 		result[(*j)++] = ' ';
-	/* while (input[*i] && !ft_isspace(input[*i])) */
-	/* 	result[(*j)++] = input[(*i)++]; */
 	if (input[*i] && input[*i] != ' ')
 		result[(*j)++] = ' ';
 	return (result);
