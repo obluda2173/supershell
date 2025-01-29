@@ -12,6 +12,40 @@
 
 #include "executor.h"
 
+void	replace_list_next_with_new_arg(t_list *list, t_list *new)
+{
+	t_list	*tmp;
+
+	ft_lstlast(new)->next = list->next->next;
+	tmp = list->next;
+	list->next = new;
+	tmp->next = NULL;
+	ft_lstclear(&tmp, free_arguments);
+}
+
+t_list	*handle_wildcard_argument(t_argument argument)
+{
+	char	*dir_path;
+	char	*pattern;
+	t_list	*dir_entries;
+	t_list	*new_arguments;
+
+	dir_path = get_dir_path(argument.word);
+	pattern = get_pattern(argument.word);
+	if (ft_strcmp(dir_path, "") && ft_strcmp(dir_path, "."))
+		new_arguments = ignore_wildcard_in_argument(dir_path, pattern);
+	else
+	{
+		dir_entries = get_dir_entries(dir_path);
+		new_arguments = create_wildcard_arguments(dir_entries, dir_path,
+				pattern);
+		ft_lstclear(&dir_entries, free);
+	}
+	free(dir_path);
+	free(pattern);
+	return (new_arguments);
+}
+
 int	expand_wildcards_in_arguments(t_list **list)
 {
 	t_list	*head;
@@ -30,7 +64,7 @@ int	expand_wildcards_in_arguments(t_list **list)
 			if (!new)
 				return (EXIT_FAILURE);
 			sort_arguments(&new);
-			replace_list_next_with_new(head, new);
+			replace_list_next_with_new_arg(head, new);
 		}
 		head = head->next;
 	}

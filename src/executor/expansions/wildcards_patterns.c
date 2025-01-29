@@ -10,7 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "executor.h"
+#include "executor_expansions.h"
+
+char	*get_pattern(char *word)
+{
+	char	*pattern;
+	char	*slash;
+
+	slash = ft_strrchr(word, '/');
+	if (slash)
+		pattern = strdup(slash + 1);
+	else
+		pattern = ft_strdup(word);
+	return (pattern);
+}
 
 int	matches_pattern(const char *pattern, const char *str)
 {
