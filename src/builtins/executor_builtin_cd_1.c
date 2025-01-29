@@ -6,50 +6,11 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 17:20:33 by erian             #+#    #+#             */
-/*   Updated: 2025/01/29 14:13:54 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/29 15:00:08 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "executor.h"
-
-static void	update_oldpwd(t_list **ep, char *tmp)
-{
-	t_env_var	*oldpwd;
-	t_env_var	*pwd;
-
-	oldpwd = get_env_var(*ep, "OLDPWD");
-	pwd = get_env_var(*ep, "PWD");
-	if (oldpwd)
-	{
-		free(oldpwd->value);
-		if (pwd && pwd->value)
-			oldpwd->value = ft_strdup(pwd->value);
-		else
-			oldpwd->value = ft_strdup(tmp);
-	}
-}
-
-static void	update_dirs(t_list **ep)
-{
-	char		*tmp;
-	t_env_var	*pwd;
-
-	tmp = getcwd(NULL, 0);
-	if (!tmp)
-	{
-		perror("getcwd");
-		return ;
-	}
-	update_oldpwd(ep, tmp);
-	pwd = get_env_var(*ep, "PWD");
-	if (pwd)
-	{
-		free(pwd->value);
-		pwd->value = tmp;
-	}
-	else
-		free(tmp);
-}
 
 static int	cd_home(t_list **ep)
 {
