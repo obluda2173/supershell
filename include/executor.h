@@ -69,9 +69,6 @@ void	expand_env(t_list *arguments, t_data *data);
 int	expand_arguments(t_cmd_node *cmd_node, t_data *data);
 int	expand_redirections(t_cmd_node *cmd_node, t_data *data);
 
-char	*expand_string(char *string, t_data *data);
-bool is_env_var_char(char c);
-char *handle_literal(char *word, t_data *data);
 
 // executor_export_1.c
 int	cstm_export(t_list **ep, t_cmd_node *cmd_node);
@@ -104,4 +101,13 @@ int cstm_cd(t_list **ep, t_list *args);
 void	update_dirs(t_list **ep);
 t_env_var	*get_env_var(t_list *ep, char *key);
 int	check_args(t_list *args);
+
+/* src/expansions */
+/* expand_string.c */
+char	*expand_string(char *string, t_data *data);
+
+/* expand_string_2.c */
+bool	is_env_var_char(char c);
+char	*advance_to_end_of_end_var(char *word);
+char	*get_next_break(char *word);
 #endif // EXECUTOR_

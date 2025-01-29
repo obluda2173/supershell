@@ -62,6 +62,29 @@ t_list	*get_dir_entries(char *dir_path)
 	return (entries);
 }
 
+char    *build_full_path(const char *dir_path, const char *entry_name)
+{
+	char        *full_path;
+	char        *ptr;
+	const char  *src = dir_path;
+
+	if (!ft_strcmp(dir_path, ""))
+		return (ft_strdup(entry_name));
+	full_path = malloc(ft_strlen(dir_path) + ft_strlen(entry_name) + 2);
+	if (!full_path)
+		return (NULL);
+	ptr = full_path;
+	while (*src)
+		*ptr++ = *src++;
+	*ptr++ = '/';
+	src = entry_name;
+	while (*src)
+		*ptr++ = *src++;
+	*ptr = '\0';
+	return (full_path);
+}
+
+
 t_list	*ignore_wildcard_in_argument(char *dir_path, char *pattern)
 {
 	char		*full_path;
