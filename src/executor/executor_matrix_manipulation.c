@@ -45,8 +45,8 @@ char	**ft_matrix_join(char **m1, char **m2)
 
 	i = -1;
 	j = -1;
-	result = malloc(sizeof(char *) * (ft_size_char_array(m1) + ft_size_char_array(m2)
-				+ 1));
+	result = malloc(sizeof(char *) * (ft_size_char_array(m1)
+				+ ft_size_char_array(m2) + 1));
 	if (!result)
 		return (NULL);
 	while (++i < ft_size_char_array(m1))

@@ -43,12 +43,12 @@ char	*append_and_check(char *result, size_t *result_len, char *str)
 {
 	char	*new_result;
 	size_t	str_len;
-	(void)result_len;
 
+	(void)result_len;
 	if (!str)
 		return (NULL);
 	str_len = ft_strlen(str);
-	new_result = append_to_result(result,  str, str_len);
+	new_result = append_to_result(result, str, str_len);
 	free(str);
 	return (new_result);
 }

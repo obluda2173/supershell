@@ -61,7 +61,8 @@ char	*expand_variable(const char *str, size_t *i, t_data *data)
 	return (ft_strdup(""));
 }
 
-char	*append_to_result(char *result, const char *addition, size_t addition_len)
+char	*append_to_result(char *result, const char *addition,
+		size_t addition_len)
 {
 	char	*new_result;
 

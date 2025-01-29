@@ -14,6 +14,7 @@
 #include "executor_builtins.h"
 #include "minishell.h"
 #include "parser.h"
+#include <unistd.h>
 
 int	error_fork(void)
 {
@@ -21,35 +22,40 @@ int	error_fork(void)
 	return (EXIT_FAILURE);
 }
 
-char **ep_to_matrix(int fds[2], t_list* ep) {
-	int count;
-		char** env_matrix = (char **)malloc(sizeof(char *) * (ft_lstsize(ep) + 1));
+char	**ep_to_matrix(int fds[2], t_list *ep)
+{
+	int		count;
+	char	**env_matrix;
+	char	*first;
+	char	*second;
 
-		if (!env_matrix)
+	env_matrix = (char **)malloc(sizeof(char *) * (ft_lstsize(ep) + 1));
+	if (!env_matrix)
+	{
+		close_fds(fds);
+		ft_putendl_fd("Allocation error", STDERR_FILENO);
+		return (NULL);
+	}
+	count = 0;
+	while (ep)
+	{
+		first = ft_strjoin(((t_env_var *)ep->content)->key, "=");
+		if (((t_env_var *)ep->content)->value)
 		{
-			close_fds(fds);
-			ft_putendl_fd("Allocation error", STDERR_FILENO);
-			return NULL;
+			second = ft_strjoin(first, ((t_env_var *)ep->content)->value);
 		}
-		count = 0;
-		while (ep)
+		else
 		{
-			char* first = ft_strjoin(((t_env_var*)ep->content)->key, "=");
-			char* second;
-			if (((t_env_var*)ep->content)->value) {
-				second = ft_strjoin(first, ((t_env_var*)ep->content)->value);
-			} else {
-				second = ft_strdup(first);
-			}
-
-			env_matrix[count] =  ft_strdup(second);
-			free(first);
-			free(second);
-			ep = ep->next;
-			count++;
+			second = ft_strdup(first);
 		}
-		env_matrix[count] = NULL;
-		return env_matrix;
+		env_matrix[count] = ft_strdup(second);
+		free(first);
+		free(second);
+		ep = ep->next;
+		count++;
+	}
+	env_matrix[count] = NULL;
+	return (env_matrix);
 }
 
 static int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2])
@@ -82,7 +88,7 @@ static int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2])
 	if (waitpid(pid, &status, 0) == -1)
 	{
 		perror("waitpid");
-		return EXIT_FAILURE;
+		return (EXIT_FAILURE);
 	}
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
@@ -90,7 +96,7 @@ static int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2])
 		ft_putendl_fd("Quit (core dumped)", STDOUT_FILENO);
 	else
 		ft_putendl_fd("", STDOUT_FILENO);
-	return status;
+	return (status);
 }
 
 int	echo(t_cmd_node cmd_node, int fds[2])
@@ -133,19 +139,19 @@ int	echo(t_cmd_node cmd_node, int fds[2])
 	return (res);
 }
 
-int expand(t_cmd_node *cmd_node, t_data *data) {
-
+int	expand(t_cmd_node *cmd_node, t_data *data)
+{
 	if (expand_redirections(cmd_node, data) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	if (expand_arguments(cmd_node, data) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-	return EXIT_SUCCESS;
+	return (EXIT_SUCCESS);
 }
 
-int execute_builtin(t_cmd_node *cmd_node, t_data *data, int fds[2]) {
-
+int	execute_builtin(t_cmd_node *cmd_node, t_data *data, int fds[2])
+{
 	if (!ft_strcmp("echo", cmd_node->cmd_token.content))
-		return echo(*cmd_node, fds);
+		return (echo(*cmd_node, fds));
 	if (!ft_strcmp("export", cmd_node->cmd_token.content))
 		return (cstm_export(&data->ep, cmd_node));
 	if (!ft_strcmp("unset", cmd_node->cmd_token.content))
@@ -165,12 +171,13 @@ int	execute_command(t_cmd_node *cmd_node, t_data *data)
 {
 	char	*cmd_path;
 	char	**argv;
-	int		fds[2] = {STDIN_FILENO, STDOUT_FILENO};
+	int		fds[2];
 	int		res;
 	char	*path_env;
 
+	fds[0] = STDIN_FILENO;
+	fds[1] = STDOUT_FILENO;
 	argv = NULL;
-
 	if (expand(cmd_node, data))
 		return (EXIT_FAILURE);
 	if (set_redirections(&(cmd_node->redirections), fds))
@@ -185,13 +192,16 @@ int	execute_command(t_cmd_node *cmd_node, t_data *data)
 		if (!cmd_path)
 		{
 			fprintf(stderr, "Command not found: %s\n",
-					cmd_node->cmd_token.content);
+				cmd_node->cmd_token.content);
 			res = 127;
-		} else {
+		}
+		else
+		{
 			argv = list_to_argv(cmd_node->arguments, cmd_path);
 			if (!argv)
 				res = EXIT_FAILURE;
-			else {
+			else
+			{
 				res = custom_exec(cmd_path, argv, data->ep, fds);
 				free_char_array(argv);
 			}

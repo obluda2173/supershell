@@ -15,10 +15,11 @@
 
 char	*get_path_env(t_list *ep)
 {
-	t_env_var *env_var;
+	t_env_var	*env_var;
+
 	while (ep)
 	{
-		env_var = (t_env_var*)ep->content;
+		env_var = (t_env_var *)ep->content;
 		if (ft_strcmp(env_var->key, "PATH") == 0)
 			return (env_var->value);
 		ep = ep->next;
@@ -58,13 +59,11 @@ char	*find_path(char *cmd, char *path_env)
 
 	if (!cmd || !path_env)
 		return (NULL);
-
 	if (ft_strchr(cmd, '/') && access(cmd, F_OK) == 0)
-		return ft_strdup(cmd);
+		return (ft_strdup(cmd));
 	paths = ft_split(path_env, ':');
 	if (!paths)
 		return (NULL);
-
 	final_path = search_in_paths(cmd, paths);
 	free_char_array(paths);
 	return (final_path);
