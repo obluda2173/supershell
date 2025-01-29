@@ -38,8 +38,7 @@ static char	*process_dollar_expansion(const char *word, t_data *data)
 	result[0] = '\0';
 	while (i < len)
 	{
-		result = append_and_check(result, &result_len,
-				process_char(word, &i, data));
+		result = append_and_check(result, &result_len, process_char(word, &i, data));
 		if (!result)
 			return (NULL);
 		if (word[i - 1] == '?' || ft_isalnum(word[i - 1]) || word[i - 1] == '_')

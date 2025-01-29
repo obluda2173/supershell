@@ -61,12 +61,11 @@ char	*expand_variable(const char *str, size_t *i, t_data *data)
 	return (ft_strdup(""));
 }
 
-char	*append_to_result(char *result, size_t *result_len,
-		const char *addition, size_t addition_len)
+char	*append_to_result(char *result, const char *addition, size_t addition_len)
 {
 	char	*new_result;
 
-	new_result = malloc(*result_len + addition_len + 1);
+	new_result = malloc(ft_strlen(result) + addition_len + 1);
 	if (!new_result)
 	{
 		if (result)
@@ -74,12 +73,9 @@ char	*append_to_result(char *result, size_t *result_len,
 		return (NULL);
 	}
 	if (result)
-	{
-		ft_memcpy(new_result, result, *result_len);
-		free(result);
-	}
-	ft_memcpy(new_result + *result_len, addition, addition_len);
-	*result_len += addition_len;
-	new_result[*result_len] = '\0';
+		ft_memcpy(new_result, result, ft_strlen(result));
+	ft_memcpy(new_result + ft_strlen(result), addition, addition_len);
+	new_result[ft_strlen(result) + addition_len] = '\0';
+	free(result);
 	return (new_result);
 }

@@ -21,7 +21,7 @@ char	*append_and_check(char *result, size_t *result_len, char *str);
 // handle_utils.c
 char *handle_env_expansion(const char *var_name, t_data *data);
 char	*expand_variable(const char *str, size_t *i, t_data *data);
-char *append_to_result(char *result, size_t *result_len, const char *addition, size_t addition_len);
+char	*append_to_result(char *result, const char *addition, size_t addition_len);
 
 /* expand_arguments.c */
 int	expand_arguments(t_cmd_node *cmd_node, t_data *data);
