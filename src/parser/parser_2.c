@@ -1,37 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_node.c                                       :+:      :+:    :+:   */
+/*   parser_2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kfreyer <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/09 09:49/51 by kfreyer           #+#    #+#             */
-/*   Updated: 2025/01/09 09:49:51 by kfreyer          ###   ########.fr       */
+/*   Created: 2025/01/29 14:55/32 by kfreyer           #+#    #+#             */
+/*   Updated: 2025/01/29 14:55:32 by kfreyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-#include "libft.h"
 #include "parser.h"
-#include <unistd.h>
-
-t_script_node	*treat_parens(t_dllist *tokens)
-{
-	t_dllist	*head;
-
-	head = tokens;
-	head = head->next;
-	if ((*(t_token *)head->content).type == RPAREN)
-		return (get_error_node("parsing error near ("));
-	while ((*(t_token *)head->content).type != RPAREN)
-		head = head->next;
-	if (((*(t_token *)head->next->content).type != END_OF_FILE))
-		return (get_error_node("parsing error near )"));
-	head = head->prev;
-	ft_dllstclear(&head->next, free_token);
-	ft_dllstadd_back(&tokens, ft_dllstnew(create_token(NULL, END_OF_FILE)));
-	return (NULL);
-}
 
 t_script_node	*parse_cmd(t_dllist *tokens)
 {
@@ -47,7 +26,7 @@ t_script_node	*parse_cmd(t_dllist *tokens)
 			return (err);
 		return (parse_cmd(tokens->next));
 	}
-	sn = get_cmd_node(*(t_token *)tokens->content);
+	sn = get_cmd_node();
 	if (!sn)
 		return (NULL);
 	return (fill_cmd_node(sn, tokens));
@@ -78,30 +57,6 @@ t_script_node	*parse_pipe(t_dllist *tokens)
 	return (sn);
 }
 
-/* removes last RPAREN from downstream;
- * throws error if if appears at a wrong place */
-t_script_node	*remove_next_rparen(t_dllist *downstream, t_script_node *sn)
-{
-	t_dllist	*head;
-
-	if (((t_token *)downstream->content)->type == RPAREN)
-		return (teardown(sn, "parsing error near ("));
-	head = downstream;
-	while (((t_token *)head->content)->type != RPAREN)
-		head = head->next;
-	if (((t_token *)head->prev->content)->type == PIPE)
-		return (teardown(sn, "parsing error near |"));
-	if (((t_token *)head->prev->content)->type == AND)
-		return (teardown(sn, "parsing error near &&"));
-	if (((t_token *)head->prev->content)->type == OR)
-		return (teardown(sn, "parsing error near ||"));
-	head->next->prev = head->prev;
-	head->prev->next = head->next;
-	free_token(head->content);
-	free(head);
-	return (NULL);
-}
-
 t_script_node	*parse_upstream(t_script_node *sn, t_dllist *tokens)
 {
 	sn->upstream = parse(tokens);
@@ -120,38 +75,6 @@ t_script_node	*parse_downstream(t_script_node *sn, t_dllist *downstream)
 	if (sn->downstream->node_type == ERROR_NODE)
 		return (teardown_err_in_downstream(sn));
 	return (sn);
-}
-
-/* t1->t2->tokens->t3->...->EOF becomes t1->t2->tokens->EOF */
-t_script_node	*truncate_tokens(t_script_node *sn, t_dllist **tokens)
-{
-	*tokens = (*tokens)->prev;
-	if (!*tokens)
-		return (teardown(sn, "error parsing pipeline before logical operator"));
-	ft_dllstclear(&((*tokens)->next), free_token);
-	ft_dllstadd_back(tokens, ft_dllstnew(create_token(NULL, END_OF_FILE)));
-	return (NULL);
-}
-
-t_script_node	*set_downstream_tokens(t_dllist **downstream_tokens,
-		t_dllist *tokens, t_script_node *sn)
-{
-	t_script_node	*err;
-
-	if (((t_token *)tokens->next->content)->type == LPAREN)
-	{
-		tokens->next->next->prev = NULL;
-		*downstream_tokens = tokens->next->next;
-		err = remove_next_rparen(*downstream_tokens, sn);
-		if (err)
-			return (err);
-	}
-	else
-	{
-		tokens->next->prev = NULL;
-		*downstream_tokens = tokens->next;
-	}
-	return (NULL);
 }
 
 t_script_node	*parse_logical(t_dllist *tokens)

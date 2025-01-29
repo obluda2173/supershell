@@ -11,10 +11,38 @@
 /* ************************************************************************** */
 #include "parser.h"
 
-t_script_node	*get_cmd_node(t_token t)
+t_script_node	*fill_cmd_node(t_script_node *sn, t_dllist *tokens)
+{
+	t_script_node	*latest_node;
+	t_token			cur_token;
+
+	while (tokens)
+	{
+		cur_token = *((t_token *)tokens->content);
+		if (cur_token.type == LPAREN)
+			return (teardown(sn, "parsing error near ("));
+		if (cur_token.type == PIPE || cur_token.type == END_OF_FILE)
+			return (sn);
+		if (sn->node_data.cmd_node.cmd_token.type == NONE
+			&& (cur_token.type == BUILTIN || cur_token.type == WORD))
+			sn->node_data.cmd_node.cmd_token = copy_token(cur_token);
+		else if (is_redirection_token(*(t_token *)tokens->content))
+		{
+			latest_node = create_and_add_redirection(tokens, sn);
+			if (latest_node && latest_node->node_type == ERROR_NODE)
+				return (latest_node);
+			tokens = tokens->next;
+		}
+		else if (!create_and_add_argument(sn, tokens->content))
+			return (NULL);
+		tokens = tokens->next;
+	}
+	return (sn);
+}
+
+t_script_node	*get_cmd_node(void)
 {
 	t_script_node	*sn;
-	(void)t;
 
 	sn = (t_script_node *)malloc(sizeof(t_script_node));
 	if (!sn)

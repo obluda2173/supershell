@@ -1,17 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_1.c                                         :+:      :+:    :+:   */
+/*   parser_redirections.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kfreyer <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/02 14:01/54 by kfreyer           #+#    #+#             */
-/*   Updated: 2025/01/02 14:01:54 by kfreyer          ###   ########.fr       */
+/*   Created: 2025/01/29 14:49/28 by kfreyer           #+#    #+#             */
+/*   Updated: 2025/01/29 14:49:28 by kfreyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-#include "libft.h"
 #include "parser.h"
 
 int	check_redirection_token(t_token t)
@@ -54,23 +52,8 @@ t_redirection	*parse_redirection_token(t_token t)
 
 t_redirection	*parse_redirection_word(t_token t, t_redirection *r)
 {
-	/* if (r->type == HERED && (t.type != SINGLE_QUOTE && t.type != DOUBLE_QUOTE)) */
-	/* if (r->type == HERED && (t.type != SINGLE_QUOTE_HERE_DOC && t.type != DOUBLE_QUOTE_HERE_DOC)) */
-	/* { */
-	/* 	free(r); */
-	/* 	return (NULL); */
-	/* } */
-	/* if (t.type == WORD || t.type == SINGLE_QUOTE) */
 	if (t.type == WORD)
 		r->word_type = LITERAL;
-	/* else if (t.type == DOUBLE_QUOTE_HERE_DOC) */
-	/* 	r->word_type = DOUBLE_QUOTE_STR; */
-	/* else if (t.type == SINGLE_QUOTE_HERE_DOC) */
-	/* 	r->word_type = SINGLE_QUOTE_STR; */
-	/* else if (t.type == DOLLAR) */
-	/* 	r->word_type = ENV_EXP; */
-	/* else if (t.type == DOUBLE_QUOTE) */
-	/* 	r->word_type = DOUBLE_QUOTE_STR; */
 	else if (t.type == WILDCARD)
 		r->word_type = WILDCARD_EXP;
 	else
@@ -82,19 +65,34 @@ t_redirection	*parse_redirection_word(t_token t, t_redirection *r)
 	return (r);
 }
 
-t_token	copy_token(t_token token)
+t_redirection	*extract_redirection(t_dllist *tokens)
 {
-	t_token	copy;
+	t_redirection	*r;
 
-	copy.content = ft_strdup(token.content);
-	copy.type = token.type;
-	return (copy);
+	r = parse_redirection_token(*(t_token *)tokens->content);
+	if (!r)
+		return (NULL);
+	return (parse_redirection_word(*(t_token *)(tokens->next->content), r));
 }
 
-bool	is_redirection_token(t_token t)
+t_script_node	*create_and_add_redirection(t_dllist *head, t_script_node *sn)
 {
-	if (t.type == REDIRECT_OUT || t.type == REDIRECT_IN
-		|| t.type == REDIRECT_APPEND || t.type == HERE_DOC)
-		return (true);
-	return (false);
+	t_redirection	*r;
+	t_list			*tmp;
+
+	r = extract_redirection(head);
+	if (!r)
+	{
+		free_script_node(sn);
+		return (get_error_node("parsing error redirection"));
+	}
+	tmp = ft_lstnew(r);
+	if (!tmp)
+	{
+		free_redirection(r);
+		free_script_node(sn);
+		return (NULL);
+	}
+	ft_lstadd_back(&sn->node_data.cmd_node.redirections, tmp);
+	return (sn);
 }

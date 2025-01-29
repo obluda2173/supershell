@@ -46,51 +46,6 @@ t_dllist	*find_last_pipe(t_dllist *tokens)
 	return (tokens);
 }
 
-bool	has_surrounding_parens(t_dllist *tokens)
-{
-	t_dllist	*scnd_to_last;
-	t_dllist	*head;
-	int			nbr_open_parens;
-
-	scnd_to_last = ft_dllstlast(tokens)->prev;
-	if (((t_token *)tokens->content)->type == LPAREN
-		&& ((t_token *)scnd_to_last->content)->type == RPAREN)
-	{
-		head = tokens->next;
-		nbr_open_parens = 1;
-		while (head != scnd_to_last)
-		{
-			if (((t_token *)head->content)->type == LPAREN)
-				nbr_open_parens++;
-			if (((t_token *)head->content)->type == RPAREN)
-				nbr_open_parens--;
-			if (nbr_open_parens == 0)
-				break ;
-			head = head->next;
-		}
-		if (head == scnd_to_last)
-			return (true);
-	}
-	return (false);
-}
-
-t_dllist	*remove_surrounding_parens(t_dllist *tokens)
-{
-	t_dllist	*scnd_to_last;
-	t_dllist	*head;
-
-	scnd_to_last = ft_dllstlast(tokens)->prev;
-	head = tokens;
-	tokens = head->next;
-	tokens->prev = NULL;
-	scnd_to_last->prev->next = scnd_to_last->next;
-	scnd_to_last->next->prev = scnd_to_last->prev;
-	scnd_to_last->next = NULL;
-	scnd_to_last->prev = NULL;
-	ft_dllstclear(&scnd_to_last, free_token);
-	return (tokens);
-}
-
 t_script_node	*parse(t_dllist *tokens)
 {
 	if (!tokens)
