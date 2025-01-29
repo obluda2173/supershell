@@ -2,14 +2,13 @@
 
 import pytest
 import pexpect
-from conftest import cstm_expect, remove_cariage, remove_ansi_sequences, get_exit_status
-import os
-
-
-def remove_files(files):
-    for f in files:
-        if os.path.isfile(f):
-            os.remove(f)
+from conftest import (
+    cstm_expect,
+    remove_cariage,
+    remove_ansi_sequences,
+    get_exit_status,
+    remove_files,
+)
 
 
 @pytest.mark.parametrize(
@@ -25,8 +24,6 @@ def remove_files(files):
         ('whoami | tee user_file | xargs echo "User is"'),
         ("date +%F | tee date_file | cut -d '-' -f 1"),
         ("uname -r | tee kernel_file | cut -d '.' -f 1"),
-        # ("echo hello | cat < non_existant"),
-        # ("ls | cat")
     ],
 )
 def test_pipes(cmd):
