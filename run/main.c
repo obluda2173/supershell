@@ -11,39 +11,7 @@
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "libft.h"
 #include "minishell.h"
-#include "parser.h"
-#include <readline/history.h>
-#include <readline/readline.h>
-#include <stdio.h>
-#include <unistd.h>
-
-void	handle_signals_2(int signum)
-{
-	(void)signum;
-	signal_received = 1;
-}
-
-void	handle_signals(int signum)
-{
-	(void)signum;
-	/* Replace the contents of rl_line_buffer with text. The point and mark are preserved,
-	   if possible.
-	   * If clear_undo is non-zero,
-	   the undo list associated with the current line is cleared.  */
-	rl_replace_line("", 0);
-	ft_putendl_fd("", STDOUT_FILENO);
-	/*  Tell the update routines that we have moved onto a new (empty) line,
-		usually after ouputting a newline.  */
-	rl_on_new_line();
-	/*  Change what's displayed on the screen to reflect the current contents of rl_line_buffer.  */
-	rl_redisplay();
-	if (signum == SIGINT)
-	{
-		signal_received = 1;
-	}
-}
 
 void	get_input(t_data *data)
 {
@@ -62,12 +30,12 @@ void	child_input(int pipefd[2], t_data *data)
 	get_input(data);
 	if (data->line == NULL)
 	{
-		close(pipefd[1]); /* Reader will see EOF */
+		close(pipefd[1]);
 		free_data(data);
 		exit(EXIT_SUCCESS);
 	}
 	write(pipefd[1], data->line, ft_strlen(data->line) + 1);
-	close(pipefd[1]); /* Reader will see EOF */
+	close(pipefd[1]);
 	free_data(data);
 	exit(EXIT_SUCCESS);
 }
@@ -144,12 +112,13 @@ int	repl(t_data *data)
 {
 	t_dllist	*tokens;
 
-	signal(SIGINT, handle_signals_2); // Parent ignores SIGINT
+	signal(SIGINT, handle_signals_2);
 	signal(SIGQUIT, SIG_IGN);
 	while (!data->exit)
 	{
 		data->line = minishell_input(data);
-		if (!check_data(data)) {
+		if (!check_data(data))
+		{
 			free(data->line);
 			data->line = NULL;
 			continue ;
@@ -182,7 +151,7 @@ int	main(int ac, char **av, char **ep)
 	{
 		return (EXIT_FAILURE);
 		free_data(data);
-	};
+	}
 	free_data(data);
 	return (EXIT_SUCCESS);
 }

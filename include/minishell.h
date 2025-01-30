@@ -58,4 +58,5 @@ t_env_var *new_env_var(char *key, char *value);
 void free_env_var(void *content);
 
 int	error_fork(void);
+void	handle_signals_2(int signum);
 #endif
