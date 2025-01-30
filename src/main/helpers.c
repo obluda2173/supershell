@@ -26,3 +26,9 @@ void	free_char_array(char **matrix)
 	}
 	free(matrix);
 }
+
+int	error_fork(void)
+{
+	perror("fork");
+	return (EXIT_FAILURE);
+}

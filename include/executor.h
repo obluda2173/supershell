@@ -44,7 +44,6 @@ void	move_invalid_keys(t_list **ep, t_list **tmp_lst,
 void	close_fds(int fds[2]);
 t_env_var	*get_env_var(t_list *ep, char *key);
 int	teardown_close_fds(int fds[2], char *err_msg);
-int	error_fork(void);
 
 /* execute_pipeline.c */
 int	execute_pipeline(t_script_node *sn, t_data *data);

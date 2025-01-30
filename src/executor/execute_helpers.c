@@ -43,9 +43,3 @@ int	teardown_close_fds(int fds[2], char *err_msg)
 	close_fds(fds);
 	return (EXIT_FAILURE);
 }
-
-int	error_fork(void)
-{
-	perror("fork");
-	return (EXIT_FAILURE);
-}

@@ -41,25 +41,39 @@ typedef struct	s_data
 /* src                                                                      * */
 /* ************************************************************************** */
 
-int	repl(t_data *data);
-char	*minishell_input(t_data *data);
-t_data *set_env_vars(char** ep, t_data *data);
-
-void	free_char_array(char **matrix);
-// free.c
+/* data.c */
+t_data	*init(char **ep);
 void	free_data(t_data *data);
 
-t_data	*init(char **ep);
-void	handle_signals(int signum);
-char	*read_line_from_fd(int read_fd);
-
-// heredoc.c
-int			heredoc_loop(t_dllist **tokens, t_data *data);
-char	*read_line_from_fd(int read_fd);
-
+/* env_var.c */
+t_data *set_env_vars(char** ep, t_data *data);
 t_env_var *new_env_var(char *key, char *value);
 void free_env_var(void *content);
 
+/* helpers.c */
+void	free_char_array(char **matrix);
 int	error_fork(void);
+
+/* heredoc.c */
+int			heredoc_loop(t_dllist **tokens, t_data *data);
+
+/* heredoc_1.c */
+t_dllist	*search_heredoc(t_dllist *tokens);
+char* add_quotes(char* str);
+t_dllist	*create_heredoc_token(t_dllist *heredoc_token, char *heredoc_input);
+char	*extract_delimiter(t_dllist **heredoc_token);
+
+/* input.c */
+char	*minishell_input(t_data *data);
+
+/* readline.c */
+char	*read_line_from_fd(int read_fd);
+
+/* repl.c */
+int	repl(t_data *data);
+
+/* signals.h */
+void	handle_signals(int signum);
 void	handle_signals_2(int signum);
+
 #endif
