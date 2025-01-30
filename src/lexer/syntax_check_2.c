@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_syntax_check_2.c                             :+:      :+:    :+:   */
+/*   syntax_check_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:29:43 by erian             #+#    #+#             */
-/*   Updated: 2025/01/29 13:47:47 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/30 16:10:14 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,6 @@ bool	check_unclosed_quotes(char *str)
 	else
 		return (true);
 	return (false);
-}
-
-bool	check_invalid_symbol(char *str)
-{
-	if (ft_strchr(str, '{') || ft_strchr(str, '}')
-		|| ft_strchr(str, '[') || ft_strchr(str, ']'))
-	{
-		ft_putendl_fd("Invalid input", STDERR_FILENO);
-		return (false);
-	}
-	return (true);
 }
 
 bool	check_unclosed_parenthesis(char *str, size_t open_paren)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfreyer <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/30 15:42/45 by kfreyer           #+#    #+#             */
-/*   Updated: 2025/01/30 15:42:45 by kfreyer          ###   ########.fr       */
+/*   Created: 2025/01/30 15:42:45 by kfreyer           #+#    #+#             */
+/*   Updated: 2025/01/30 16:13:02 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ bool				check_syntax(char *str);
 // lexer_syntax_check_2.c
 bool				check_consecutive_chars(char *str, char c);
 bool				check_unclosed_quotes(char *str);
-bool				check_invalid_symbol(char *str);
 bool				check_unclosed_parenthesis(char *str, size_t open_paren);
 
 // lexer_tokenize_1.c

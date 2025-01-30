@@ -1,45 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_syntax_check_1.c                             :+:      :+:    :+:   */
+/*   syntax_check_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 09:40:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/30 13:26:12 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/30 16:12:20 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static bool	check_inv_char(char *str)
-{
-	int	i;
-	int	d;
-	int	s;
-
-	i = -1;
-	d = 0;
-	s = 0;
-	while (str[++i])
-	{
-		if (str[i] == '\'' && (d % 2 == 0))
-			s++;
-		if (str[i] == '\"' && (s % 2 == 0))
-			d++;
-		if ((s % 2 == 0) && (d % 2 == 0) && (str[i] == '\\' || str[i] == ';'))
-		{
-			if (str[i] == ';')
-				ft_putendl_fd("syntax error near unexpected token: \';\'",
-					STDERR_FILENO);
-			else
-				ft_putendl_fd("syntax error near unexpected token: \'\\\'",
-					STDERR_FILENO);
-			return (false);
-		}
-	}
-	return (true);
-}
 
 static bool	in_quotes(char *str, int i)
 {
@@ -60,6 +31,24 @@ static bool	in_quotes(char *str, int i)
 	}
 	if ((s % 2 == 0) && (d % 2 == 0))
 		return (false);
+	return (true);
+}
+
+static bool	check_invalid_symbol(char *str)
+{
+	int		i;
+	char	*inv_char;
+
+	i = -1;
+	inv_char = "[]{}\\;";
+	while (str[++i])
+	{
+		if (ft_strchr(inv_char, str[i]) && !in_quotes(str, i))
+		{
+			ft_putendl_fd("Invalid input", STDERR_FILENO);
+			return (false);
+		}
+	}
 	return (true);
 }
 
@@ -110,8 +99,6 @@ bool	check_syntax(char *str)
 	if (!check_invalid_symbol(str))
 		return (false);
 	if (!check_unclosed_parenthesis(str, 0))
-		return (false);
-	if (!check_inv_char(str))
 		return (false);
 	return (true);
 }
