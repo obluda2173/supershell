@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:59:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/28 15:36:02 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/30 10:28:55 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	main(int ac, char **av, char **ep)
 {
 	t_data	*data;
+	int		exit_status;
 
 	(void)av;
 	if (ac != 1 || ep == NULL || *ep == NULL)
@@ -24,9 +25,11 @@ int	main(int ac, char **av, char **ep)
 		return (printf("Error: Initialization failed. Exiting...\n"), 0);
 	if (repl(data) == EXIT_FAILURE)
 	{
-		return (EXIT_FAILURE);
 		free_data(data);
+		exit(EXIT_FAILURE);
 	}
+	exit_status = data->exit_status;
 	free_data(data);
-	return (EXIT_SUCCESS);
+	exit(exit_status);
+	// return (EXIT_SUCCESS);
 }
