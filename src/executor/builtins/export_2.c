@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_builtin_export_2.c                        :+:      :+:    :+:   */
+/*   export_2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 13:46:03 by erian             #+#    #+#             */
-/*   Updated: 2025/01/29 16:49:58 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/30 17:14:56 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static bool	valid_key(char *key)
 {
 	int	i;
 
-	i = 1;
+	i = 0;
 	if (!ft_isalpha(key[i]) && key[i] != '_')
 		return (false);
 	while (key[++i])
@@ -79,9 +79,11 @@ bool	assign_var(t_env_var **new_var, char *raw_var)
 	if (!valid_key(key))
 	{
 		ft_putstr_fd("export: \'", STDERR_FILENO);
-		ft_putstr_fd(key, STDERR_FILENO);
+		if (key)
+			ft_putstr_fd(key, STDERR_FILENO);
 		ft_putstr_fd("=\"", STDERR_FILENO);
-		ft_putstr_fd(value, STDERR_FILENO);
+		if (value)
+			ft_putstr_fd(value, STDERR_FILENO);
 		ft_putendl_fd("\"\': not a valid identifier", STDERR_FILENO);
 		free(key);
 		free(value);
