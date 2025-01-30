@@ -15,7 +15,7 @@
 void	handle_signals_2(int signum)
 {
 	if (signum == SIGINT)
-		signal_received = 1;
+		g_signal_received = 1;
 }
 
 void	handle_signals(int signum)
@@ -26,6 +26,6 @@ void	handle_signals(int signum)
 		ft_putendl_fd("", STDOUT_FILENO);
 		rl_on_new_line();
 		rl_redisplay();
-		signal_received = 1;
+		g_signal_received = 1;
 	}
 }

@@ -13,7 +13,7 @@
 #include "libft.h"
 #include "minishell.h"
 
-volatile sig_atomic_t	signal_received = 0;
+volatile sig_atomic_t	g_signal_received = 0;
 
 void	handle_signals_heredoc(int signum)
 {
@@ -67,10 +67,10 @@ char	*read_heredoc_input(char *delimiter, t_data *data)
 			child_heredoc(pipefd);
 		close(pipefd[1]);
 		wait(NULL);
-		if (signal_received == 1)
+		if (g_signal_received == 1)
 		{
 			data->exit_status = 130;
-			signal_received = 0;
+			g_signal_received = 0;
 			free(heredoc_input);
 			return NULL;
 		}

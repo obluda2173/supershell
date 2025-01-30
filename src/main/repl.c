@@ -53,10 +53,10 @@ bool	check_data(t_data *data)
 		data->exit_status = 2;
 		return (false);
 	}
-	if (signal_received == 1)
+	if (g_signal_received == 1)
 	{
 		data->exit_status = 130;
-		signal_received = 0;
+		g_signal_received = 0;
 	}
 	return (true);
 }
