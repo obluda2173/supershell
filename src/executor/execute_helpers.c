@@ -50,17 +50,3 @@ int	error_fork(void)
 	return (EXIT_FAILURE);
 }
 
-void	free_char_array(char **matrix)
-{
-	size_t	i;
-
-	i = 0;
-	if (!matrix)
-		return ;
-	while (matrix[i])
-	{
-		free(matrix[i]);
-		i++;
-	}
-	free(matrix);
-}

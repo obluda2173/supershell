@@ -35,3 +35,38 @@ void	free_env_var(void *content)
 	free(env_var->key);
 	free(env_var);
 }
+
+void	*teardown_data(t_data *data)
+{
+	free_data(data);
+	return (NULL);
+}
+
+t_data	*set_env_vars(char **ep, t_data *data)
+{
+	char		**key_and_value;
+	char		*key;
+	char		*value;
+	t_env_var	*env_var;
+	t_list		*new_node;
+
+	while (*ep != NULL)
+	{
+		key_and_value = ft_split(*ep, '=');
+		key = key_and_value[0];
+		if (key_and_value[1])
+			value = key_and_value[1];
+		else
+			value = "";
+		env_var = new_env_var(key, value);
+		if (!env_var)
+			return (teardown_data(data));
+		free_char_array(key_and_value);
+		new_node = ft_lstnew(env_var);
+		if (!new_node)
+			return (teardown_data(data));
+		ft_lstadd_back(&(data->ep), new_node);
+		ep++;
+	}
+	return (data);
+}

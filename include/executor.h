@@ -28,7 +28,6 @@ int	execute_cmd_node(t_cmd_node *cmd_node, t_data *data);
 int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2]);
 
 // executor_matrix_manipulation.c
-void free_char_array(char **matrix);
 char	**ep_to_char_array(int fds[2], t_list *ep);
 
 // executor_prepare_argv.c

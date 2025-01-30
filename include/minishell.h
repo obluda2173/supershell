@@ -43,6 +43,9 @@ typedef struct	s_data
 
 int	repl(t_data *data);
 char	*minishell_input(t_data *data);
+t_data *set_env_vars(char** ep, t_data *data);
+
+void	free_char_array(char **matrix);
 // free.c
 void	free_data(t_data *data);
 

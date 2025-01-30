@@ -52,12 +52,7 @@ static void	update_shlvl(t_list *ep)
 // initialise data structure and extract environment
 t_data	*init(char **ep)
 {
-	t_list		*new_node;
-	t_data		*data;
-	char		**key_and_value;
-	char		*key;
-	char		*value;
-	t_env_var	*env_var;
+	t_data	*data;
 
 	data = malloc(sizeof(t_data));
 	if (!data)
@@ -66,32 +61,8 @@ t_data	*init(char **ep)
 	data->exit_status = 0;
 	data->exit = false;
 	data->line = NULL;
-	while (*ep != NULL)
-	{
-		key_and_value = ft_split(*ep, '=');
-		key = key_and_value[0];
-		value = NULL;
-		if (key_and_value[1])
-			value = key_and_value[1];
-		else
-			value = "";
-		env_var = new_env_var(key, value);
-		if (!env_var)
-		{
-			free_data(data);
-			return (NULL);
-		}
-		free_char_array(key_and_value);
-		new_node = ft_lstnew(env_var);
-		if (!new_node)
-		{
-			free_data(data);
-			return (NULL);
-		}
-		ft_lstadd_back(&(data->ep), new_node);
-		ep++;
-	}
+	if (!set_env_vars(ep, data))
+		return (NULL);
 	update_shlvl(data->ep);
 	return (data);
 }
-
