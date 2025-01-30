@@ -8,7 +8,7 @@
 # include <stdbool.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-
+#include <sys/wait.h>
 # include "libft.h"
 # include "lexer.h"
 
@@ -41,12 +41,12 @@ typedef struct	s_data
 /* src                                                                      * */
 /* ************************************************************************** */
 
+int	repl(t_data *data);
+char	*minishell_input(t_data *data);
 // free.c
 void	free_data(t_data *data);
 
 t_data	*init(char **ep);
-char	*meeting_line(t_data **data);
-char * rl_gets(const char* prompt);
 void	handle_signals(int signum);
 char	*read_line_from_fd(int read_fd);
 

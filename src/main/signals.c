@@ -20,7 +20,8 @@ void	handle_signals_2(int signum)
 
 void	handle_signals(int signum)
 {
-	if (signum == SIGINT) {
+	if (signum == SIGINT)
+	{
 		rl_replace_line("", 0);
 		ft_putendl_fd("", STDOUT_FILENO);
 		rl_on_new_line();
