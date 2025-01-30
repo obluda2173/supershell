@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 17:23:51 by erian             #+#    #+#             */
-/*   Updated: 2025/01/25 14:35:49 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/30 12:43:20 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static t_token_type	assign_operator_type(char *str)
 		return (REDIRECT_APPEND);
 	if (!ft_strcmp(str, "<\0"))
 		return (REDIRECT_IN);
-	if (ft_strchr(str, '>'))
+	if (!ft_strcmp(str, ">\0"))
 		return (REDIRECT_OUT);
 	if (!ft_strcmp(str, "(\0"))
 		return (LPAREN);
