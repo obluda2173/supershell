@@ -73,15 +73,18 @@ char	*add_double_quotes(char *str)
 	return (quoted_str);
 }
 
-t_dllist	*create_heredoc_token(t_dllist *heredoc_token, char *heredoc_input, bool quoted_delimiter)
+t_dllist	*create_heredoc_token(t_dllist *heredoc_token, char *heredoc_input,
+		bool quoted_delimiter)
 {
-	(void)heredoc_token;
 	t_dllist	*new_token_node;
 
+	(void)heredoc_token;
 	if (quoted_delimiter)
-		new_token_node = ft_dllstnew(create_token(heredoc_input, HD_SINGLE_QUOTE));
+		new_token_node = ft_dllstnew(create_token(heredoc_input,
+					HD_SINGLE_QUOTE));
 	else
-		new_token_node = ft_dllstnew(create_token(heredoc_input, HD_DOUBLE_QUOTE));
+		new_token_node = ft_dllstnew(create_token(heredoc_input,
+					HD_DOUBLE_QUOTE));
 	if (!new_token_node)
 	{
 		printf("Error: Memory allocation failed 2.\n");
@@ -105,7 +108,9 @@ char	*extract_delimiter(t_dllist **heredoc_token)
 		{
 			delimiter = ft_strdup(next_token->content);
 			*heredoc_token = (*heredoc_token)->next;
-		} else {
+		}
+		else
+		{
 			ft_putendl_fd("Syntax Error.", STDERR_FILENO);
 			return (NULL);
 		}
