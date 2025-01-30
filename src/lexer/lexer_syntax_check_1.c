@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 09:40:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/29 13:47:16 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/30 13:26:12 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,28 @@ static bool	check_inv_char(char *str)
 	return (true);
 }
 
+static bool	in_quotes(char *str, int i)
+{
+	int	j;
+	int	d;
+	int	s;
+	
+	j = 0;
+	d = 0;
+	s = 0;
+	while (j < i)
+	{
+		if (str[j] == '\'' && (d % 2 == 0))
+			s++;
+		if (str[j] == '\"' && (s % 2 == 0))
+			d++;
+		j++;
+	}
+	if ((s % 2 == 0) && (d % 2 == 0))
+		return (false);
+	return (true);
+}
+
 int	count_consequitives(char *str, char c)
 {
 	int	c_counter;
@@ -53,7 +75,7 @@ int	count_consequitives(char *str, char c)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == c)
+		if (str[i] == c && !in_quotes(str, i))
 		{
 			j = i;
 			while (str[j] == c)
