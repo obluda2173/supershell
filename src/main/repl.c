@@ -19,6 +19,11 @@ void	parse_and_execute(t_dllist *tokens, t_data *data)
 
 	script = parse(tokens);
 	ft_dllstclear(&tokens, free_token);
+	if (!script)
+	{
+		data->exit_status = 0;
+		return ;
+	}
 	if (script->node_type != ERROR_NODE)
 		data->exit_status = execute_script(script, data);
 	else

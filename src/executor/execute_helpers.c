@@ -49,4 +49,3 @@ int	error_fork(void)
 	perror("fork");
 	return (EXIT_FAILURE);
 }
-
