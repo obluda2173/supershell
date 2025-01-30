@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "lexer.h"
 #include "minishell.h"
 #include <unistd.h>
 
@@ -75,21 +76,12 @@ t_dllist	*create_heredoc_token(t_dllist *heredoc_token, char *heredoc_input)
 {
 	t_token		*token;
 	t_dllist	*new_token_node;
-	char		*new_heredoc_input;
 
 	token = (t_token *)heredoc_token->content;
 	if (ft_strchr(token->content, '\''))
-	{
-		new_heredoc_input = add_quotes(heredoc_input);
-		free(heredoc_input);
-		new_token_node = ft_dllstnew(create_token(new_heredoc_input, WORD));
-	}
+		new_token_node = ft_dllstnew(create_token(heredoc_input, HD_SINGLE_QUOTE));
 	else
-	{
-		new_heredoc_input = add_double_quotes(heredoc_input);
-		free(heredoc_input);
-		new_token_node = ft_dllstnew(create_token(new_heredoc_input, WORD));
-	}
+		new_token_node = ft_dllstnew(create_token(heredoc_input, HD_DOUBLE_QUOTE));
 	if (!new_token_node)
 	{
 		printf("Error: Memory allocation failed 2.\n");

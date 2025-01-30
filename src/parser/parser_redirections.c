@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "lexer.h"
 #include "parser.h"
 
 int	check_redirection_token(t_token t)
@@ -54,6 +55,10 @@ t_redirection	*parse_redirection_word(t_token t, t_redirection *r)
 {
 	if (t.type == WORD)
 		r->word_type = LITERAL;
+	else if (t.type == HD_SINGLE_QUOTE)
+		r->word_type = SINGLE_QUOTE;
+	else if (t.type == HD_DOUBLE_QUOTE)
+		r->word_type = DOUBLE_QUOTE;
 	else if (t.type == WILDCARD)
 		r->word_type = WILDCARD_EXP;
 	else

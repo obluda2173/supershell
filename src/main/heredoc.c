@@ -38,36 +38,6 @@ void child_heredoc(int pipefd[2]) {
 	exit(EXIT_SUCCESS);
 }
 
-/*  parent_heredoc(int pipefd[2], t_data *data, char* heredoc_input) { */
-/* 	 char *tmp; */
-/* 	 char* line; */
-/* 		close(pipefd[1]); */
-/* 		wait(NULL); */
-/* 		if (signal_received == 1) */
-/* 		{ */
-/* 			data->exit_status = 130; */
-/* 			signal_received = 0; */
-/* 			free(heredoc_input); */
-/* 			return NULL; */
-/* 		} */
-/* 		line = read_line_from_fd(pipefd[0]); */
-/* 		if (!line || ft_strcmp(line, delimiter) == 0) */
-/* 		{ */
-/* 			free(line); */
-/* 			break ; */
-/* 		} */
-/* 		tmp = ft_strjoin(heredoc_input, line); */
-/* 		free(heredoc_input); */
-/* 		heredoc_input = ft_strjoin(tmp, "\n"); */
-/* 		free(tmp); */
-/* 		free(line); */
-/* 		if (!heredoc_input) */
-/* 		{ */
-/* 			printf("Error: Memory allocation failed 1.\n"); */
-/* 			return (NULL); */
-/* 		} */
-/* } */
-
 char	*read_heredoc_input(char *delimiter, t_data *data)
 {
 	char	*line;

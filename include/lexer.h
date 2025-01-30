@@ -35,6 +35,8 @@ typedef enum e_token_type
 	LPAREN,				// 11
 	RPAREN,				// 12
 	INVALID,			// 13
+	HD_SINGLE_QUOTE,			// 5
+	HD_DOUBLE_QUOTE,			// 5
 	NONE
 }	t_token_type;
 

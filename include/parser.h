@@ -28,6 +28,8 @@ typedef enum e_node_type
 typedef enum e_word_type
 {
 	LITERAL,
+	SINGLE_QUOTE,
+	DOUBLE_QUOTE,
 	WILDCARD_EXP,
 }							t_word_type;
 

@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "executor_expansions.h"
+#include "lexer.h"
 #include "libft.h"
 #include "parser.h"
 #include <fcntl.h>
@@ -82,7 +84,12 @@ void	expand_env_redirection(t_list *redirections, t_data *data)
 	while (head)
 	{
 		r = (t_redirection *)head->content;
-		new_word = expand_string(r->word, data);
+		if (r->word_type == SINGLE_QUOTE)
+			new_word = ft_strdup(r->word);
+		else if (r->word_type == DOUBLE_QUOTE)
+			new_word = handle_double_quotes_hd(r->word, data);
+		else
+			new_word = expand_string(r->word, data);
 		free(r->word);
 		r->word = new_word;
 		head = head->next;

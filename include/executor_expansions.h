@@ -11,6 +11,7 @@ char	*handle_dollar(const char *word, t_data *data);
 
 // handle_double_quotes.c
 char    *handle_double_quotes(const char *word,  t_data *data);
+char	*handle_double_quotes_hd(const char *word, t_data *data);
 
 // handle_dollar_2.c
 char	*handle_exit_status(size_t *i, t_data *data);
