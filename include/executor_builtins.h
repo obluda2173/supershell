@@ -5,6 +5,9 @@
 #include "parser.h"
 
 /* executor/builtins */
+/* echo.c */
+int	echo(t_cmd_node cmd_node, int fds[2]);
+
 // builtin_cd_1.c
 int cstm_cd(t_list **ep, t_list *args);
 

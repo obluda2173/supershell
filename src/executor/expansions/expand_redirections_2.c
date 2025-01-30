@@ -37,10 +37,3 @@ t_list	*new_redirection_from_entry(char *entry, t_redirection redirection)
 	new->fd = redirection.fd;
 	return (ft_lstnew(new));
 }
-
-int	teardown_close_fds(int fds[2], char *err_msg)
-{
-	perror(err_msg);
-	close_fds(fds);
-	return (EXIT_FAILURE);
-}

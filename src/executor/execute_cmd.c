@@ -12,51 +12,6 @@
 
 #include "executor.h"
 #include "executor_builtins.h"
-#include "minishell.h"
-#include "parser.h"
-#include <unistd.h>
-
-int	error_fork(void)
-{
-	perror("fork");
-	return (EXIT_FAILURE);
-}
-
-char	**ep_to_matrix(int fds[2], t_list *ep)
-{
-	int		count;
-	char	**env_matrix;
-	char	*first;
-	char	*second;
-
-	env_matrix = (char **)malloc(sizeof(char *) * (ft_lstsize(ep) + 1));
-	if (!env_matrix)
-	{
-		close_fds(fds);
-		ft_putendl_fd("Allocation error", STDERR_FILENO);
-		return (NULL);
-	}
-	count = 0;
-	while (ep)
-	{
-		first = ft_strjoin(((t_env_var *)ep->content)->key, "=");
-		if (((t_env_var *)ep->content)->value)
-		{
-			second = ft_strjoin(first, ((t_env_var *)ep->content)->value);
-		}
-		else
-		{
-			second = ft_strdup(first);
-		}
-		env_matrix[count] = ft_strdup(second);
-		free(first);
-		free(second);
-		ep = ep->next;
-		count++;
-	}
-	env_matrix[count] = NULL;
-	return (env_matrix);
-}
 
 static int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2])
 {
@@ -97,46 +52,6 @@ static int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2])
 	else
 		ft_putendl_fd("", STDOUT_FILENO);
 	return (status);
-}
-
-int	echo(t_cmd_node cmd_node, int fds[2])
-{
-	char	**argv;
-	int		res;
-	char	**head;
-	bool	print_newline;
-
-	argv = NULL;
-	argv = list_to_argv(cmd_node.arguments, "");
-	res = 0;
-	if (!argv)
-		return (1);
-	head = argv;
-	head++;
-	if (*head)
-	{
-		print_newline = true;
-		if (!ft_strcmp(*head, "-n"))
-		{
-			print_newline = false;
-			head++;
-		}
-		while (*head)
-		{
-			ft_putstr_fd(*head, fds[1]);
-			head++;
-			if (*head)
-				ft_putstr_fd(" ", fds[1]);
-		}
-		if (print_newline)
-			ft_putendl_fd("", fds[1]);
-	}
-	else
-	{
-		ft_putendl_fd("", fds[1]);
-	}
-	free_char_array(argv);
-	return (res);
 }
 
 int	expand(t_cmd_node *cmd_node, t_data *data)

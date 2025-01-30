@@ -27,8 +27,7 @@ int	execute_cmd_node(t_cmd_node *cmd_node, t_data *data);
 
 // executor_matrix_manipulation.c
 void free_char_array(char **matrix);
-size_t ft_size_char_array(char **matrix);
-char **ft_matrix_join(char **matrix1, char **matrix2);
+char	**ep_to_matrix(int fds[2], t_list *ep);
 
 // executor_prepare_argv.c
 char **list_to_argv(t_list *arguments, char *cmd_path);
@@ -43,6 +42,8 @@ void	move_invalid_keys(t_list **ep, t_list **tmp_lst,
 /* executor_helpers.c */
 void	close_fds(int fds[2]);
 t_env_var	*get_env_var(t_list *ep, char *key);
+int	teardown_close_fds(int fds[2], char *err_msg);
+int	error_fork(void);
 
 /* execute_pipeline.c */
 int	execute_pipeline(t_script_node *sn, t_data *data);

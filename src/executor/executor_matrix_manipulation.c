@@ -27,32 +27,29 @@ void	free_char_array(char **matrix)
 	free(matrix);
 }
 
-size_t	ft_size_char_array(char **matrix)
+char	**ep_to_matrix(int fds[2], t_list *ep)
 {
-	size_t	size;
+	int		count;
+	char	**env_matrix;
+	char	*first;
+	char	*second;
 
-	size = 0;
-	while (matrix && matrix[size])
-		size++;
-	return (size);
-}
-
-char	**ft_matrix_join(char **m1, char **m2)
-{
-	char	**result;
-	size_t	i;
-	size_t	j;
-
-	i = -1;
-	j = -1;
-	result = malloc(sizeof(char *) * (ft_size_char_array(m1)
-				+ ft_size_char_array(m2) + 1));
-	if (!result)
-		return (NULL);
-	while (++i < ft_size_char_array(m1))
-		result[i] = ft_strdup(m1[i]);
-	while (++j < ft_size_char_array(m2))
-		result[i++] = ft_strdup(m2[j]);
-	result[i] = NULL;
-	return (result);
+	env_matrix = (char **)malloc(sizeof(char *) * (ft_lstsize(ep) + 1));
+	if (!env_matrix)
+		teardown_close_fds(fds, "Allocation error");
+	count = 0;
+	while (ep)
+	{
+		first = ft_strjoin(((t_env_var *)ep->content)->key, "=");
+		if (((t_env_var *)ep->content)->value)
+			second = ft_strjoin(first, ((t_env_var *)ep->content)->value);
+		else
+			second = ft_strdup(first);
+		env_matrix[count++] = ft_strdup(second);
+		free(first);
+		free(second);
+		ep = ep->next;
+	}
+	env_matrix[count] = NULL;
+	return (env_matrix);
 }
