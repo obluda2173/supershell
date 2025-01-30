@@ -160,7 +160,6 @@ int	repl(t_data *data)
 		data->line = NULL;
 		if (heredoc_loop(&tokens, data))
 		{
-			/* printf("Error: Heredoc processing failed.\n"); */
 			ft_dllstclear(&tokens, free_token);
 			continue ;
 		}

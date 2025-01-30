@@ -25,9 +25,12 @@ char	*find_path(char *cmd, char *path_env);
 // execute_cmd.c
 int	execute_cmd_node(t_cmd_node *cmd_node, t_data *data);
 
+/* execute_cmd_1.c */
+int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2]);
+
 // executor_matrix_manipulation.c
 void free_char_array(char **matrix);
-char	**ep_to_matrix(int fds[2], t_list *ep);
+char	**ep_to_char_array(int fds[2], t_list *ep);
 
 // executor_prepare_argv.c
 char **list_to_argv(t_list *arguments, char *cmd_path);
@@ -47,6 +50,5 @@ int	error_fork(void);
 
 /* execute_pipeline.c */
 int	execute_pipeline(t_script_node *sn, t_data *data);
-
 
 #endif // EXECUTOR_
