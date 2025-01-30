@@ -12,12 +12,32 @@
 
 #include "executor.h"
 
+void	echo_print(int fds[2], char **head)
+{
+	bool	print_newline;
+
+	print_newline = true;
+	if (!ft_strcmp(*head, "-n"))
+	{
+		print_newline = false;
+		head++;
+	}
+	while (*head)
+	{
+		ft_putstr_fd(*head, fds[1]);
+		head++;
+		if (*head)
+			ft_putstr_fd(" ", fds[1]);
+	}
+	if (print_newline)
+		ft_putendl_fd("", fds[1]);
+}
+
 int	echo(t_cmd_node cmd_node, int fds[2])
 {
 	char	**argv;
 	int		res;
 	char	**head;
-	bool	print_newline;
 
 	argv = NULL;
 	argv = list_to_argv(cmd_node.arguments, "");
@@ -27,27 +47,9 @@ int	echo(t_cmd_node cmd_node, int fds[2])
 	head = argv;
 	head++;
 	if (*head)
-	{
-		print_newline = true;
-		if (!ft_strcmp(*head, "-n"))
-		{
-			print_newline = false;
-			head++;
-		}
-		while (*head)
-		{
-			ft_putstr_fd(*head, fds[1]);
-			head++;
-			if (*head)
-				ft_putstr_fd(" ", fds[1]);
-		}
-		if (print_newline)
-			ft_putendl_fd("", fds[1]);
-	}
+		echo_print(fds, head);
 	else
-	{
 		ft_putendl_fd("", fds[1]);
-	}
 	free_char_array(argv);
 	return (res);
 }
