@@ -17,7 +17,7 @@ static bool	in_quotes(char *str, int i)
 	int	j;
 	int	d;
 	int	s;
-	
+
 	j = 0;
 	d = 0;
 	s = 0;

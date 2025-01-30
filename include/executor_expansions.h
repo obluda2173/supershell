@@ -24,6 +24,12 @@ char		*handle_dollar(const char *word, t_data *data);
 // handle_double_quotes.c
 char		*handle_double_quotes(const char *word, t_data *data);
 char		*handle_double_quotes_hd(const char *word, t_data *data);
+char		*process_exit_status(t_data *data, char **result, size_t *i);
+char		*process_normal_char(const char *word, size_t *i, char **result);
+
+// handle_double_quotes_1.c
+char		*handle_dollar_expansion(const char *word, t_data *data, size_t *i,
+				char *result);
 
 // handle_dollar_2.c
 char		*handle_exit_status(size_t *i, t_data *data);
