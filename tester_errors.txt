@@ -1,7 +1,14 @@
-
+OK_TESTS:
+Test  30: ❌ export HELLO-=123
 Test  13: ❌ echo "> >> < * ? [ ] | ; [ ] || && ( ) & # $  <<"
 Test  14: ❌ echo '> >> < * ? [ ] | ; [ ] || && ( ) & # $  <<'
-Test  27: ❌ export HELLO=123 A
-Test  27: ❌ export HELLO=123 A
-Test  30: ❌ export HELLO-=123
 Test  31: ❌ export =
+
+
+FAILING_TESTS:
+export HELLO=123 A
+export ECHO=echo
+then
+$ECHO
+
+e"c"h"o
