@@ -1,6 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   readline.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kfreyer <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/30 08:44/57 by kfreyer           #+#    #+#             */
+/*   Updated: 2025/01/30 08:44:57 by kfreyer          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#define BUFFER_SIZE 1024
+
 #include "minishell.h"
 
-// finding meeting line
+void	*teardown_content(char *content, char *err_msg)
+{
+	free(content);
+	ft_putendl_fd(err_msg, STDERR_FILENO);
+	return (NULL);
+}
+
 char	*meeting_line(t_data **data)
 {
 	t_list		*start;
@@ -19,13 +39,9 @@ char	*meeting_line(t_data **data)
 		if (ft_strcmp(env_var->key, "LOGNAME") == 0)
 		{
 			if (env_var->value)
-			{
 				line = ft_strdup(env_var->value);
-			}
 			else
-			{
 				line = ft_strdup("");
-			}
 			if (line)
 			{
 				result = ft_strjoin(line, "$ ");
@@ -35,7 +51,7 @@ char	*meeting_line(t_data **data)
 		}
 		start = start->next;
 	}
-	return ft_strdup("$ ");
+	return (ft_strdup("$ "));
 }
 
 char	*rl_gets(const char *prompt)
@@ -53,47 +69,23 @@ char	*rl_gets(const char *prompt)
 	return (line_read);
 }
 
-/* char	*read_line_from_child(int read_fd) */
-/* { */
-/* 	int		error; */
-/* 	char	*line; */
-/* 	int		count; */
+void	*my_realloc(void *ptr, size_t new_size)
+{
+	void	*new_ptr;
 
-/* 	line = NULL; */
-/* 	line = malloc(sizeof(char) * 100); */
-/* 	count = 0; */
-/* 	error = read(read_fd, line + (count++), 1); */
-/* 	if (error == 0) */
-/* 	{ */
-/* 		free(line); */
-/* 		close(read_fd); */
-/* 		return (NULL); */
-/* 	} */
-/* 	while (read(read_fd, line + (count++), 1) > 0) */
-/* 	{ */
-/* 	} */
-/* 	close(read_fd); */
-/* 	return (line); */
-/* } */
-
-#define BUFFER_SIZE 1024
-
-void *my_realloc(void *ptr, size_t new_size) {
-	if (new_size == 0) {
+	if (new_size == 0)
+	{
 		free(ptr);
-		return NULL;
+		return (NULL);
 	}
-
 	if (ptr == NULL)
-		return malloc(new_size);
-
-	void *new_ptr = malloc(new_size);
+		return (malloc(new_size));
+	new_ptr = malloc(new_size);
 	if (!new_ptr)
-		return NULL;  // Allocation failed
-
+		return (NULL);
 	ft_memcpy(new_ptr, ptr, new_size);
 	free(ptr);
-	return new_ptr;
+	return (new_ptr);
 }
 
 char	*read_line_from_fd(int fd)
@@ -113,25 +105,18 @@ char	*read_line_from_fd(int fd)
 			break ;
 		new_content = my_realloc(content, total_size + bytes_read + 1);
 		if (!new_content)
-		{
-			free(content);
-			perror("Failed to allocate memory");
-			return (NULL);
-		}
+			return (teardown_content(content, "Failed to allocate memory"));
 		content = new_content;
 		memcpy(content + total_size, buffer, bytes_read);
 		total_size += bytes_read;
 	}
 	if (bytes_read == -1)
-	{
-		perror("Error reading from file descriptor");
-		free(content);
-		return (NULL);
-	}
+		return (teardown_content(content,
+				"Error reading from file descriptor"));
 	if (bytes_read && !content)
 		return (NULL);
 	if (content)
-		content[total_size] = '\0'; // Null-terminate the string
+		content[total_size] = '\0';
 	close(fd);
 	return (content);
 }

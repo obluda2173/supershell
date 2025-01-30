@@ -11,18 +11,20 @@
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "executor.h"
 #include "minishell.h"
 
-t_env_var *new_env_var(char *key, char *value) {
-	t_env_var *env_var = (t_env_var*)malloc(sizeof(t_env_var));
+t_env_var	*new_env_var(char *key, char *value)
+{
+	t_env_var	*env_var;
+
+	env_var = (t_env_var *)malloc(sizeof(t_env_var));
 	if (!env_var)
-		return NULL;
+		return (NULL);
 	env_var->key = ft_strdup(key);
 	env_var->value = NULL;
 	if (value)
 		env_var->value = ft_strdup(value);
-	return env_var;
+	return (env_var);
 }
 
 static void	update_shlvl(t_list *ep)
@@ -35,7 +37,7 @@ static void	update_shlvl(t_list *ep)
 	{
 		shlvl = new_env_var("SHLVL", "1");
 		ft_lstadd_back(&ep, ft_lstnew(shlvl));
-		return;
+		return ;
 	}
 	if (!shlvl->value)
 		shlvl->value = ft_strdup("0");
@@ -52,8 +54,12 @@ static void	update_shlvl(t_list *ep)
 // initialise data structure and extract environment
 t_data	*init(char **ep)
 {
-	t_list	*new_node;
-	t_data	*data;
+	t_list		*new_node;
+	t_data		*data;
+	char		**key_and_value;
+	char		*key;
+	char		*value;
+	t_env_var	*env_var;
 
 	data = malloc(sizeof(t_data));
 	if (!data)
@@ -64,22 +70,20 @@ t_data	*init(char **ep)
 	data->line = NULL;
 	while (*ep != NULL)
 	{
-		char** key_and_value = ft_split(*ep, '=');
-		char* key = key_and_value[0];
-		char* value = NULL;
-
+		key_and_value = ft_split(*ep, '=');
+		key = key_and_value[0];
+		value = NULL;
 		if (key_and_value[1])
 			value = key_and_value[1];
 		else
 			value = "";
-
-		t_env_var *env_var = new_env_var(key, value);
-		if (!env_var) {
+		env_var = new_env_var(key, value);
+		if (!env_var)
+		{
 			free_data(data);
 			return (NULL);
 		}
 		free_char_array(key_and_value);
-
 		new_node = ft_lstnew(env_var);
 		if (!new_node)
 		{
@@ -89,14 +93,15 @@ t_data	*init(char **ep)
 		ft_lstadd_back(&(data->ep), new_node);
 		ep++;
 	}
-	
 	update_shlvl(data->ep);
-
 	return (data);
 }
 
-void free_env_var(void *content) {
-	t_env_var *env_var = (t_env_var*)content;
+void	free_env_var(void *content)
+{
+	t_env_var	*env_var;
+
+	env_var = (t_env_var *)content;
 	free(env_var->value);
 	free(env_var->key);
 	free(env_var);

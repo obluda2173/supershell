@@ -20,7 +20,7 @@ def remove_files(files):
         ("cmd_fail && echo hello"),
         ("echo Hello || echo World"),
         ("cmd_fail || echo World"),
-        ("cmd_fail || cmd_fail && adsf"),
+        ("cmd_fail || cmd_fail && cmd_fail"),
         ("echo Hello || echo New && echo World"),
         ("(echo Hello || echo New) && echo World"),
         ("echo Hello || (echo New && echo World)"),
@@ -49,8 +49,8 @@ def remove_files(files):
         ("cmd_fail || echo New && cmd_fail"),
         ("echo hello || cmd_fail && cmd_fail"),
         ("(cmd_fail || cmd_fail) && echo World"),
-        ("(cmd_fail || echo New) && adsf"),
-        ("(echo Hello || cmd_fail) && adsf"),
+        ("(cmd_fail || echo New) && cmd_fail"),
+        ("(echo Hello || cmd_fail) && cmd_fail"),
         ("echo Hello || (cmd_fail && cmd_fail)"),
         ("cmd_fail || (cmd_fail && echo World)"),
         ("cmd_fail || (echo New && cmd_fail)"),
@@ -58,8 +58,8 @@ def remove_files(files):
         ("cmd_fail && echo New || cmd_fail"),
         ("echo hello && cmd_fail || cmd_fail"),
         ("(cmd_fail && cmd_fail) || echo World"),
-        ("(cmd_fail && echo New) || adsf"),
-        ("(echo Hello && cmd_fail) || adsf"),
+        ("(cmd_fail && echo New) || cmd_fail"),
+        ("(echo Hello && cmd_fail) || cmd_fail"),
         ("echo Hello && (cmd_fail || cmd_fail)"),
         ("cmd_fail && (cmd_fail || echo World)"),
         ("cmd_fail && (echo New || cmd_fail)"),
@@ -100,9 +100,11 @@ def test_logical(cmd):
 
     assert len(bash_output) == len(minishell_output)
     for line_bash, line_minishell in zip(bash_output, minishell_output):
-        if line_bash.startswith("bash"):
-            line_bash = line_bash.split(": ")[-1]
-            assert line_bash in line_minishell.lower()
+        # if line_bash.startswith("bash"):
+        #     line_bash = line_bash.split(": ")[-1]
+        #     assert line_bash in line_minishell.lower()
+        if "command not found" in line_bash:
+            assert "Command not found" in line_minishell
         else:
             assert line_bash == line_minishell
     assert bash_exit_status == minishell_exit_status

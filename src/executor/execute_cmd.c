@@ -55,7 +55,7 @@ int	execute_cmd(t_cmd_node *cmd_node, t_data *data, int fds[2])
 	cmd_path = find_path(cmd_node->cmd_token.content, path_env);
 	if (!cmd_path)
 	{
-		ft_putstr_fd("Command not found:", STDERR_FILENO);
+		ft_putstr_fd("Command not found: ", STDERR_FILENO);
 		ft_putendl_fd(cmd_node->cmd_token.content, STDERR_FILENO);
 		res = 127;
 	}
