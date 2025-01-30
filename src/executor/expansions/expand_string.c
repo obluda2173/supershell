@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "executor.h"
-// #include "executor_kay.h"
 
 char	*expand_from_single_quote(char *word, t_data *data)
 {

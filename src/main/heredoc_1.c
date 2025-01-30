@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <unistd.h>
 
 t_dllist	*search_heredoc(t_dllist *tokens)
 {
@@ -49,6 +50,27 @@ char	*add_quotes(char *str)
 	return (quoted_str);
 }
 
+char	*add_double_quotes(char *str)
+{
+	size_t	len;
+	char	*quoted_str;
+
+	if (!str)
+		return (NULL);
+	len = ft_strlen(str);
+	quoted_str = malloc(len + 3);
+	if (!quoted_str)
+	{
+		ft_putendl_fd("Memory allocation failed\n", STDERR_FILENO);
+		return (NULL);
+	}
+	quoted_str[0] = '\"';
+	ft_strlcpy(quoted_str + 1, str, len + 2);
+	quoted_str[len + 1] = '\"';
+	quoted_str[len + 2] = '\0';
+	return (quoted_str);
+}
+
 t_dllist	*create_heredoc_token(t_dllist *heredoc_token, char *heredoc_input)
 {
 	t_token		*token;
@@ -63,7 +85,11 @@ t_dllist	*create_heredoc_token(t_dllist *heredoc_token, char *heredoc_input)
 		new_token_node = ft_dllstnew(create_token(new_heredoc_input, WORD));
 	}
 	else
-		new_token_node = ft_dllstnew(create_token(heredoc_input, WORD));
+	{
+		new_heredoc_input = add_double_quotes(heredoc_input);
+		free(heredoc_input);
+		new_token_node = ft_dllstnew(create_token(new_heredoc_input, WORD));
+	}
 	if (!new_token_node)
 	{
 		printf("Error: Memory allocation failed 2.\n");

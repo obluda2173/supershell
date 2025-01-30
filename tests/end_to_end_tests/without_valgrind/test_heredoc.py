@@ -6,24 +6,23 @@ from conftest import remove_cariage, remove_ansi_sequences, cstm_expect, get_exi
 
 
 def test_cd():
-    bash = pexpect.spawn("bash", encoding="utf-8")
+    minishell = pexpect.spawn("./minishell", encoding="utf-8")
 
-    cstm_expect(r"\$ ", bash)
-    bash.sendline("<<EOF")
-    bash.sendline("'")
-    bash.sendline("EOF")
+    cstm_expect(r"\$ ", minishell)
+    minishell.sendline("<<EOF")
+    minishell.sendline("'")
+    minishell.sendline("EOF")
 
-    cstm_expect(r"\$ ", bash)
-    assert bash.before is not None
+    cstm_expect(r"\$ ", minishell)
+    assert minishell.before is not None
 
-    bash_output = [
+    minishell_output = [
         remove_cariage(remove_ansi_sequences(line))
-        for line in bash.before.split("\n")[1:-1]
+        for line in minishell.before.split("\n")[1:-1]
     ]
-    print(bash_output)
-    bash.sendline("exit")
-    bash.close()
-    assert False
+    print(minishell_output)
+    minishell.sendline("exit")
+    minishell.close()
 
     # minishell_output = []
     # minishell = pexpect.spawn("./minishell", encoding="utf-8")

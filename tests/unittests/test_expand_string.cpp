@@ -72,6 +72,9 @@ INSTANTIATE_TEST_SUITE_P(
 		expandStringParams{"\"$PATH$LOGNAME\"", "path_valuelogname"},
 		expandStringParams{"\"$1_PATH\"", ""},  // Assuming $1 is not set.
 		expandStringParams{"'$$'", "$$"},
-		expandStringParams{"\"$10$LOGUNSET\"", ""}  // Assuming $10 and $LOGNAME unset or empty.
+		expandStringParams{"\"$10$LOGUNSET\"", ""},  // Assuming $10 and $LOGNAME unset or empty.j
+		expandStringParams{"\"\'\'\'\"", "\'\'\'"},
+		expandStringParams{"\"\'$PATH\'\'\"", "\'path_value\'\'"},
+		expandStringParams{"\"\'\"", "\'"}
 		)
 	);
