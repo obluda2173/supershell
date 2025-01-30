@@ -12,6 +12,8 @@
 
 #include "executor.h"
 #include "executor_builtins.h"
+#include "libft.h"
+#include <unistd.h>
 
 int	expand(t_cmd_node *cmd_node, t_data *data)
 {
@@ -53,7 +55,8 @@ int	execute_cmd(t_cmd_node *cmd_node, t_data *data, int fds[2])
 	cmd_path = find_path(cmd_node->cmd_token.content, path_env);
 	if (!cmd_path)
 	{
-		fprintf(stderr, "Command not found: %s\n", cmd_node->cmd_token.content);
+		ft_putstr_fd("Command not found:", STDERR_FILENO);
+		ft_putendl_fd(cmd_node->cmd_token.content, STDERR_FILENO);
 		res = 127;
 	}
 	else

@@ -11,10 +11,7 @@
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "libft.h"
 #include "parser.h"
-#include <sys/wait.h>
-#include <unistd.h>
 
 int	execute_script(t_script_node *sn, t_data *data)
 {

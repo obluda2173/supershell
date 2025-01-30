@@ -10,7 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "minishell.h"
+#include <unistd.h>
 
 static bool	valid_key(char *key)
 {
@@ -76,8 +78,11 @@ bool	assign_var(t_env_var **new_var, char *raw_var)
 		return (false);
 	if (!valid_key(key))
 	{
-		printf("bash: export: \'%s=\"%s\"\': not a valid identifier\n",
-			key, value);
+		ft_putstr_fd("export: \'", STDERR_FILENO);
+		ft_putstr_fd(key, STDERR_FILENO);
+		ft_putstr_fd("=\"", STDERR_FILENO);
+		ft_putstr_fd(value, STDERR_FILENO);
+		ft_putendl_fd("\"\': not a valid identifier", STDERR_FILENO);
 		free(key);
 		free(value);
 		return (false);
