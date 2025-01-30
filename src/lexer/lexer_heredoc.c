@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 11:00:40 by erian             #+#    #+#             */
-/*   Updated: 2025/01/29 13:21:25 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/30 09:48:30 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static t_dllist	*search_heredoc(t_dllist *tokens)
 char* add_quotes(char* str) {
 	if (!str)
 		return NULL;
-	size_t len = strlen(str);
+	size_t len = ft_strlen(str);
 	char* quoted_str = malloc(len + 3);
 	if (!quoted_str) {
 		ft_putendl_fd( "Memory allocation failed\n", STDERR_FILENO);

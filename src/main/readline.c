@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   readline.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfreyer <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/30 08:44/57 by kfreyer           #+#    #+#             */
-/*   Updated: 2025/01/30 08:44:57 by kfreyer          ###   ########.fr       */
+/*   Created: 2025/01/30 08:44:57 by kfreyer           #+#    #+#             */
+/*   Updated: 2025/01/30 09:55:50 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*set_content(size_t total_size, ssize_t bytes_read, char *content,
 	if (!new_content)
 		return (teardown_content(content, "Failed to allocate memory"));
 	content = new_content;
-	memcpy(content + total_size, buffer, bytes_read);
+	ft_memcpy(content + total_size, buffer, bytes_read);
 	return (new_content);
 }
 

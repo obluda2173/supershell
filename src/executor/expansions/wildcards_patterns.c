@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   wildcard_match_pattern.c                           :+:      :+:    :+:   */
+/*   wildcards_patterns.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfreyer <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/29 16:02/02 by kfreyer           #+#    #+#             */
-/*   Updated: 2025/01/29 16:02:02 by kfreyer          ###   ########.fr       */
+/*   Created: 2025/01/29 16:02:02 by kfreyer           #+#    #+#             */
+/*   Updated: 2025/01/30 09:53:30 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*get_pattern(char *word)
 
 	slash = ft_strrchr(word, '/');
 	if (slash)
-		pattern = strdup(slash + 1);
+		pattern = ft_strdup(slash + 1);
 	else
 		pattern = ft_strdup(word);
 	return (pattern);
