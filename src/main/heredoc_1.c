@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "lexer.h"
+#include "libft.h"
 #include "minishell.h"
 #include <unistd.h>
 
@@ -105,6 +106,9 @@ char	*extract_delimiter(t_dllist **heredoc_token)
 		{
 			delimiter = ft_strdup(next_token->content);
 			*heredoc_token = (*heredoc_token)->next;
+		} else {
+			ft_putendl_fd("Syntax Error.", STDERR_FILENO);
+			return (NULL);
 		}
 	}
 	if (!delimiter)

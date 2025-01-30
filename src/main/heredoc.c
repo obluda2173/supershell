@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "minishell.h"
 
 volatile sig_atomic_t	signal_received = 0;
@@ -103,7 +104,6 @@ int	heredoc_loop(t_dllist **tokens, t_data *data)
 	heredoc_token = search_heredoc(*tokens);
 	if (!heredoc_token)
 		return EXIT_SUCCESS;
-
 	delimiter = extract_delimiter(&heredoc_token);
 	if (!delimiter)
 		return EXIT_FAILURE;
