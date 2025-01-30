@@ -1,0 +1,39 @@
+#+title: Tester Errors
+
+* ./tester
+OK_TESTS:
+Test  30: ❌ export HELLO-=123
+Test  13: ❌ echo "> >> < * ? [ ] | ; [ ] || && ( ) & # $  <<"
+Test  14: ❌ echo '> >> < * ? [ ] | ; [ ] || && ( ) & # $  <<'
+Test  31: ❌ export =
+
+
+FAILING_TESTS:
+export HELLO=123 A
+export ECHO=echo
+then
+$ECHO
+
+e"c"h"o
+
+* ./tester redirects
+
+1. grep hi <./test_files/infile
+2. grep hi "<infile" <         ./test_files/infile
+3. echo hi < ./test_files/infile bye bye
+4. grep hi <./test_files/infile_big <./test_files/infile
+5. echo <"./test_files/infile" "bonjour       42"
+6. cat <"./test_files/file name with spaces"
+7. cat <./test_files/infile_big ./test_files/infile
+8. cat <"1""2""3""4""5"
+9. echo <"./test_files/infile" <missing <"./test_files/infile"
+10. echo <missing <"./test_files/infile" <missing
+11. cat <"./test_files/infile"
+12. echo <"./test_files/infile_big" | cat <"./test_files/infile"
+13. echo <"./test_files/infile_big" | cat "./test_files/infile"
+14. echo <"./test_files/infile_big" | echo <"./test_files/infile"
+15. echo hi | cat <"./test_files/infile"
+16. echo hi | cat "./test_files/infile"
+17. cat <"./test_files/infile" | echo hi
+18. cat <"./test_files/infile" | grep hello
+# first broken pipe

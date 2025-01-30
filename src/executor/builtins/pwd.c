@@ -10,8 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "minishell.h"
 #include "parser.h"
+#include <unistd.h>
 
 int	cstm_pwd(t_list **ep, t_cmd_node *cmd_node)
 {
@@ -24,7 +26,7 @@ int	cstm_pwd(t_list **ep, t_cmd_node *cmd_node)
 	{
 		tmp_var = (t_env_var *)tmp_ep->content;
 		if (!ft_strcmp(tmp_var->key, "PWD"))
-			printf("%s\n", tmp_var->value);
+			ft_putendl_fd(tmp_var->value, STDOUT_FILENO);
 		tmp_ep = tmp_ep->next;
 	}
 	return (EXIT_SUCCESS);

@@ -47,8 +47,8 @@ char	*read_heredoc_input(char *delimiter, t_data *data)
 	char	*line;
 	char	*heredoc_input;
 	char	*tmp;
-		int pipefd[2];
-		pid_t cpid;
+	int		pipefd[2];
+	pid_t	cpid;
 
 	heredoc_input = ft_strdup("");
 	while (1)
@@ -94,6 +94,7 @@ char	*read_heredoc_input(char *delimiter, t_data *data)
 	}
 	return (heredoc_input);
 }
+
 bool	is_quoted_delimiter(char *delimiter)
 {
 	if (ft_strchr(delimiter, '\''))
@@ -160,8 +161,10 @@ int	heredoc_loop(t_dllist **tokens, t_data *data)
 	if (!heredoc_token)
 		return (EXIT_SUCCESS);
 	delimiter = extract_delimiter(&heredoc_token);
-	if (!delimiter)
+	if (!delimiter) {
+		data->exit_status = 2;
 		return (EXIT_FAILURE);
+	}
 	quoted_delimiter = is_quoted_delimiter(delimiter);
 	if (quoted_delimiter)
 	{
@@ -173,8 +176,7 @@ int	heredoc_loop(t_dllist **tokens, t_data *data)
 	free(delimiter);
 	if (!heredoc_input)
 		return (EXIT_FAILURE);
-	new_token_node = create_heredoc_token(heredoc_token, heredoc_input,
-			quoted_delimiter);
+	new_token_node = create_heredoc_token(heredoc_input, quoted_delimiter);
 	if (!new_token_node)
 		return (EXIT_FAILURE);
 	if (heredoc_token->next)

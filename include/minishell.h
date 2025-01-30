@@ -46,11 +46,11 @@ typedef struct s_env_var
 // structure for main data
 typedef struct s_data
 {
-	t_list	*ep;
-	char	*line;
-	int		exit_status;
-	bool	exit;
-}						t_data;
+	t_list						*ep;
+	char						*line;
+	int							exit_status;
+	bool						exit;
+}								t_data;
 
 /* ************************************************************************** */
 /* src                                                                      * */
@@ -75,8 +75,8 @@ int								heredoc_loop(t_dllist **tokens, t_data *data);
 /* heredoc_1.c */
 t_dllist						*search_heredoc(t_dllist *tokens);
 char							*add_quotes(char *str);
-t_dllist						*create_heredoc_token(t_dllist *heredoc_token,
-									char *heredoc_input, bool quoted_delimiter);
+t_dllist						*create_heredoc_token(char *heredoc_input,
+									bool quoted_delimiter);
 char							*extract_delimiter(t_dllist **heredoc_token);
 
 /* input.c */

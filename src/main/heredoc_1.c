@@ -73,12 +73,10 @@ char	*add_double_quotes(char *str)
 	return (quoted_str);
 }
 
-t_dllist	*create_heredoc_token(t_dllist *heredoc_token, char *heredoc_input,
-		bool quoted_delimiter)
+t_dllist	*create_heredoc_token(char *heredoc_input, bool quoted_delimiter)
 {
 	t_dllist	*new_token_node;
 
-	(void)heredoc_token;
 	if (quoted_delimiter)
 		new_token_node = ft_dllstnew(create_token(heredoc_input,
 					HD_SINGLE_QUOTE));
