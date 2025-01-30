@@ -13,18 +13,15 @@
 #include "executor.h"
 #include "minishell.h"
 
-t_env_var	*new_env_var(char *key, char *value)
+void	free_data(t_data *data)
 {
-	t_env_var	*env_var;
-
-	env_var = (t_env_var *)malloc(sizeof(t_env_var));
-	if (!env_var)
-		return (NULL);
-	env_var->key = ft_strdup(key);
-	env_var->value = NULL;
-	if (value)
-		env_var->value = ft_strdup(value);
-	return (env_var);
+	if (!data)
+		return ;
+	if (data->ep)
+		ft_lstclear(&(data->ep), free_env_var);
+	if (data->line)
+		free(data->line);
+	free(data);
 }
 
 static void	update_shlvl(t_list *ep)
@@ -44,7 +41,8 @@ static void	update_shlvl(t_list *ep)
 	sh_nbr = ft_atoi(shlvl->value) + 1;
 	if (sh_nbr >= 1000)
 	{
-		printf("minishell: warning: shell level (%d) too high, resetting to 1\n", sh_nbr);
+		printf("minishell: warning: shell level ");
+		printf("(%d) too high, resetting to 1\n", sh_nbr);
 		sh_nbr = 1;
 	}
 	free(shlvl->value);
@@ -97,23 +95,3 @@ t_data	*init(char **ep)
 	return (data);
 }
 
-void	free_env_var(void *content)
-{
-	t_env_var	*env_var;
-
-	env_var = (t_env_var *)content;
-	free(env_var->value);
-	free(env_var->key);
-	free(env_var);
-}
-
-void	free_data(t_data *data)
-{
-	if (!data)
-		return ;
-	if (data->ep)
-		ft_lstclear(&(data->ep), free_env_var);
-	if (data->line)
-		free(data->line);
-	free(data);
-}

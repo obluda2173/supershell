@@ -49,7 +49,6 @@ char	*get_prompt(t_data **data)
 	char		*result;
 	t_env_var	*env_var;
 
-	/* char		*line; */
 	if (!data || !*data)
 		return (NULL);
 	start = (*data)->ep;

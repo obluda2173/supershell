@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #define BUFFER_SIZE 1024
 
 #include "minishell.h"
@@ -40,13 +41,25 @@ void	*my_realloc(void *ptr, size_t new_size)
 	return (new_ptr);
 }
 
+char	*set_content(size_t total_size, ssize_t bytes_read, char *content,
+		char *buffer)
+{
+	char	*new_content;
+
+	new_content = my_realloc(content, total_size + bytes_read + 1);
+	if (!new_content)
+		return (teardown_content(content, "Failed to allocate memory"));
+	content = new_content;
+	memcpy(content + total_size, buffer, bytes_read);
+	return (new_content);
+}
+
 char	*read_line_from_fd(int fd)
 {
 	char	buffer[BUFFER_SIZE];
 	char	*content;
 	size_t	total_size;
 	ssize_t	bytes_read;
-	char	*new_content;
 
 	content = NULL;
 	total_size = 0;
@@ -55,11 +68,7 @@ char	*read_line_from_fd(int fd)
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read <= 0)
 			break ;
-		new_content = my_realloc(content, total_size + bytes_read + 1);
-		if (!new_content)
-			return (teardown_content(content, "Failed to allocate memory"));
-		content = new_content;
-		memcpy(content + total_size, buffer, bytes_read);
+		content = set_content(total_size, bytes_read, content, buffer);
 		total_size += bytes_read;
 	}
 	if (bytes_read == -1)

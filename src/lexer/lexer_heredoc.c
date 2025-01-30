@@ -155,12 +155,10 @@ char	*extract_delimiter(t_dllist **heredoc_token)
 	if (!heredoc_token || !*heredoc_token)
 		return (NULL);
 	delimiter = NULL;
-	/* token = (t_token *)(*heredoc_token)->content; */
 
 	if ((*heredoc_token)->next)
 	{
 		next_token = (t_token *)(*heredoc_token)->next->content;
-		fflush(stdout);
 		if (next_token->type == WORD)
 		{
 			delimiter = ft_strdup(next_token->content);
