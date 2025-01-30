@@ -12,11 +12,23 @@
 
 #include "executor.h"
 #include "executor_builtins.h"
-#include "libft.h"
-#include <unistd.h>
 
 int	expand(t_cmd_node *cmd_node, t_data *data)
 {
+	char	*new_word;
+
+	if (cmd_node->cmd_token.content)
+	{
+		new_word = expand_string(cmd_node->cmd_token.content, data);
+		if (!new_word)
+		{
+			ft_putendl_fd("Syntax Error: could not expand command token",
+				STDERR_FILENO);
+			return (EXIT_FAILURE);
+		}
+		free(cmd_node->cmd_token.content);
+		cmd_node->cmd_token.content = new_word;
+	}
 	if (expand_redirections(cmd_node, data) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	if (expand_arguments(cmd_node, data) == EXIT_FAILURE)

@@ -31,5 +31,4 @@ int	main(int ac, char **av, char **ep)
 	exit_status = data->exit_status;
 	free_data(data);
 	exit(exit_status);
-	// return (EXIT_SUCCESS);
 }
