@@ -93,6 +93,47 @@ char	*read_heredoc_input(char *delimiter, t_data *data)
 	}
 	return (heredoc_input);
 }
+bool is_quoted_delimiter(char* delimiter) {
+	if (ft_strchr(delimiter, '\''))
+		return true;
+	if (ft_strchr(delimiter, '\"'))
+		return true;
+	return false;
+}
+
+int count_non_quotes(char *str) {
+	int count = 0;
+	if (!str)
+		return count;
+	while (*str) {
+		if (!(*str == '\'' || *str == '\"'))
+			count++;
+		str++;
+	}
+	return count;
+}
+
+char *remove_quotes(char *str) {
+	if (!str)
+		return str;
+	if (*str == '\0')
+		return str;
+
+	int final_len = count_non_quotes(str);
+	char* new_str = malloc(sizeof(char) * (final_len + 1));
+	if (!new_str) {
+		ft_putendl_fd("Allocation error", STDERR_FILENO);
+		return NULL;
+	}
+	new_str[final_len] = '\0';
+	int i = 0;
+	while (*str) {
+		if (!(*str == '\'' || *str == '\"'))
+			new_str[i++] = *str;
+		str++;
+	}
+	return new_str;
+}
 
 int	heredoc_loop(t_dllist **tokens, t_data *data)
 {
@@ -100,6 +141,8 @@ int	heredoc_loop(t_dllist **tokens, t_data *data)
 	char		*heredoc_input;
 	t_dllist	*new_token_node;
 	t_dllist	*heredoc_token;
+	bool quoted_delimiter;
+	char* new_delimiter;
 
 	heredoc_token = search_heredoc(*tokens);
 	if (!heredoc_token)
@@ -107,11 +150,17 @@ int	heredoc_loop(t_dllist **tokens, t_data *data)
 	delimiter = extract_delimiter(&heredoc_token);
 	if (!delimiter)
 		return EXIT_FAILURE;
+	quoted_delimiter = is_quoted_delimiter(delimiter);
+	if (quoted_delimiter) {
+		new_delimiter = remove_quotes(delimiter);
+		free(delimiter);
+		delimiter = new_delimiter;
+	}
 	heredoc_input = read_heredoc_input(delimiter, data);
 	free(delimiter);
 	if (!heredoc_input)
 		return EXIT_FAILURE;
-	new_token_node = create_heredoc_token(heredoc_token, heredoc_input);
+	new_token_node = create_heredoc_token(heredoc_token, heredoc_input, quoted_delimiter);
 	if (!new_token_node)
 		return EXIT_FAILURE;
 	if (heredoc_token->next)

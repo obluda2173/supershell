@@ -60,7 +60,7 @@ int			heredoc_loop(t_dllist **tokens, t_data *data);
 /* heredoc_1.c */
 t_dllist	*search_heredoc(t_dllist *tokens);
 char* add_quotes(char* str);
-t_dllist	*create_heredoc_token(t_dllist *heredoc_token, char *heredoc_input);
+t_dllist	*create_heredoc_token(t_dllist *heredoc_token, char *heredoc_input, bool quoted_delimiter);
 char	*extract_delimiter(t_dllist **heredoc_token);
 
 /* input.c */
