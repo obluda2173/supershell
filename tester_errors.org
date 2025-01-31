@@ -27,8 +27,6 @@ e"c"h"o
 - Test  32: ❌ export 123
   - mini exit code = 0
   - bash exit code = 1
-
-
 * ./tester redirects
 ** ok
 - Test  68: ✅⚠️  echo <"./test_files/infile_big" | echo <"./test_files/infile"

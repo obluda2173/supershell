@@ -13,29 +13,49 @@
 #include "executor.h"
 #include "executor_builtins.h"
 #include "libft.h"
+#include "parser.h"
 #include <unistd.h>
 #include <sys/stat.h>
 
-int	expand(t_cmd_node *cmd_node, t_data *data)
+int	expand(t_cmd_node *cn, t_data *data)
 {
 	char	*new_word;
 
-	if (cmd_node->cmd_token.content)
+	if (cn->cmd_token.content)
 	{
-		new_word = expand_string(cmd_node->cmd_token.content, data);
+		new_word = expand_string(cn->cmd_token.content, data);
 		if (!new_word)
 		{
 			ft_putendl_fd("Syntax Error: could not expand command token",
 				STDERR_FILENO);
 			return (EXIT_FAILURE);
 		}
-		free(cmd_node->cmd_token.content);
-		cmd_node->cmd_token.content = new_word;
+		free(cn->cmd_token.content);
+		cn->cmd_token.content = new_word;
 	}
-	if (expand_redirections(cmd_node, data) == EXIT_FAILURE)
+	if (expand_redirections(cn, data) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-	if (expand_arguments(cmd_node, data) == EXIT_FAILURE)
+	if (expand_arguments(cn, data) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
+	if (ft_strlen(cn->cmd_token.content) == 0) {
+		t_list* next_arg = NULL;
+		t_list* head = cn->arguments;
+		while (head) {
+			if (ft_strlen(((t_argument*)head->content)->word) == 0) {
+				head = head->next;
+				continue;
+			}
+			next_arg = head;
+			head = head->next;
+			free(cn->cmd_token.content);
+
+			cn->cmd_token.content = ft_strdup(((t_argument*)next_arg->content)->word);
+			next_arg->next = NULL;
+			ft_lstclear(&cn->arguments, free_arguments);
+			cn->arguments = head;
+			break;
+		}
+	}
 	return (EXIT_SUCCESS);
 }
 
@@ -119,22 +139,22 @@ int	execute_cmd(t_cmd_node *cmd_node, t_data *data, int fds[2])
 	return (res);
 }
 
-int	execute_cmd_node(t_cmd_node *cmd_node, t_data *data)
+int	execute_cmd_node(t_cmd_node *cn, t_data *data)
 {
 	int	fds[2];
 	int	res;
 
 	fds[0] = STDIN_FILENO;
 	fds[1] = STDOUT_FILENO;
-	if (expand(cmd_node, data))
+	if (expand(cn, data))
 		return (EXIT_FAILURE);
-	if (set_redirections(&(cmd_node->redirections), fds))
+	if (set_redirections(&(cn->redirections), fds))
 		return (EXIT_FAILURE);
 	res = EXIT_SUCCESS;
-	if (is_builtin(cmd_node->cmd_token.content))
-		res = execute_builtin(cmd_node, data, fds);
-	else if (cmd_node->cmd_token.type == WORD && ft_strlen(cmd_node->cmd_token.content))
-		res = execute_cmd(cmd_node, data, fds);
+	if (is_builtin(cn->cmd_token.content))
+		res = execute_builtin(cn, data, fds);
+	else if (cn->cmd_token.type == WORD && ft_strlen(cn->cmd_token.content))
+		res = execute_cmd(cn, data, fds);
 	close_fds(fds);
 	return (res);
 }
