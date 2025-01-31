@@ -43,3 +43,9 @@ int	teardown_close_fds(int fds[2], char *err_msg)
 	close_fds(fds);
 	return (EXIT_FAILURE);
 }
+
+int	exit_perror(char *err_msg, int exit_status)
+{
+	perror(err_msg);
+	return (exit_status);
+}

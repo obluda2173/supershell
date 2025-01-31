@@ -11,11 +11,7 @@
 /* ************************************************************************** */
 
 #include "executor.h"
-#include "libft.h"
 #include "minishell.h"
-#include <errno.h>
-#include <stdlib.h>
-#include <unistd.h>
 
 char	**ep_to_char_array(int fds[2], t_list *ep)
 {
@@ -47,25 +43,20 @@ char	**ep_to_char_array(int fds[2], t_list *ep)
 void	child_exec_cmd(int fds[2], t_list *ep, char *cmd_path, char **args)
 {
 	char	**env_matrix;
+	int		exit_status;
 
 	signal(SIGQUIT, SIG_DFL);
 	env_matrix = ep_to_char_array(fds, ep);
 	if (!env_matrix)
 		exit(EXIT_FAILURE);
 	if (dup2(fds[0], STDIN_FILENO) == -1)
-	{
-		perror("dup2");
-		exit(EXIT_FAILURE);
-	}
+		exit_perror("dup2", EXIT_FAILURE);
 	if (dup2(fds[1], STDOUT_FILENO) == -1)
-	{
-		perror("dup2");
-		exit(EXIT_FAILURE);
-	};
+		exit_perror("dup2", EXIT_FAILURE);
 	close_fds(fds);
 	if (execve(cmd_path, args, env_matrix) == -1)
 	{
-		int exit_status = errno;
+		exit_status = errno;
 		perror("execve");
 		free_char_array(env_matrix);
 		if (exit_status == EACCES)
