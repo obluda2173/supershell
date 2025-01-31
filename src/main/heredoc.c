@@ -6,11 +6,10 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 11:00:40 by erian             #+#    #+#             */
-/*   Updated: 2025/01/31 14:37:47 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/31 17:26:02 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "minishell.h"
 
 volatile sig_atomic_t	g_signal_received = 0;
@@ -40,15 +39,6 @@ void	child_heredoc(int pipefd[2])
 	close(pipefd[1]);
 	free(line);
 	exit(EXIT_SUCCESS);
-}
-
-bool	is_quoted_delimiter(char *delimiter)
-{
-	if (ft_strchr(delimiter, '\''))
-		return (true);
-	if (ft_strchr(delimiter, '\"'))
-		return (true);
-	return (false);
 }
 
 int	count_non_quotes(char *str)
@@ -97,44 +87,23 @@ char	*remove_quotes(char *str)
 
 int	heredoc_loop(t_dllist **tokens, t_data *data)
 {
-	char		*delimiter;
-	char		*heredoc_input;
-	t_dllist	*new_token_node;
 	t_dllist	*heredoc_token;
-	bool		quoted_delimiter;
-	char		*new_delimiter;
+	char		*delimiter;
+	bool		quoted;
+	char		*heredoc_input;
+	t_dllist	*new_node;
 
 	heredoc_token = search_heredoc(*tokens);
 	if (!heredoc_token)
 		return (EXIT_SUCCESS);
-	delimiter = extract_delimiter(&heredoc_token);
-	if (!delimiter) {
-		data->exit_status = 2;
+	if (process_heredoc_delimiter(&heredoc_token, data, &delimiter, &quoted))
 		return (EXIT_FAILURE);
-	}
-	quoted_delimiter = is_quoted_delimiter(delimiter);
-	if (quoted_delimiter)
-	{
-		new_delimiter = remove_quotes(delimiter);
-		free(delimiter);
-		delimiter = new_delimiter;
-	}
 	heredoc_input = read_heredoc_input(delimiter, data);
 	free(delimiter);
 	if (!heredoc_input)
 		return (EXIT_FAILURE);
-	new_token_node = create_heredoc_token(heredoc_input, quoted_delimiter);
-	if (!new_token_node)
+	new_node = create_heredoc_token(heredoc_input, quoted);
+	if (!new_node)
 		return (EXIT_FAILURE);
-	if (heredoc_token->next)
-	{
-		new_token_node->next = heredoc_token->next;
-		new_token_node->next->prev = new_token_node;
-	}
-	else
-		new_token_node->next = NULL;
-	new_token_node->prev = heredoc_token->prev;
-	heredoc_token->prev->next = new_token_node;
-	ft_dllstdelone(heredoc_token, free_token);
-	return (heredoc_loop(&(new_token_node->next), data));
+	return (replace_token(heredoc_token, new_node, data));
 }
