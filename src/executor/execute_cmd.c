@@ -55,6 +55,27 @@ int	execute_builtin(t_cmd_node *cmd_node, t_data *data, int fds[2])
 	return (EXIT_SUCCESS);
 }
 
+bool is_builtin(char *word) {
+	if (!word)
+		return false;
+	if (!ft_strcmp("echo", word))
+		return true;
+	if (!ft_strcmp("export", word))
+		return true;
+	if (!ft_strcmp("unset", word))
+		return true;
+	if (!ft_strcmp("env", word))
+		return true;
+	if (!ft_strcmp("pwd", word))
+		return true;
+	if (!ft_strcmp("cd", word))
+		return true;
+	if (!ft_strcmp("exit", word))
+		return true;
+	return false;
+
+}
+
 int	execute_cmd(t_cmd_node *cmd_node, t_data *data, int fds[2])
 {
 	char	*path_env;
@@ -96,9 +117,9 @@ int	execute_cmd_node(t_cmd_node *cmd_node, t_data *data)
 	if (set_redirections(&(cmd_node->redirections), fds))
 		return (EXIT_FAILURE);
 	res = EXIT_SUCCESS;
-	if (cmd_node->cmd_token.type == BUILTIN)
+	if (is_builtin(cmd_node->cmd_token.content))
 		res = execute_builtin(cmd_node, data, fds);
-	if (cmd_node->cmd_token.type == WORD)
+	else if (cmd_node->cmd_token.type == WORD)
 		res = execute_cmd(cmd_node, data, fds);
 	close_fds(fds);
 	return (res);
