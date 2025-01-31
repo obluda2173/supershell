@@ -14,6 +14,7 @@
 #include "executor_builtins.h"
 #include "libft.h"
 #include <unistd.h>
+#include <sys/stat.h>
 
 int	expand(t_cmd_node *cmd_node, t_data *data)
 {
@@ -78,6 +79,15 @@ bool is_builtin(char *word) {
 
 }
 
+int is_directory(const char *path) {
+	struct stat path_stat;
+	if (stat(path, &path_stat) != 0) {
+		perror("stat");
+		return 0;
+	}
+	return S_ISDIR(path_stat.st_mode);
+}
+
 int	execute_cmd(t_cmd_node *cmd_node, t_data *data, int fds[2])
 {
 	char	*path_env;
@@ -93,9 +103,11 @@ int	execute_cmd(t_cmd_node *cmd_node, t_data *data, int fds[2])
 		ft_putstr_fd("Command not found: ", STDERR_FILENO);
 		ft_putendl_fd(cmd_node->cmd_token.content, STDERR_FILENO);
 		res = 127;
-	}
-	else
-	{
+	} else if (is_directory(cmd_path)) {
+		ft_putendl_fd("Is a directory", STDERR_FILENO);
+		free(cmd_path);
+		res = 126;
+	} else {
 		argv = list_to_argv(cmd_node->arguments, cmd_path);
 		if (!argv)
 			res = EXIT_FAILURE;
@@ -121,7 +133,7 @@ int	execute_cmd_node(t_cmd_node *cmd_node, t_data *data)
 	res = EXIT_SUCCESS;
 	if (is_builtin(cmd_node->cmd_token.content))
 		res = execute_builtin(cmd_node, data, fds);
-	else if (cmd_node->cmd_token.type == WORD)
+	else if (cmd_node->cmd_token.type == WORD && ft_strlen(cmd_node->cmd_token.content))
 		res = execute_cmd(cmd_node, data, fds);
 	close_fds(fds);
 	return (res);
