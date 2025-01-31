@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "libft.h"
+#include <unistd.h>
 
 int	exec_pipe_downstream(int input_fd, t_script_node *sn, t_data *data)
 {
@@ -35,6 +37,7 @@ int	exec_pipe_downstream(int input_fd, t_script_node *sn, t_data *data)
 
 void	exec_upstream_child(int pipedes[2], t_script_node *sn, t_data *data)
 {
+
 	dup2(pipedes[1], STDOUT_FILENO);
 	close(pipedes[0]);
 	close(pipedes[1]);
@@ -58,12 +61,13 @@ int	execute_pipeline(t_script_node *sn, t_data *data)
 	if (pid == 0)
 		exec_upstream_child(pipedes, sn, data);
 	close(pipedes[1]);
+	int exit_status_downstream = exec_pipe_downstream(pipedes[0], sn, data);
 	if (waitpid(pid, &status, 0) == -1)
 	{
 		perror("waitpid");
 		return (EXIT_FAILURE);
 	}
 	if (WIFEXITED(status))
-		return (exec_pipe_downstream(pipedes[0], sn, data));
-	return (EXIT_FAILURE);
+		return exit_status_downstream;
+	return exit_status_downstream;
 }

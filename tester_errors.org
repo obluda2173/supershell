@@ -15,12 +15,20 @@ $ECHO
 e"c"h"o
 
 * ./tester redirects
+** ok
 - Test  68: ✅⚠️  echo <"./test_files/infile_big" | echo <"./test_files/infile"
 - mini error = ()
 - bash error = ( Broken pipe)
 - Test  71: ✅⚠️  cat <"./test_files/infile" | echo hi
 - mini error = ()
 - bash error = ( Broken pipe)
+** to fix
+- Test  73: ❌ cat <"./test_files/infile" | echo hi
+  - mini exit code = 1
+  - bash exit code = 0
+- Test  75: ❌ cat <"./test_files/infile_big" | echo hi
+  - mini exit code = 1
+  - bash exit code = 0
 * tester extras
 - Test   2: ❌ $PWD
   - mini exit code = 1

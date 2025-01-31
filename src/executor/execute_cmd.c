@@ -12,6 +12,8 @@
 
 #include "executor.h"
 #include "executor_builtins.h"
+#include "libft.h"
+#include <unistd.h>
 
 int	expand(t_cmd_node *cmd_node, t_data *data)
 {

@@ -11,7 +11,9 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "libft.h"
 #include "minishell.h"
+#include <unistd.h>
 
 char	**ep_to_char_array(int fds[2], t_list *ep)
 {
@@ -48,15 +50,23 @@ void	child_exec_cmd(int fds[2], t_list *ep, char *cmd_path, char **args)
 	env_matrix = ep_to_char_array(fds, ep);
 	if (!env_matrix)
 		exit(EXIT_FAILURE);
-	dup2(fds[0], STDIN_FILENO);
-	dup2(fds[1], STDOUT_FILENO);
+	if (dup2(fds[0], STDIN_FILENO) == -1)
+	{
+		perror("dup2");
+		exit(EXIT_FAILURE);
+	}
+	if (dup2(fds[1], STDOUT_FILENO) == -1)
+	{
+		perror("dup2");
+		exit(EXIT_FAILURE);
+	};
+	close_fds(fds);
 	if (execve(cmd_path, args, env_matrix) == -1)
 	{
 		free_char_array(env_matrix);
 		perror("execve");
 		exit(EXIT_FAILURE);
 	}
-	close_fds(fds);
 	free_char_array(env_matrix);
 	exit(EXIT_SUCCESS);
 }
