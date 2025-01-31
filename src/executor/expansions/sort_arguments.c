@@ -1,14 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_sort_arguments.c                          :+:      :+:    :+:   */
+/*   sort_arguments.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfreyer <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/21 16:35/35 by kfreyer           #+#    #+#             */
-/*   Updated: 2025/01/21 16:35:35 by kfreyer          ###   ########.fr       */
+/*   Created: 2025/01/21 16:35:35 by kfreyer           #+#    #+#             */
+/*   Updated: 2025/01/31 13:12:14 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "executor.h"
 
 int	ft_strcmp_lower(const char *s1, const char *s2)

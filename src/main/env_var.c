@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_var.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfreyer <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/30 09:46/13 by kfreyer           #+#    #+#             */
-/*   Updated: 2025/01/30 09:46:13 by kfreyer          ###   ########.fr       */
+/*   Created: 2025/01/30 09:46:13 by kfreyer           #+#    #+#             */
+/*   Updated: 2025/01/31 13:09:16 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,26 +42,40 @@ void	*teardown_data(t_data *data)
 	return (NULL);
 }
 
-t_data	*set_env_vars(char **ep, t_data *data)
+t_env_var	*extract_env_var(char *ep)
 {
-	char		**key_and_value;
+	char		*equal_sign;
 	char		*key;
 	char		*value;
+	t_env_var	*env_var;
+
+	equal_sign = ft_strchr(ep, '=');
+	if (equal_sign)
+	{
+		key = ft_substr(ep, 0, equal_sign - ep);
+		value = ft_strdup(equal_sign + 1);
+	}
+	else
+	{
+		key = ft_strdup(ep);
+		value = ft_strdup("");
+	}
+	env_var = new_env_var(key, value);
+	free(key);
+	free(value);
+	return (env_var);
+}
+
+t_data	*set_env_vars(char **ep, t_data *data)
+{
 	t_env_var	*env_var;
 	t_list		*new_node;
 
 	while (*ep != NULL)
 	{
-		key_and_value = ft_split(*ep, '=');
-		key = key_and_value[0];
-		if (key_and_value[1])
-			value = key_and_value[1];
-		else
-			value = "";
-		env_var = new_env_var(key, value);
+		env_var = extract_env_var(*ep);
 		if (!env_var)
 			return (teardown_data(data));
-		free_char_array(key_and_value);
 		new_node = ft_lstnew(env_var);
 		if (!new_node)
 			return (teardown_data(data));
