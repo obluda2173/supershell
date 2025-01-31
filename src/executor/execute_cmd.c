@@ -37,7 +37,7 @@ int	expand(t_cmd_node *cn, t_data *data)
 		return (EXIT_FAILURE);
 	if (expand_arguments(cn, data) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-	if (ft_strlen(cn->cmd_token.content) == 0) {
+	if (cn->cmd_token.content && ft_strlen(cn->cmd_token.content) == 0) {
 		t_list* next_arg = NULL;
 		t_list* head = cn->arguments;
 		while (head) {
