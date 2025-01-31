@@ -1,16 +1,20 @@
 
 # Table of Contents
 
-1.  [./tester](#org5b54bd2)
-2.  [./tester redirects](#org6a8ceb4)
-3.  [tester extras](#org32b5e9a)
-4.  [tester os<sub>specific</sub>](#org6cb646a)
-5.  [./tester bonus](#org0102ebd)
-6.  [./tester wildcards](#orgf5ef85d)
+1.  [./tester](#orgd4f9216)
+2.  [./tester builtins](#orgd2a24f2)
+3.  [./tester redirects](#org2a2fe6b)
+    1.  [ok](#org1b6e0d6)
+    2.  [to fix](#org6f52d3c)
+4.  [tester extras](#orgd39b241)
+5.  [tester os<sub>specific</sub>](#org13d2966)
+6.  [./tester bonus](#org62a4e50)
+7.  [./tester wildcards](#orgc17f56d)
+
+r Errors
 
 
-
-<a id="org5b54bd2"></a>
+<a id="orgd4f9216"></a>
 
 # ./tester
 
@@ -27,9 +31,32 @@ $ECHO
 e&ldquo;c&rdquo;h"o
 
 
-<a id="org6a8ceb4"></a>
+<a id="orgd2a24f2"></a>
+
+# ./tester builtins
+
+-   Test  26: ❌ export A-
+    -   mini exit code = 0
+    -   bash exit code = 1
+-   Test  30: ❌ export HELLO-=123
+    -   mini exit code = 0
+    -   bash exit code = 1
+-   Test  31: ❌ export =
+    -   mini exit code = 0
+    -   bash exit code = 1
+-   Test  32: ❌ export 123
+    -   mini exit code = 0
+    -   bash exit code = 1
+
+
+<a id="org2a2fe6b"></a>
 
 # ./tester redirects
+
+
+<a id="org1b6e0d6"></a>
+
+## ok
 
 -   Test  68: ✅⚠️  echo <&ldquo;./test<sub>files</sub>/infile<sub>big</sub>&rdquo; | echo <&ldquo;./test<sub>files</sub>/infile&rdquo;
 -   mini error = ()
@@ -39,7 +66,19 @@ e&ldquo;c&rdquo;h"o
 -   bash error = ( Broken pipe)
 
 
-<a id="org32b5e9a"></a>
+<a id="org6f52d3c"></a>
+
+## to fix
+
+-   Test  73: ❌ cat <&ldquo;./test<sub>files</sub>/infile&rdquo; | echo hi
+    -   mini exit code = 1
+    -   bash exit code = 0
+-   Test  75: ❌ cat <&ldquo;./test<sub>files</sub>/infile<sub>big</sub>&rdquo; | echo hi
+    -   mini exit code = 1
+    -   bash exit code = 0
+
+
+<a id="orgd39b241"></a>
 
 # tester extras
 
@@ -73,7 +112,7 @@ e&ldquo;c&rdquo;h"o
 😭 😭 😭
 
 
-<a id="org6cb646a"></a>
+<a id="org13d2966"></a>
 
 # tester os<sub>specific</sub>
 
@@ -95,7 +134,7 @@ e&ldquo;c&rdquo;h"o
     -   bash output = (TRES=3)
 
 
-<a id="org0102ebd"></a>
+<a id="org62a4e50"></a>
 
 # ./tester bonus
 
@@ -119,7 +158,7 @@ mini exit code = 2
 bash exit code = 0
 
 
-<a id="orgf5ef85d"></a>
+<a id="orgc17f56d"></a>
 
 # ./tester wildcards
 

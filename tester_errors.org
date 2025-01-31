@@ -1,4 +1,5 @@
-#+title: Tester Errors
+#+title: Teste
+r Errors
 
 * ./tester
 OK_TESTS:
@@ -13,6 +14,20 @@ then
 $ECHO
 
 e"c"h"o
+* ./tester builtins
+- Test  26: ❌ export A-
+  - mini exit code = 0
+  - bash exit code = 1
+- Test  30: ❌ export HELLO-=123
+  - mini exit code = 0
+  - bash exit code = 1
+- Test  31: ❌ export =
+  - mini exit code = 0
+  - bash exit code = 1
+- Test  32: ❌ export 123
+  - mini exit code = 0
+  - bash exit code = 1
+
 
 * ./tester redirects
 ** ok
