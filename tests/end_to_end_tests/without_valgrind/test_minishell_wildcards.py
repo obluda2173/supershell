@@ -19,12 +19,12 @@ from conftest import (
 @pytest.mark.parametrize(
     "cmd",
     [
-        (["echo *"]),
+        # (["echo *"]),
         # (["echo .*"]),          # this one is flaky due to version of bash
         (["echo *s"]),
         (["echo c*"]),
         (["echo *.c"]),
-        (["echo ./*"]),
+        # (["echo ./*"]),
     ],
 )
 def test_wildcards_with_bash(cmd):

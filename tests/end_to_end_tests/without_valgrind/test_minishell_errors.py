@@ -74,7 +74,7 @@ cmd = "echo $PATH\n"
 def test_errors_executables():
 
     err_msg = "Permission denied"
-    want_exit_status = 1
+    want_exit_status = 126
 
     minishell = start_process("./minishell")
     minishell = start_process("./minishell")
