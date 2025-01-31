@@ -49,3 +49,24 @@ int	exit_perror(char *err_msg, int exit_status)
 	perror(err_msg);
 	return (exit_status);
 }
+
+bool	is_builtin(char *word)
+{
+	if (!word)
+		return (false);
+	if (!ft_strcmp("echo", word))
+		return (true);
+	if (!ft_strcmp("export", word))
+		return (true);
+	if (!ft_strcmp("unset", word))
+		return (true);
+	if (!ft_strcmp("env", word))
+		return (true);
+	if (!ft_strcmp("pwd", word))
+		return (true);
+	if (!ft_strcmp("cd", word))
+		return (true);
+	if (!ft_strcmp("exit", word))
+		return (true);
+	return (false);
+}

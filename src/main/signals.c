@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+volatile sig_atomic_t	g_signal_received = 0;
+
 void	handle_signals_2(int signum)
 {
 	if (signum == SIGINT)

@@ -108,10 +108,7 @@ char	*extract_delimiter(t_dllist **heredoc_token)
 			*heredoc_token = (*heredoc_token)->next;
 		}
 		else
-		{
-			ft_putendl_fd("Syntax Error.", STDERR_FILENO);
-			return (NULL);
-		}
+			return (error_and_return_null("Syntax Error."));
 	}
 	if (!delimiter)
 	{

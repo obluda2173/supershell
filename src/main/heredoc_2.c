@@ -78,10 +78,7 @@ char	*read_heredoc_input(char *delimiter, t_data *data)
 	while (1)
 	{
 		if (!create_heredoc_process(pipefd, &cpid))
-		{
-			free(heredoc_input);
-			return (NULL);
-		}
+			return (free_heredoc_return_null(heredoc_input));
 		if (handle_heredoc_signal(data, &heredoc_input))
 			return (NULL);
 		line = read_line_from_fd(pipefd[0]);

@@ -22,7 +22,7 @@ bool	is_quoted_delimiter(char *delimiter)
 }
 
 int	process_heredoc_delimiter(t_dllist **heredoc_token, t_data *data,
-	char **delimiter, bool *quoted)
+		char **delimiter, bool *quoted)
 {
 	char	*new_delim;
 
@@ -55,4 +55,10 @@ int	replace_token(t_dllist *heredoc_token, t_dllist *new_node, t_data *data)
 	heredoc_token->prev->next = new_node;
 	ft_dllstdelone(heredoc_token, free_token);
 	return (heredoc_loop(&new_node->next, data));
+}
+
+void	*free_heredoc_return_null(char *heredoc_input)
+{
+	free(heredoc_input);
+	return (NULL);
 }

@@ -58,6 +58,12 @@ void		close_fds(int fds[2]);
 t_env_var	*get_env_var(t_list *ep, char *key);
 int			teardown_close_fds(int fds[2], char *err_msg);
 int			exit_perror(char *err_msg, int exit_status);
+bool		is_builtin(char *word);
+
+/* executor_helpers_1.c */
+int			is_directory(const char *path);
+int			error_cmd_not_found(t_cmd_node *cn);
+int			error_is_directory(char *cmd_path);
 
 /* execute_pipeline.c */
 int			execute_pipeline(t_script_node *sn, t_data *data);

@@ -12,16 +12,38 @@
 
 #include "executor.h"
 #include "executor_builtins.h"
-#include "libft.h"
 #include "parser.h"
-#include <sys/stat.h>
-#include <unistd.h>
+
+void	replace_command_token_with_first_arg(t_cmd_node *cn)
+{
+	t_list	*n_arg;
+	t_list	*head;
+	char	*word;
+
+	n_arg = NULL;
+	head = cn->arguments;
+	while (head)
+	{
+		if (ft_strlen(((t_argument *)head->content)->word) == 0)
+		{
+			head = head->next;
+			continue ;
+		}
+		n_arg = head;
+		head = head->next;
+		free(cn->cmd_token.content);
+		word = ft_strdup(((t_argument *)n_arg->content)->word);
+		cn->cmd_token.content = word;
+		n_arg->next = NULL;
+		ft_lstclear(&cn->arguments, free_arguments);
+		cn->arguments = head;
+		break ;
+	}
+}
 
 int	expand(t_cmd_node *cn, t_data *data)
 {
 	char	*new_word;
-	t_list	*next_arg;
-	t_list	*head;
 
 	if (cn->cmd_token.content)
 	{
@@ -40,26 +62,7 @@ int	expand(t_cmd_node *cn, t_data *data)
 	if (expand_arguments(cn, data) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	if (cn->cmd_token.content && ft_strlen(cn->cmd_token.content) == 0)
-	{
-		next_arg = NULL;
-		head = cn->arguments;
-		while (head)
-		{
-			if (ft_strlen(((t_argument *)head->content)->word) == 0)
-			{
-				head = head->next;
-				continue ;
-			}
-			next_arg = head;
-			head = head->next;
-			free(cn->cmd_token.content);
-			cn->cmd_token.content = ft_strdup(((t_argument *)next_arg->content)->word);
-			next_arg->next = NULL;
-			ft_lstclear(&cn->arguments, free_arguments);
-			cn->arguments = head;
-			break ;
-		}
-	}
+		replace_command_token_with_first_arg(cn);
 	return (EXIT_SUCCESS);
 }
 
@@ -82,39 +85,6 @@ int	execute_builtin(t_cmd_node *cmd_node, t_data *data, int fds[2])
 	return (EXIT_SUCCESS);
 }
 
-bool	is_builtin(char *word)
-{
-	if (!word)
-		return (false);
-	if (!ft_strcmp("echo", word))
-		return (true);
-	if (!ft_strcmp("export", word))
-		return (true);
-	if (!ft_strcmp("unset", word))
-		return (true);
-	if (!ft_strcmp("env", word))
-		return (true);
-	if (!ft_strcmp("pwd", word))
-		return (true);
-	if (!ft_strcmp("cd", word))
-		return (true);
-	if (!ft_strcmp("exit", word))
-		return (true);
-	return (false);
-}
-
-int	is_directory(const char *path)
-{
-	struct stat	path_stat;
-
-	if (stat(path, &path_stat) != 0)
-	{
-		perror("stat");
-		return (0);
-	}
-	return (S_ISDIR(path_stat.st_mode));
-}
-
 int	execute_cmd(t_cmd_node *cmd_node, t_data *data, int fds[2])
 {
 	char	*path_env;
@@ -126,17 +96,9 @@ int	execute_cmd(t_cmd_node *cmd_node, t_data *data, int fds[2])
 	path_env = get_path_env(data->ep);
 	cmd_path = find_path(cmd_node->cmd_token.content, path_env);
 	if (!cmd_path)
-	{
-		ft_putstr_fd("Command not found: ", STDERR_FILENO);
-		ft_putendl_fd(cmd_node->cmd_token.content, STDERR_FILENO);
-		res = 127;
-	}
+		return (error_cmd_not_found(cmd_node));
 	else if (is_directory(cmd_path))
-	{
-		ft_putendl_fd("Is a directory", STDERR_FILENO);
-		free(cmd_path);
-		res = 126;
-	}
+		return (error_is_directory(cmd_path));
 	else
 	{
 		argv = list_to_argv(cmd_node->arguments, cmd_path);

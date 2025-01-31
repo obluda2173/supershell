@@ -15,6 +15,7 @@
 
 # include "lexer.h"
 # include "libft.h"
+# include <errno.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <stdbool.h>
@@ -23,7 +24,6 @@
 # include <string.h>
 # include <sys/wait.h>
 # include <unistd.h>
-#include <errno.h>
 
 /* ************************************************************************** */
 /* global variables
@@ -69,6 +69,7 @@ void							free_env_var(void *content);
 /* helpers.c */
 void							free_char_array(char **matrix);
 int								error_fork(void);
+char							*error_and_return_null(char *msg);
 
 /* heredoc.c */
 void							child_heredoc(int pipefd[2]);
@@ -88,11 +89,11 @@ char							*read_heredoc_input(char *delimiter,
 
 /* heredoc_3.c */
 bool							is_quoted_delimiter(char *delimiter);
-int								process_heredoc_delimiter(
-									t_dllist **heredoc_token, t_data *data,
-									char **delimiter, bool *quoted);
+int								process_heredoc_delimiter(t_dllist **ht,
+									t_data *d, char **de, bool *q);
 int								replace_token(t_dllist *heredoc_token,
 									t_dllist *new_node, t_data *data);
+void							*free_heredoc_return_null(char *heredoc_input);
 
 /* input.c */
 char							*minishell_input(t_data *data);
