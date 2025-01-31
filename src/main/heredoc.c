@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_heredoc.c                                    :+:      :+:    :+:   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 11:00:40 by erian             #+#    #+#             */
-/*   Updated: 2025/01/30 09:48:30 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/31 14:37:47 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 volatile sig_atomic_t	g_signal_received = 0;
 
-void	handle_signals_heredoc(int signum)
+static void	handle_signals_heredoc(int signum)
 {
 	(void)signum;
 	ft_putendl_fd("", STDOUT_FILENO);
@@ -40,59 +40,6 @@ void	child_heredoc(int pipefd[2])
 	close(pipefd[1]);
 	free(line);
 	exit(EXIT_SUCCESS);
-}
-
-char	*read_heredoc_input(char *delimiter, t_data *data)
-{
-	char	*line;
-	char	*heredoc_input;
-	char	*tmp;
-	int		pipefd[2];
-	pid_t	cpid;
-
-	heredoc_input = ft_strdup("");
-	while (1)
-	{
-		if (pipe(pipefd) == -1)
-		{
-			perror("pipe");
-			return (NULL);
-		}
-		cpid = fork();
-		if (cpid == -1)
-		{
-			perror("fork");
-			return (NULL);
-		}
-		if (cpid == 0)
-			child_heredoc(pipefd);
-		close(pipefd[1]);
-		wait(NULL);
-		if (g_signal_received == 1)
-		{
-			data->exit_status = 130;
-			g_signal_received = 0;
-			free(heredoc_input);
-			return (NULL);
-		}
-		line = read_line_from_fd(pipefd[0]);
-		if (!line || ft_strcmp(line, delimiter) == 0)
-		{
-			free(line);
-			break ;
-		}
-		tmp = ft_strjoin(heredoc_input, line);
-		free(heredoc_input);
-		heredoc_input = ft_strjoin(tmp, "\n");
-		free(tmp);
-		free(line);
-		if (!heredoc_input)
-		{
-			printf("Error: Memory allocation failed 1.\n");
-			return (NULL);
-		}
-	}
-	return (heredoc_input);
 }
 
 bool	is_quoted_delimiter(char *delimiter)

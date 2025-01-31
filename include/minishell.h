@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 15:42:49 by kfreyer           #+#    #+#             */
-/*   Updated: 2025/01/31 12:06:30 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/31 14:37:36 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ void							free_char_array(char **matrix);
 int								error_fork(void);
 
 /* heredoc.c */
+void							child_heredoc(int pipefd[2]);
 int								heredoc_loop(t_dllist **tokens, t_data *data);
 
 /* heredoc_1.c */
@@ -78,6 +79,10 @@ char							*add_quotes(char *str);
 t_dllist						*create_heredoc_token(char *heredoc_input,
 									bool quoted_delimiter);
 char							*extract_delimiter(t_dllist **heredoc_token);
+
+/* heredoc_2.c */
+char							*read_heredoc_input(char *delimiter,
+									t_data *data);
 
 /* input.c */
 char							*minishell_input(t_data *data);
