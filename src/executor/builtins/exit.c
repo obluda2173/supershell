@@ -1,39 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_builtin_exit.c                            :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 12:13:32 by erian             #+#    #+#             */
-/*   Updated: 2025/01/29 16:36:56 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/31 12:06:13 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "parser.h"
 
-static bool	valid_arg(char *str)
+static bool	valid_arg(char *s)
 {
-	long long	val;
-	int			i;
-	int			s;
+	long long unsigned int	val;
+	int						i;
 
 	val = 0;
 	i = 0;
-	s = 1;
-	if (str[i] == '-' || str[i] == '+')
-	{
-		if (str[i] == '-')
-			s = -1;
+	if (s[i] == '-' || s[i] == '+')
 		i++;
-	}
-	while (str[i])
+	while (s[i])
 	{
-		if (!ft_isdigit(str[i]))
+		if (!ft_isdigit(s[i]))
 			return (false);
-		val = val * 10 + (str[i] - '0');
-		if ((s == 1 && val > LLONG_MAX) || (s == -1 && (-val < LLONG_MIN)))
+		val = val * 10 + (s[i] - '0');
+		if (val > LONG_MAX)
 			return (false);
 		i++;
 	}
