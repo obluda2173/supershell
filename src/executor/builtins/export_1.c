@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_builtin_export_1.c                        :+:      :+:    :+:   */
+/*   export_1.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 09:37:32 by erian             #+#    #+#             */
-/*   Updated: 2025/01/29 16:47:40 by erian            ###   ########.fr       */
+/*   Updated: 2025/01/31 11:48:20 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,10 @@ static bool	add_var(t_list **ep, t_list *arg_lst)
 	t_list		*arg_i;
 	t_env_var	*new_var;
 	t_argument	*current_arg;
+	bool		exit_status;
 
 	arg_i = arg_lst;
+	exit_status = true;
 	while (arg_i)
 	{
 		current_arg = (t_argument *)arg_i->content;
@@ -55,13 +57,14 @@ static bool	add_var(t_list **ep, t_list *arg_lst)
 		{
 			free(new_var);
 			arg_i = arg_i->next;
+			exit_status = false;
 			continue ;
 		}
 		if (!rewrite_var(ep, new_var))
 			ft_lstadd_back(ep, ft_lstnew(new_var));
 		arg_i = arg_i->next;
 	}
-	return (true);
+	return (exit_status);
 }
 
 static void	sort_for_export(t_list **ep)
