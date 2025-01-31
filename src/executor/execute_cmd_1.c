@@ -13,6 +13,8 @@
 #include "executor.h"
 #include "libft.h"
 #include "minishell.h"
+#include <errno.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 char	**ep_to_char_array(int fds[2], t_list *ep)
@@ -63,9 +65,12 @@ void	child_exec_cmd(int fds[2], t_list *ep, char *cmd_path, char **args)
 	close_fds(fds);
 	if (execve(cmd_path, args, env_matrix) == -1)
 	{
-		free_char_array(env_matrix);
+		int exit_status = errno;
 		perror("execve");
-		exit(EXIT_FAILURE);
+		free_char_array(env_matrix);
+		if (exit_status == EACCES)
+			exit(126);
+		exit(exit_status);
 	}
 	free_char_array(env_matrix);
 	exit(EXIT_SUCCESS);
@@ -81,7 +86,7 @@ int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2])
 		return (error_fork());
 	if (pid == 0)
 		child_exec_cmd(fds, ep, cmd_path, args);
-	if (waitpid(pid, &status, 0) == -1)
+	if (waitpid(-1, &status, 0) == -1)
 	{
 		perror("waitpid");
 		return (EXIT_FAILURE);
