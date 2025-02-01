@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_tokenize_3.c                                 :+:      :+:    :+:   */
+/*   tokenize_3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 17:23:51 by erian             #+#    #+#             */
-/*   Updated: 2025/01/30 12:43:20 by erian            ###   ########.fr       */
+/*   Updated: 2025/02/01 10:24:43 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,22 @@ static t_token_type	assign_operator_type(char *str)
 	return (WORD);
 }
 
+static bool	identify_wildcard(char *str)
+{
+	if (ft_strchr(str, '*'))
+	{
+		if (in_quotes(str, ft_strchr(str, '*') - str))
+			return (false);
+		return (true);
+	}
+	return (false);
+}
+
 static t_token_type	assign_general_type(char *str)
 {
 	if (!str)
 		return (END_OF_FILE);
-	if (ft_strchr(str, '*'))
+	if (identify_wildcard(str))
 		return (WILDCARD);
 	if (ft_strchr(str, ';') || ft_strchr(str, '\\'))
 		return (INVALID);

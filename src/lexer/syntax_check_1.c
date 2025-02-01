@@ -6,13 +6,31 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 09:40:08 by erian             #+#    #+#             */
-/*   Updated: 2025/01/30 16:12:20 by erian            ###   ########.fr       */
+/*   Updated: 2025/02/01 10:15:02 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static bool	in_quotes(char *str, int i)
+static bool	check_invalid_symbol(char *str)
+{
+	int		i;
+	char	*inv_char;
+
+	i = -1;
+	inv_char = "[]{}\\;";
+	while (str[++i])
+	{
+		if (ft_strchr(inv_char, str[i]) && !in_quotes(str, i))
+		{
+			ft_putendl_fd("Invalid input", STDERR_FILENO);
+			return (false);
+		}
+	}
+	return (true);
+}
+
+bool	in_quotes(char *str, int i)
 {
 	int	j;
 	int	d;
@@ -31,24 +49,6 @@ static bool	in_quotes(char *str, int i)
 	}
 	if ((s % 2 == 0) && (d % 2 == 0))
 		return (false);
-	return (true);
-}
-
-static bool	check_invalid_symbol(char *str)
-{
-	int		i;
-	char	*inv_char;
-
-	i = -1;
-	inv_char = "[]{}\\;";
-	while (str[++i])
-	{
-		if (ft_strchr(inv_char, str[i]) && !in_quotes(str, i))
-		{
-			ft_putendl_fd("Invalid input", STDERR_FILENO);
-			return (false);
-		}
-	}
 	return (true);
 }
 

@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 15:42:45 by kfreyer           #+#    #+#             */
-/*   Updated: 2025/01/30 16:13:02 by erian            ###   ########.fr       */
+/*   Updated: 2025/02/01 10:15:25 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ char				*handle_operators(const char *input, size_t *i,
 						char *result, size_t *j);
 
 // lexer_syntax_check_1.c
+bool				in_quotes(char *str, int i);
 int					count_consequitives(char *str, char c);
 bool				check_syntax(char *str);
 
