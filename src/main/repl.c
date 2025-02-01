@@ -13,6 +13,7 @@
 #include "executor.h"
 #include "libft.h"
 #include "minishell.h"
+#include <unistd.h>
 
 void	parse_and_execute(t_dllist *tokens, t_data *data)
 {

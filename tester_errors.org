@@ -87,25 +87,22 @@ e"c"h"o
 - Test   5: ❌ export UNO=1 DOS-2 TRES=3 || env | grep TRES
   - mini output = ()
   - bash output = (TRES=3)
-* ./tester bonus
-Test   2: ❌ cat <minishell.h&ls
-mini output = ()
-bash output = (bash_outfiles bash.supp bonus bonus_bonus builtins extras local.supp loop.out manual_tests mini_outfiles os_specific outfile01 outfiles pipes README.md redirects syntax tester test_files wildcards)
-mini exit code = 1
-bash exit code = 0
-Test   5: ❌ &
-mini exit code = 127
-bash exit code = 2
-mini error = ( &)
-bash error = ( syntax error near unexpected token `&')
-Test   8: ❌ *
-mini exit code = 0
-bash exit code = 127
-mini error = ()
-
-Test  19: ❌ << *
-mini exit code = 2
-bash exit code = 0
+* TODO ./tester bonus
+- [X] Test   2: ❌ cat <minishell.h&ls
+  - we don't need to handle single &
+- [X] Test   5: ❌ &
+  - mini exit code = 127
+  - bash exit code = 2
+  - mini error = ( &)
+  - bash error = ( syntax error near unexpected token `&')
+- [X] Test   8: ❌ *
+  - bug fixed
+    - mini exit code = 0
+    - bash exit code = 127
+    - mini error = ()
+- [ ] Test  19: ❌ << *
+  - mini exit code = 2
+  - bash exit code = 0
 * ./tester wildcards
 Test   8: ❌ echo "*"
 mini output = (bash.supp bash_outfiles bonus bonus_bonus builtins extras local.supp loop.out manual_tests mini_outfiles os_specific outfiles pipes README.md redirects syntax test_files tester wildcards)

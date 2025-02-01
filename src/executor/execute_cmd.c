@@ -61,6 +61,11 @@ int	expand(t_cmd_node *cn, t_data *data)
 		return (EXIT_FAILURE);
 	if (expand_arguments(cn, data) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
+
+	if (!cn->cmd_token.content) {
+		replace_command_token_with_first_arg(cn);
+		cn->cmd_token.type = WORD;
+	}
 	if (cn->cmd_token.content && ft_strlen(cn->cmd_token.content) == 0)
 		replace_command_token_with_first_arg(cn);
 	return (EXIT_SUCCESS);
