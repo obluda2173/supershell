@@ -69,7 +69,8 @@ void							free_env_var(void *content);
 /* helpers.c */
 void							free_char_array(char **matrix);
 int								error_fork(void);
-char							*error_and_return_null(char *msg);
+void							*error_and_return_null(char *msg);
+int								error_failure(char *msg);
 
 /* heredoc.c */
 void							child_heredoc(int pipefd[2]);

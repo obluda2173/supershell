@@ -12,6 +12,7 @@
 
 #include "executor.h"
 #include "executor_builtins.h"
+#include "minishell.h"
 #include "parser.h"
 
 void	replace_command_token_with_first_arg(t_cmd_node *cn)
@@ -49,11 +50,7 @@ int	expand(t_cmd_node *cn, t_data *data)
 	{
 		new_word = expand_string(cn->cmd_token.content, data);
 		if (!new_word)
-		{
-			ft_putendl_fd("Syntax Error: could not expand command token",
-				STDERR_FILENO);
-			return (EXIT_FAILURE);
-		}
+			return (error_failure("Syntax Error"));
 		free(cn->cmd_token.content);
 		cn->cmd_token.content = new_word;
 	}
@@ -61,8 +58,8 @@ int	expand(t_cmd_node *cn, t_data *data)
 		return (EXIT_FAILURE);
 	if (expand_arguments(cn, data) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-
-	if (!cn->cmd_token.content) {
+	if (!cn->cmd_token.content)
+	{
 		replace_command_token_with_first_arg(cn);
 		cn->cmd_token.type = WORD;
 	}
@@ -131,7 +128,8 @@ int	execute_cmd_node(t_cmd_node *cn, t_data *data)
 	res = EXIT_SUCCESS;
 	if (is_builtin(cn->cmd_token.content))
 		res = execute_builtin(cn, data, fds);
-	else if (cn->cmd_token.type == WORD && ft_strlen(cn->cmd_token.content))
+	else if (cn->cmd_token.content && cn->cmd_token.type == WORD
+		&& ft_strlen(cn->cmd_token.content))
 		res = execute_cmd(cn, data, fds);
 	close_fds(fds);
 	return (res);

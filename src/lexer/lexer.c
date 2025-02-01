@@ -10,8 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "lexer.h"
+#include "libft.h"
+#include "minishell.h"
+
+static bool	last_token_was_heredoc(t_dllist *token_list)
+{
+	if (ft_dllstlast(token_list)
+		&& ((t_token *)ft_dllstlast(token_list)->content)->type == HERE_DOC)
+		return (true);
+	return (false);
+}
 
 static t_dllist	*tokenize_line(const char *line)
 {
@@ -29,10 +38,9 @@ static t_dllist	*tokenize_line(const char *line)
 	{
 		token = get_next_token(&lc);
 		if (!token)
-		{
-			printf("Tokenization error or empty line\n");
-			return (NULL);
-		}
+			return (error_and_return_null("Tokenization error or empty line"));
+		if (last_token_was_heredoc(token_list) && token->type == WILDCARD)
+			token->type = WORD;
 		new_token_node = ft_dllstnew((void *)token);
 		ft_dllstadd_back(&token_list, new_token_node);
 		if (token->type == END_OF_FILE)

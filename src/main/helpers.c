@@ -33,8 +33,14 @@ int	error_fork(void)
 	return (EXIT_FAILURE);
 }
 
-char	*error_and_return_null(char *msg)
+void	*error_and_return_null(char *msg)
 {
 	ft_putendl_fd(msg, STDERR_FILENO);
 	return (NULL);
+}
+
+int	error_failure(char *msg)
+{
+	ft_putendl_fd(msg, STDERR_FILENO);
+	return (EXIT_FAILURE);
 }

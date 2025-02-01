@@ -496,6 +496,12 @@ INSTANTIATE_TEST_SUITE_P(
 							new_token("echo", BUILTIN),
 								new_token("*src*", WILDCARD),
 								new_token(NULL, END_OF_FILE),
+								}},
+					TestTokenizeParams{
+						"<< *", {
+							new_token("<<", HERE_DOC),
+								new_token("*", WORD),
+								new_token(NULL, END_OF_FILE),
 								}}
 					// TestTokenizeParams{
 					//  "export asdf$PATH", {
