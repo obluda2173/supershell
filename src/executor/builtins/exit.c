@@ -6,12 +6,11 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 12:13:32 by erian             #+#    #+#             */
-/*   Updated: 2025/01/31 12:06:13 by erian            ###   ########.fr       */
+/*   Updated: 2025/02/04 11:16:38 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-#include "parser.h"
+#include "executor.h"
 
 static bool	valid_arg(char *s)
 {

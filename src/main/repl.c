@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 08:59:28 by kfreyer           #+#    #+#             */
-/*   Updated: 2025/02/01 10:28:35 by erian            ###   ########.fr       */
+/*   Updated: 2025/02/03 18:36:13 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ bool	check_data(t_data *data)
 		data->line = NULL;
 		return (false);
 	}
+	add_history(data->line);
 	if (!check_syntax(data->line))
 	{
 		data->exit_status = 2;
@@ -78,7 +79,6 @@ int	repl(t_data *data)
 			data->line = NULL;
 			continue ;
 		}
-		add_history(data->line);
 		tokens = tokenize(data->line);
 		free(data->line);
 		data->line = NULL;

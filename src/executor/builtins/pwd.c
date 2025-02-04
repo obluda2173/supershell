@@ -1,33 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_builtin_pwd.c                             :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 16:43:42 by erian             #+#    #+#             */
-/*   Updated: 2025/01/29 16:52:43 by erian            ###   ########.fr       */
+/*   Updated: 2025/02/04 11:22:56 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "minishell.h"
-#include "parser.h"
-#include <unistd.h>
+#include "executor.h"
 
 int	cstm_pwd(t_list **ep, t_cmd_node *cmd_node)
 {
-	t_list		*tmp_ep;
+	char		*pwd;
 	t_env_var	*tmp_var;
 
 	(void)cmd_node;
-	tmp_ep = *ep;
-	while (tmp_ep)
+	tmp_var = get_env_var(*ep, "PWD");
+	if (tmp_var)
+		ft_putendl_fd(tmp_var->value, STDOUT_FILENO);
+	else
 	{
-		tmp_var = (t_env_var *)tmp_ep->content;
-		if (!ft_strcmp(tmp_var->key, "PWD"))
-			ft_putendl_fd(tmp_var->value, STDOUT_FILENO);
-		tmp_ep = tmp_ep->next;
+		pwd = getcwd(NULL, 0);
+		ft_putendl_fd(pwd, STDOUT_FILENO);
+		free(pwd); 
 	}
 	return (EXIT_SUCCESS);
 }

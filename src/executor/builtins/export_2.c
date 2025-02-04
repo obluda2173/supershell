@@ -6,13 +6,11 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 13:46:03 by erian             #+#    #+#             */
-/*   Updated: 2025/01/31 11:39:18 by erian            ###   ########.fr       */
+/*   Updated: 2025/02/04 11:16:45 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "minishell.h"
-#include <unistd.h>
+#include "executor.h"
 
 static bool	valid_key(char *key)
 {
