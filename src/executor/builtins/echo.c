@@ -12,18 +12,39 @@
 
 #include "executor.h"
 
+bool	only_ns(char *str)
+{
+	if (!str || !*str)
+		return (false);
+	if (*str != '-')
+		return (false);
+	str++;
+	while (*str)
+	{
+		if (*str != 'n')
+			return (false);
+		str++;
+	}
+	return (true);
+}
+
 void	echo_print(int fds[2], char **head)
 {
 	bool	print_newline;
 
 	print_newline = true;
-	if (!ft_strcmp(*head, "-n"))
+	if (only_ns(*head))
 	{
 		print_newline = false;
 		head++;
 	}
 	while (*head)
 	{
+		if (only_ns(*head))
+		{
+			head++;
+			continue ;
+		}
 		ft_putstr_fd(*head, fds[1]);
 		head++;
 		if (*head)
