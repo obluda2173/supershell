@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_cmd_path.c                                :+:      :+:    :+:   */
+/*   execute_cmd_1.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 12:17:23 by erian             #+#    #+#             */
-/*   Updated: 2025/01/09 17:10:09 by erian            ###   ########.fr       */
+/*   Updated: 2025/02/04 14:30:35 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ void	child_exec_cmd(int fds[2], t_list *ep, char *cmd_path, char **args)
 		free_char_array(env_matrix);
 		if (exit_status == EACCES)
 			exit(126);
-
 		exit(exit_status);
 	}
 	free_char_array(env_matrix);
@@ -84,7 +83,8 @@ int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2])
 		perror("waitpid");
 		return (EXIT_FAILURE);
 	}
-	if (WIFEXITED(status)) {
+	if (WIFEXITED(status))
+	{
 		g_signal_received = 0;
 		return (WEXITSTATUS(status));
 	}

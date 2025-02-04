@@ -6,7 +6,7 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 16:43:42 by erian             #+#    #+#             */
-/*   Updated: 2025/02/04 11:22:56 by erian            ###   ########.fr       */
+/*   Updated: 2025/02/04 14:30:55 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	cstm_pwd(t_list **ep, t_cmd_node *cmd_node)
 	{
 		pwd = getcwd(NULL, 0);
 		ft_putendl_fd(pwd, STDOUT_FILENO);
-		free(pwd); 
+		free(pwd);
 	}
 	return (EXIT_SUCCESS);
 }
