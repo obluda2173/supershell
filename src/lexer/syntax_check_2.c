@@ -6,16 +6,16 @@
 /*   By: erian <erian@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 12:29:43 by erian             #+#    #+#             */
-/*   Updated: 2025/01/30 16:10:14 by erian            ###   ########.fr       */
+/*   Updated: 2025/02/04 16:13:16 by erian            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	skip_double_quotes(char *str, size_t *i)
+static void	skip_quotes(char *str, size_t *i, char c)
 {
 	(*i)++;
-	while (str[*i] != '\"' && str[*i])
+	while (str[*i] != c && str[*i])
 		(*i)++;
 }
 
@@ -64,8 +64,8 @@ bool	check_unclosed_parenthesis(char *str, size_t open_paren)
 	i = -1;
 	while (str[++i])
 	{
-		if (str[i] == '\"')
-			skip_double_quotes(str, &i);
+		if (str[i] == '\"' || str[i] == '\'')
+			skip_quotes(str, &i, str[i]);
 		if (str[i] == '(')
 			open_paren++;
 		else if (str[i] == ')')

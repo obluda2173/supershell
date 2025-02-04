@@ -57,7 +57,7 @@ S_NAME      =   @echo "$(BLUE)Full clean completed$(COLOR)"
 # **************************************************************************** #
 all:		$(NAME)
 $(NAME):	libft $(OBJ_FILES)
-			$(CC) $(FLAGS) $(OBJ_FILES) $(INCLUDES) $(FSANITIZE) run/main.c -o $(NAME) $(LIBS)
+			$(CC) $(CFLAGS) $(OBJ_FILES) $(INCLUDES) $(FSANITIZE) run/main.c -o $(NAME) $(LIBS)
 			$(SUCCESS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
@@ -114,11 +114,14 @@ clean:
 fclean:		clean
 			$(MAKE) -C libft $@
 			rm -f $(NAME)
+			rm -f minishell_bonus
 			$(S_NAME)
 			rm -rf $(OBJ_DIR)
 			rm -rf $(BUILD_DIR)
 
 re: 		fclean all
+
+bonus: $(NAME)
 
 print_srcs:
 	@echo $(SRC_FILES)
@@ -131,4 +134,4 @@ compile_commands:
 	mv build/compile_commands.json ./compile_commands.json
 
 
-.PHONY:		all clean fclean re libft
+.PHONY:		all clean fclean re libft bonus
