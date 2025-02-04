@@ -12,6 +12,7 @@
 
 #include "executor.h"
 #include "minishell.h"
+#include <unistd.h>
 
 char	**ep_to_char_array(int fds[2], t_list *ep)
 {
@@ -61,6 +62,7 @@ void	child_exec_cmd(int fds[2], t_list *ep, char *cmd_path, char **args)
 		free_char_array(env_matrix);
 		if (exit_status == EACCES)
 			exit(126);
+
 		exit(exit_status);
 	}
 	free_char_array(env_matrix);
@@ -82,8 +84,10 @@ int	custom_exec(char *cmd_path, char **args, t_list *ep, int fds[2])
 		perror("waitpid");
 		return (EXIT_FAILURE);
 	}
-	if (WIFEXITED(status))
+	if (WIFEXITED(status)) {
+		g_signal_received = 0;
 		return (WEXITSTATUS(status));
+	}
 	if (status == 131)
 		ft_putendl_fd("Quit (core dumped)", STDOUT_FILENO);
 	else
