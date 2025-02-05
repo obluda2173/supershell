@@ -12,7 +12,6 @@
 
 #include "executor.h"
 #include "minishell.h"
-#include <unistd.h>
 
 char	**ep_to_char_array(int fds[2], t_list *ep)
 {

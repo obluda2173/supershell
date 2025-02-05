@@ -12,12 +12,11 @@
 
 #include "executor.h"
 
-int	cstm_pwd(t_list **ep, t_cmd_node *cmd_node)
+int	cstm_pwd(t_list **ep)
 {
 	char		*pwd;
 	t_env_var	*tmp_var;
 
-	(void)cmd_node;
 	tmp_var = get_env_var(*ep, "PWD");
 	if (tmp_var)
 		ft_putendl_fd(tmp_var->value, STDOUT_FILENO);

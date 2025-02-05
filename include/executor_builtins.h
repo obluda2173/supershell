@@ -24,7 +24,7 @@ int		echo(t_cmd_node cmd_node, int fds[2]);
 int		cstm_cd(t_list **ep, t_list *args);
 
 // builtin_pwd.c
-int		cstm_pwd(t_list **ep, t_cmd_node *cmd_node);
+int		cstm_pwd(t_list **ep);
 
 // builtin_exit.c
 int		cstm_exit(t_list *args, t_data *data);
