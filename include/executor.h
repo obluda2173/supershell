@@ -47,7 +47,7 @@ char		**ep_to_char_array(int fds[2], t_list *ep);
 char		**list_to_argv(t_list *arguments, char *cmd_path);
 
 // executor_export_3.c
-t_list		**copy_ep(t_list *ep);
+t_list		*copy_ep(t_list *ep);
 bool		should_be_escaped(char c);
 void		print_env_var(char *key, char *value);
 void		move_invalid_keys(t_list **ep, t_list **tmp_lst, t_list **prev,

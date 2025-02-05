@@ -39,30 +39,27 @@ static t_env_var	*copy_var(t_env_var *var)
 	return (ret_var);
 }
 
-t_list	**copy_ep(t_list *ep)
+t_list	*copy_ep(t_list *ep)
 {
-	t_list		*tmp_ep;
-	t_list		**ret_ep;
+	t_list		*head;
+	t_list		*ret_ep;
 	t_env_var	*tmp_var;
 	t_env_var	*ret_var;
 
-	ret_ep = malloc(sizeof(t_list *));
-	if (!ret_ep)
-		return (NULL);
-	*ret_ep = NULL;
-	tmp_ep = ep;
-	while (tmp_ep)
+	ret_ep = NULL;
+	head = ep;
+	while (head)
 	{
-		tmp_var = (t_env_var *)tmp_ep->content;
+		tmp_var = (t_env_var *)head->content;
 		ret_var = copy_var(tmp_var);
 		if (!ret_var)
 		{
-			ft_lstclear(ret_ep, free_env_var);
+			ft_lstclear(&ret_ep, free_env_var);
 			free(ret_ep);
 			return (NULL);
 		}
-		ft_lstadd_back(ret_ep, ft_lstnew(ret_var));
-		tmp_ep = tmp_ep->next;
+		ft_lstadd_back(&ret_ep, ft_lstnew(ret_var));
+		head = head->next;
 	}
 	return (ret_ep);
 }
@@ -86,31 +83,4 @@ void	print_env_var(char *key, char *value)
 		ft_putchar_fd(*value++, STDOUT_FILENO);
 	}
 	ft_putendl_fd("\"", STDOUT_FILENO);
-}
-
-void	move_invalid_keys(t_list **ep, t_list **tmp_lst,
-								t_list **prev, t_list **last_node)
-{
-	t_env_var	*env_var;
-
-	env_var = (t_env_var *)(*tmp_lst)->content;
-	if (!ft_isalpha(env_var->key[0]))
-	{
-		if (*prev)
-			(*prev)->next = (*tmp_lst)->next;
-		else
-			*ep = (*tmp_lst)->next;
-		(*last_node)->next = *tmp_lst;
-		(*tmp_lst)->next = NULL;
-		*last_node = *tmp_lst;
-		if (*prev)
-			*tmp_lst = (*prev)->next;
-		else
-			*tmp_lst = *ep;
-	}
-	else
-	{
-		*prev = *tmp_lst;
-		*tmp_lst = (*tmp_lst)->next;
-	}
 }

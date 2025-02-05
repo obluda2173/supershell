@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "executor.h"
+#include "executor_expansions.h"
 
 static bool	rewrite_var(t_list **ep, t_env_var *new_var)
 {
@@ -67,40 +68,19 @@ static bool	add_var(t_list **ep, t_list *arg_lst)
 	return (exit_status);
 }
 
-static void	sort_for_export(t_list **ep)
-{
-	t_list		*tmp_lst;
-	t_list		*prev;
-	t_list		*last_node;
-	int			list_size;
-
-	if (!ep || !*ep)
-		return ;
-	sort_arguments(ep);
-	tmp_lst = *ep;
-	last_node = ft_lstlast(*ep);
-	list_size = ft_lstsize(*ep);
-	prev = NULL;
-	while (list_size > 0 && tmp_lst)
-	{
-		move_invalid_keys(ep, &tmp_lst, &prev, &last_node);
-		list_size--;
-	}
-}
-
 static void	print_export(t_list **ep)
 {
 	t_list		*tmp_ep;
-	t_list		**cpy_ep;
+	t_list		*cpy_ep;
 	t_env_var	*env_var;
 
 	cpy_ep = copy_ep(*ep);
-	sort_for_export(cpy_ep);
-	tmp_ep = *cpy_ep;
+	sort_arguments(&cpy_ep);
+	tmp_ep = cpy_ep;
 	while (tmp_ep)
 	{
 		env_var = (t_env_var *)tmp_ep->content;
-		if (env_var->key[0] == '_')
+		if (env_var->key[0] == '_' && ft_strlen(env_var->key) == 1)
 		{
 			tmp_ep = tmp_ep->next;
 			continue ;
@@ -111,7 +91,7 @@ static void	print_export(t_list **ep)
 			printf("declare -x %s\n", env_var->key);
 		tmp_ep = tmp_ep->next;
 	}
-	ft_lstclear(cpy_ep, free_env_var);
+	ft_lstclear(&cpy_ep, free_env_var);
 	free(cpy_ep);
 }
 
