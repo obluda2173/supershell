@@ -32,6 +32,15 @@ t_argument new_argument(const char* literal, t_word_type type) {
 	return (t_argument){(char*)literal, type};
 }
 
+t_argument *new_argument_pointer(const char* literal, t_word_type type) {
+	t_argument *a = (t_argument*)malloc(sizeof(t_argument));
+	if (!a)
+		exit(EXIT_FAILURE);
+	a->type = type;
+	a->word = ft_strdup(literal);
+	return a;
+}
+
 t_redirection new_redirection(int fd, t_redirection_type type, const char* word, t_word_type wt) {
 	return (t_redirection){fd, type, (char*)word, wt};
 }

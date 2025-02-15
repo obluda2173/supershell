@@ -1,44 +1,35 @@
 #include "test_main.hpp"
+#include "test_mocks.hpp"
 
-t_list *create_script(std::vector<t_argument> args) {
-	t_script_node *sn = (t_script_node*)malloc(sizeof(t_script_node));
-	t_list *script = NULL;
-	sn->node_data.cmd_node.cmd_token = new_token(ft_strdup("echo"), BUILTIN);
-	sn->node_data.cmd_node.arguments = NULL;
-	sn->node_data.cmd_node.redirections = NULL;
-	for (auto want_arg : args) {
-		t_argument *arg = (t_argument*)malloc(sizeof(t_argument));
-		arg->word = ft_strdup(want_arg.word);
-		ft_lstadd_back(&sn->node_data.cmd_node.arguments, ft_lstnew(arg));
-	}
-	ft_lstadd_back(&script, ft_lstnew(sn));
-	return script;
-}
 
-struct ExecutorTestParams {
-	std::vector<t_argument> args;
-	std::string want_output;
-	int want_return;
-};
+TEST_P(ExecutorTestSuite, ErrorTests) {
+	// setup
+	ExecutorTestsParams params = GetParam();
+	char** envp = get_envp();
+	t_data *data = init(envp);
+	t_script_node *script = new_script_node((char*)params.cmd, params.type);
 
-class ExecutorTestSuite : public::testing::TestWithParam<ExecutorTestParams>{};
-
-TEST_P(ExecutorTestSuite, ExecutorTests) {
-	ExecutorTestParams params = GetParam();
-	t_list *script = create_script(params.args);
-
+	// run
+	testing::internal::CaptureStderr();
 	testing::internal::CaptureStdout();
-	EXPECT_EQ(params.want_return, execute(script));
-	std::string got = testing::internal::GetCapturedStdout();
-	EXPECT_STREQ(params.want_output.c_str(), got.c_str());
-	ft_lstclear(&script, free_script_node);
-}
+	int got_return = execute_script(script,  data);
 
+	// compare
+	EXPECT_EQ(params.want_return, got_return);
+	std::string got_stderr = testing::internal::GetCapturedStderr();
+	std::string got_stdout = testing::internal::GetCapturedStdout();
+	EXPECT_STREQ(params.want_stderr, got_stderr.c_str());
+
+	free_data(data);
+	free_char_array(envp);
+	free_script_node(script);
+}
 
 INSTANTIATE_TEST_SUITE_P(
-	ExecutorTests, ExecutorTestSuite,
+	ExecutorTests,
+	ExecutorTestSuite,
 	testing::Values(
-		ExecutorTestParams{{}, "\n", 0},
-		ExecutorTestParams{{new_argument("Hello", LITERAL)}, "Hello\n", 0},
-		ExecutorTestParams{{new_argument("Hello", LITERAL), new_argument("World", LITERAL)}, "Hello World\n", 0}
-		));
+		ExecutorTestsParams{"random_cmd", WORD, 127, "", "Command not found: random_cmd\n"},
+		ExecutorTestsParams{"ls", WORD, 0, "",""}
+		)
+	);
