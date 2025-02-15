@@ -1,6 +1,6 @@
 # Minishell  
 Minishell is a simple UNIX shell implementation created as part of the 42 curriculum. It mimics the behavior of a basic shell, allowing users to execute commands, manage processes, and handle input/output operations.  
-It was a pleasure to work with my teammate [Kay](https://github.com/Keisn1)
+It was a pleasure to work with my teammate [Kay](https://github.com/Keisn1).
 
 ## 🛠️ Features  
 - Executes built-in and external commands (`echo`, `cd`, `pwd`, `export`, `unset`, `env`, `exit`).  
